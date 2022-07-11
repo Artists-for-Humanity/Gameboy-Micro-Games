@@ -1,9 +1,11 @@
 // Add imports for phaser library, scenes, and plugins
 import Phaser from 'phaser';
-import MenuScene from './Scenes/MenuScene';
-import BunkerScene from './Scenes/BunkerScene';
 import GlobalState from './GlobalState';
-import MicroGame1 from './8Bitties/MicroGame1';
+import MicroGame01 from './8Bitties/MicroGame01';
+import MicroGame11 from './DebugginDaOpps/MicroGame11';
+import MicroGame21 from './MicroGamers/MicroGame21';
+import MicroGame31 from './Team4/MicroGame31';
+
 
 
 // Set configuration for phaser game instance
@@ -23,7 +25,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [MicroGame1],
+  scene: [MicroGame01],
   audio: {
     disableWebAudio: true,
   },
