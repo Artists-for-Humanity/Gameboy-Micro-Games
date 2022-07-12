@@ -16,42 +16,51 @@ export default class MicroGame01 extends Phaser.Scene {
   preload() {
     this.load.image(
       "catch",
-      new URL("../8Bitties/assets/Catch_Text.png", import.meta.url).href
+      new URL("../8Bitties/assets/Catch_Text.png",
+        import.meta.url).href
     );
     this.load.image(
       "fail",
-      new URL("../8Bitties/assets/fail_text.png", import.meta.url).href
+      new URL("../8Bitties/assets/fail_text.png",
+        import.meta.url).href
     );
     this.load.image(
       "safe",
-      new URL("../8Bitties/assets/safe_text.png", import.meta.url).href
+      new URL("../8Bitties/assets/safe_text.png",
+        import.meta.url).href
     );
     this.load.image(
       "shadow",
-      new URL("../8Bitties/assets/animations/shadow.png", import.meta.url).href
+      new URL("../8Bitties/assets/animations/shadow.png",
+        import.meta.url).href
     );
     this.load.image(
       "yang_fall",
-      new URL("../8Bitties/assets/animations/yang_fall.png", import.meta.url)
+      new URL("../8Bitties/assets/animations/yang_fall.png",
+        import.meta.url)
         .href
     );
     this.load.image(
       "yang_safe",
-      new URL("../8Bitties/assets/animations/yang_safe.png", import.meta.url)
+      new URL("../8Bitties/assets/animations/yang_safe.png",
+        import.meta.url)
         .href
     );
     this.load.image(
       "yang_falling",
-      new URL("../8Bitties/assets/animations/Yang_Falling.png", import.meta.url)
+      new URL("../8Bitties/assets/animations/Yang_Falling.png",
+        import.meta.url)
         .href
     );
     this.load.image(
       "Blanket",
-      new URL("../8Bitties/assets/blanket.png", import.meta.url).href
+      new URL("../8Bitties/assets/blanket.png",
+        import.meta.url).href
     );
     this.load.image(
       "grass",
-      new URL("../8Bitties/assets/grass_bg.png", import.meta.url).href
+      new URL("../8Bitties/assets/grass_bg.png",
+        import.meta.url).href
     );
   }
 
@@ -63,24 +72,7 @@ export default class MicroGame01 extends Phaser.Scene {
   }
 
   update() {
-    if (this.catchScale <= 0.9) {
-      this.timer++;
-      this.catch.setScale(this.catchScale);
-      this.catchScale += 0.2 / this.timer;
-    }
-    if (this.catchScale >= 0.9) {
-      this.catch.destroy();
-      this.gameStart();
-    }
-
-    //   setText() {
-    // this.myText = this.add.text(275, 360, '')
-    // this.myText.setStyle({
-    //     fontSize: '100px',
-    //     fill: '#000000',
-    //     align: 'center',
-    // });
-    // this.myText.setText('8Bitties');
+    this.scaleCatch();
   }
   gameStart() {
     this.grass = this.add.image(490, 360, "grass");
@@ -96,5 +88,20 @@ export default class MicroGame01 extends Phaser.Scene {
   }
   spawnCat() {
     console.log("here");
+  }
+
+  scaleCatch() {
+    console.log(this.catchScale);
+    if (this.catchScale <= 0.9) {
+      this.timer++;
+      console.log(this.timer)
+      this.catch.setScale(this.catchScale);
+      this.catchScale += 0.2 / this.timer;
+    } else if (this.timer === 137) {
+      this.catch.destroy();
+      this.gameStart();
+      this.timer = 0;
+      console.log('hi');
+    }
   }
 }
