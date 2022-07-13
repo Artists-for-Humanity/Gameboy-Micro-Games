@@ -7,72 +7,112 @@ export default class ColorLab extends Phaser.Scene {
       key: "ColorLab",
     });
     this.gamestart = false;
-    // Game Object Decla
+    // Game Object Declaration
     this.timer;
     this.catchScale = 0;
-    this.catch;
-    this.grass;
+    this.mix;
+    this.background;
+    this.redVial;
+    this.blueVial;
+    this.yellowVial;
+    this.beaker;
+    this.arrow;
+    this.cursors;
+    this.arrow_placement;
+
+    this.decreasing;
+
+    this.left
+    this.right
+
+    // this.player = this.physics.add.sprite(480, 600, 'player');
   }
   preload() {
-    this.load.image(
-      "catch",
-      new URL("../8Bitties/assets/Catch_Text.png",
-        import.meta.url).href
-    );
-    this.load.image(
-      "fail",
-      new URL("../8Bitties/assets/fail_text.png",
-        import.meta.url).href
-    );
-    this.load.image(
-      "safe",
-      new URL("../8Bitties/assets/safe_text.png",
-        import.meta.url).href
-    );
-    this.load.image(
-      "shadow",
-      new URL("../8Bitties/assets/animations/shadow.png",
-        import.meta.url).href
-    );
-    this.load.image(
-      "yang_fall",
-      new URL("../8Bitties/assets/animations/yang_fall.png",
-        import.meta.url)
-        .href
-    );
-    this.load.image(
-      "yang_safe",
-      new URL("../8Bitties/assets/animations/yang_safe.png",
-        import.meta.url)
-        .href
-    );
-    this.load.image(
-      "yang_falling",
-      new URL("../8Bitties/assets/animations/Yang_Falling.png",
-        import.meta.url)
-        .href
-    );
-    this.load.image(
-      "Blanket",
-      new URL("../8Bitties/assets/blanket.png",
-        import.meta.url).href
-    );
-    this.load.image(
-      "grass",
-      new URL("../8Bitties/assets/grass_bg.png",
-        import.meta.url).href
-    );
+    this.load.image("empty beaker", new URL("../8Bitties/assets/beakerempty.png", import.meta.url).href);
+    this.load.image("green beaker", new URL("../8Bitties/assets/beakergreen.png", import.meta.url).href);
+    this.load.image("purple beaker", new URL("../8Bitties/assets/beakerpurple.png", import.meta.url).href);
+    this.load.image("orange beaker", new URL("../8Bitties/assets/beakerorange.png", import.meta.url).href);
+    this.load.image("empty vial", new URL("../8Bitties/assets/emptyvial.png", import.meta.url).href);
+    this.load.image("red vial", new URL("../8Bitties/assets/vialred.png", import.meta.url).href);
+    this.load.image("blue vial", new URL("../8Bitties/assets/vialblue.png", import.meta.url).href);
+    this.load.image("yellow vial", new URL("../8Bitties/assets/vialyellow.png", import.meta.url).href);
+    this.load.image("background", new URL("../8Bitties/assets/sciencelabbg.png", import.meta.url).href);
+    this.load.image("arrow", new URL("../8Bitties/assets/arrow.png", import.meta.url).href);
   }
 
   create() {
     // this.setText();
-    this.catch = this.add.image(490, 360, "catch");
+    this.background = this.add.image(490, 360, "background"); 
+    
+  
+
+    this.redVial = this.physics.add.sprite(653, 680, "red vial").setScale(.45).setOrigin(1);
+    this.blueVial = this.physics.add.sprite(790, 680, "blue vial").setScale(.45).setOrigin(1);
+    this.yellowVial = this.physics.add.sprite(927, 680, "yellow vial").setScale(.45).setOrigin(1);
+    this.beaker = this.physics.add.sprite(400, 680, "empty beaker").setScale(.8).setOrigin(1);
+    this.arrow = this.physics.add.sprite(653, 480, "arrow").setScale(.5).setOrigin(1);
+
+    this.redVial.body.setAllowGravity(false);
+    this.blueVial.body.setAllowGravity(false);
+    this.yellowVial.body.setAllowGravity(false);
+    this.beaker.body.setAllowGravity(false);
+    this.arrow.body.setAllowGravity(false);
+
+    
+    this.cursors = this.input.keyboard.createCursorKeys();
+
+    this.arrow_placement = 0;
+    // this.mix = this.add.image(490, 360, "mix");
     this.timer = 1;
-    this.catch.setScale(0);
+
+    this.left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
+    this.right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
+
+    this.decreasing = false;
+
+
   }
 
   update() {
-    this.scaleCatch();
+  
+    if(this.timer > 50){
+      this.decreasing = true
+    }
+    if(this.timer < 1){
+      this.decreasing = false
+    }
+     
+    if(this.decreasing){
+      this.timer--
+      this.arrow.y++
+    }
+    else{
+      this.timer++
+      this.arrow.y--
+    }
+
+      if(Phaser.Input.Keyboard.JustDown(this.left) && this.arrow_placement > 0){
+        this.arrow_placement--;
+      }
+      else if(Phaser.Input.Keyboard.JustDown(this.right) && this.arrow_placement < 2) {
+        this.arrow_placement++;
+      }
+    
+
+
+    switch(this.arrow_placement){
+      case 0: 
+        this.arrow.x = this.redVial.x
+        return;
+      case 1:
+        this.arrow.x = this.blueVial.x
+        return;
+      case 2:
+        this.arrow.x = this.yellowVial.x
+        return;
+
+      default: return;
+    }
   }
   gameStart() {
     this.grass = this.add.image(490, 360, "grass");
@@ -80,28 +120,8 @@ export default class ColorLab extends Phaser.Scene {
   getRandomInt(max) {
     return Math.floor(Math.random() * max);
   }
-  getPosition() {
-    const Position = {
-      x: Math.floor(Phaser.Math.Between(100, 900)),
-      y: Math.floor(Phaser.Math.Between(100, 700)),
-    };
-  }
-  spawnCat() {
-    console.log("here");
-  }
+  
+  
 
-  scaleCatch() {
-    console.log(this.catchScale);
-    if (this.catchScale <= 0.9) {
-      this.timer++;
-      console.log(this.timer)
-      this.catch.setScale(this.catchScale);
-      this.catchScale += 0.2 / this.timer;
-    } else if (this.timer === 137) {
-      this.catch.destroy();
-      this.gameStart();
-      this.timer = 0;
-      console.log('hi');
-    }
-  }
+
 }

@@ -1,10 +1,10 @@
-export default class ColorLab extends Phaser.Scene {
+export default class TugOWar extends Phaser.Scene {
   // Game Class Constructor
   constructor() {
     super({
       active: false,
       visible: false,
-      key: "ColorLab",
+      key: "TugOWar",
     });
     this.gamestart = false;
     // Game Object Decla

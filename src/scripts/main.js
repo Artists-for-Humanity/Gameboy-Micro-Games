@@ -4,6 +4,7 @@ import GlobalState from "./GlobalState";
 import Emoeowgency from "./8Bitties/Emeowgency";
 import MicroGame21 from "./MicroGamers/MicroGame21";
 import MicroGame31 from "./Team4/MicroGame31";
+import ColorLab from "./8Bitties/ColorLab";
 
 // Set configuration for phaser game instance
 const config = {
@@ -22,7 +23,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [Emoeowgency],
+  scene: [ColorLab],
   audio: {
     disableWebAudio: true,
   },
