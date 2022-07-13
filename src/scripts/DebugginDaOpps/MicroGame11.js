@@ -8,32 +8,31 @@ export default class MicroGame11 extends Phaser.Scene {
     });
 
     // Game Object Declarations
-    this.myText;
     this.eventScreen;
     this.startText;
+    this.timedEvent;
   }
 
   preload() {
-    console.log("preload start");
     this.load.image(
       "background",
       new URL("./assets/background.png", import.meta.url).href
     );
     this.load.image(
       "full-tire",
-      newURL("./assets/car.png", import.meta.url).href
+      new URL("./assets/car.png", import.meta.url).href
     );
     this.load.image("car", new URL("./assets/car.png", import.meta.url).href);
   }
 
   create() {
-    console.log("create");
     this.add.image(540, 360, "background");
     this.setText();
     // timer = game.time.create(false);
-    timedEvent = this.time.addEvent({
+
+    this.timedEvent = this.time.addEvent({
       delay: 500,
-      callback: onEvent,
+      callback: this.onEvent(),
       callbackScope: this,
       loop: false,
     });
@@ -49,9 +48,10 @@ export default class MicroGame11 extends Phaser.Scene {
       align: "center",
     });
     this.startText.setText("PUMP!");
+    console.log("text");
   }
 
-  // onEvent({
-  //     this.startText.visible = false;
-  // });
+  onEvent() {
+    this.startText.visible = true;
+  }
 }
