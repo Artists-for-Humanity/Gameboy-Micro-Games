@@ -1,8 +1,7 @@
 // Add imports for phaser library, scenes, and plugins
 import Phaser from "phaser";
 import GlobalState from "./GlobalState";
-import Emoeowgency from "./8Bitties/Emoeowgency";
-import MicroGame11 from "./DebugginDaOpps/MicroGame11";
+import Emoeowgency from "./8Bitties/Emeowgency";
 import MicroGame21 from "./MicroGamers/MicroGame21";
 import MicroGame31 from "./Team4/MicroGame31";
 
