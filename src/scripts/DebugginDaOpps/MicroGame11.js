@@ -30,12 +30,7 @@ export default class MicroGame11 extends Phaser.Scene {
     this.setText();
     // timer = game.time.create(false);
 
-    this.timedEvent = this.time.addEvent({
-      delay: 500,
-      callback: this.onEvent(),
-      callbackScope: this,
-      loop: false,
-    });
+    this.timedEvent = this.time.delayedCall(3000, this.onEvent, [], this);
   }
 
   update() {}
@@ -48,10 +43,10 @@ export default class MicroGame11 extends Phaser.Scene {
       align: "center",
     });
     this.startText.setText("PUMP!");
-    console.log("text");
+    console.log("hello");
   }
 
   onEvent() {
-    this.startText.visible = true;
+    this.startText.visible = false;
   }
 }

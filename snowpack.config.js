@@ -3,7 +3,7 @@
 
 /** @type {import("snowpack").SnowpackUserConfig } */
 module.exports = {
-  root: './src',
+  root: "./src",
   plugins: [
     /* ... */
   ],
@@ -14,18 +14,18 @@ module.exports = {
     /* ... */
   },
   buildOptions: {
-    out: 'docs',
-    metaUrlPath: 'snowpack',
+    out: "docs",
+    metaUrlPath: "snowpack",
   },
   mount: {
     src: {
-      url: '/',
-      dot: true
+      url: "/",
+      dot: true,
     },
     public: {
-      url: '/',
+      url: "/",
       static: true,
-      dot: true
-    }
-  }
+      dot: true,
+    },
+  },
 };
