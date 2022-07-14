@@ -53,18 +53,18 @@ export default class MicroGame11 extends Phaser.Scene {
     // Animation for car
 
     this.anims.create({
-        key: "car-inflate"
-        frames: [
-            { key: "car", frame: 0 },
-            { key: "car", frame: 1 },
-            { key: "car", frame: 2 },
-            { key: "car", frame: 3 },
-            { key: "car", frame: 4 },
-            { key: "car", frame: 5 },
-            { key: "car", frame: 6 },
-            { key: "car", frame: 7 },
-        ],
-        frameRate: 10,
+      key: "car-inflate",
+      frames: [
+        { key: "car", frame: 0 },
+        { key: "car", frame: 1 },
+        { key: "car", frame: 2 },
+        { key: "car", frame: 3 },
+        { key: "car", frame: 4 },
+        { key: "car", frame: 5 },
+        { key: "car", frame: 6 },
+        { key: "car", frame: 7 },
+      ],
+      frameRate: 10,
     });
 
     // Animation for idle lever
@@ -118,7 +118,6 @@ export default class MicroGame11 extends Phaser.Scene {
   update() {
     if (this.cursors.up.isDown) {
       this.lever.anims.play("lever-up", true);
-      
     } else if (this.cursors.down.isDown) {
       this.lever.anims.play("lever-down", true);
       this.car.anims.play("car-inflate", true);
