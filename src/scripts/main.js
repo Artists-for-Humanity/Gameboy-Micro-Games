@@ -11,7 +11,7 @@ import MicroGame31 from './Team4/MicroGame31';
 // Set configuration for phaser game instance
 const config = {
   type: Phaser.AUTO,
-  width: 1080,
+  width: 980,
   height: 720,
   backgroundColor: '#808080',
 
