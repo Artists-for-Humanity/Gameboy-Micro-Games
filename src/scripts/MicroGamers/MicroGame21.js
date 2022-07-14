@@ -115,6 +115,7 @@ export default class MicroGame21 extends Phaser.Scene {
         this.door1 = this.add.image(540, 360, 'door1');
         this.door1.alpha = 0;
         this.concrete = this.add.image(540, 360, 'concrete');
+        this.concrete.depth = 1;
         this.box = this.add.image(540, 360, 'box');
         this.box.visible = false;
         this.door2 = this.add.image(540, 360, 'door2');
@@ -205,7 +206,7 @@ export default class MicroGame21 extends Phaser.Scene {
 
     userInput(){
         if (this.selectAvailable && this.cursors.up.isDown && this.guesses.length <= 3) { 
-            this.flash(0, 200);
+            this.flash(0, 200); //200ms flash duration
             this.guesses.push(0);
             this.guess();
         } else if (this.selectAvailable && this.cursors.right.isDown) {
