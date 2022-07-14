@@ -29,6 +29,6 @@ export default class MicroGame31 extends Phaser.Scene {
             fill: '#000000',
             align: 'center',
         });
-        this.myText.setText('Team4');
+        this.myText.setText('TeamInflation');
     }
 }
