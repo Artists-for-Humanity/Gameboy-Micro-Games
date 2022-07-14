@@ -14,13 +14,14 @@ export default class Emeowgency extends Phaser.Scene {
     this.catchScale = 0;
     this.catch;
     this.grass;
-    this.catfalling = false;
-    this.catFail = true;
-    this.catFall = false;
+    this.catfalling = true;
+    this.catFail = false;
+    this.catFall = true;
     this.catSafe = false;
-    this.catScale = 0;
-    this.catTimer = 0;
+    this.shadowScale = 0;
+    this.shadowTimer = 0;
     this.cat;
+    this.shadow;
   }
   preload() {
     this.load.image(
@@ -50,7 +51,7 @@ export default class Emeowgency extends Phaser.Scene {
         import.meta.url
       ).href,
       {
-        frameWidth: 88,
+        frameWidth: 86.8,
         frameHeight: 58,
       }
     );
@@ -66,15 +67,23 @@ export default class Emeowgency extends Phaser.Scene {
 
   update() {
     this.scaleCatch();
-    if (this.cat) {
+    console.log("timer", this.timer);
+    if (this.shadow) {
       this.scaleShadow();
     }
-    if (this.catfalling === true) {
-      //this.cat.update();
+    if (this.cat) {
+      console.log("hieght", this.cat.y);
+
+      this.playanimations();
+
+      if (this.cat.y !== this.shadow.y) {
+        this.cat.y += 4;
+      }
     }
   }
   gameStart() {
-    this.grass = this.add.image(490, 360, "grass");
+    this.grass = this.add.image(490, 360, "grass").setDepth(-10);
+    this.spawnShadow();
     this.spawnCat();
     this.spawnBlanket();
   }
@@ -88,18 +97,20 @@ export default class Emeowgency extends Phaser.Scene {
     };
     return position;
   }
-  spawnCat() {
+  spawnShadow() {
     const position = this.getRandomPosition();
     // this.cat = new Cat(this, position.x, position.y);
-    this.cat = this.physics.add.sprite(position.x, position.y, "yang");
+    this.shadow = this.physics.add
+      .sprite(position.x, position.y, "yang")
+      .setDepth(-8);
   }
 
   scaleCatch() {
-    if (this.catchScale <= 0.9) {
+    if (this.catchScale <= 1) {
       this.timer++;
-      this.catchScale += 0.22 / this.timer;
+      this.catchScale += 0.3 / this.timer;
       this.catch.setScale(this.catchScale);
-    } else if (this.timer === 91) {
+    } else if (this.timer === 43) {
       this.catch.destroy();
       this.gameStart();
       this.timer = 0;
@@ -154,18 +165,22 @@ export default class Emeowgency extends Phaser.Scene {
   }
 
   spawnBlanket() {
-    console.log("blanket");
+    this.blanket = this.physics.add.image(480, 360, "Blanket").setScale(0.4);
   }
 
   scaleShadow() {
-    if (this.catScale <= 1) {
-      this.catTimer++;
-      this.catScale += 0.17 / this.catTimer;
-      this.cat.setScale(this.catScale);
-    } else if (this.catTimer === 201) {
-      this.catTimer = 0;
-      this.playanimations();
+    if (this.shadowScale <= 1) {
+      this.shadowTimer++;
+      this.shadowScale += 0.2 / this.shadowTimer;
+      this.shadow.setScale(this.shadowScale);
+    } else if (this.shadowTimer === 83) {
+      this.shadowTimer = 0;
     }
+  }
+  spawnCat() {
+    this.cat = this.physics.add
+      .sprite(this.shadow.x, this.shadow.y - 83 * 4, "yang")
+      .setDepth(-7);
   }
   playanimations() {
     if (this.catSafe === true) {
