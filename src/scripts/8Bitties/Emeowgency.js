@@ -50,8 +50,8 @@ export default class Emeowgency extends Phaser.Scene {
         import.meta.url
       ).href,
       {
-        frameWidth: 19,
-        frameHeight: 87,
+        frameWidth: 88,
+        frameHeight: 58,
       }
     );
   }
