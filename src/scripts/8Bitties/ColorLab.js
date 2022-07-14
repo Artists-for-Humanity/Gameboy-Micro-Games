@@ -33,17 +33,17 @@ export default class ColorLab extends Phaser.Scene {
     // this.player = this.physics.add.sprite(480, 600, 'player');
   }
   preload() {
-    this.load.image("empty beaker", new URL("../8Bitties/assets/beakerempty.png", import.meta.url).href);
-    this.load.image("green beaker", new URL("../8Bitties/assets/beakergreen.png", import.meta.url).href);
-    this.load.image("purple beaker", new URL("../8Bitties/assets/beakerpurple.png", import.meta.url).href);
-    this.load.image("orange beaker", new URL("../8Bitties/assets/beakerorange.png", import.meta.url).href);
-    this.load.image("empty vial", new URL("../8Bitties/assets/emptyvial.png", import.meta.url).href);
-    this.load.image("red vial", new URL("../8Bitties/assets/vialred.png", import.meta.url).href);
-    this.load.image("blue vial", new URL("../8Bitties/assets/vialblue.png", import.meta.url).href);
-    this.load.image("yellow vial", new URL("../8Bitties/assets/vialyellow.png", import.meta.url).href);
-    this.load.image("background", new URL("../8Bitties/assets/sciencelabbg.png", import.meta.url).href);
-    this.load.image("arrow", new URL("../8Bitties/assets/arrow.png", import.meta.url).href);
-    this.load.image("mix", new URL("../8Bitties/assets/textbox.png", import.meta.url).href);
+    this.load.image("empty beaker", new URL("../8Bitties/assets/colorlab/beakerempty.png", import.meta.url).href);
+    this.load.image("green beaker", new URL("../8Bitties/assets/colorlab/beakergreen.png", import.meta.url).href);
+    this.load.image("purple beaker", new URL("../8Bitties/assets/colorlab/beakerpurple.png", import.meta.url).href);
+    this.load.image("orange beaker", new URL("../8Bitties/assets/colorlab/beakerorange.png", import.meta.url).href);
+    this.load.image("empty vial", new URL("../8Bitties/assets/colorlab/emptyvial.png", import.meta.url).href);
+    this.load.image("red vial", new URL("../8Bitties/assets/colorlab/vialred.png", import.meta.url).href);
+    this.load.image("blue vial", new URL("../8Bitties/assets/colorlab/vialblue.png", import.meta.url).href);
+    this.load.image("yellow vial", new URL("../8Bitties/assets/colorlab/vialyellow.png", import.meta.url).href);
+    this.load.image("background", new URL("../8Bitties/assets/colorlab/sciencelabbg.png", import.meta.url).href);
+    this.load.image("arrow", new URL("../8Bitties/assets/colorlab/arrow.png", import.meta.url).href);
+    this.load.image("mix", new URL("../8Bitties/assets/colorlab/textbox.png", import.meta.url).href);
   }
 
   create() {
