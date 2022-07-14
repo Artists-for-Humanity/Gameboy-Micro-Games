@@ -1,6 +1,4 @@
 import Phaser from "phaser";
-import Cat from "./sprites/cat";
-import Blanket from "./sprites/Blanket";
 
 export default class Emeowgency extends Phaser.Scene {
   // Game Class Constructor
@@ -17,6 +15,12 @@ export default class Emeowgency extends Phaser.Scene {
     this.catch;
     this.grass;
     this.catfalling = false;
+    this.catFail = true;
+    this.catFall = false;
+    this.catSafe = false;
+    this.catScale = 0;
+    this.catTimer = 0;
+    this.cat;
   }
   preload() {
     this.load.image(
@@ -32,10 +36,6 @@ export default class Emeowgency extends Phaser.Scene {
       new URL("../8Bitties/assets/safe_text.png", import.meta.url).href
     );
     this.load.image(
-      "shadow",
-      new URL("../8Bitties/assets/animations/shadow.png", import.meta.url).href
-    );
-    this.load.image(
       "Blanket",
       new URL("../8Bitties/assets/blanket.png", import.meta.url).href
     );
@@ -46,7 +46,7 @@ export default class Emeowgency extends Phaser.Scene {
     this.load.spritesheet(
       "yang",
       new URL(
-        "../8Bitties/assets/animations/SpriteSheetYang.png",
+        "../8Bitties/assets/animations/yangSpriteSheet.png",
         import.meta.url
       ).href,
       {
@@ -61,13 +61,16 @@ export default class Emeowgency extends Phaser.Scene {
     this.catch = this.add.image(490, 360, "catch");
     this.timer = 1;
     this.catch.setScale(0);
-    this.loadAnimations();
+    this.createAnimations();
   }
 
   update() {
     this.scaleCatch();
+    if (this.cat) {
+      this.scaleShadow();
+    }
     if (this.catfalling === true) {
-      this.cat.update();
+      //this.cat.update();
     }
   }
   gameStart() {
@@ -87,7 +90,8 @@ export default class Emeowgency extends Phaser.Scene {
   }
   spawnCat() {
     const position = this.getRandomPosition();
-    this.cat = new Cat(this, position.x, position.y);
+    // this.cat = new Cat(this, position.x, position.y);
+    this.cat = this.physics.add.sprite(position.x, position.y, "yang");
   }
 
   scaleCatch() {
@@ -102,13 +106,24 @@ export default class Emeowgency extends Phaser.Scene {
       this.catfalling = true;
     }
   }
-  loadAnimations() {
+  createAnimations() {
+    this.anims.create({
+      key: "shadow",
+      frames: [
+        {
+          key: "yang",
+          frame: 0,
+        },
+      ],
+      frameRate: 1,
+      repeat: -1,
+    });
     this.anims.create({
       key: "safe",
       frames: [
         {
           key: "yang",
-          frame: 2,
+          frame: 3,
         },
       ],
       frameRate: 1,
@@ -119,7 +134,7 @@ export default class Emeowgency extends Phaser.Scene {
       frames: [
         {
           key: "yang",
-          frame: 1,
+          frame: 2,
         },
       ],
       frameRate: 1,
@@ -130,7 +145,7 @@ export default class Emeowgency extends Phaser.Scene {
       frames: [
         {
           key: "yang",
-          frame: 0,
+          frame: 1,
         },
       ],
       frameRate: 1,
@@ -140,5 +155,30 @@ export default class Emeowgency extends Phaser.Scene {
 
   spawnBlanket() {
     console.log("blanket");
+  }
+
+  scaleShadow() {
+    if (this.catScale <= 1) {
+      this.catTimer++;
+      this.catScale += 0.17 / this.catTimer;
+      this.cat.setScale(this.catScale);
+    } else if (this.catTimer === 201) {
+      this.catTimer = 0;
+      this.playanimations();
+    }
+  }
+  playanimations() {
+    if (this.catSafe === true) {
+      this.cat.anims.play("safe", true);
+      return;
+    }
+    if (this.catFall === true) {
+      this.cat.anims.play("fall", true);
+      return;
+    }
+    if (this.catFail === true) {
+      this.cat.anims.play("fail", true);
+      return;
+    }
   }
 }
