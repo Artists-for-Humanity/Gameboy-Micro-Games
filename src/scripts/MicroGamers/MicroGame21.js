@@ -15,8 +15,10 @@ export default class MicroGame21 extends Phaser.Scene {
         this.gameState = false;
         this.started = false;
         this.startTimer = 0;
-        this.red, this.yellow, this.purple, this.blue;
-        this.colorblocks = [];
+        this.lightRed, this.lightYellow, this.lightPurple, this.lightBlue;
+        this.lightColorBlocks = [];
+        this.darkRed, this.darkYellow, this.darkPurple, this.darkBlue;
+        this.darkColorBlocks = [];
         this.lightColors = ["0xFF8B8E", "0xF3E260", "0xB25AFD", "0x7CAFFE"];
         this.darkColors = ["0xFF3D41", "0xFFD000", "0x961BFF", "0x001EFF"];
         this.pattern = [];
@@ -42,10 +44,14 @@ export default class MicroGame21 extends Phaser.Scene {
     preload() {
         this.load.image('brickWall', new URL('brickWall.png', import.meta.url).href);
         this.load.image('box', new URL('box.png', import.meta.url).href);
-        this.load.image('redButton', new URL('redButton.png', import.meta.url).href);
-        this.load.image('yellowButton', new URL('yellowButton.png', import.meta.url).href);
-        this.load.image('purpleButton', new URL('purpleButton.png', import.meta.url).href);
-        this.load.image('blueButton', new URL('blueButton.png', import.meta.url).href);
+        this.load.image('lightRed', new URL('lightRed.png', import.meta.url).href);
+        this.load.image('lightYellow', new URL('lightYellow.png', import.meta.url).href);
+        this.load.image('lightPurple', new URL('lightPurple.png', import.meta.url).href);
+        this.load.image('lightBlue', new URL('lightBlue.png', import.meta.url).href);
+        this.load.image('darkRed', new URL('darkRed.png', import.meta.url).href);
+        this.load.image('darkYellow', new URL('darkYellow.png', import.meta.url).href);
+        this.load.image('darkPurple', new URL('darkPurple.png', import.meta.url).href);
+        this.load.image('darkBlue', new URL('darkBlue.png', import.meta.url).href);
     }
 
     create() {
@@ -60,21 +66,34 @@ export default class MicroGame21 extends Phaser.Scene {
 
         this.setText(); //start screen text
 
-        this.red = this.add.rectangle(408, 334, 255, 170, "0xFF8B8E");
-        this.yellow = this.add.rectangle(678, 334, 255, 170, "0xF3E260");
-        this.purple = this.add.rectangle(408, 522, 255, 170, "0xB25AFD");
-        this.blue = this.add.rectangle(678, 522, 255, 170, "0x7CAFFE");
-        this.colorblocks = [this.red, this.yellow, this.purple, this.blue]; //add colorblocks to array
+        this.lightRed = this.add.sprite(408, 334, 'lightRed');
+        this.lightYellow = this.add.sprite(678, 334, 'lightYellow');
+        this.lightPurple = this.add.sprite(408, 522, 'lightPurple');
+        this.lightBlue = this.add.sprite(678, 522, 'lightBlue');
+        this.lightColorBlocks = [this.lightRed, this.lightYellow, this.lightPurple, this.lightBlue]; //put lightColorBlocks into an array
 
-        for (var i = 0; i < this.colorblocks.length; i++) { //set board invisible when game starts
-            this.colorblocks[i].visible = false;
+        this.darkRed = this.add.sprite(408, 334, 'darkRed');
+        this.darkYellow = this.add.sprite(678, 334, 'darkYellow');
+        this.darkPurple = this.add.sprite(408, 522, 'darkPurple');
+        this.darkBlue = this.add.sprite(678, 522, 'darkBlue');
+        this.darkColorBlocks = [this.darkRed, this.darkYellow, this.darkPurple, this.darkBlue]; //put darkColorBlocks into an array
+
+        for (var i = 0; i < this.lightColorBlocks.length; i++) { //set board invisible when game starts
+            this.lightColorBlocks[i].visible = false;
+            this.lightColorBlocks[i].setScale(1.8);
+            this.darkColorBlocks[i].visible = false;
+            this.darkColorBlocks[i].setScale(1.8);
         }
 
-        this.g1 = this.add.rectangle(340.5, 160, 130, 90, "", 0);
-        this.g2 = this.add.rectangle(475.5, 160, 130, 90, "", 0);
-        this.g3 = this.add.rectangle(610.5, 160, 130, 90, "", 0);
-        this.g4 = this.add.rectangle(745.5, 160, 130, 90, "", 0);
-        this.guessBlocks = [this.g1, this.g2, this.g3, this.g4]; //add guess blocks to array, transparent at start
+        this.g1 = this.add.sprite(340.5, 160, '');
+        this.g2 = this.add.sprite(475.5, 160, '');
+        this.g3 = this.add.sprite(610.5, 160, '');
+        this.g4 = this.add.sprite(745.5, 160, '');
+        this.guessBlocks = [this.g1, this.g2, this.g3, this.g4]; //initialize guessBlocks and make them all invisible
+
+        for (var i = 0; i < this.guessBlocks.length; i++) { //turn guessBlocks invisible at the start of the game
+            this.guessBlocks[i].visible = false;
+        }
 
         for (var i = 0; i < 4; i++) { //create pattern
             this.pattern.push(this.getRandomInt(4));
@@ -87,13 +106,14 @@ export default class MicroGame21 extends Phaser.Scene {
         if (this.startTimer >= 2000 && !this.started) { //start game after 2 seconds
             this.startGame();
             this.gameState = true;
-            this.started = true; //prevents startGame from continuously running
+            this.started = true; //prevents startGame from running again
         }
-        if (this.interactive && this.gameState === true) { //only runs when interactive mode is turned on AND gameState is TRUE
+        if (this.interactive && this.gameState === true) { //only runs when interactive mode is turned on AND gameState is TRUE (game will stop after gameState is set back to FALSE)
             this.clickTimer += delta;
-            this.selectTimer += delta;
-            if (this.clickTimer >= 200) this.clickAvailable = true; //only allows for click every 200ms
-            if (this.selectTimer >= 200) this.selectAvailable = true; //only allows for selection every 200ms
+            this.selectTimer += delta; //timers used to prevent double clicks
+            this.showDarkColor(this.selected); //show selected block
+            if (this.clickTimer >= 150) this.clickAvailable = true; //only allows for click every 150ms
+            if (this.selectTimer >= 150) this.selectAvailable = true; //only allows for selection every 150ms
             this.userInput();
         }
     }
@@ -112,19 +132,19 @@ export default class MicroGame21 extends Phaser.Scene {
         this.myText.visible = false;
         this.showBoard();
         this.time.delayedCall(1000, this.flashPattern, [], this);
-        this.time.delayedCall(this.pattern.length * 500 + 1000, this.startInteractive, [], this);
+        this.time.delayedCall(this.pattern.length * 500 + 2000, () => {this.interactive = true}, [], this); //starts interactive part of the game 1 second after  pattern flahses (2000 - 1000)
     }
 
     showBoard() {
         this.box.visible = true;
-        for (var i = 0; i < this.colorblocks.length; i++) {
-            this.colorblocks[i].visible = true;
+        for (var i = 0; i < this.lightColorBlocks.length; i++) {
+            this.lightColorBlocks[i].visible = true;
         }
     }
 
     flash(num) {
-        this.showBrighterColor(num);
-        this.time.delayedCall(300, this.showOriginalColor, [num], this);
+        this.showDarkColor(num);
+        this.time.delayedCall(300, this.showLightColor, [num], this);
     }
 
     flashPattern() {
@@ -133,52 +153,32 @@ export default class MicroGame21 extends Phaser.Scene {
         }
     }
 
-    showBrighterColor(num) {
-        this.colorblocks[num].setFillStyle(this.darkColors[num]);
+    showDarkColor(num) {
+        this.lightColorBlocks[num].visible = false;
+        this.darkColorBlocks[num].visible = true;
     }
 
-    showOriginalColor(num) {
-        this.colorblocks[num].setFillStyle(this.lightColors[num]);
+    showLightColor(num) {
+        this.darkColorBlocks[num].visible = false;
+        this.lightColorBlocks[num].visible = true;
     }
 
     getRandomInt(max) {
         return Math.floor(Math.random() * max);
     }
 
-    startInteractive() {
-        this.interactive = true;
-        this.showOutline(this.selected);
-    }
-
-    showOutline(num) {
-        this.colorblocks[num].setStrokeStyle(4, "0x000000");
-        this.colorblocks[num].depth = 1;
-    }
-
-    hideOutline(num) {
-        this.colorblocks[num].setStrokeStyle();
-        this.colorblocks[num].depth = 0;
+    hide(num) {
+        this.showLightColor(num);
     }
 
     userInput(){
         if (this.clickAvailable && this.cursors.left.isDown && this.selected >= 1) { 
-            this.last = this.selected;
-            this.hideOutline(this.last);
-            this.selected--;
-            this.showOutline(this.selected);
-            this.clickTimer = 0;
-            this.clickAvailable = false;
+            this.move(0); //0 indicates LEFT
         } else if (this.clickAvailable && this.cursors.right.isDown && this.selected <= 2) {
-            this.last = this.selected;
-            this.hideOutline(this.last);
-            this.selected++;
-            this.showOutline(this.selected);
-            this.clickTimer = 0;
-            this.clickAvailable = false;
+            this.move(1); //1 indicates RIGHT
         } else if (this.selectAvailable && this.keyA.isDown && this.guesses.length <= 3) {
             this.guesses.push(this.selected);
-            this.guessBlocks[this.guess].setFillStyle(this.lightColors[this.guesses[this.guess]]);
-            this.guessBlocks[this.guess].setStrokeStyle(2, "0x000000");
+            this.showGuess(this.selected);
             console.log(this.guesses);
             if (JSON.stringify(this.guesses[this.guess]) != JSON.stringify(this.pattern[this.guess])) { //check loss condition
                 console.log("YOU LOSE");
@@ -191,7 +191,26 @@ export default class MicroGame21 extends Phaser.Scene {
             }
             this.guess++;
             this.selectTimer = 0;
-            this.selectAvailable = false;            
+            this.selectAvailable = false;      
         }
+    }
+
+    move(num) {
+        this.last = this.selected;
+        if (num === 0) this.selected--; //left
+        if (num === 1) this.selected++; //right
+        this.hide(this.last); //hide last block
+        this.clickTimer = 0;
+        this.clickAvailable = false;
+    }
+
+    showGuess(num) {
+        var key;
+        if (num === 0) key = 'lightRed';
+        if (num === 1) key = 'lightYellow';
+        if (num === 2) key = 'lightPurple';
+        if (num === 3) key = 'lightBlue';
+        this.guessBlocks[this.guess].setTexture(key);
+        this.guessBlocks[this.guess].visible = true;
     }
 }
