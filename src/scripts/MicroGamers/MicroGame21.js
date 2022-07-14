@@ -17,8 +17,8 @@ export default class MicroGame21 extends Phaser.Scene {
         this.startTimer = 0;
         this.red, this.yellow, this.purple, this.blue;
         this.colorblocks = [];
-        this.originalColors = ["0xFF8B8E", "0xF3E260", "0xB25AFD", "0x7CAFFE"];
-        this.brighterColors = ["0xFF3D41", "0xFFD000", "0x961BFF", "0x001EFF"];
+        this.lightColors = ["0xFF8B8E", "0xF3E260", "0xB25AFD", "0x7CAFFE"];
+        this.darkColors = ["0xFF3D41", "0xFFD000", "0x961BFF", "0x001EFF"];
         this.pattern = [];
   
         this.g1, this.g2, this.g3, this.g4;
@@ -29,8 +29,7 @@ export default class MicroGame21 extends Phaser.Scene {
         this.last;
 
         this.keyA;
-        this.keyS;
-        this.keySPACE;
+        this.cursors;
         this.interactive = false;
         this.clickAvailable = false;
         this.selectAvailable = false;
@@ -54,6 +53,7 @@ export default class MicroGame21 extends Phaser.Scene {
         this.box = this.add.image(540, 360, 'box');
         this.box.visible = false;
 
+        this.cursors = this.input.keyboard.createCursorKeys();
         this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -134,11 +134,11 @@ export default class MicroGame21 extends Phaser.Scene {
     }
 
     showBrighterColor(num) {
-        this.colorblocks[num].setFillStyle(this.brighterColors[num]);
+        this.colorblocks[num].setFillStyle(this.darkColors[num]);
     }
 
     showOriginalColor(num) {
-        this.colorblocks[num].setFillStyle(this.originalColors[num]);
+        this.colorblocks[num].setFillStyle(this.lightColors[num]);
     }
 
     getRandomInt(max) {
@@ -161,23 +161,23 @@ export default class MicroGame21 extends Phaser.Scene {
     }
 
     userInput(){
-        if (this.clickAvailable && this.keyA.isDown && this.selected >= 1) { 
+        if (this.clickAvailable && this.cursors.left.isDown && this.selected >= 1) { 
             this.last = this.selected;
             this.hideOutline(this.last);
             this.selected--;
             this.showOutline(this.selected);
             this.clickTimer = 0;
             this.clickAvailable = false;
-        } else if (this.clickAvailable && this.keyS.isDown && this.selected <= 2) {
+        } else if (this.clickAvailable && this.cursors.right.isDown && this.selected <= 2) {
             this.last = this.selected;
             this.hideOutline(this.last);
             this.selected++;
             this.showOutline(this.selected);
             this.clickTimer = 0;
             this.clickAvailable = false;
-        } else if (this.selectAvailable && this.keySPACE.isDown && this.guesses.length <= 3) {
+        } else if (this.selectAvailable && this.keyA.isDown && this.guesses.length <= 3) {
             this.guesses.push(this.selected);
-            this.guessBlocks[this.guess].setFillStyle(this.originalColors[this.guesses[this.guess]]);
+            this.guessBlocks[this.guess].setFillStyle(this.lightColors[this.guesses[this.guess]]);
             this.guessBlocks[this.guess].setStrokeStyle(2, "0x000000");
             console.log(this.guesses);
             if (JSON.stringify(this.guesses[this.guess]) != JSON.stringify(this.pattern[this.guess])) { //check loss condition
