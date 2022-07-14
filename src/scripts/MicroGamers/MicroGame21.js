@@ -21,24 +21,19 @@ export default class MicroGame21 extends Phaser.Scene {
         this.started = false;
         this.startTimer = 0;
         this.lightRed, this.lightYellow, this.lightPurple, this.lightBlue;
-        this.lightColorBlocks = [];
+        this.lightColorButtons = [];
         this.darkRed, this.darkYellow, this.darkPurple, this.darkBlue;
-        this.darkColorBlocks = [];
+        this.darkColorButtons = [];
         this.pattern = [];
   
         this.g1, this.g2, this.g3, this.g4;
         this.guessBlocks = [];
         this.guesses = [];
-        this.guess = 0;
-        this.selected = 0;
-        this.last;
+        this.guessNum = 0;
 
-        this.keyA;
         this.cursors;
         this.interactive = false;
-        this.clickAvailable = false;
         this.selectAvailable = false;
-        this.clickTimer = 0;
         this.selectTimer = 0;
     }
 
@@ -63,27 +58,23 @@ export default class MicroGame21 extends Phaser.Scene {
 
     create() {
         this.drawUI();
-
-        this.cursors = this.input.keyboard.createCursorKeys();
-        this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-        this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        this.cursors = this.input.keyboard.createCursorKeys(); //add keyboard input
 
         this.lightRed = this.add.sprite(408, 334, 'lightRed');
         this.lightYellow = this.add.sprite(678, 334, 'lightYellow');
         this.lightPurple = this.add.sprite(408, 522, 'lightPurple');
         this.lightBlue = this.add.sprite(678, 522, 'lightBlue');
-        this.lightColorBlocks = [this.lightRed, this.lightYellow, this.lightPurple, this.lightBlue]; //put lightColorBlocks into an array
+        this.lightColorButtons = [this.lightRed, this.lightYellow, this.lightPurple, this.lightBlue]; //put lightColorButtons into an array
 
         this.darkRed = this.add.sprite(408, 334, 'darkRed');
         this.darkYellow = this.add.sprite(678, 334, 'darkYellow');
         this.darkPurple = this.add.sprite(408, 522, 'darkPurple');
         this.darkBlue = this.add.sprite(678, 522, 'darkBlue');
-        this.darkColorBlocks = [this.darkRed, this.darkYellow, this.darkPurple, this.darkBlue]; //put darkColorBlocks into an array
+        this.darkColorButtons = [this.darkRed, this.darkYellow, this.darkPurple, this.darkBlue]; //put darkColorButtons into an array
 
-        for (var i = 0; i < this.lightColorBlocks.length; i++) { //set board invisible when game starts
-            this.lightColorBlocks[i].setScale(1.8);
-            this.darkColorBlocks[i].setScale(1.8);
+        for (var i = 0; i < this.lightColorButtons.length; i++) { //set board invisible when game starts
+            this.lightColorButtons[i].setScale(1.8);
+            this.darkColorButtons[i].setScale(1.8);
         }
         this.hideBoard();
 
@@ -113,10 +104,7 @@ export default class MicroGame21 extends Phaser.Scene {
         }
         if (this.interactive && this.gameState === true) { //only runs when interactive mode is turned on AND gameState is TRUE (game will stop after gameState is set back to FALSE)
             this.myText.alpha -= 0.0166; //fade text out
-            this.clickTimer += delta;
             this.selectTimer += delta; //timers used to prevent double clicks
-            this.showDarkColor(this.selected); //show selected block
-            if (this.clickTimer >= 150) this.clickAvailable = true; //only allows for click every 150ms
             if (this.selectTimer >= 150) this.selectAvailable = true; //only allows for selection every 150ms
             this.userInput();
         }
@@ -142,8 +130,8 @@ export default class MicroGame21 extends Phaser.Scene {
     startGame() {
         this.showMemorizeText();
         this.showBoard();
-        this.time.delayedCall(2000, this.flashPattern, [], this); //flash pattern 1 second after board appears
-        this.time.delayedCall(this.pattern.length * 500 + 3000, () => {this.interactive = true}, [], this); //starts interactive part of the game 5 seconds after board appear (4 * 500 + 3000 = 5000ms)
+        this.time.delayedCall(2000, this.flashPattern, [], this); //flash pattern 2 second after board appears
+        this.time.delayedCall(this.pattern.length * 500 + 2500, () => {this.interactive = true}, [], this); //starts interactive part of the game 4.5 seconds after board appear (4 * 500 + 2500 = 4500ms)
     }
 
     showMemorizeText() {
@@ -171,16 +159,16 @@ export default class MicroGame21 extends Phaser.Scene {
 
     showBoard() {
         this.box.visible = true;
-        for (var i = 0; i < this.lightColorBlocks.length; i++) {
-            this.lightColorBlocks[i].visible = true;
+        for (var i = 0; i < this.lightColorButtons.length; i++) {
+            this.lightColorButtons[i].visible = true;
         }
     }
 
     hideBoard() {
         this.box.visible = false;
-        for (var i = 0; i < this.lightColorBlocks.length; i++) {
-            this.lightColorBlocks[i].visible = false;
-            this.darkColorBlocks[i].visible = false;
+        for (var i = 0; i < this.lightColorButtons.length; i++) {
+            this.lightColorButtons[i].visible = false;
+            this.darkColorButtons[i].visible = false;
         }
     }
 
@@ -190,64 +178,68 @@ export default class MicroGame21 extends Phaser.Scene {
         }
     }
 
-    flash(num) {
+    flash(num, ms) { //num = the index that is flashed, ms = flash duration
         this.showDarkColor(num);
-        this.time.delayedCall(300, this.showLightColor, [num], this); //flash appears for 300ms
+        this.time.delayedCall(ms, this.showLightColor, [num], this);
     }
 
     flashPattern() {
         for (var i = 0; i < this.pattern.length; i++) {
-            this.time.delayedCall(i * 500, this.flash, [this.pattern[i]], this); //500 ms between flashes
+            this.time.delayedCall(i * 500, this.flash, [this.pattern[i], 300], this); //500 ms between flashes and 300ms flash durations
         }
     }
 
     showDarkColor(num) {
-        this.lightColorBlocks[num].visible = false;
-        this.darkColorBlocks[num].visible = true;
+        this.lightColorButtons[num].visible = false;
+        this.darkColorButtons[num].visible = true;
     }
 
     showLightColor(num) {
-        this.darkColorBlocks[num].visible = false;
-        this.lightColorBlocks[num].visible = true;
+        this.darkColorButtons[num].visible = false;
+        this.lightColorButtons[num].visible = true;
     }
 
-    hide(num) {
-        this.showLightColor(num);
-    }
-
-    getRandomInt(max) {
+    getRandomInt(max) { //random int from 0 to max, EXCLUSIVE
         return Math.floor(Math.random() * max);
     }
 
     userInput(){
-        if (this.clickAvailable && this.cursors.left.isDown && this.selected >= 1) { 
-            this.move(0); //0 indicates LEFT
-        } else if (this.clickAvailable && this.cursors.right.isDown && this.selected <= 2) {
-            this.move(1); //1 indicates RIGHT
-        } else if (this.selectAvailable && this.keyA.isDown && this.guesses.length <= 3) {
-            this.guesses.push(this.selected); //adds selected color to guess array
-            this.showGuess(this.selected);
-            if (JSON.stringify(this.guesses[this.guess]) != JSON.stringify(this.pattern[this.guess])) { //check loss condition
-                this.showLossText();
-                this.gameState = false;
-            }
-            if (JSON.stringify(this.guesses) == JSON.stringify(this.pattern)) { //check win condition
-                this.time.delayedCall(1500, this.win, [], this);
-                this.gameState = false;
-            }
-            this.guess++;
-            this.selectTimer = 0;
-            this.selectAvailable = false;      
+        if (this.selectAvailable && this.cursors.up.isDown && this.guesses.length <= 3) { 
+            this.flash(0, 200);
+            this.guesses.push(0);
+            this.guess();
+        } else if (this.selectAvailable && this.cursors.right.isDown) {
+            this.flash(1, 200);
+            this.guesses.push(1);
+            this.guess();
+        } else if (this.selectAvailable && this.cursors.down.isDown) {
+            this.flash(2, 200);
+            this.guesses.push(2);
+            this.guess();
+        } else if (this.selectAvailable && this.cursors.left.isDown) {
+            this.flash(3, 200);
+            this.guesses.push(3);
+            this.guess();
         }
     }
 
-    move(num) {
-        this.last = this.selected;
-        if (num === 0) this.selected--; //left
-        if (num === 1) this.selected++; //right
-        this.hide(this.last); //hide last block
-        this.clickTimer = 0;
-        this.clickAvailable = false;
+    guess() {
+        this.showGuess(this.guesses[this.guessNum]);
+        this.checkWL();
+        this.guessNum++;
+        this.selectTimer = 0;
+        this.selectAvailable = false;
+    }
+
+    checkWL() {
+        if (JSON.stringify(this.guesses[this.guessNum]) != JSON.stringify(this.pattern[this.guessNum])) { // loss condition
+            this.showLossText();
+            this.gameState = false;
+        }
+        if (JSON.stringify(this.guesses) == JSON.stringify(this.pattern)) { // win condition
+            this.time.delayedCall(1500, this.win, [], this);
+            this.gameState = false;
+        }
     }
 
     showGuess(num) {
@@ -256,11 +248,11 @@ export default class MicroGame21 extends Phaser.Scene {
         if (num === 1) key = 'lightYellow';
         if (num === 2) key = 'lightPurple';
         if (num === 3) key = 'lightBlue';
-        this.guessBlocks[this.guess].setTexture(key);
-        this.guessBlocks[this.guess].visible = true;
+        this.guessBlocks[this.guessNum].setTexture(key);
+        this.guessBlocks[this.guessNum].visible = true; //sets guessBlock to the color that lines up with the number guessed and turns that specific block visible
     }
 
-    win() {
+    win() { //hides UI then opens door after 1 second
         this.box.visible = false;
         this.hideBoard();
         this.hideGuessBlocks();
