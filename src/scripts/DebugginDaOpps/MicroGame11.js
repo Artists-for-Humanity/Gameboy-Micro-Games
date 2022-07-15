@@ -13,8 +13,11 @@ export default class MicroGame11 extends Phaser.Scene {
     this.startText;
     this.timedEvent;
     this.lever;
-    this.car;
-    this.pumpToWin = 18;
+    this.car25;
+    this.car50;
+    this.car75;
+    this.car100;
+    this.pumpToWin = 20;
     this.playerPumps = 0;
     this.clickAvailable = true;
     this.clickTimer = 0;
@@ -36,27 +39,39 @@ export default class MicroGame11 extends Phaser.Scene {
     this.load.spritesheet(
       "lever",
       new URL("./assets/lever.png", import.meta.url).href,
-      {
-        frameWidth: 88,
-        frameHeight: 162,
-      }
+      { frameWidth: 88, frameHeight: 162 }
     );
     this.load.spritesheet(
-      "car",
-      new URL("./assets/car_spritesheet.png", import.meta.url).href,
-      {
-        frameWidth: 980,
-        frameHeight: 720,
-      }
+      "car25",
+      new URL("./assets/25car_spritesheet.png", import.meta.url).href,
+      { frameWidth: 980, frameHeight: 720 }
+    );
+
+    this.load.spritesheet(
+      "car50",
+      new URL("./assets/50car_spritesheet.png", import.meta.url).href,
+      { frameWidth: 980, frameHeight: 720 }
+    );
+
+    this.load.spritesheet(
+      "car75",
+      new URL("./assets/75car_spritesheet.png", import.meta.url).href,
+      { frameWidth: 980, frameHeight: 720 }
+    );
+
+    this.load.spritesheet(
+      "car100",
+      new URL("./assets/100car_spritesheet.png", import.meta.url).href,
+      { frameWidth: 980, frameHeight: 720 }
     );
   }
 
   create() {
-    this.add.image(1080 / 2, 720 / 2, "background");
+    this.add.image(980 / 2, 720 / 2, "background");
     this.add.image(980 / 2, 720 / 2, "pumpgame_bg");
     // this.add.image(980 / 2, 720 / 2, "temp_car_bg");
     this.lever = this.physics.add.sprite(900, 480, "lever");
-    this.car = this.physics.add.sprite(980 / 2, 355, "car");
+    this.car25 = this.physics.add.sprite(980 / 2, 355, "car25");
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -66,20 +81,20 @@ export default class MicroGame11 extends Phaser.Scene {
 
     // Animation for car
 
-    this.anims.create({
-      key: "car-inflate",
-      frames: [
-        { key: "car", frame: 0 },
-        { key: "car", frame: 1 },
-        { key: "car", frame: 2 },
-        { key: "car", frame: 3 },
-        { key: "car", frame: 4 },
-        { key: "car", frame: 5 },
-        { key: "car", frame: 6 },
-        { key: "car", frame: 7 },
-      ],
-      frameRate: 10,
-    });
+    // this.anims.create({
+    //   key: "car-inflate",
+    //   frames: [
+    //     { key: "car", frame: 0 },
+    //     { key: "car", frame: 1 },
+    //     { key: "car", frame: 2 },
+    //     { key: "car", frame: 3 },
+    //     { key: "car", frame: 4 },
+    //     { key: "car", frame: 5 },
+    //     { key: "car", frame: 6 },
+    //     { key: "car", frame: 7 },
+    //   ],
+    //   frameRate: 10,
+    // });
 
     // Animation for idle lever
 
@@ -100,7 +115,7 @@ export default class MicroGame11 extends Phaser.Scene {
         { key: "lever", frame: 5 },
         { key: "lever", frame: 6 },
       ],
-      frameRate: 10,
+      frameRate: 24,
     });
 
     this.anims.create({
@@ -114,19 +129,64 @@ export default class MicroGame11 extends Phaser.Scene {
         { key: "lever", frame: 1 },
         { key: "lever", frame: 0 },
       ],
-      frameRate: 10,
+      frameRate: 24,
     });
 
-    // this.anims.create({
-    //   key: "car",
-    //   frames: [
-    //     { key: "car", frame: 0 },
-    //     { key: "car", frame: 1 },
-    //     { key: "car", frame: 2 },
-    //     { key: "car", frame: 3 },
-    //   ],
-    //   frameRate: 10,
-    // });
+    // Car animations
+    this.anims.create({
+      key: "car-inflate-25%",
+      frames: [
+        { key: "car25", frame: 0 },
+        { key: "car25", frame: 1 },
+        { key: "car25", frame: 2 },
+        { key: "car25", frame: 3 },
+        { key: "car25", frame: 4 },
+        { key: "car25", frame: 5 },
+      ],
+      frameRate: 24,
+    });
+
+    this.anims.create({
+      key: "car-inflate-50%",
+      frames: [
+        { key: "car50", frame: 0 },
+        { key: "car50", frame: 1 },
+        { key: "car50", frame: 2 },
+        { key: "car50", frame: 3 },
+        { key: "car50", frame: 4 },
+        { key: "car50", frame: 5 },
+        { key: "car50", frame: 6 },
+      ],
+      frameRate: 24,
+    });
+
+    this.anims.create({
+      key: "car-inflate-75%",
+      frames: [
+        { key: "car75", frame: 0 },
+        { key: "car75", frame: 1 },
+        { key: "car75", frame: 2 },
+        { key: "car75", frame: 3 },
+        { key: "car75", frame: 4 },
+        { key: "car75", frame: 5 },
+        { key: "car75", frame: 6 },
+      ],
+      frameRate: 24,
+    });
+
+    this.anims.create({
+      key: "car-inflate-100%",
+      frames: [
+        { key: "car100", frame: 0 },
+        { key: "car100", frame: 1 },
+        { key: "car100", frame: 2 },
+        { key: "car100", frame: 3 },
+        { key: "car100", frame: 4 },
+        { key: "car100", frame: 5 },
+        { key: "car100", frame: 6 },
+      ],
+      frameRate: 24,
+    });
   }
 
   update(time, delta) {
@@ -145,8 +205,8 @@ export default class MicroGame11 extends Phaser.Scene {
   }
 
   timerCountdown(time) {
-    if (time / 1000 > 5 && this.playerPumps < this.pumpToWin) {
-      console.log("5 seconds passed! You lose!");
+    console.log(this.car25);
+    if (time / 1000 > 3 && this.playerPumps < this.pumpToWin) {
       this.gameState = false;
       this.endText = this.add.text(300, 360, "You lose!");
       this.endText.setStyle({
@@ -156,7 +216,7 @@ export default class MicroGame11 extends Phaser.Scene {
       });
     }
 
-    if (time / 1000 > 5 && this.playerPumps >= this.pumpToWin) {
+    if (time / 1000 > 50 && this.playerPumps >= this.pumpToWin) {
       this.gameState = false;
       this.endText = this.add.text(300, 360, "You Won!");
       this.endText.setStyle({
@@ -169,20 +229,21 @@ export default class MicroGame11 extends Phaser.Scene {
 
   updatePump() {
     this.playerPumps += 1;
-    console.log(this.playerPumps);
+
     this.lever.anims.play("lever-down", true);
-    if (this.playerPumps === 25) {
-      this.car.anims.play("car-inflate-25%", true);
-    }
-    if (this.playerPumps === 50) {
-      this.car.anims.play("car-inflate-50%", true);
-    }
-    if (this.playerPumps === 75) {
-      this.car.anims.play("car-inflate-75%", true);
-    }
-    if (this.playerPumps === 100) {
-      this.car.anims.play("car-inflate-100%", true);
-    }
+    this.car25.anims.play("car-inflate-25%", true);
+    // if (this.playerPumps === 5) {
+    //   this.car25.anims.play("car-inflate-25%", true);
+    // }
+    // if (this.playerPumps === 10) {
+    //   this.car50.anims.play("car-inflate-50%", true);
+    // }
+    // if (this.playerPumps === 15) {
+    //   this.car75.anims.play("car-inflate-75%", true);
+    // }
+    // if (this.playerPumps === 20) {
+    //   this.car100.anims.play("car-inflate-100%", true);
+    // }
   }
   setText() {
     this.startText = this.add.text(360, 300, "");
