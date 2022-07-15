@@ -20,8 +20,20 @@ export default class Emeowgency extends Phaser.Scene {
     this.catSafe = false;
     this.shadowScale = 0;
     this.shadowTimer = 0;
+    this.safeScale = 0;
+    this.safeTimer = 0;
+    this.failScale = 0;
+    this.failTimer = 0;
+    this.createImage = false;
+    this.failScaleToggle = false;
+    this.safeScaleToggle = false;
     this.cat;
+    this.blanket;
     this.shadow;
+    this.up;
+    this.down;
+    this.left;
+    this.right;
   }
   preload() {
     this.load.image(
@@ -58,53 +70,38 @@ export default class Emeowgency extends Phaser.Scene {
   }
 
   create() {
-    // this.setText();
     this.catch = this.add.image(490, 360, "catch");
     this.timer = 1;
     this.catch.setScale(0);
     this.createAnimations();
+    this.up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+    this.left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+    this.down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+    this.right = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.RIGHT
+    );
   }
 
   update() {
+    this.playSafe();
+    this.playFail();
     this.scaleCatch();
-    console.log("timer", this.timer);
+
     if (this.shadow) {
       this.scaleShadow();
     }
     if (this.cat) {
-      console.log("hieght", this.cat.y);
-
       this.playanimations();
-
       if (this.cat.y !== this.shadow.y) {
         this.cat.y += 4;
       }
     }
-  }
-  gameStart() {
-    this.grass = this.add.image(490, 360, "grass").setDepth(-10);
-    this.spawnShadow();
-    this.spawnCat();
-    this.spawnBlanket();
-  }
-  getRandomInt(max) {
-    return Math.floor(Math.random() * max);
-  }
-  getRandomPosition() {
-    const position = {
-      x: Math.floor(Phaser.Math.Between(100, 900)),
-      y: Math.floor(Phaser.Math.Between(100, 700)),
-    };
-    return position;
-  }
-  spawnShadow() {
-    const position = this.getRandomPosition();
-    // this.cat = new Cat(this, position.x, position.y);
-    this.shadow = this.physics.add
-      .sprite(position.x, position.y, "yang")
-      .setDepth(-8);
+    if (this.blanket) {
+      this.moveBlanket();
+    }
   }
 
+  //Catch!, the image in the beggining
   scaleCatch() {
     if (this.catchScale <= 1) {
       this.timer++;
@@ -115,6 +112,130 @@ export default class Emeowgency extends Phaser.Scene {
       this.gameStart();
       this.timer = 0;
       this.catfalling = true;
+    }
+  }
+
+  //starts the game after Catch! finnishes popping up
+  gameStart() {
+    this.grass = this.add.image(540, 360, "grass").setDepth(-10);
+    this.spawnShadow();
+    this.spawnCat();
+    this.spawnBlanket();
+  }
+  //makes a random x and y coordiante
+  getRandomPosition() {
+    const position = {
+      x: Math.floor(Phaser.Math.Between(100, 900)),
+      y: Math.floor(Phaser.Math.Between(100, 700)),
+    };
+    return position;
+  }
+  //spawns the shadow at a random location on the screen
+  spawnShadow() {
+    const position = this.getRandomPosition();
+    this.shadow = this.physics.add
+      .sprite(position.x, position.y, "yang")
+      .setDepth(-8);
+  }
+
+  spawnBlanket() {
+    this.blanket = this.physics.add
+      .image(480, 360, "Blanket")
+      .setScale(0.4)
+      .setDepth(-10);
+    this.physics.add.overlap(this.blanket, this.shadow, () => {
+      this.catSafe = true;
+    });
+  }
+  //spawns the cat above the Shadow based on how long shadow takes to get big
+  spawnCat() {
+    this.cat = this.physics.add
+      .sprite(this.shadow.x, this.shadow.y - 83 * 4, "yang")
+      .setDepth(-7);
+  }
+  //scales the shadow up to 1 , also determines the end of the game
+  scaleShadow() {
+    if (this.shadowScale <= 1) {
+      this.shadowTimer++;
+      this.shadowScale += 0.2 / this.shadowTimer;
+      this.shadow.setScale(this.shadowScale);
+    }
+    if (this.shadowTimer === 83) {
+      this.shadowTimer = 0;
+
+      if (this.catSafe === true) {
+        this.safeScaleToggle = true;
+        this.catFall = false;
+      }
+      if (this.catSafe === false) {
+        this.catFail = true;
+        this.catFall = false;
+        this.failScaleToggle = true;
+      }
+    }
+  }
+
+  playanimations() {
+    if (this.catSafe === true) {
+      this.cat.anims.play("safe", true);
+      return;
+    }
+    if (this.catFall === true) {
+      this.cat.anims.play("fall", true);
+      return;
+    }
+    if (this.catFail === true) {
+      this.cat.anims.play("fail", true);
+      return;
+    }
+  }
+  //moves the blanket with arrow keys
+  moveBlanket() {
+    if (this.up.isDown) {
+      this.blanket.y -= 5;
+    }
+    if (this.down.isDown) {
+      this.blanket.y += 5;
+    }
+    if (this.left.isDown) {
+      this.blanket.x -= 5;
+    }
+    if (this.right.isDown) {
+      this.blanket.x += 5;
+    }
+  }
+  //creates the image for safe! on cene and scales it up gradually
+
+  playSafe() {
+    if (this.safeScaleToggle === true) {
+      if (this.createImage === false) {
+        this.safe = this.add.image(540, 360, "safe").setDepth(100);
+      }
+      if (this.safeScale <= 1) {
+        this.safeTimer++;
+        this.safeScale += 0.2 / this.safeTimer;
+        this.safe.setScale(this.safeScale);
+      }
+      if (this.safeTimer === 83) {
+        this.safeTimer = 0;
+      }
+    }
+  }
+  //creates the image for fail on cene and scales it up gradually
+  playFail() {
+    if (this.failScaleToggle === true) {
+      if (this.createImage === false) {
+        this.fail = this.add.image(540, 360, "fail").setDepth(100);
+        this.createImage = true;
+      }
+      if (this.failScale <= 1) {
+        this.failTimer++;
+        this.failScale += 0.2 / this.failTimer;
+        this.fail.setScale(this.failScale);
+      }
+      if (this.failTimer === 83) {
+        this.failTimer = 0;
+      }
     }
   }
   createAnimations() {
@@ -162,38 +283,5 @@ export default class Emeowgency extends Phaser.Scene {
       frameRate: 1,
       repeat: -1,
     });
-  }
-
-  spawnBlanket() {
-    this.blanket = this.physics.add.image(480, 360, "Blanket").setScale(0.4);
-  }
-
-  scaleShadow() {
-    if (this.shadowScale <= 1) {
-      this.shadowTimer++;
-      this.shadowScale += 0.2 / this.shadowTimer;
-      this.shadow.setScale(this.shadowScale);
-    } else if (this.shadowTimer === 83) {
-      this.shadowTimer = 0;
-    }
-  }
-  spawnCat() {
-    this.cat = this.physics.add
-      .sprite(this.shadow.x, this.shadow.y - 83 * 4, "yang")
-      .setDepth(-7);
-  }
-  playanimations() {
-    if (this.catSafe === true) {
-      this.cat.anims.play("safe", true);
-      return;
-    }
-    if (this.catFall === true) {
-      this.cat.anims.play("fall", true);
-      return;
-    }
-    if (this.catFail === true) {
-      this.cat.anims.play("fail", true);
-      return;
-    }
   }
 }
