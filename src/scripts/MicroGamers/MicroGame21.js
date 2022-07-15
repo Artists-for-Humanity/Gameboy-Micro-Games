@@ -82,8 +82,6 @@ export default class MicroGame21 extends Phaser.Scene {
         this.Down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
         this.Up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
 
-
-
         this.lightRed = this.add.sprite(408, 334, 'lightRed');
         this.lightYellow = this.add.sprite(678, 334, 'lightYellow');
         this.lightPurple = this.add.sprite(408, 522, 'lightPurple');
@@ -96,7 +94,7 @@ export default class MicroGame21 extends Phaser.Scene {
         this.darkBlue = this.add.sprite(678, 522, 'darkBlue');
         this.darkColorButtons = [this.darkRed, this.darkYellow, this.darkPurple, this.darkBlue]; //put darkColorButtons into an array
 
-        for (var i = 0; i < this.lightColorButtons.length; i++) {
+        for (var i = 0; i < this.lightColorButtons.length; i++) { //scale buttons
             this.lightColorButtons[i].setScale(1.8);
             this.darkColorButtons[i].setScale(1.8);
         }
@@ -107,7 +105,6 @@ export default class MicroGame21 extends Phaser.Scene {
         this.g3 = this.add.sprite(610.5, 160, '');
         this.g4 = this.add.sprite(745.5, 160, '');
         this.guessBlocks = [this.g1, this.g2, this.g3, this.g4]; //initialize guessBlocks into an array
-
         this.hideGuessBlocks();
 
         for (var i = 0; i < 4; i++) { //create pattern
@@ -118,20 +115,18 @@ export default class MicroGame21 extends Phaser.Scene {
 
     update(time, delta) {
         if (this.door1.alpha < 1) {
-            console.log('reachme 00')
-            this.time.delayedCall(600, () => {
+            this.time.delayedCall(600, () => { //door fade in after 600ms
                 this.door1.alpha += 0.006;
-            }, [], this); //door fade in after 600ms
+            }, [], this);
         }
-
-        if (!this.started) this.startTimer += delta; //only use startTimer if game not started
+        if (!this.started) this.startTimer += delta; //this.started prevents startGame from running > 1 time
         if (this.startTimer >= 4500 && !this.started) { //start game after 4.5 seconds
             this.startGame();
             this.gameState = true;
-            this.started = true; //prevents startGame from running again
+            this.started = true;
         }
-        if (this.interactive && this.gameState === true) { //only runs when interactive mode is turned on AND gameState is TRUE (game will stop after gameState is set back to FALSE)
-            this.myText.alpha -= 0.0166; //fade text out
+        if (this.interactive && this.gameState === true) { //only runs when interactive mode is turned on AND gameState is TRUE
+            this.myText.alpha -= 0.0166; //fade memorizeText out
             this.userInput();
         }
     }
@@ -159,8 +154,8 @@ export default class MicroGame21 extends Phaser.Scene {
         this.showBoard();
         this.time.delayedCall(2000, this.flashPattern, [], this); //flash pattern 2 second after board appears
         this.time.delayedCall(this.pattern.length * 500 + 2500, () => {
-            this.interactive = true
-        }, [], this); //starts interactive part of the game 4.5 seconds after board appear (4 * 500 + 2500 = 4500ms)
+            this.interactive = true //turns on interaction 4.5 seconds after board appear (4 * 500 + 2500 = 4500ms)
+        }, [], this); 
     }
 
     showMemorizeText() {
@@ -172,6 +167,17 @@ export default class MicroGame21 extends Phaser.Scene {
         });
         this.myText.setText('Memorize the pattern!');
         this.myText.alpha = 1;
+    }
+
+    showWinText() {
+        this.winText = this.add.text(180, 260, 'YOU WON!');
+        this.winText.setStyle({
+            fontSize: '160px',
+            fill: '#00ff00',
+            align: 'center',
+            stroke: '#808080',
+            strokeThickness: 8
+        });
     }
 
     showLossText() {
@@ -214,7 +220,7 @@ export default class MicroGame21 extends Phaser.Scene {
 
     flashPattern() {
         for (var i = 0; i < this.pattern.length; i++) {
-            this.time.delayedCall(i * 500, this.flash, [this.pattern[i], 300], this); //500 ms between flashes and 300ms flash durations
+            this.time.delayedCall(i * 500, this.flash, [this.pattern[i], 300], this); //500ms between flashes and 300ms flash durations
         }
     }
 
@@ -258,26 +264,26 @@ export default class MicroGame21 extends Phaser.Scene {
         this.guessNum++;
     }
 
-    checkWL() {
-        if (JSON.stringify(this.guesses[this.guessNum]) != JSON.stringify(this.pattern[this.guessNum])) { // loss condition
+    checkWL() { //check win loss
+        if (JSON.stringify(this.guesses[this.guessNum]) != JSON.stringify(this.pattern[this.guessNum])) { //loss
             this.showLossText();
             this.gameState = false;
         }
-        if (JSON.stringify(this.guesses) == JSON.stringify(this.pattern)) { // win condition
+        if (JSON.stringify(this.guesses) == JSON.stringify(this.pattern)) { //win
             this.time.delayedCall(1500, this.win, [], this);
             this.gameState = false;
         }
     }
 
 
-    showGuess(num) {
+    showGuess(num) { //uses index of each color to show each guess
         var key;
         if (num === 0) key = 'lightRed';
         if (num === 1) key = 'lightYellow';
         if (num === 2) key = 'lightPurple';
         if (num === 3) key = 'lightBlue';
         this.guessBlocks[this.guessNum].setTexture(key);
-        this.guessBlocks[this.guessNum].visible = true; //sets guessBlock to the color that lines up with the number guessed and turns that specific block visible
+        this.guessBlocks[this.guessNum].visible = true; 
     }
 
     win() { //hides UI then opens door after 1 second
@@ -299,16 +305,5 @@ export default class MicroGame21 extends Phaser.Scene {
             this.door5.visible = true;
         }, [], this);
         this.time.delayedCall(1000, this.showWinText, [], this);
-    }
-
-    showWinText() {
-        this.winText = this.add.text(180, 260, 'YOU WON!');
-        this.winText.setStyle({
-            fontSize: '160px',
-            fill: '#00ff00',
-            align: 'center',
-            stroke: '#808080',
-            strokeThickness: 8
-        });
     }
 }
