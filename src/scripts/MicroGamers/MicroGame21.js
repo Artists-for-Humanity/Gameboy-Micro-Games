@@ -25,7 +25,7 @@ export default class MicroGame21 extends Phaser.Scene {
         this.darkRed, this.darkYellow, this.darkPurple, this.darkBlue;
         this.darkColorButtons = [];
         this.pattern = [];
-  
+
         this.g1, this.g2, this.g3, this.g4;
         this.guessBlocks = [];
         this.guesses = [];
@@ -33,32 +33,56 @@ export default class MicroGame21 extends Phaser.Scene {
 
         this.cursors;
         this.interactive = false;
-        this.selectAvailable = false;
-        this.selectTimer = 0;
+
+        this.Left;
+        this.Right;
+        this.Down;
+        this.Up;
     }
 
     preload() {
-        this.load.image('brickWall', new URL('assets21/brickWall.png', import.meta.url).href);
-        this.load.image('concrete', new URL('assets21/concrete.png', import.meta.url).href);
-        this.load.image('door1', new URL('assets21/door1.png', import.meta.url).href);
-        this.load.image('door2', new URL('assets21/door2.png', import.meta.url).href);
-        this.load.image('door3', new URL('assets21/door3.png', import.meta.url).href);
-        this.load.image('door4', new URL('assets21/door4.png', import.meta.url).href);
-        this.load.image('door5', new URL('assets21/door5.png', import.meta.url).href);
-        this.load.image('box', new URL('assets21/box.png', import.meta.url).href);
-        this.load.image('lightRed', new URL('assets21/lightRed.png', import.meta.url).href);
-        this.load.image('lightYellow', new URL('assets21/lightYellow.png', import.meta.url).href);
-        this.load.image('lightPurple', new URL('assets21/lightPurple.png', import.meta.url).href);
-        this.load.image('lightBlue', new URL('assets21/lightBlue.png', import.meta.url).href);
-        this.load.image('darkRed', new URL('assets21/darkRed.png', import.meta.url).href);
-        this.load.image('darkYellow', new URL('assets21/darkYellow.png', import.meta.url).href);
-        this.load.image('darkPurple', new URL('assets21/darkPurple.png', import.meta.url).href);
-        this.load.image('darkBlue', new URL('assets21/darkBlue.png', import.meta.url).href);
+        this.load.image('brickWall', new URL('assets21/brickWall.png',
+            import.meta.url).href);
+        this.load.image('concrete', new URL('assets21/concrete.png',
+            import.meta.url).href);
+        this.load.image('door1', new URL('assets21/door1.png',
+            import.meta.url).href);
+        this.load.image('door2', new URL('assets21/door2.png',
+            import.meta.url).href);
+        this.load.image('door3', new URL('assets21/door3.png',
+            import.meta.url).href);
+        this.load.image('door4', new URL('assets21/door4.png',
+            import.meta.url).href);
+        this.load.image('door5', new URL('assets21/door5.png',
+            import.meta.url).href);
+        this.load.image('box', new URL('assets21/box.png',
+            import.meta.url).href);
+        this.load.image('lightRed', new URL('assets21/lightRed.png',
+            import.meta.url).href);
+        this.load.image('lightYellow', new URL('assets21/lightYellow.png',
+            import.meta.url).href);
+        this.load.image('lightPurple', new URL('assets21/lightPurple.png',
+            import.meta.url).href);
+        this.load.image('lightBlue', new URL('assets21/lightBlue.png',
+            import.meta.url).href);
+        this.load.image('darkRed', new URL('assets21/darkRed.png',
+            import.meta.url).href);
+        this.load.image('darkYellow', new URL('assets21/darkYellow.png',
+            import.meta.url).href);
+        this.load.image('darkPurple', new URL('assets21/darkPurple.png',
+            import.meta.url).href);
+        this.load.image('darkBlue', new URL('assets21/darkBlue.png',
+            import.meta.url).href);
     }
 
     create() {
         this.drawUI();
-        this.cursors = this.input.keyboard.createCursorKeys(); //add keyboard input
+        this.Left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        this.Right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        this.Down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        this.Up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+
+
 
         this.lightRed = this.add.sprite(408, 334, 'lightRed');
         this.lightYellow = this.add.sprite(678, 334, 'lightYellow');
@@ -72,7 +96,7 @@ export default class MicroGame21 extends Phaser.Scene {
         this.darkBlue = this.add.sprite(678, 522, 'darkBlue');
         this.darkColorButtons = [this.darkRed, this.darkYellow, this.darkPurple, this.darkBlue]; //put darkColorButtons into an array
 
-        for (var i = 0; i < this.lightColorButtons.length; i++) { //set board invisible when game starts
+        for (var i = 0; i < this.lightColorButtons.length; i++) {
             this.lightColorButtons[i].setScale(1.8);
             this.darkColorButtons[i].setScale(1.8);
         }
@@ -84,9 +108,7 @@ export default class MicroGame21 extends Phaser.Scene {
         this.g4 = this.add.sprite(745.5, 160, '');
         this.guessBlocks = [this.g1, this.g2, this.g3, this.g4]; //initialize guessBlocks into an array
 
-        for (var i = 0; i < this.guessBlocks.length; i++) { //turn guessBlocks invisible
-            this.guessBlocks[i].visible = false;
-        }
+        this.hideGuessBlocks();
 
         for (var i = 0; i < 4; i++) { //create pattern
             this.pattern.push(this.getRandomInt(4));
@@ -95,7 +117,13 @@ export default class MicroGame21 extends Phaser.Scene {
     }
 
     update(time, delta) {
-        this.time.delayedCall(600, () => {this.door1.alpha += 0.006;}, [], this); //door fade in after 600ms
+        if (this.door1.alpha < 1) {
+            console.log('reachme 00')
+            this.time.delayedCall(600, () => {
+                this.door1.alpha += 0.006;
+            }, [], this); //door fade in after 600ms
+        }
+
         if (!this.started) this.startTimer += delta; //only use startTimer if game not started
         if (this.startTimer >= 4500 && !this.started) { //start game after 4.5 seconds
             this.startGame();
@@ -104,8 +132,6 @@ export default class MicroGame21 extends Phaser.Scene {
         }
         if (this.interactive && this.gameState === true) { //only runs when interactive mode is turned on AND gameState is TRUE (game will stop after gameState is set back to FALSE)
             this.myText.alpha -= 0.0166; //fade text out
-            this.selectTimer += delta; //timers used to prevent double clicks
-            if (this.selectTimer >= 150) this.selectAvailable = true; //only allows for selection every 150ms
             this.userInput();
         }
     }
@@ -132,7 +158,9 @@ export default class MicroGame21 extends Phaser.Scene {
         this.showMemorizeText();
         this.showBoard();
         this.time.delayedCall(2000, this.flashPattern, [], this); //flash pattern 2 second after board appears
-        this.time.delayedCall(this.pattern.length * 500 + 2500, () => {this.interactive = true}, [], this); //starts interactive part of the game 4.5 seconds after board appear (4 * 500 + 2500 = 4500ms)
+        this.time.delayedCall(this.pattern.length * 500 + 2500, () => {
+            this.interactive = true
+        }, [], this); //starts interactive part of the game 4.5 seconds after board appear (4 * 500 + 2500 = 4500ms)
     }
 
     showMemorizeText() {
@@ -204,20 +232,20 @@ export default class MicroGame21 extends Phaser.Scene {
         return Math.floor(Math.random() * max);
     }
 
-    userInput(){
-        if (this.selectAvailable && this.cursors.up.isDown && this.guesses.length <= 3) { 
+    userInput() {
+        if (Phaser.Input.Keyboard.JustDown(this.Up)) {
             this.flash(0, 200); //200ms flash duration
             this.guesses.push(0);
             this.guess();
-        } else if (this.selectAvailable && this.cursors.right.isDown) {
+        } else if (Phaser.Input.Keyboard.JustDown(this.Right)) {
             this.flash(1, 200);
             this.guesses.push(1);
             this.guess();
-        } else if (this.selectAvailable && this.cursors.down.isDown) {
+        } else if (Phaser.Input.Keyboard.JustDown(this.Down)) {
             this.flash(2, 200);
             this.guesses.push(2);
             this.guess();
-        } else if (this.selectAvailable && this.cursors.left.isDown) {
+        } else if (Phaser.Input.Keyboard.JustDown(this.Left)) {
             this.flash(3, 200);
             this.guesses.push(3);
             this.guess();
@@ -228,8 +256,6 @@ export default class MicroGame21 extends Phaser.Scene {
         this.showGuess(this.guesses[this.guessNum]);
         this.checkWL();
         this.guessNum++;
-        this.selectTimer = 0;
-        this.selectAvailable = false;
     }
 
     checkWL() {
@@ -242,6 +268,7 @@ export default class MicroGame21 extends Phaser.Scene {
             this.gameState = false;
         }
     }
+
 
     showGuess(num) {
         var key;
@@ -259,12 +286,18 @@ export default class MicroGame21 extends Phaser.Scene {
         this.hideGuessBlocks();
         this.time.delayedCall(1000, this.openDoor, [], this);
     }
-    
+
     openDoor() {
         this.door2.visible = true;
-        this.time.delayedCall(200, () => {this.door3.visible = true;}, [], this);
-        this.time.delayedCall(400, () => {this.door4.visible = true;}, [], this);
-        this.time.delayedCall(600, () => {this.door5.visible = true;}, [], this);
+        this.time.delayedCall(200, () => {
+            this.door3.visible = true;
+        }, [], this);
+        this.time.delayedCall(400, () => {
+            this.door4.visible = true;
+        }, [], this);
+        this.time.delayedCall(600, () => {
+            this.door5.visible = true;
+        }, [], this);
         this.time.delayedCall(1000, this.showWinText, [], this);
     }
 
@@ -272,7 +305,7 @@ export default class MicroGame21 extends Phaser.Scene {
         this.winText = this.add.text(180, 260, 'YOU WON!');
         this.winText.setStyle({
             fontSize: '160px',
-            fill: '#ff0000',
+            fill: '#00ff00',
             align: 'center',
             stroke: '#808080',
             strokeThickness: 8
