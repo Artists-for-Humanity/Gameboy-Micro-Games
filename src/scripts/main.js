@@ -25,7 +25,7 @@ const config = {
   },
   scene: [Emeowgency],
   audio: {
-    disableWebAudio: true,
+    disableWebAudio: false,
   },
   plugins: {
     global: [

@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 
 export default class Emeowgency extends Phaser.Scene {
+
   // Game Class Constructor
   constructor() {
     super({
@@ -9,7 +10,8 @@ export default class Emeowgency extends Phaser.Scene {
       key: "Emeowgency",
     });
     this.gamestart = false;
-    // Game Object Decla
+
+    // Game Object Declaration
     this.timer;
     this.catchScale = 0;
     this.catch;
@@ -35,42 +37,48 @@ export default class Emeowgency extends Phaser.Scene {
     this.left;
     this.right;
   }
+
   preload() {
     this.load.image(
       "catch",
-      new URL("../8Bitties/assets/Catch_Text.png", import.meta.url).href
+      new URL("../8Bitties/assets/Catch_Text.png",
+        import.meta.url).href
     );
     this.load.image(
       "fail",
-      new URL("../8Bitties/assets/fail_text.png", import.meta.url).href
+      new URL("../8Bitties/assets/fail_text.png",
+        import.meta.url).href
     );
     this.load.image(
       "safe",
-      new URL("../8Bitties/assets/safe_text.png", import.meta.url).href
+      new URL("../8Bitties/assets/safe_text.png",
+        import.meta.url).href
     );
     this.load.image(
       "Blanket",
-      new URL("../8Bitties/assets/blanket.png", import.meta.url).href
+      new URL("../8Bitties/assets/blanket.png",
+        import.meta.url).href
     );
     this.load.image(
       "grass",
-      new URL("../8Bitties/assets/grass_bg.png", import.meta.url).href
+      new URL("../8Bitties/assets/grass_bg.png",
+        import.meta.url).href
     );
     this.load.spritesheet(
       "yang",
       new URL(
         "../8Bitties/assets/animations/yangSpriteSheet.png",
         import.meta.url
-      ).href,
-      {
-        frameWidth: 86.8,
-        frameHeight: 58,
-      }
+      ).href, {
+      frameWidth: 86.8,
+      frameHeight: 58,
+    }
     );
   }
 
   create() {
-    this.catch = this.add.image(490, 360, "catch");
+    this.grass = this.add.image(540, 360, "grass").setDepth(-10);
+    this.catch = this.add.image(540, 360, "catch");
     this.timer = 1;
     this.catch.setScale(0);
     this.createAnimations();
@@ -117,11 +125,11 @@ export default class Emeowgency extends Phaser.Scene {
 
   //starts the game after Catch! finnishes popping up
   gameStart() {
-    this.grass = this.add.image(540, 360, "grass").setDepth(-10);
     this.spawnShadow();
     this.spawnCat();
     this.spawnBlanket();
   }
+
   //makes a random x and y coordiante
   getRandomPosition() {
     const position = {
@@ -130,12 +138,14 @@ export default class Emeowgency extends Phaser.Scene {
     };
     return position;
   }
+
   //spawns the shadow at a random location on the screen
   spawnShadow() {
     const position = this.getRandomPosition();
     this.shadow = this.physics.add
       .sprite(position.x, position.y, "yang")
       .setDepth(-8);
+    this.shadow.alpha = .5;
   }
 
   spawnBlanket() {
@@ -147,12 +157,14 @@ export default class Emeowgency extends Phaser.Scene {
       this.catSafe = true;
     });
   }
+
   //spawns the cat above the Shadow based on how long shadow takes to get big
   spawnCat() {
     this.cat = this.physics.add
       .sprite(this.shadow.x, this.shadow.y - 83 * 4, "yang")
       .setDepth(-7);
   }
+
   //scales the shadow up to 1 , also determines the end of the game
   scaleShadow() {
     if (this.shadowScale <= 1) {
@@ -189,6 +201,8 @@ export default class Emeowgency extends Phaser.Scene {
       return;
     }
   }
+
+
   //moves the blanket with arrow keys
   moveBlanket() {
     if (this.up.isDown) {
@@ -204,12 +218,15 @@ export default class Emeowgency extends Phaser.Scene {
       this.blanket.x += 5;
     }
   }
-  //creates the image for safe! on cene and scales it up gradually
 
+  //creates the image for safe! on cene and scales it up gradually
   playSafe() {
     if (this.safeScaleToggle === true) {
       if (this.createImage === false) {
         this.safe = this.add.image(540, 360, "safe").setDepth(100);
+        this.createImage = true;
+        console.log('reachme 00')
+
       }
       if (this.safeScale <= 1) {
         this.safeTimer++;
@@ -221,6 +238,7 @@ export default class Emeowgency extends Phaser.Scene {
       }
     }
   }
+
   //creates the image for fail on cene and scales it up gradually
   playFail() {
     if (this.failScaleToggle === true) {
@@ -238,48 +256,41 @@ export default class Emeowgency extends Phaser.Scene {
       }
     }
   }
+
   createAnimations() {
     this.anims.create({
       key: "shadow",
-      frames: [
-        {
-          key: "yang",
-          frame: 0,
-        },
-      ],
+      frames: [{
+        key: "yang",
+        frame: 0,
+      },],
       frameRate: 1,
       repeat: -1,
     });
     this.anims.create({
       key: "safe",
-      frames: [
-        {
-          key: "yang",
-          frame: 3,
-        },
-      ],
+      frames: [{
+        key: "yang",
+        frame: 3,
+      },],
       frameRate: 1,
       repeat: -1,
     });
     this.anims.create({
       key: "fail",
-      frames: [
-        {
-          key: "yang",
-          frame: 2,
-        },
-      ],
+      frames: [{
+        key: "yang",
+        frame: 2,
+      },],
       frameRate: 1,
       repeat: -1,
     });
     this.anims.create({
       key: "fall",
-      frames: [
-        {
-          key: "yang",
-          frame: 1,
-        },
-      ],
+      frames: [{
+        key: "yang",
+        frame: 1,
+      },],
       frameRate: 1,
       repeat: -1,
     });
