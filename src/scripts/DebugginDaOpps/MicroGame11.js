@@ -21,6 +21,8 @@ export default class MicroGame11 extends Phaser.Scene {
     this.playerPumps = 0;
     this.clickAvailable = true;
     this.clickTimer = 0;
+    this.downWasPressed = false;
+    this.upWasPressed = true;
   }
 
   preload() {
@@ -44,34 +46,41 @@ export default class MicroGame11 extends Phaser.Scene {
     this.load.spritesheet(
       "car25",
       new URL("./assets/25car_spritesheet.png", import.meta.url).href,
-      { frameWidth: 980, frameHeight: 720 }
+      { frameWidth: 1080, frameHeight: 720 }
     );
 
     this.load.spritesheet(
       "car50",
       new URL("./assets/50car_spritesheet.png", import.meta.url).href,
-      { frameWidth: 980, frameHeight: 720 }
+      { frameWidth: 1080, frameHeight: 720 }
     );
 
     this.load.spritesheet(
       "car75",
       new URL("./assets/75car_spritesheet.png", import.meta.url).href,
-      { frameWidth: 980, frameHeight: 720 }
+      { frameWidth: 1080, frameHeight: 720 }
     );
 
     this.load.spritesheet(
       "car100",
       new URL("./assets/100car_spritesheet.png", import.meta.url).href,
-      { frameWidth: 980, frameHeight: 720 }
+      { frameWidth: 1080, frameHeight: 720 }
     );
   }
 
   create() {
-    this.add.image(980 / 2, 720 / 2, "background");
-    this.add.image(980 / 2, 720 / 2, "pumpgame_bg");
-    // this.add.image(980 / 2, 720 / 2, "temp_car_bg");
-    this.lever = this.physics.add.sprite(900, 480, "lever");
-    this.car25 = this.physics.add.sprite(980 / 2, 355, "car25");
+    this.add.image(1080 / 2, 720 / 2, "background");
+    this.add.image(1080 / 2, 720 / 2, "pumpgame_bg");
+    // this.add.image(1080 / 2, 720 / 2, "temp_car_bg");
+    this.lever = this.physics.add.sprite(955, 480, "lever");
+    this.car25 = this.physics.add.sprite(540, 350, "car25");
+    this.car50 = this.physics.add.sprite(540, 350, "car50");
+    this.car75 = this.physics.add.sprite(540, 350, "car75");
+    this.car100 = this.physics.add.sprite(540, 350, "car100");
+
+    this.car50.visible = false;
+    this.car75.visible = false;
+    this.car100.visible = false;
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -194,9 +203,17 @@ export default class MicroGame11 extends Phaser.Scene {
       this.clickTimer += delta;
       this.timerCountdown(time);
       if (this.clickTimer > 100) this.clickAvailable = true;
-      if (this.cursors.up.isDown) {
+      if (this.cursors.up.isDown && this.downWasPressed) {
+        this.downWasPressed = false;
+        this.upWasPressed = true;
         this.lever.anims.play("lever-up", true);
-      } else if (this.cursors.down.isDown && this.clickAvailable) {
+      } else if (
+        this.cursors.down.isDown &&
+        this.clickAvailable &&
+        this.upWasPressed
+      ) {
+        this.downWasPressed = true;
+        this.upWasPressed = false;
         this.time.delayedCall(100, this.updatePump, [], this);
         this.clickAvailable = false;
         this.clickTimer = 0;
@@ -205,8 +222,7 @@ export default class MicroGame11 extends Phaser.Scene {
   }
 
   timerCountdown(time) {
-    console.log(this.car25);
-    if (time / 1000 > 3 && this.playerPumps < this.pumpToWin) {
+    if (time / 1000 > 8 && this.playerPumps < this.pumpToWin) {
       this.gameState = false;
       this.endText = this.add.text(300, 360, "You lose!");
       this.endText.setStyle({
@@ -231,19 +247,25 @@ export default class MicroGame11 extends Phaser.Scene {
     this.playerPumps += 1;
 
     this.lever.anims.play("lever-down", true);
-    this.car25.anims.play("car-inflate-25%", true);
-    // if (this.playerPumps === 5) {
-    //   this.car25.anims.play("car-inflate-25%", true);
-    // }
-    // if (this.playerPumps === 10) {
-    //   this.car50.anims.play("car-inflate-50%", true);
-    // }
-    // if (this.playerPumps === 15) {
-    //   this.car75.anims.play("car-inflate-75%", true);
-    // }
-    // if (this.playerPumps === 20) {
-    //   this.car100.anims.play("car-inflate-100%", true);
-    // }
+    if (this.playerPumps === 5) {
+      this.car25.visible = true;
+      this.car25.anims.play("car-inflate-25%", true);
+    }
+    if (this.playerPumps === 10) {
+      this.car50.visible = true;
+      this.car50.anims.play("car-inflate-50%", true);
+      this.car25.visible = false;
+    }
+    if (this.playerPumps === 15) {
+      this.car75.visible = true;
+      this.car75.anims.play("car-inflate-75%", true);
+      this.car50.visible = false;
+    }
+    if (this.playerPumps === 20) {
+      this.car100.visible = true;
+      this.car100.anims.play("car-inflate-100%", true);
+      this.car75.visible = false;
+    }
   }
   setText() {
     this.startText = this.add.text(360, 300, "");
