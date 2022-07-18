@@ -1,34 +1,52 @@
-export default class MicroGame01 extends Phaser.Scene {
-    // Game Class Constructor
-    constructor() {
-        super({
-            active: false,
-            visible: false,
-            key: 'MicroGame11',
-        });
+export default class MicroGame11 extends Phaser.Scene {
+  // Game Class Constructor
+  constructor() {
+    super({
+      active: false,
+      visible: false,
+      key: "MicroGame11",
+    });
 
-        // Game Object Declarations
-        this.myText;
+    // Game Object Declarations
+    this.eventScreen;
+    this.startText;
+    this.timedEvent;
+  }
 
-    }
+  preload() {
+    this.load.image(
+      "background",
+      new URL("./assets/background.png", import.meta.url).href
+    );
+    this.load.image(
+      "full-tire",
+      new URL("./assets/car.png", import.meta.url).href
+    );
+    this.load.image("car", new URL("./assets/car.png", import.meta.url).href);
+  }
 
-    preload() {
-    }
+  create() {
+    this.add.image(540, 360, "background");
+    this.setText();
+    // timer = game.time.create(false);
 
-    create() {
-        this.setText();
-    }
+    this.timedEvent = this.time.delayedCall(3000, this.onEvent, [], this);
+  }
 
-    update() {
-    }
+  update() {}
 
-    setText() {
-        this.myText = this.add.text(125, 360, '')
-        this.myText.setStyle({
-            fontSize: '100px',
-            fill: '#000000',
-            align: 'center',
-        });
-        this.myText.setText('DebugginDaOpps');
-    }
+  setText() {
+    this.startText = this.add.text(360, 300, "");
+    this.startText.setStyle({
+      fontSize: "100px",
+      fill: "#000000",
+      align: "center",
+    });
+    this.startText.setText("PUMP!");
+    console.log("hello");
+  }
+
+  onEvent() {
+    this.startText.visible = false;
+  }
 }
