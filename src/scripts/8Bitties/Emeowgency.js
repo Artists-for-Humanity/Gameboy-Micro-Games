@@ -225,7 +225,6 @@ export default class Emeowgency extends Phaser.Scene {
       if (this.createImage === false) {
         this.safe = this.add.image(540, 360, "safe").setDepth(100);
         this.createImage = true;
-        console.log('reachme 00')
 
       }
       if (this.safeScale <= 1) {
