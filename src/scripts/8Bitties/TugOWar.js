@@ -8,91 +8,113 @@ export default class TugOWar extends Phaser.Scene {
     });
     this.gamestart = false;
     // Game Object Decla
-    this.timer;
-    this.catchScale = 0;
-    this.catch;
-    this.grass;
+    this.pullTimer = 0;
+    this.pullScale = 0;
+    this.pull;
+    this.mud;
+    this.progressBar;
+    this.dash;
+    this.player;
+    this.npcs;
+    this.rope;
+    this.meter;
+    this.dash;
+    this.greenzone;
+    this.gamestarted = false;
+    this.progNum = 0;
   }
   preload() {
     this.load.image(
-      "catch",
-      new URL("../8Bitties/assets/Catch_Text.png", import.meta.url).href
+      "background",
+      new URL("../8Bitties/assets/TugOWar/tugOwarBG.png", import.meta.url).href
     );
     this.load.image(
-      "fail",
-      new URL("../8Bitties/assets/fail_text.png", import.meta.url).href
-    );
-    this.load.image(
-      "safe",
-      new URL("../8Bitties/assets/safe_text.png", import.meta.url).href
-    );
-    this.load.image(
-      "shadow",
-      new URL("../8Bitties/assets/animations/shadow.png", import.meta.url).href
-    );
-    this.load.image(
-      "yang_fall",
-      new URL("../8Bitties/assets/animations/yang_fall.png", import.meta.url)
+      "pull",
+      new URL("../8Bitties/assets/TugOWar/imageholder.png", import.meta.url)
         .href
     );
     this.load.image(
-      "yang_safe",
-      new URL("../8Bitties/assets/animations/yang_safe.png", import.meta.url)
+      "mud",
+      new URL("../8Bitties/assets/TugOWar/imageholder.png", import.meta.url)
         .href
     );
     this.load.image(
-      "yang_falling",
-      new URL("../8Bitties/assets/animations/Yang_Falling.png", import.meta.url)
+      "player",
+      new URL("../8Bitties/assets/TugOWar/imageholder.png", import.meta.url)
         .href
     );
     this.load.image(
-      "Blanket",
-      new URL("../8Bitties/assets/blanket.png", import.meta.url).href
+      "npc",
+      new URL("../8Bitties/assets/TugOWar/imageholder.png", import.meta.url)
+        .href
     );
     this.load.image(
-      "grass",
-      new URL("../8Bitties/assets/grass_bg.png", import.meta.url).href
+      "rope",
+      new URL("../8Bitties/assets/TugOWar/ropeholder.png", import.meta.url).href
     );
   }
 
   create() {
-    // this.setText();
-    this.catch = this.add.image(490, 360, "catch");
-    this.timer = 1;
-    this.catch.setScale(0);
+    this.pull = this.add.image(540, 360, "pull").setDepth(1);
+    this.grass = this.add.image(540, 360, "background").setDepth(-10);
+    this.mud = this.add.sprite(540, 560, "mud").setDepth(-9);
+    this.progressBar = this.add.image(540, 75, "rope");
+    this.spacebar = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.SPACE
+    );
+
+    this.dash = this.physics.add.image(75, 540, "player");
+    this.greenzone = this.physics.add.image(75, 360, "player");
+    this.player = this.add.sprite(300, 560, "player");
+    this.npc = this.add.sprite(780, 560, "npc");
   }
 
   update() {
-    this.scaleCatch();
-  }
-  gameStart() {
-    this.grass = this.add.image(490, 360, "grass");
-  }
-  getRandomInt(max) {
-    return Math.floor(Math.random() * max);
-  }
-  getPosition() {
-    const Position = {
-      x: Math.floor(Phaser.Math.Between(100, 900)),
-      y: Math.floor(Phaser.Math.Between(100, 700)),
-    };
-  }
-  spawnCat() {
-    console.log("here");
+    console.log(this.progNum);
+    if (424 > this.dash.y > 296) {
+      this.moveProgress();
+    } else {
+      this.progressBar.x -= 1;
+      this.progNum -= 1;
+    }
+    this.scalePull();
+    this.startDashMovement();
   }
 
-  scaleCatch() {
-    console.log(this.catchScale);
-    if (this.catchScale <= 0.9) {
-      this.timer++;
-      console.log(this.timer);
-      this.catch.setScale(this.catchScale);
-      this.catchScale += 0.2 / this.timer;
-    } else if (this.timer === 137) {
-      this.catch.destroy();
+  scalePull() {
+    if (this.pullScale <= 1.5) {
+      this.pullTimer += 1;
+      this.pullScale += 0.3 / this.pullTimer;
+      this.pull.setScale(this.pullScale);
+    } else if (this.pullTimer === 83) {
+      this.pull.destroy();
       this.gameStart();
-      this.timer = 0;
-      console.log("hi");
+      this.pullTimer = 0;
     }
-  } //empty commit//
+  }
+  startDashMovement() {
+    if (this.dash && this.gamestarted) {
+      if (this.dash.y <= 552) {
+        this.dash.y += 2;
+      }
+      if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
+        this.dash.y -= 35;
+      }
+    }
+  }
+
+  gameStart() {
+    this.rope = this.add.sprite(540, 460, "rope");
+    this.meter = this.add.image(75, 360, "rope");
+    this.gamestarted = true;
+  }
+  moveProgress() {
+    if (this.progressBar.x < 690) {
+      this.progressBar.x += 2;
+      this.progNum += 2;
+    }
+    if (this.progNum >= 150) {
+      console.log("you: W");
+    }
+  }
 }
