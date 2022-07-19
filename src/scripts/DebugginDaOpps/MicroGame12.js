@@ -4,7 +4,7 @@ export default class MicroGame12 extends Phaser.Scene {
     super({
       active: false,
       visible: false,
-      key: MicroGame12,
+      key: "MicroGame12",
     });
 
     // Game Object Declarations
@@ -16,7 +16,7 @@ export default class MicroGame12 extends Phaser.Scene {
   preload() {
     this.load.image(
       "startScreen",
-      new URL("./assets1/startscreen.png", import.meta.url).href
+      new URL("./assets1/startScreen.png", import.meta.url).href
     );
     this.load.image(
       "trash-can",
@@ -45,6 +45,8 @@ export default class MicroGame12 extends Phaser.Scene {
   }
 
   create() {
+    this.add.image(760, 540, "recycle-bin").setScale(0.15, 0.15);
+    this.add.image(320, 540, "trash-can").setScale(0.15, 0.15);
     this.tempBg = this.add.image(1080 / 2, 720 / 2, "startScreen");
 
     this.cursors = this.input.keyboard.createCursorKeys();
