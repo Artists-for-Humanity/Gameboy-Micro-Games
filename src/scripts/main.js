@@ -24,9 +24,9 @@ const config = {
       debug: false,
     },
   },
-  scene: [MicroGame21],
+  scene: [ColorLab],
   audio: {
-    disableWebAudio: false,
+    disableWebAudio: true,
   },
   plugins: {
     global: [

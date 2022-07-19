@@ -1,4 +1,4 @@
-import WebFont from 'webfontloader';
+import WebFontFile from '../../scripts/WebFontFile'
 
 export default class ColorLab extends Phaser.Scene {
   // Game Class Constructor
@@ -41,6 +41,8 @@ export default class ColorLab extends Phaser.Scene {
     // this.player = this.physics.add.sprite(480, 600, 'player');
   }
   preload() {
+    this.load.addFile(new WebFontFile(this.load, 'Russo One'))
+
     this.load.image("empty beaker", new URL("../8Bitties/assets/colorlab/beakerempty.png",
       import.meta.url).href);
     this.load.image("green beaker", new URL("../8Bitties/assets/colorlab/beakergreen.png",
@@ -79,7 +81,6 @@ export default class ColorLab extends Phaser.Scene {
 
   create() {
     // this.setText();
-    console.log(this.prompts[Phaser.Math.Between(0, 2)]);
 
     this.background = this.add.image(540, 360, "background");
     this.gamestart = true;
@@ -99,58 +100,36 @@ export default class ColorLab extends Phaser.Scene {
     this.mix.body.setAllowGravity(false);
 
     this.promptText = this.add.text(490, 100, this.prompts[Phaser.Math.Between(0, 2)], {
-      fontFamily: 'Slackey',
+      fontFamily: 'Russo One',
       fontSize: '64px',
     }).setOrigin(.5);
 
-    console.log('reachme 00');
-
-
-    WebFont.load({
-      custom: {
-        families: ['Slackey'],
-      },
-      active: () => {
-        console.log('reachme 01');
-        this.add
-          .text(
-            490,
-            100,
-            this.prompts[Phaser.Math.Between(0, 2)], {
-              fontFamily: 'Slackey',
-              fontSize: '64px',
-            }
-          )
-      },
-    });
-
-    console.log("is this wrking");
     this.anims.create({
       key: "red vial anim",
       frames: [{
-          key: "red vial",
-          frame: 0
-        },
-        {
-          key: "red vial",
-          frame: 1
-        },
-        {
-          key: "red vial",
-          frame: 2
-        },
-        {
-          key: "red vial",
-          frame: 3
-        },
-        {
-          key: "red vial",
-          frame: 4
-        },
-        {
-          key: "red vial",
-          frame: 5
-        },
+        key: "red vial",
+        frame: 0
+      },
+      {
+        key: "red vial",
+        frame: 1
+      },
+      {
+        key: "red vial",
+        frame: 2
+      },
+      {
+        key: "red vial",
+        frame: 3
+      },
+      {
+        key: "red vial",
+        frame: 4
+      },
+      {
+        key: "red vial",
+        frame: 5
+      },
       ],
       frameRate: 8,
       repeat: -1
@@ -158,29 +137,29 @@ export default class ColorLab extends Phaser.Scene {
     this.anims.create({
       key: "blue vial anim",
       frames: [{
-          key: "blue vial",
-          frame: 0
-        },
-        {
-          key: "blue vial",
-          frame: 1
-        },
-        {
-          key: "blue vial",
-          frame: 2
-        },
-        {
-          key: "blue vial",
-          frame: 3
-        },
-        {
-          key: "blue vial",
-          frame: 4
-        },
-        {
-          key: "blue vial",
-          frame: 5
-        },
+        key: "blue vial",
+        frame: 0
+      },
+      {
+        key: "blue vial",
+        frame: 1
+      },
+      {
+        key: "blue vial",
+        frame: 2
+      },
+      {
+        key: "blue vial",
+        frame: 3
+      },
+      {
+        key: "blue vial",
+        frame: 4
+      },
+      {
+        key: "blue vial",
+        frame: 5
+      },
       ],
       frameRate: 8,
       repeat: -1
@@ -188,35 +167,33 @@ export default class ColorLab extends Phaser.Scene {
     this.anims.create({
       key: "yellow vial anim",
       frames: [{
-          key: "yellow vial",
-          frame: 0
-        },
-        {
-          key: "yellow vial",
-          frame: 1
-        },
-        {
-          key: "yellow vial",
-          frame: 2
-        },
-        {
-          key: "yellow vial",
-          frame: 3
-        },
-        {
-          key: "yellow vial",
-          frame: 4
-        },
-        {
-          key: "yellow vial",
-          frame: 5
-        },
+        key: "yellow vial",
+        frame: 0
+      },
+      {
+        key: "yellow vial",
+        frame: 1
+      },
+      {
+        key: "yellow vial",
+        frame: 2
+      },
+      {
+        key: "yellow vial",
+        frame: 3
+      },
+      {
+        key: "yellow vial",
+        frame: 4
+      },
+      {
+        key: "yellow vial",
+        frame: 5
+      },
       ],
       frameRate: 8,
       repeat: -1
     });
-
-    console.log("what ab this");
 
     this.redVialHovered = false;
     this.yellowVialHovered = false;
@@ -303,9 +280,6 @@ export default class ColorLab extends Phaser.Scene {
       default:
         0;
     }
-
-    console.log("before");
-
 
   }
 
