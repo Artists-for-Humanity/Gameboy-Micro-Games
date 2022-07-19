@@ -74,7 +74,7 @@ export default class MicroGame11 extends Phaser.Scene {
     this.car50 = this.physics.add.sprite(540, 350, "car50");
     this.car75 = this.physics.add.sprite(540, 350, "car75");
     this.car100 = this.physics.add.sprite(540, 350, "car100");
-    this.gameOverScreen = this.add.image(1080 / 2, 720, 2, "gameOverScreen");
+    this.gameOverScreen = this.add.image(this.game.config.width / 2, this.game.config.height / 2, "gameOverScreen");
     this.tempBg = this.add.image(1080 / 2, 720 / 2, "startScreen");
 
     this.car50.visible = false;
@@ -87,7 +87,6 @@ export default class MicroGame11 extends Phaser.Scene {
     this.timedEvent = this.time.delayedCall(1000, this.onEvent, [], this);
 
     // Animation for idle lever
-
     this.anims.create({
       key: "lever-idle",
       frames: [{ key: "lever", frame: 0 }],
@@ -123,7 +122,6 @@ export default class MicroGame11 extends Phaser.Scene {
     });
 
     // Car animations
-
     this.anims.create({
       key: "car-inflate-25%",
       frames: [
@@ -207,12 +205,6 @@ export default class MicroGame11 extends Phaser.Scene {
     if (time / 1000 > 10 && this.playerPumps < this.pumpToWin) {
       this.gameState = false;
       this.gameOverScreen.visible = true;
-      //   this.endText = this.add.text(300, 360, "You lose!");
-      //   this.endText.setStyle({
-      //     fontSize: "100px",
-      //     fill: "#000000",
-      //     align: "center",
-      //   });
     }
 
     if (time / 1000 > 10 && this.playerPumps >= this.pumpToWin) {
@@ -256,19 +248,3 @@ export default class MicroGame11 extends Phaser.Scene {
     this.tempBg.visible = false;
   }
 }
-
-// How to win the game:
-/**
- *
- * Pump car to 100%
- *
- * need meter variable track progress.
- *
- * How to track meter?
- *
- * Every time we pump we increase meter percentage.
- *
- * Win = meter 100% && still time left on timer.
- *
- * Lose = meter !100% && no time left on timer.
- */
