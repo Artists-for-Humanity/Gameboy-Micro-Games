@@ -1,5 +1,6 @@
 export default class MicroGame31 extends Phaser.Scene {
     // Game Class Constructor
+    
     constructor() {
         super({
             active: false,
@@ -26,10 +27,13 @@ export default class MicroGame31 extends Phaser.Scene {
     create() {
         const gameWidth = this.game.config.width;
         const gameHeight = this.game.config.height;
+        const { width, height } = this.scale
+        const playButton = this.add.image(width * -910, height * -365, "Button01")
+		//.setDisplaySize(150, 50)   
         this.add.image(gameWidth / 2, gameHeight / 2, "background");
         this.button = this.add.image(gameWidth - 910, gameHeight - 365, "Button01").setScale(0.68, 0.5);
         this.button.setInteractive();
-        this.button = this.add.image(gameWidth - 180, gameHeight - 365, "Button02").setScale(0.68, 0.5);
+        this.button = this.add.image(gameWidth - 980, gameHeight - 365, "Button02").setScale(0.68, 0.5);
         this.button.setInteractive();
         this.button = this.add.image(gameWidth - 910, gameHeight - 95, "Button03").setScale(0.68, 0.5);
         this.button.setInteractive();
@@ -37,14 +41,42 @@ export default class MicroGame31 extends Phaser.Scene {
         this.button.setInteractive();
         this.button = this.add.image(gameWidth - 600, gameHeight - 365, "Button05").setScale(0.68, 0.5);
         this.button.setInteractive();
-        
-        
-        
-        
+
+               
         //this.setText();
     }
 
     update() {
+        // 
+        const upJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.up)
+		const downJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.down)
+		const spaceJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.space)
+
+        if (upJustPressed)
+		{
+			this.selectNextButton(-1)
+		}
+		else if (downJustPressed)
+		{
+			this.selectNextButton(1)
+		}
+		else if (spaceJustPressed)
+		{
+			this.confirmSelection()
+		}
+		//
+		if (upJustPressed)
+		{
+			this.selectNextButton(-1)
+		}
+		else if (downJustPressed)
+		{
+			this.selectNextButton(1)
+		}
+		else if (spaceJustPressed)
+		{
+			this.confirmSelection()
+		}
     }
 
     setText() {
