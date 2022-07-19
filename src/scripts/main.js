@@ -4,11 +4,12 @@ import GlobalState from "./GlobalState";
 import MicroGame01 from "./8Bitties/MicroGame01";
 import MicroGame11 from "./DebugginDaOpps/MicroGame11";
 import MicroGame21 from "./MicroGamers/MicroGame21";
+import MicroGame22 from "./MicroGamers/MicroGame22";
 import MicroGame31 from "./Team4/MicroGame31";
 // Set configuration for phaser game instance
 const config = {
   type: Phaser.AUTO,
-  width: 980,
+  width: 1080,
   height: 720,
   backgroundColor: "#808080",
   // Add physics, arcade, scene, and audio
@@ -21,7 +22,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [MicroGame21],
+  scene: [MicroGame22],
   audio: {
     disableWebAudio: true,
   },

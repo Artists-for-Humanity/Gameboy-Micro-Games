@@ -31,7 +31,6 @@ export default class MicroGame21 extends Phaser.Scene {
         this.guesses = [];
         this.guessNum = 0;
 
-        this.cursors;
         this.interactive = false;
 
         this.Left;
@@ -155,6 +154,7 @@ export default class MicroGame21 extends Phaser.Scene {
         this.time.delayedCall(2000, this.flashPattern, [], this); //flash pattern 2 second after board appears
         this.time.delayedCall(this.pattern.length * 500 + 2500, () => {
             this.interactive = true //turns on interaction 4.5 seconds after board appear (4 * 500 + 2500 = 4500ms)
+            console.log('start interactive');
         }, [], this); 
     }
 
