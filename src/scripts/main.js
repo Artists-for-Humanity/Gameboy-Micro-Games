@@ -4,6 +4,7 @@ import GlobalState from "./GlobalState";
 import Emeowgency from "./8Bitties/Emeowgency";
 import ColorLab from "./8Bitties/ColorLab";
 import MicroGame11 from "./DebugginDaOpps/MicroGame11";
+import MicroGame12 from "./DebugginDaOpps/MicroGame12";
 import MicroGame21 from "./MicroGamers/MicroGame21";
 import MicroGame31 from "./Team4/MicroGame31";
 
