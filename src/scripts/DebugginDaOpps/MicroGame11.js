@@ -9,8 +9,8 @@ export default class MicroGame11 extends Phaser.Scene {
 
     // Game Object Declarations
     this.gameState = true;
-    this.eventScreen;
-    this.startText;
+    this.startScreen;
+    // this.startText;
     this.timedEvent;
     this.lever;
     this.car25;
@@ -27,17 +27,23 @@ export default class MicroGame11 extends Phaser.Scene {
 
   preload() {
     this.load.image(
-      "background",
-      new URL("./assets/background.png", import.meta.url).href
+      "startScreen",
+      new URL("./assets/startScreen.png", import.meta.url).href
     );
     this.load.image(
       "pumpgame_bg",
       new URL("./assets/pumpgame_background.png", import.meta.url).href
     );
-    this.load.image(
-      "temp_car_bg",
-      new URL("./assets/camry_background.png", import.meta.url).href
-    );
+    // this.load.image(
+    //   "temp_car_bg",
+    //   new URL("./assets/camry_background.png", import.meta.url).href
+    // );
+
+    // this.load.image(
+    //   "lever0",
+    //   new URL("./assets/lever0.png", import.meta.url).href
+    // );
+
     this.load.spritesheet(
       "lever",
       new URL("./assets/lever.png", import.meta.url).href,
@@ -69,14 +75,16 @@ export default class MicroGame11 extends Phaser.Scene {
   }
 
   create() {
-    this.add.image(1080 / 2, 720 / 2, "background");
+    this.add.image(1080 / 2, 720 / 2, "startScreen");
     this.add.image(1080 / 2, 720 / 2, "pumpgame_bg");
     // this.add.image(1080 / 2, 720 / 2, "temp_car_bg");
     this.lever = this.physics.add.sprite(955, 480, "lever");
+    // this.add.image(955, 480, "lever0");
     this.car25 = this.physics.add.sprite(540, 350, "car25");
     this.car50 = this.physics.add.sprite(540, 350, "car50");
     this.car75 = this.physics.add.sprite(540, 350, "car75");
     this.car100 = this.physics.add.sprite(540, 350, "car100");
+    this.tempBg = this.add.image(1080 / 2, 720 / 2, "startScreen");
 
     this.car50.visible = false;
     this.car75.visible = false;
@@ -84,64 +92,48 @@ export default class MicroGame11 extends Phaser.Scene {
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
-    this.setText();
+    // this.setText();
 
     this.timedEvent = this.time.delayedCall(1000, this.onEvent, [], this);
-
-    // Animation for car
-
-    // this.anims.create({
-    //   key: "car-inflate",
-    //   frames: [
-    //     { key: "car", frame: 0 },
-    //     { key: "car", frame: 1 },
-    //     { key: "car", frame: 2 },
-    //     { key: "car", frame: 3 },
-    //     { key: "car", frame: 4 },
-    //     { key: "car", frame: 5 },
-    //     { key: "car", frame: 6 },
-    //     { key: "car", frame: 7 },
-    //   ],
-    //   frameRate: 10,
-    // });
 
     // Animation for idle lever
 
     this.anims.create({
       key: "lever-idle",
-      frames: [{ key: "lever", frame: 6 }],
+      frames: [{ key: "lever", frame: 0 }],
       frameRate: 10,
     });
 
     this.anims.create({
       key: "lever-up",
       frames: [
-        { key: "lever", frame: 0 },
         { key: "lever", frame: 1 },
         { key: "lever", frame: 2 },
         { key: "lever", frame: 3 },
         { key: "lever", frame: 4 },
         { key: "lever", frame: 5 },
         { key: "lever", frame: 6 },
+        { key: "lever", frame: 7 },
       ],
-      frameRate: 24,
+      frameRate: 30,
     });
 
     this.anims.create({
       key: "lever-down",
       frames: [
+        { key: "lever", frame: 7 },
         { key: "lever", frame: 6 },
         { key: "lever", frame: 5 },
         { key: "lever", frame: 4 },
         { key: "lever", frame: 3 },
         { key: "lever", frame: 2 },
         { key: "lever", frame: 1 },
-        { key: "lever", frame: 0 },
       ],
-      frameRate: 24,
+      frameRate: 30,
     });
 
     // Car animations
+
     this.anims.create({
       key: "car-inflate-25%",
       frames: [
@@ -202,6 +194,7 @@ export default class MicroGame11 extends Phaser.Scene {
     if (this.gameState) {
       this.clickTimer += delta;
       this.timerCountdown(time);
+      // this.lever.anims.play("lever-idle", true);
       if (this.clickTimer > 100) this.clickAvailable = true;
       if (this.cursors.up.isDown && this.downWasPressed) {
         this.downWasPressed = false;
@@ -209,8 +202,8 @@ export default class MicroGame11 extends Phaser.Scene {
         this.lever.anims.play("lever-up", true);
       } else if (
         this.cursors.down.isDown &&
-        this.clickAvailable &&
-        this.upWasPressed
+        this.upWasPressed &&
+        this.clickAvailable
       ) {
         this.downWasPressed = true;
         this.upWasPressed = false;
@@ -222,7 +215,7 @@ export default class MicroGame11 extends Phaser.Scene {
   }
 
   timerCountdown(time) {
-    if (time / 1000 > 8 && this.playerPumps < this.pumpToWin) {
+    if (time / 1000 > 10 && this.playerPumps < this.pumpToWin) {
       this.gameState = false;
       this.endText = this.add.text(300, 360, "You lose!");
       this.endText.setStyle({
@@ -232,7 +225,7 @@ export default class MicroGame11 extends Phaser.Scene {
       });
     }
 
-    if (time / 1000 > 50 && this.playerPumps >= this.pumpToWin) {
+    if (time / 1000 > 10 && this.playerPumps >= this.pumpToWin) {
       this.gameState = false;
       this.endText = this.add.text(300, 360, "You Won!");
       this.endText.setStyle({
@@ -245,6 +238,7 @@ export default class MicroGame11 extends Phaser.Scene {
 
   updatePump() {
     this.playerPumps += 1;
+    console.log(this.playerPumps);
 
     this.lever.anims.play("lever-down", true);
     if (this.playerPumps === 5) {
@@ -267,21 +261,20 @@ export default class MicroGame11 extends Phaser.Scene {
       this.car75.visible = false;
     }
   }
-  setText() {
-    this.startText = this.add.text(360, 300, "");
-    this.startText.setStyle({
-      fontSize: "100px",
-      fill: "#000000",
-      align: "center",
-    });
+  //   setText() {
+  //     this.startText = this.add.text(360, 300, "");
+  //     this.startText.setStyle({
+  //       fontSize: "100px",
+  //       fill: "#000000",
+  //       align: "center",
+  //     });
 
-    this.tempBg = this.add.image(1080 / 2, 720 / 2, "background");
-    this.startText.setText("PUMP!");
-  }
+  //     this.startText.setText("PUMP!");
+  //   }
 
   onEvent() {
     this.tempBg.visible = false;
-    this.startText.visible = false;
+    // this.startText.visible = false;
   }
 }
 
