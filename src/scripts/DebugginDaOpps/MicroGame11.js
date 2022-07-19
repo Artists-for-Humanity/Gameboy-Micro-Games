@@ -74,7 +74,11 @@ export default class MicroGame11 extends Phaser.Scene {
     this.car50 = this.physics.add.sprite(540, 350, "car50");
     this.car75 = this.physics.add.sprite(540, 350, "car75");
     this.car100 = this.physics.add.sprite(540, 350, "car100");
-    this.gameOverScreen = this.add.image(this.game.config.width / 2, this.game.config.height / 2, "gameOverScreen");
+    this.gameOverScreen = this.add.image(
+      this.game.config.width / 2,
+      this.game.config.height / 2,
+      "gameOverScreen"
+    );
     this.tempBg = this.add.image(1080 / 2, 720 / 2, "startScreen");
 
     this.car50.visible = false;
