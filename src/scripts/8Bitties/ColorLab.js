@@ -51,14 +51,6 @@ export default class ColorLab extends Phaser.Scene {
 
     this.load.image("empty beaker", new URL("../8Bitties/assets/colorlab/beakerempty.png",
       import.meta.url).href);
-    // this.load.image("green beaker", new URL("../8Bitties/assets/colorlab/beakergreen.png",
-    //   import.meta.url).href);
-    // this.load.image("purple beaker", new URL("../8Bitties/assets/colorlab/beakerpurple.png",
-    //   import.meta.url).href);
-    // this.load.image("orange beaker", new URL("../8Bitties/assets/colorlab/beakerorange.png",
-    //   import.meta.url).href);
-    // this.load.image("empty vial", new URL("../8Bitties/assets/colorlab/emptyvial.png",
-    //   import.meta.url).href);
     this.load.spritesheet("red vial", new URL("../8Bitties/assets/colorlab/redvialsprites.png",
       import.meta.url).href, {
       frameWidth: 270,
@@ -90,7 +82,6 @@ export default class ColorLab extends Phaser.Scene {
       frameWidth: 463,
       frameHeight: 558
     });
-
     this.load.spritesheet("purple beaker", new URL("../8Bitties/assets/colorlab/beakerpurplefull.png",
       import.meta.url).href, {
       frameWidth: 463,
@@ -111,9 +102,11 @@ export default class ColorLab extends Phaser.Scene {
       frameWidth: 270,
       frameHeight: 368
     });
-
-    this.load.image("red vial pour", new URL("../8Bitties/assets/colorlab/vialredpour.png",
-      import.meta.url).href);
+    //explosion sprite
+    this.load.spritesheet("explosion", new URL("../8Bitties/assets/colorlab/explosionsprites.png", import.meta.url).href, {
+      frameWidth: 420,
+      frameHeight: 420
+    });
     this.load.image("background", new URL("../8Bitties/assets/colorlab/sciencelabbg.png",
       import.meta.url).href);
     this.load.image("arrow", new URL("../8Bitties/assets/colorlab/arrow.png",
@@ -312,6 +305,58 @@ export default class ColorLab extends Phaser.Scene {
       frameRate: 10,
       repeat: -1
     });
+    //explosion
+    this.anims.create({
+      key: "explosion anim",
+      frames: [{
+        key: "explosion",
+        frame: 0
+      },
+      {
+        key: "explosion",
+        frame: 1
+      },
+      {
+        key: "explosion",
+        frame: 2
+      },
+      {
+        key: "explosion",
+        frame: 3
+      },
+      {
+        key: "explosion",
+        frame: 4
+      },
+      {
+        key: "explosion",
+        frame: 5
+      },
+      {
+        key: "explosion",
+        frame: 6
+      },
+      {
+        key: "explosion",
+        frame: 7
+      },
+      {
+        key: "explosion",
+        frame: 8
+      },
+      {
+        key: "explosion",
+        frame: 9
+      },
+      {
+        key: "explosion",
+        frame: 10
+      },
+      ],
+      frameRate: 7,
+      repeat: 0
+    });
+    
 
 
     this.redVialHovered = false;
@@ -338,11 +383,9 @@ export default class ColorLab extends Phaser.Scene {
 
     this.beakerColor = "";
 
-
     this.redVialNotEmpty = true;
     this.blueVialNotEmpty = true;
     this.yellowVialNotEmpty = true;
-
 
   }
 
@@ -351,6 +394,8 @@ export default class ColorLab extends Phaser.Scene {
     // if (this.gamestart) {
     this.playAnims();
     // }
+
+    
 
     //changes arrow y on a timer
     if (this.timer > 50) {
@@ -397,7 +442,6 @@ export default class ColorLab extends Phaser.Scene {
         this.blueVialHovered = true;
         this.yellowVialHovered = false;
         this.enterPressed = Phaser.Input.Keyboard.JustDown(this.enter)
-
         this.vialPouring();
         this.time.delayedCall(0, this.setVialHeight, [liftHeight, dropHeight, this.blueVialHovered, this.redVialHovered, this.yellowVialHovered, this.blueVial, this.redVial, this.yellowVial], this);
         this.playAnims;
@@ -421,6 +465,12 @@ export default class ColorLab extends Phaser.Scene {
 
   }
 
+  playAnims() {
+    if (this.redVialNotEmpty) this.redVial.anims.play("red vial anim", true);
+    if (this.blueVialNotEmpty) this.blueVial.anims.play("blue vial anim", true);
+    if (this.yellowVialNotEmpty) this.yellowVial.anims.play("yellow vial anim", true);
+  };
+
   setVialHeight(liftHeight, dropHeight, vialHovered, vialNotHovered1, vialNotHovered2, vial1, vial2, vial3) {
     if (vialHovered) {
       vial1.setY(liftHeight)
@@ -434,13 +484,6 @@ export default class ColorLab extends Phaser.Scene {
   }
 
   vialPouring() {
-    // check if vialEmptied is false.
-    // if not, get the current color of the hovered vial.
-    // then, stop animation, empty current hovered vial.
-    // set vialEmptied to true.
-    // move the current color to the main jar.
-    // check if color in jar is legal by calling a helper function checkWin().
-    // 
     if (this.tryOne) {
       if (this.redVialHovered && this.enterPressed && this.redVialNotEmpty) {
         this.beaker.anims.play('redbeaker anim')
@@ -475,23 +518,22 @@ export default class ColorLab extends Phaser.Scene {
     if (this.tryTwo) {
       if (this.redVialHovered && this.enterPressed && this.redVialNotEmpty) {
         this.beakerColor === "yellow" ? this.beaker.anims.play("orangebeaker anim") : this.beaker.anims.play("purplebeaker anim");
+        this.beakerColor === "yellow" ? this.beakerColor = "Mix Orange" : this.beakerColor = "Mix Purple";
         this.redVialNotEmpty = false;
-        this.beakerColor = "Mix Orange"
         this.redVial.anims.play('emptyvial anim')
-        
         this.checkWin()
       }
       if (this.blueVialHovered && this.enterPressed && this.blueVialNotEmpty) {
         this.beakerColor === "red" ? this.beaker.anims.play("purplebeaker anim") : this.beaker.anims.play("greenbeaker anim");
+        this.beakerColor === "red" ? this.beakerColor = "Mix Purple" : this.beakerColor = "Mix Green";
         this.blueVialNotEmpty = false;
-        this.beakerColor = "Mix Purple"
         this.blueVial.anims.play('emptyvial anim')
         this.checkWin()
       }
       if (this.yellowVialHovered && this.enterPressed && this.yellowVialNotEmpty) {
         this.beakerColor === "blue" ? this.beaker.anims.play("greenbeaker anim") : this.beaker.anims.play("orangebeaker anim");
+        this.beakerColor === "blue" ? this.beakerColor = "Mix Green" : this.beakerColor = "Mix Orange";
         this.yellowVialNotEmpty = false;
-        this.beakerColor = "Mix Green"
         this.yellowVial.anims.play('emptyvial anim')
         this.checkWin()
       }
@@ -504,39 +546,67 @@ export default class ColorLab extends Phaser.Scene {
     if (this.tryOne) {
       if (this.beakerColor === 'red' && this.finalColor === 'Mix Green') {
         console.log('You lost!')
+        this.youLose()
         this.youWin = false;
         // you lost
       }
       if (this.beakerColor === 'blue' && this.finalColor === 'Mix Orange') {
         console.log('You lost!')
-        
+        this.youLose()
       }
         
       if (this.beakerColor === 'yellow' && this.finalColor === 'Mix Purple') {
         console.log('You lost!')
-        
+        this.youLose()
       }
     }
     
-    if (this.tryTwo && this.beakerColor != this.finalColor) {
+    if (this.tryTwo && this.beakerColor !== this.finalColor) {
       console.log('Beaker second try:', this.beakerColor, 'final color:', this.finalColor)
       console.log('You lost!')
-      
-      // you lost
+      this.youLose()
+      //youLose() 
+    }
+    if (this.tryTwo && this.beakerColor == this.finalColor) {
+      this.youWin();
+      //no delay you win popup animation
+      //function for you win
     }
     return false;
   }
 
-  playAnims() {
-    if (this.redVialNotEmpty) this.redVial.anims.play("red vial anim", true);
-    if (this.blueVialNotEmpty) this.blueVial.anims.play("blue vial anim", true);
-    if (this.yellowVialNotEmpty) this.yellowVial.anims.play("yellow vial anim", true);
-  }
-}
+ 
 
-// youLose(){
+  youLose() {
+  //beaker explosion animation
+  this.beaker.setPosition(540, 360).setOrigin(0.5);
+  this.beaker.anims.play("explosion anim", true).setScale(2);
+  this.enter = false;
+  this.left = false;
+  this.right = false;
+  this.destroySprites();
+      //delayed call you lost popup animation
+      //
+  }
+
+  youWin() {
+    console.log("you win")
+    this.enter = false;
+    this.left = false;
+    this.right = false;
+  }
   
-// }
+  destroySprites() {
+    this.redVial.setVisible(false);
+    this.blueVial.setVisible(false);
+    this.yellowVial.setVisible(false)
+    this.arrow.setVisible(false);
+    this.mix.setVisible(false);
+    this.promptText.setVisible(false);
+    
+  }
+  
+}
 
 // youWin(){
 
