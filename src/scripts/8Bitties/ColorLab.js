@@ -585,6 +585,7 @@ export default class ColorLab extends Phaser.Scene {
   this.left = false;
   this.right = false;
   this.destroySprites();
+  
       //delayed call you lost popup animation
       //
   }
@@ -603,7 +604,6 @@ export default class ColorLab extends Phaser.Scene {
     this.arrow.setVisible(false);
     this.mix.setVisible(false);
     this.promptText.setVisible(false);
-    
   }
   
 }
