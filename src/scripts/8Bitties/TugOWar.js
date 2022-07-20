@@ -50,7 +50,7 @@ export default class TugOWar extends Phaser.Scene {
     );
     this.load.image(
       "rope",
-      new URL("../8Bitties/assets/TugOWar/ropeholder.png", import.meta.url).href
+      new URL("../8Bitties/assets/TugOWar/ropeHolder.png", import.meta.url).href
     );
   }
 
