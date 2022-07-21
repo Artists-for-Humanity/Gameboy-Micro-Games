@@ -14,7 +14,6 @@ export default class MainMenu extends Phaser.Scene {
     }
 
     create() {
-        console.log('hello');
         this.globalState.test();
     }
 

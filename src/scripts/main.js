@@ -26,7 +26,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [MainMenu],
+  scene: [MicroGame11, Emeowgency, MicroGame21],
   audio: {
     disableWebAudio: false,
   },
@@ -41,5 +41,6 @@ const config = {
     ],
   },
 };
+
 // Initialize game instance
 new Phaser.Game(config);

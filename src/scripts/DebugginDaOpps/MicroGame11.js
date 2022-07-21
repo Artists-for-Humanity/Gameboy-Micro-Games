@@ -68,6 +68,8 @@ export default class MicroGame11 extends Phaser.Scene {
   }
 
   create() {
+    // this.globalState.test();
+
     this.add.image(1080 / 2, 720 / 2, "pumpgame_bg");
     this.lever = this.physics.add.sprite(955, 480, "lever");
     this.car25 = this.physics.add.sprite(540, 350, "car25");
