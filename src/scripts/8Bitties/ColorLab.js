@@ -353,7 +353,7 @@ export default class ColorLab extends Phaser.Scene {
         frame: 10
       },
       ],
-      frameRate: 7,
+      frameRate: 12,
       repeat: 0
     });
     
