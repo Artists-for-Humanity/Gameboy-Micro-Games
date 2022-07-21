@@ -1,5 +1,6 @@
 // Add imports for phaser library, scenes, and plugins
 import Phaser from "phaser";
+import phaserJuice from "./path/to/phaserJuice.min.js";
 import GlobalState from "./GlobalState";
 import MicroGame01 from "./8Bitties/MicroGame01";
 import MicroGame11 from "./DebugginDaOpps/MicroGame11";
@@ -19,7 +20,7 @@ const config = {
       gravity: {
         y: 0,
       },
-      debug: true,
+      debug: false,
     },
   },
   scene: [MicroGame12],
