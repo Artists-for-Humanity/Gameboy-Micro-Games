@@ -11,6 +11,7 @@ export default class MicroGame12 extends Phaser.Scene {
     this.gameState = true;
     this.startScreen;
     this.timedEvent;
+    this.currTrashItem;
     this.firstTrash = Phaser.Math.Between(0, 3);
   }
 
@@ -59,7 +60,6 @@ export default class MicroGame12 extends Phaser.Scene {
       .image(320, 540, "trash-can")
       .setScale(0.15, 0.15);
     this.currTrashItem;
-    this.chicken;
     this.listOfTrashItems = [
       { image: "chicken-leg", destination: "trash" },
       { image: "pizza", destination: "trash" },
@@ -91,18 +91,55 @@ export default class MicroGame12 extends Phaser.Scene {
     this.gameOverScreen.visible = false;
 
     this.cursors = this.input.keyboard.createCursorKeys();
+    this.currTrashItem.setCollideWorldBounds(true);
 
     this.physics.add.collider(this.currTrashItem, this.trashBin, (a, b) => {
       console.log("What is :", a.texture.key, b.texture.key);
       if (a.texture.key === "chicken-leg" && b.texture.key === "trash-can") {
         a.destroy();
+        this.spawnTrash();
       }
       if (a.texture.key === "pizza" && b.texture.key === "trash-can") {
         a.destroy();
+        this.spawnTrash();
       }
-      this.spawnTrash();
+      if (a.texture.key === "plastic-bag" && b.texture.key === "trash-can") {
+        a.destroy();
+        this.gameState = false;
+        this.gameOverScreen.visible = true;
+      }
+      if (
+        a.texture.key === "plastic-can-holder" &&
+        b.texture.key === "trash-can"
+      ) {
+        a.destroy();
+        this.gameState = false;
+        this.gameOverScreen.visible = true;
+      }
     });
-    this.physics.add.collider(this.currTrashItem, this.recycleBin);
+    this.physics.add.collider(this.currTrashItem, this.recycleBin, (a, b) => {
+      if (a.texture.key === "chicken-leg" && b.texture.key === "recycle-bin") {
+        a.destroy();
+        this.gameState = false;
+        this.gameOverScreen.visible = true;
+      }
+      if (a.texture.key === "pizza" && b.texture.key === "recycle-bin") {
+        a.destroy();
+        this.gameState = false;
+        this.gameOverScreen = true;
+      }
+      if (a.texture.key === "plastic-bag" && b.texture.key === "recycle-bin") {
+        a.destroy();
+        this.spawnTrash();
+      }
+      if (
+        a.texture.key === "plastic-can-holder" &&
+        b.texture.key === "recycle-bin"
+      ) {
+        a.destroy();
+        this.spawnTrash();
+      }
+    });
 
     this.timedEvent = this.time.delayedCall(1000, this.onEvent, [], this);
   }
@@ -147,6 +184,11 @@ export default class MicroGame12 extends Phaser.Scene {
       console.log("What is :", a.texture.key);
       this.spawnTrash();
     });
+    this.physics.add.collider(this.currTrashItem, this.recycleBin, (a, b) => {
+      a.destroy();
+      this.spawnTrash();
+    });
+
     // if
   }
 
@@ -154,10 +196,10 @@ export default class MicroGame12 extends Phaser.Scene {
   moveTrash() {
     // check if left arrow key is down, then change the -x coordinate
     if (this.cursors.left.isDown) {
-      this.currTrashItem.x -= 2;
+      this.currTrashItem.x -= 3;
     }
     if (this.cursors.right.isDown) {
-      this.currTrashItem.x += 2;
+      this.currTrashItem.x += 3;
     }
     // check if left arrow key is down, then change the x coordinate
   }
