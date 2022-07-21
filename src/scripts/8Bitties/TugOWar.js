@@ -29,7 +29,6 @@ export default class TugOWar extends Phaser.Scene {
     this.winTimer = 0;
     this.winScale = 0;
     this.imageCreated = false;
-
     this.loseDecrease = false;
   }
   preload() {
@@ -48,20 +47,12 @@ export default class TugOWar extends Phaser.Scene {
         .href
     );
     this.load.image(
-      "player",
-      new URL("../8Bitties/assets/TugOWar/person.png", import.meta.url).href
-    );
-    this.load.image(
-      "npc",
-      new URL("../8Bitties/assets/TugOWar/person.png", import.meta.url).href
-    );
-    this.load.image(
       "rope",
       new URL("../8Bitties/assets/TugOWar/rope.png", import.meta.url).href
     );
     this.load.image(
-      "win",
-      new URL("../8Bitties/assets/TugOWar/ropeHolder.png", import.meta.url).href
+      "safe",
+      new URL("../8Bitties/assets/TugOWar/safe_text.png", import.meta.url).href
     );
     this.load.image(
       "lose",
@@ -69,16 +60,25 @@ export default class TugOWar extends Phaser.Scene {
     );
     this.load.image(
       "meter",
-      new URL("../8Bitties/assets/TugOWar/ropeHolder.png", import.meta.url).href
+      new URL("../8Bitties/assets/TugOWar/meter.png", import.meta.url).href
     );
     this.load.image(
       "dash",
-      new URL("../8Bitties/assets/TugOWar/imageholder.png", import.meta.url)
-        .href
+      new URL("../8Bitties/assets/TugOWar/pointer.png", import.meta.url).href
+    );
+    this.load.spritesheet(
+      "player",
+      new URL("../8Bitties/assets/TugOWar/playerFrames.png", import.meta.url)
+        .href,
+      {
+        frameWidth: 44,
+        frameHeight: 64,
+      }
     );
   }
 
   create() {
+    this.createAnimations();
     this.pull = this.add.image(540, 360, "pull").setDepth(1);
     this.grass = this.add.image(540, 360, "background").setDepth(-10);
     this.mud = this.add.sprite(540, 560, "mud").setDepth(-9);
@@ -86,21 +86,26 @@ export default class TugOWar extends Phaser.Scene {
     this.spacebar = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
+    this.progressBar.setMask(this.mask);
+    this.rope = this.add.sprite(540, 580, "rope").setDepth(1);
+    this.meter = this.add.image(75, 360, "meter");
+    this.dash = this.physics.add.image(90, 540, "dash");
     this.graphics = this.make.graphics();
     this.graphics.fillRect(290, 40, 500, 60);
     this.mask = new Phaser.Display.Masks.GeometryMask(this, this.graphics);
-    this.progressBar.setMask(this.mask);
-    this.dash = this.physics.add.image(75, 540, "dash");
+
     this.greenzone = this.physics.add
       .image(75, 360, "greenzone")
       .setVisible(false);
-    this.player = this.add.sprite(270, 560, "player").setDepth(2);
-    this.npc = this.add.image(810, 560, "npc").setDepth(2);
+    this.player = this.add
+      .sprite(270, 560, "player")
+      .setDepth(2)
+      .play("pulling");
+    this.npc = this.add.sprite(810, 560, "player").setDepth(2).play("pulling");
     this.npc.flipX = true;
   }
 
   update() {
-    console.log(this.progNum, "barvalue");
     this.winOrLose();
     this.scalePull();
     this.startDashMovement();
@@ -135,8 +140,6 @@ export default class TugOWar extends Phaser.Scene {
   }
 
   gameStart() {
-    this.rope = this.add.sprite(540, 580, "rope").setDepth(1);
-    this.meter = this.add.image(75, 360, "meter");
     this.gamestarted = true;
   }
   moveProgress() {
@@ -174,7 +177,7 @@ export default class TugOWar extends Phaser.Scene {
   }
   youWin() {
     if (this.imageCreated === false) {
-      this.youwin = this.add.image(540, 360, "win").setDepth(100);
+      this.youwin = this.add.image(540, 360, "safe").setDepth(100);
       this.imageCreated = true;
     }
     if (this.winScale <= 1) {
@@ -182,5 +185,22 @@ export default class TugOWar extends Phaser.Scene {
       this.winScale += 0.2 / this.winTimer;
       this.youwin.setScale(this.winScale);
     }
+  }
+  createAnimations() {
+    this.anims.create({
+      key: "pulling",
+      frames: [
+        {
+          key: "player",
+          frame: 0,
+        },
+        {
+          key: "player",
+          frame: 1,
+        },
+      ],
+      frameRate: 1,
+      repeat: -1,
+    });
   }
 }
