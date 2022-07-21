@@ -1,15 +1,12 @@
 import WebFontFile from '../../scripts/WebFontFile'
 
 export default class ColorLab extends Phaser.Scene {
-  // Game Class Constructor
   constructor() {
     super({
       active: false,
       visible: false,
       key: "ColorLab",
     });
-    this.gamestart = false;
-    // Game Object Declaration
     this.timer;
     this.catchScale = 0;
     this.mix;
@@ -47,11 +44,6 @@ export default class ColorLab extends Phaser.Scene {
     this.failScale = 0;
     this.failTimer = 0;
     this.createImage = false;
-
-    //gamestart is the period of time where you are told to mix. gamestart will change to another property once the player starts mixing.
-    this.gamestart;
-
-    // this.player = this.physics.add.sprite(480, 600, 'player');
   }
   preload() {
     this.load.addFile(new WebFontFile(this.load, 'Russo One'))
@@ -128,10 +120,7 @@ export default class ColorLab extends Phaser.Scene {
   }
 
   create() {
-    // this.setText();
-
     this.background = this.add.image(540, 360, "background");
-    this.gamestart = true;
 
     this.mix = this.physics.add.sprite(490, 100, "prompt box").setScale(.75).setOrigin(.5);
     this.redVial = this.physics.add.sprite(653, 680, "red vial").setScale(.45).setOrigin(1);
@@ -152,7 +141,6 @@ export default class ColorLab extends Phaser.Scene {
       fontFamily: 'Russo One',
       fontSize: '58px',
     }).setOrigin(.5);
-
       //red vial
     this.anims.create({
       key: "red vial anim",
@@ -367,9 +355,6 @@ export default class ColorLab extends Phaser.Scene {
       frameRate: 12,
       repeat: 0
     });
-    
-
-
     this.redVialHovered = false;
     this.yellowVialHovered = false;
     this.blueVialHovered = false;
@@ -401,10 +386,7 @@ export default class ColorLab extends Phaser.Scene {
   }
 
   update() {
-
-    // if (this.gamestart) {
     this.playAnims();
-    // }
     if (this.lose === true){
       if (this.fail){
       if (this.failScale <= 1) {
@@ -414,7 +396,6 @@ export default class ColorLab extends Phaser.Scene {
         }
       }
     }
-
     if( this.win === true){
       if (this.safe){
         if (this.safeScale <= 1) {
@@ -424,9 +405,6 @@ export default class ColorLab extends Phaser.Scene {
         }
       }
     }
-    
-
-    //changes arrow y on a timer
     if (this.timer > 50) {
       this.decreasing = true
     }
@@ -447,8 +425,6 @@ export default class ColorLab extends Phaser.Scene {
     } else if (Phaser.Input.Keyboard.JustDown(this.right) && this.arrow_placement < 2) {
       this.arrow_placement++;
     }
-
-
 
     var liftHeight = 613;
     var dropHeight = 680;
@@ -571,13 +547,11 @@ export default class ColorLab extends Phaser.Scene {
   }
 
   checkWin() {
-    // check if user enter the color on the first try, and the second try
     if (this.tryOne) {
       if (this.beakerColor === 'red' && this.finalColor === 'Mix Green') {
         console.log('You lost!');
         this.youLose();
         this.playFail();
-        // you lost
       }
       if (this.beakerColor === 'blue' && this.finalColor === 'Mix Orange') {
         console.log('You lost!');
@@ -596,15 +570,11 @@ export default class ColorLab extends Phaser.Scene {
       console.log('Beaker second try:', this.beakerColor, 'final color:', this.finalColor);
       console.log('You lost!');
       this.youLose();
-      this.playFail();
-      //youLose() 
+      this.playFail(); 
     }
     if (this.tryTwo && this.beakerColor == this.finalColor) {
       this.youWin();
       this.playSafe();
-
-      //no delay you win popup animation
-      //function for you win
     }
     return false;
   }
@@ -612,7 +582,6 @@ export default class ColorLab extends Phaser.Scene {
  
 
   youLose() {
-  //beaker explosion animation
   this.beaker.setPosition(540, 360).setOrigin(0.5);
   this.beaker.anims.play("explosion anim", true).setScale(2);
   this.enter = false;
@@ -620,9 +589,6 @@ export default class ColorLab extends Phaser.Scene {
   this.right = false;
   this.lose = true;
   this.destroySprites();
-  
-      //delayed call you lost popup animation
-      //
   }
 
   youWin() {
@@ -652,8 +618,6 @@ export default class ColorLab extends Phaser.Scene {
       }
      
   }
-
-//creates the image for fail on cene and scales it up gradually
   playFail() {
       if (this.createImage === false) {
         this.fail = this.add.image(540, 360, "fail").setDepth(100);
