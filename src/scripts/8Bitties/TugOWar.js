@@ -86,14 +86,14 @@ export default class TugOWar extends Phaser.Scene {
     this.spacebar = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
-    this.progressBar.setMask(this.mask);
+
     this.rope = this.add.sprite(540, 580, "rope").setDepth(1);
     this.meter = this.add.image(75, 360, "meter");
     this.dash = this.physics.add.image(90, 540, "dash");
     this.graphics = this.make.graphics();
     this.graphics.fillRect(290, 40, 500, 60);
     this.mask = new Phaser.Display.Masks.GeometryMask(this, this.graphics);
-
+    this.progressBar.setMask(this.mask);
     this.greenzone = this.physics.add
       .image(75, 360, "greenzone")
       .setVisible(false);
