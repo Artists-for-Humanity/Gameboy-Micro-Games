@@ -8,6 +8,9 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
 
   }
 
+  test() {
+    console.log('Testing this Function');
+  }
 
 }
 
