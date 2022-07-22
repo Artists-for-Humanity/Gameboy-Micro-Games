@@ -45,25 +45,25 @@ export default class FrogJump extends Phaser.Scene {
         });
         this.cursors = this.input.keyboard.createCursorKeys();
         this.platforms = this.physics.add.staticGroup();
-        this.platforms.create(200, 800, 'ground').setScale(10).refreshBody();
+        this.platforms.create(200, 820, 'ground').setScale(11).refreshBody();
             // this.platforms.create(200, 568, 'ground').setScale(0.2).refreshBody();
 
-        this.platforms.create(500, 400, 'ground').setScale(0.2).refreshBody();
+        this.platforms.create(500, 450, 'ground').setScale(0.2).refreshBody();
         // this.platforms.create(200, 250, 'ground').setScale(0.2).refreshBody();
-        this.platforms.create(720, 150, 'ground').setScale(0.2).refreshBody();
+        this.platforms.create(720, 250, 'ground').setScale(0.2).refreshBody();
         
 
         this.playerSprite = this.physics.add.sprite(500,600, 'dude');
         
         // this.playerSprite.setBounce(0.2);
-        this.playerSprite.setCollideWorldBounds(true); 
+        this.playerSprite.setCollideWorldBounds(false); 
         this.playerSprite.body.setGravityY(700);
 
 
 
         this.physics.add.collider(this.playerSprite, this.platforms);
         this.cam = this.cameras.main;
-        // this.cam.setBounds(0,0, 1080, 2160);
+        this.cam.setBounds(0, -500, 1080, 1220);
         this.cameras.main.startFollow(this.playerSprite);
 
 
