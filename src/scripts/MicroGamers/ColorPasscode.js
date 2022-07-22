@@ -40,37 +40,37 @@ export default class MicroGame21 extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('brickWall', new URL('assets21/brickWall.png',
+        this.load.image('brickWall', new URL('assets/ColorPasscode/brickWall.png',
             import.meta.url).href);
-        this.load.image('concrete', new URL('assets21/concrete.png',
+        this.load.image('concrete', new URL('assets/ColorPasscode/concrete.png',
             import.meta.url).href);
-        this.load.image('door1', new URL('assets21/door1.png',
+        this.load.image('door1', new URL('assets/ColorPasscode/door1.png',
             import.meta.url).href);
-        this.load.image('door2', new URL('assets21/door2.png',
+        this.load.image('door2', new URL('assets/ColorPasscode/door2.png',
             import.meta.url).href);
-        this.load.image('door3', new URL('assets21/door3.png',
+        this.load.image('door3', new URL('assets/ColorPasscode/door3.png',
             import.meta.url).href);
-        this.load.image('door4', new URL('assets21/door4.png',
+        this.load.image('door4', new URL('assets/ColorPasscode/door4.png',
             import.meta.url).href);
-        this.load.image('door5', new URL('assets21/door5.png',
+        this.load.image('door5', new URL('assets/ColorPasscode/door5.png',
             import.meta.url).href);
-        this.load.image('box', new URL('assets21/box.png',
+        this.load.image('box', new URL('assets/ColorPasscode/box.png',
             import.meta.url).href);
-        this.load.image('lightRed', new URL('assets21/lightRed.png',
+        this.load.image('lightRed', new URL('assets/ColorPasscode/lightRed.png',
             import.meta.url).href);
-        this.load.image('lightYellow', new URL('assets21/lightYellow.png',
+        this.load.image('lightYellow', new URL('assets/ColorPasscode/lightYellow.png',
             import.meta.url).href);
-        this.load.image('lightPurple', new URL('assets21/lightPurple.png',
+        this.load.image('lightPurple', new URL('assets/ColorPasscode/lightPurple.png',
             import.meta.url).href);
-        this.load.image('lightBlue', new URL('assets21/lightBlue.png',
+        this.load.image('lightBlue', new URL('assets/ColorPasscode/lightBlue.png',
             import.meta.url).href);
-        this.load.image('darkRed', new URL('assets21/darkRed.png',
+        this.load.image('darkRed', new URL('assets/ColorPasscode/darkRed.png',
             import.meta.url).href);
-        this.load.image('darkYellow', new URL('assets21/darkYellow.png',
+        this.load.image('darkYellow', new URL('assets/ColorPasscode/darkYellow.png',
             import.meta.url).href);
-        this.load.image('darkPurple', new URL('assets21/darkPurple.png',
+        this.load.image('darkPurple', new URL('assets/ColorPasscode/darkPurple.png',
             import.meta.url).href);
-        this.load.image('darkBlue', new URL('assets21/darkBlue.png',
+        this.load.image('darkBlue', new URL('assets/ColorPasscode/darkBlue.png',
             import.meta.url).href);
     }
 

@@ -3,8 +3,8 @@ import Phaser from "phaser";
 import GlobalState from "./GlobalState";
 import MicroGame01 from "./8Bitties/MicroGame01";
 import MicroGame11 from "./DebugginDaOpps/MicroGame11";
-import MicroGame21 from "./MicroGamers/MicroGame21";
-import MicroGame22 from "./MicroGamers/MicroGame22";
+import MicroGame21 from "./MicroGamers/ColorPasscode";
+import MicroGame22 from "./MicroGamers/HideFromCat";
 import MicroGame31 from "./Team4/MicroGame31";
 // Set configuration for phaser game instance
 const config = {
@@ -22,7 +22,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [MicroGame22],
+  scene: [MicroGame21],
   audio: {
     disableWebAudio: true,
   },
