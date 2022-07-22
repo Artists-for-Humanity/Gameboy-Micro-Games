@@ -5,6 +5,7 @@ import MicroGame01 from "./8Bitties/MicroGame01";
 import MicroGame11 from "./DebugginDaOpps/MicroGame11";
 import MicroGame21 from "./MicroGamers/MicroGame21";
 import MicroGame31 from "./TeamInflation/MicroGame31";
+import FrogJump from "./TeamInflation/FrogJump";
 // Set configuration for phaser game instance
 const config = {
   type: Phaser.AUTO,
@@ -21,7 +22,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [MicroGame31],
+  scene: [FrogJump],
   audio: {
     disableWebAudio: true,
   },
