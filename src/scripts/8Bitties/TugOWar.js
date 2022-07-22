@@ -165,6 +165,7 @@ export default class TugOWar extends Phaser.Scene {
   }
 
   youLose() {
+    console.log("mudsplash animation here");
     if (this.imageCreated === false) {
       this.youlose = this.add.image(540, 360, "lose").setDepth(100);
       this.imageCreated = true;
