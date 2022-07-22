@@ -9,7 +9,6 @@ export default class MicroGame12 extends Phaser.Scene {
 
     // Game Object Declarations
     this.triesToWin = 4;
-    this.gameState = true;
     this.startScreen;
     this.timedEvent;
     this.currTrashItem;
@@ -110,6 +109,7 @@ export default class MicroGame12 extends Phaser.Scene {
   update() {
     if (!this.gameOver) {
       if (this.playerScore === this.triesToWin) {
+        this.currTrashItem.visible = false;
         this.gameOver = true;
         this.endText = this.add.text(360, 300, "You Won!");
         this.endText.setStyle({
@@ -118,10 +118,6 @@ export default class MicroGame12 extends Phaser.Scene {
           align: "center",
         });
       }
-      //   if (this.currTrashItem.y > 720) {
-      //     this.gameOver = true;
-      //     this.gameOverScreen.visible = true;
-      //   }
 
       if (this.currTrashItem === undefined) {
         console.log(this.currTrashItem);
@@ -132,9 +128,14 @@ export default class MicroGame12 extends Phaser.Scene {
             this.listOfTrashItems[this.firstTrash].image
           )
           .setScale(0.12, 0.12);
-        this.currTrashItem.setCollideWorldBounds(false);
         this.addTrashCollider(this.recycleBin);
         this.addTrashCollider(this.trashBin);
+      }
+
+      if (this.currTrashItem.y >= 720 + this.currTrashItem.displayWidth / 2) {
+        this.gameOver = true;
+        this.gameOverScreen.visible = true;
+        this.currTrashItem.visible = false;
       }
       this.time.delayedCall(1000, this.dropTrash, [], this);
     }
@@ -153,11 +154,8 @@ export default class MicroGame12 extends Phaser.Scene {
 
   // Get the current trash item on screen and drop its y coordinate down.
   dropTrash() {
-    if (this.currTrashItem.y >= 720 + this.currTrashItem.displayWidth / 2) {
-      this.spawnTrash();
-      this.addTrashCollider(this.recycleBin);
-      this.addTrashCollider(this.trashBin);
-    }
+    this.addTrashCollider(this.recycleBin);
+    this.addTrashCollider(this.trashBin);
     this.currTrashItem.y += 5;
     this.moveTrash();
   }
@@ -196,6 +194,7 @@ export default class MicroGame12 extends Phaser.Scene {
       } else {
         this.playerScore += 1;
         a.destroy();
+        this.spawnTrash();
       }
     });
   }
