@@ -9,6 +9,7 @@ import MicroGame31 from "./Team4/MicroGame31";
 import TugOWar from "./8Bitties/TugOWar";
 import FlySwat from "./8Bitties/FlySwat";
 import DrinkPour from "./8Bitties/DrinkPour";
+import SockToss from "./Team Notateam/socktoss";
 // Set configuration for phaser game instance
 const config = {
   type: Phaser.AUTO,
@@ -26,7 +27,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [ColorLab],
+  scene: [SockToss],
   audio: {
     disableWebAudio: true,
   },
