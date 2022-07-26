@@ -13,7 +13,8 @@ export default class MicroGame31 extends Phaser.Scene {
         this.buttons = [];
         this.selectedButtonIndex = 0;
         // TODO swap buttonValues order
-        this.buttonValues = [64, 62, 60, 49, 28, /*24, 16, 12, 4, 2*/];
+        this.buttonValues = [64, 62, 60, 49, 28, 24, 16, 12, 4, 2];
+        this.pickedButtonValue = [];
         // IMPORTANT! Make sure that buttonPosition, selectedValues, and buttons (after addButtons) have the same length!
         this.buttonPositions = Phaser.Utils.Array.Shuffle([
             [280, 620],
@@ -24,7 +25,7 @@ export default class MicroGame31 extends Phaser.Scene {
         ])
         this.selectedValues = [];
         this.gameOver = false;
-        this.answerSheet = ['Button00', 'Button01', 'Button02', 'Button03', 'Button04','Button05', 'Button06', 'Button07', 'Button08', 'Button09'];
+        this.buttonImgNames = ['Button00', 'Button01', 'Button02', 'Button03', 'Button04','Button05', 'Button06', 'Button07', 'Button08', 'Button09'];
         //this.selectedValues = Phaser.Utils.Array.Shuffle(this.selectedValues)
 
         // score = 0;
@@ -93,6 +94,7 @@ export default class MicroGame31 extends Phaser.Scene {
         this.buttons.push(this.equation04);
 
         this.addImgToButtons();
+        console.log(this.buttons, this.pickedButtonValue)
         this.buttonSelector = this.add.image(0.68, 0.5, "cursorimage").setScale(0.07, 0.07);
         this.userInput();
         this.selectButton(0);
@@ -111,9 +113,18 @@ export default class MicroGame31 extends Phaser.Scene {
     addImgToButtons() {
 
         for (let i = 0; i < this.buttonPositions.length; i++) {
-            this.buttons[i] = this.add.image(this.buttonPositions[i][0], this.buttonPositions[i][1], this.answerSheet[i]).setScale(0.68, 0.5);
+            // create a button then add the button to this.buttons list.
+            // we want to randomized the equations here, and generate the correct key order.
+            // first randomly pick this.buttonImgNames[random number] to get a random image value.
+            // then at the end of the for loop we want to sort the array in descending order.
+            let randomIndex = Phaser.Math.Between(0, this.buttonImgNames.length - 1)
+            this.pickedButtonValue[i] = this.buttonValues.splice(randomIndex, 1)[0]
+            this.buttons[i] = this.add.image(this.buttonPositions[i][0], this.buttonPositions[i][1], this.buttonImgNames.splice(randomIndex, 1)[0]).setScale(0.68, 0.5);
+            // setting buttons to interactive.
             this.buttons[i].setInteractive();
         }
+
+        this.pickedButtonValue.sort((a,b)=>b-a)
 
     }
 
@@ -163,12 +174,12 @@ export default class MicroGame31 extends Phaser.Scene {
             this.selectNextButton(1)
         } else if (spaceJustPressed) {
             this.confirmSelection()
-            console.log('hi0', this.selectedValues, this.selectedValues.length,  this.buttonValues[this.selectedValues.length - 1])
             const currentValue = this.selectedValues[this.selectedValues.length-1]
-            const anwserValue = this.buttonValues[this.selectedValues.length - 1]
+            const anwserValue = this.pickedButtonValue[this.selectedValues.length - 1]
+            console.log(this.selectedValues)
+            console.log(currentValue, anwserValue)
             this.gameOver = !(currentValue === anwserValue);
-            console.log(this.selectedValues.length, this.buttonValues.length)
-            if (this.selectedValues.length === this.buttonValues.length) {
+            if (this.selectedValues.length === this.pickedButtonValue.length) {
                 this.checkList()
             }
         }
@@ -181,7 +192,7 @@ export default class MicroGame31 extends Phaser.Scene {
             // console.log('SelectedValues: ' + this.selectedValues);
             // console.log('Button Values: ' + this.buttonValues);
 
-            if (this.selectedValues[i] != this.buttonValues[i]) {
+            if (this.selectedValues[i] != this.pickedButtonValue[i]) {
                 result = false
                 break;
             }
@@ -199,7 +210,8 @@ export default class MicroGame31 extends Phaser.Scene {
 
         for (let i = 0; i < this.buttons.length; i++) {
             this.buttons[i].on('selected', () => {
-                this.selectedValues.push(this.buttonValues[i]);
+                console.log(i)
+                this.selectedValues.push(this.pickedButtonValue[i]);
             })
 
         }
