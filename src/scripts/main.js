@@ -27,7 +27,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [SockToss],
+  scene: [FlySwat],
   audio: {
     disableWebAudio: true,
   },
