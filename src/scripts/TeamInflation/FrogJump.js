@@ -11,18 +11,46 @@ export default class FrogJump extends Phaser.Scene {
         // Game Object Declarations
         this.myText;
         this.keySpace;
+        this.delayed = false;
+
 
     }
     preload() {
         this.load.spritesheet("dude", new URL("./assets/FillerAssets/dude.png", import.meta.url).href, { frameWidth: 32, frameHeight: 48});
         this.load.image('sky',new URL("./assets/FillerAssets/bckg.png", import.meta.url).href);
         this.load.image('ground', new URL("./assets/FillerAssets/platform.png", import.meta.url).href);
+        this.load.image('star', new URL("./assets/FillerAssets/star.png", import.meta.url).href);
         
     }
     create() {
         this.background = this.add.tileSprite(0, 0, 1080, 720, "sky");
         this.background.setOrigin(0,0);
-        this.background.setScrollFactor(0);
+        this.background.setScrollFactor(0)
+
+
+        this.loseText = this.add.text(330, 310)
+        this.loseText.setText('You Lose');
+        this.loseText.setStyle({
+            fontSize: '100px',
+            fill: '#00ff00'
+        })
+        this.loseText.setScrollFactor(0);
+
+        this.loseText.setVisible(false);
+
+        this.winText = this.add.text(330, 310)
+        this.winText.setText('You Win');
+        this.winText.setStyle({
+            fontSize: '100px',
+            fill: '#00ff00'
+        })
+
+        this.winText.setScrollFactor(0);
+
+        this.winText.setVisible(false);
+
+        
+        
         
         this.anims.create({
             key: 'left',
@@ -51,6 +79,10 @@ export default class FrogJump extends Phaser.Scene {
         this.platforms.create(500, 450, 'ground').setScale(0.2).refreshBody();
         // this.platforms.create(200, 250, 'ground').setScale(0.2).refreshBody();
         this.platforms.create(720, 250, 'ground').setScale(0.2).refreshBody();
+        this.platforms.create(0,30, "ground").setScale(1.5).refreshBody();
+        this.platforms.create(500,150, "ground").setScale(0.2).refreshBody();
+        this.stars = this.physics.add.group();
+        this.stars.create(150,-20, 'star');
         
 
         this.playerSprite = this.physics.add.sprite(500,600, 'dude');
@@ -62,9 +94,14 @@ export default class FrogJump extends Phaser.Scene {
 
 
         this.physics.add.collider(this.playerSprite, this.platforms);
+        this.physics.add.overlap(this.playerSprite, this.stars, this.destroyStar, null, this);
         this.cam = this.cameras.main;
         this.cam.setBounds(0, -500, 1080, 1220);
         this.cameras.main.startFollow(this.playerSprite);
+
+        this.delayedEvent = this.time.delayedCall(3000, this.loseState, [], this);
+
+        // this.setText();
     }
 
     update() {
@@ -92,10 +129,31 @@ if (this.cursors.up.isDown && this.playerSprite.body.touching.down)
     this.playerSprite.setVelocityY(-600);
 }
 
-    // this.background.tilePositionX = this.cameras.main.scrollX * .3;
 
+
+
+
+
+    // this.background.tilePositionX = this.cameras.main.scrollX * .3;
+    
 
     }
+    destroyStar(playerSprite, star) {
+        star.destroy()
+
+        this.winText.setVisible(true);
+        
+        this.physics.pause();
+    }
+
+    loseState(scene) {
+        this.loseText.setVisible(true);
+        
+        this.physics.pause();
+        
+    }
+
+
 
     setText() {
         // this.myText = this.add.text(275, 360, '')
@@ -106,4 +164,8 @@ if (this.cursors.up.isDown && this.playerSprite.body.touching.down)
         // });
         // this.myText.setText('8Bitties');
     }
+
+
+    
+    
 }
