@@ -18,9 +18,14 @@ export default class MicroGame22 extends Phaser.Scene {
         this.laser;
         this.hitbox1;
         this.hitbox2;
-
+        this.mouse;
+        
         this.Left;
         this.Right;
+
+        this.side = 0;
+        this.sweeping = false;
+        this.gameover = false;
     }
 
     preload() {
@@ -40,6 +45,8 @@ export default class MicroGame22 extends Phaser.Scene {
             import.meta.url).href);
         this.load.image('hitbox', new URL('assets/HideFromCat/hitbox.png',
             import.meta.url).href);
+        this.load.image('mouse', new URL('assets/HideFromCat/mouse.png',
+            import.meta.url).href);
         this.load.spritesheet(
             'laser',
             new URL('assets/HideFromCat/laser.png', import.meta.url).href,
@@ -55,16 +62,19 @@ export default class MicroGame22 extends Phaser.Scene {
         this.cat = this.add.image(540, 360, 'cat');
         this.eyes = this.add.image(540, 360, 'eyes');
         this.table = this.add.image(540, 360, 'table');
-        this.cup = this.add.image(540, 360, 'cup');
+        this.cup = this.add.image(500, 360, 'cup');
         this.cup.depth = 1;
-        this.plates = this.add.image(540, 360, 'plates');
+        this.plates = this.add.image(590, 360, 'plates');
         this.plates.depth = 1;
         this.laser = this.physics.add.sprite(540, 360, 'laser');
-        this.hitbox1 = this.physics.add.sprite(130, 670, 'hitbox');
-        this.hitbox1.depth = 2;
-        this.hitbox2 = this.physics.add.sprite(400, 670, 'hitbox');
-        this.hitbox2.depth = 2;
-
+        this.hitbox1 = this.physics.add.sprite(0, 0, 'hitbox');
+        // this.hitbox1.alpha = 0;
+        this.hitbox2 = this.physics.add.sprite(0, 0, 'hitbox');
+        // this.hitbox2.alpha = 0;
+        this.mouse = this.physics.add.sprite(150, 660, 'mouse');
+        this.mouse.setScale(0.4);
+        this.mouse.flipX = true;
+        this.mouse.depth = 2;
         this.createAnims();
 
         this.Left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
@@ -72,12 +82,15 @@ export default class MicroGame22 extends Phaser.Scene {
     }
 
     update() {
-        if (Phaser.Input.Keyboard.JustDown(this.Right)) {
-            this.sweepRight();
+        if (this.Right.isDown) {
+            this.mouse.flipX = true;
+            this.mouse.x += 8;
         }
-        else if (Phaser.Input.Keyboard.JustDown(this.Left)) {
-            this.sweepLeft();
+        if (this.Left.isDown) {
+            this.mouse.flipX = false;
+            this.mouse.x -= 8;
         }
+        this.startSweeping();
     }
 
     createAnims() {
@@ -122,33 +135,27 @@ export default class MicroGame22 extends Phaser.Scene {
         this.laser.anims.play('0');
         this.time.delayedCall(150, () => {
             this.laser.anims.play('1');
-            this.hitbox1.x = 195;
-            this.hitbox2.x = 470;
         }, [], this);
         this.time.delayedCall(300, () => {
             this.laser.anims.play('2');
-            this.hitbox1.x = 250;
-            this.hitbox2.x = 530;
+            this.hitbox2.setPosition(530, 670);
         }, [], this);
         this.time.delayedCall(450, () => {
             this.laser.anims.play('3');
-            this.hitbox1.x = 360;
             this.hitbox2.x = 645;
         }, [], this);
         this.time.delayedCall(600, () => {
             this.laser.anims.play('4');
-            this.hitbox1.x = 455;
             this.hitbox2.x = 725;
         }, [], this);
         this.time.delayedCall(750, () => {
             this.laser.anims.play('5');
-            this.hitbox1.x = 525;
-            this.hitbox2.x = 800;
+            this.hitbox1.setPosition(525, 670);
+            this.hitbox2.setPosition(0);
         }, [], this);
         this.time.delayedCall(900, () => {
             this.laser.anims.play('6'); 
             this.hitbox1.x = 620;
-            this.hitbox2.x = 905;
         }, [], this);
 
     }
@@ -158,33 +165,38 @@ export default class MicroGame22 extends Phaser.Scene {
         this.time.delayedCall(150, () => {
             this.laser.anims.play('5');
             this.hitbox1.x = 525;
-            this.hitbox2.x = 800;
         }, [], this);
         this.time.delayedCall(300, () => {
             this.laser.anims.play('4');
-            this.hitbox1.x = 455;
-            this.hitbox2.x = 725;
+            this.hitbox1.setPosition(0);
+            this.hitbox2.setPosition(725, 670);
         }, [], this);
         this.time.delayedCall(450, () => {
             this.laser.anims.play('3');
-            this.hitbox1.x = 360;
             this.hitbox2.x = 645;
         }, [], this);
         this.time.delayedCall(600, () => {
             this.laser.anims.play('2');
-            this.hitbox1.x = 250;
             this.hitbox2.x = 530;
         }, [], this);
         this.time.delayedCall(750, () => {
             this.laser.anims.play('1');
-            this.hitbox1.x = 195;
-            this.hitbox2.x = 470;
+            this.hitbox2.setPosition(0);
         }, [], this);
         this.time.delayedCall(900, () => {
             this.laser.anims.play('0');
-            this.hitbox1.x = 130;
-            this.hitbox2.x = 400;
         }, [], this);
+    }
+
+    startSweeping() {
+        if (this.laser.frame.name === 0 && this.side === 0) {
+            this.side = 1;
+            this.time.delayedCall(2200, this.sweepRight, [], this);
+        }
+        if (this.laser.frame.name === 6 && this.side === 1) {
+            this.side = 0;
+            this.time.delayedCall(2200, this.sweepLeft, [], this);
+        }
     }
 
     setText() {
