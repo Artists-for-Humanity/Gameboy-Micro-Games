@@ -6,7 +6,9 @@ import ColorLab from "./8Bitties/ColorLab";
 import MicroGame11 from "./DebugginDaOpps/MicroGame11";
 import MicroGame21 from "./MicroGamers/MicroGame21";
 import MicroGame31 from "./Team4/MicroGame31";
-
+import TugOWar from "./8Bitties/TugOWar";
+import FlySwat from "./8Bitties/FlySwat";
+import DrinkPour from "./8Bitties/DrinkPour";
 // Set configuration for phaser game instance
 const config = {
   type: Phaser.AUTO,
