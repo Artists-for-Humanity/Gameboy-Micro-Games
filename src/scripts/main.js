@@ -22,7 +22,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [MicroGame21],
+  scene: [MicroGame22],
   audio: {
     disableWebAudio: true,
   },
