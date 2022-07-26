@@ -22,6 +22,10 @@ export default class MicroGame12 extends Phaser.Scene {
       new URL("./assets1/startScreen.png", import.meta.url).href
     );
     this.load.image(
+      "background",
+      new URL("./assets1/game-background.png", import.meta.url).href
+    );
+    this.load.image(
       "gameOverScreen",
       new URL("./assets1/game-over.png", import.meta.url).href
     );
@@ -55,6 +59,11 @@ export default class MicroGame12 extends Phaser.Scene {
     this.gameOver = false;
     this.gameWidth = this.game.config.width;
     this.gameHeight = this.game.config.height;
+    this.add.image(
+      this.game.config.width / 2,
+      this.game.config.height / 2,
+      "background"
+    );
     this.recycleBin = this.physics.add
       .image(760, 540, "recycle-bin")
       .setScale(0.2, 0.2);
@@ -111,7 +120,7 @@ export default class MicroGame12 extends Phaser.Scene {
       if (this.playerScore === this.triesToWin) {
         this.currTrashItem.visible = false;
         this.gameOver = true;
-        this.endText = this.add.text(360, 300, "You Won!");
+        this.endText = this.add.text(300, 250, "You Won!");
         this.endText.setStyle({
           fontSize: "100px",
           fill: "000000",
@@ -120,7 +129,6 @@ export default class MicroGame12 extends Phaser.Scene {
       }
 
       if (this.currTrashItem === undefined) {
-        console.log(this.currTrashItem);
         this.currTrashItem = this.physics.add
           .image(
             this.gameWidth / 2,
