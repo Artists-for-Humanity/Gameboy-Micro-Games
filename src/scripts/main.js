@@ -4,8 +4,8 @@ import GlobalState from "./GlobalState";
 import MicroGame01 from "./8Bitties/MicroGame01";
 import MicroGame11 from "./DebugginDaOpps/MicroGame11";
 import MicroGame21 from "./MicroGamers/MicroGame21";
-import MicroGame31 from "./TeamInflation/MicroGame31";
-import FrogJump from "./TeamInflation/FrogJump";
+import Highest2Lowest from "./TeamInflation/Highest2Lowest";
+import FrogJump from "./TeamInflation/Highest2Lowest";
 // Set configuration for phaser game instance
 const config = {
   type: Phaser.AUTO,
@@ -22,7 +22,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [FrogJump],
+  scene: [Highest2Lowest],
   audio: {
     disableWebAudio: true,
   },

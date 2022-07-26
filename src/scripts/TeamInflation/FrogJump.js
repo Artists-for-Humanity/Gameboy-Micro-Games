@@ -65,11 +65,6 @@ export default class FrogJump extends Phaser.Scene {
         this.cam = this.cameras.main;
         this.cam.setBounds(0, -500, 1080, 1220);
         this.cameras.main.startFollow(this.playerSprite);
-
-
-
-
-        // this.setText();
     }
 
     update() {
