@@ -38,8 +38,7 @@ export default class TugOWar extends Phaser.Scene {
     );
     this.load.image(
       "pull",
-      new URL("../8Bitties/assets/TugOWar/imageholder.png", import.meta.url)
-        .href
+      new URL("../8Bitties/assets/TugOWar/pulltext.png", import.meta.url).href
     );
     this.load.image(
       "rope",
@@ -114,17 +113,16 @@ export default class TugOWar extends Phaser.Scene {
     this.npc.flipX = true;
   }
   update() {
-    console.log("prognum", this.progNum);
     this.winOrLose();
     this.scalePull();
     this.startDashMovement();
   }
   scalePull() {
-    if (this.pullScale <= 1.5) {
+    if (this.pullScale <= 1) {
       this.pullTimer += 1;
-      this.pullScale += 0.3 / this.pullTimer;
+      this.pullScale += 0.25 / this.pullTimer;
       this.pull.setScale(this.pullScale);
-    } else if (this.pullTimer === 83) {
+    } else if (this.pullTimer === 31) {
       this.pull.destroy();
       this.gameStart();
       this.pullTimer = 0;
@@ -174,7 +172,6 @@ export default class TugOWar extends Phaser.Scene {
     }
   }
   youLose() {
-    // console.log("mudsplash animation here");
     if (this.imageCreated === false) {
       this.youlose = this.add.image(540, 360, "lose").setDepth(100);
       this.imageCreated = true;
