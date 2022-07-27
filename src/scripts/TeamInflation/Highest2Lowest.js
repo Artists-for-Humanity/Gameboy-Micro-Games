@@ -1,5 +1,5 @@
 export default class MicroGame31 extends Phaser.Scene {
-    // Game Class Constructor
+   
 
     constructor() {
         super({
@@ -8,11 +8,10 @@ export default class MicroGame31 extends Phaser.Scene {
             key: 'Highest2Lowest',
         });
 
-        // Game Object Declarations
+
         this.myText;
         this.buttons = [];
         this.selectedButtonIndex = 0;
-        // TODO swap buttonValues order
         this.buttonValues = [64, 62, 60, 49, 28, 24, 16, 12, 4, 2];
         this.pickedButtonValue = [];
         // IMPORTANT! Make sure that buttonPosition, selectedValues, and buttons (after addButtons) have the same length!
@@ -26,16 +25,12 @@ export default class MicroGame31 extends Phaser.Scene {
         this.selectedValues = [];
         this.gameOver = false;
         this.buttonImgNames = ['Button00', 'Button01', 'Button02', 'Button03', 'Button04','Button05', 'Button06', 'Button07', 'Button08', 'Button09'];
-        //this.selectedValues = Phaser.Utils.Array.Shuffle(this.selectedValues)
-
-        // score = 0;
-        
+        this.answerSheet; 
         this.gameTime = 50;
         this.activeTime = false;
         this.currentTime = 0;
         this.text;
-        // gameOver = false;
-
+        
     }
 
     preload() {
@@ -83,19 +78,21 @@ export default class MicroGame31 extends Phaser.Scene {
         this.gameHeight = this.game.config.height;
 
         this.add.image(this.gameWidth / 2, this.gameHeight / 2, "background");
-
+    
+        
         this.image = this.add.image(this.gameWidth - 540, this.gameHeight - 560, "Instructions").setScale(0.6, 0.5);
-
-
+        
+        
+        
         this.buttons.push(this.equation00);
         this.buttons.push(this.equation01);
         this.buttons.push(this.equation02);
         this.buttons.push(this.equation03);
         this.buttons.push(this.equation04);
-
+        
         this.addImgToButtons();
-        console.log(this.buttons, this.pickedButtonValue)
         this.buttonSelector = this.add.image(0.68, 0.5, "cursorimage").setScale(0.07, 0.07);
+        this.youLostImg = this.add.image(600, 480, "loseimage").setScale(1, 1).setVisible(false);
         this.userInput();
         this.selectButton(0);
 
@@ -110,21 +107,50 @@ export default class MicroGame31 extends Phaser.Scene {
     
     }
 
+    update(time, delta) {
+        
+        if (!this.gameOver) {
+            
+        this.currentTime += delta;
+        
+        this.timer()
+
+        const upJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.up)
+        const downJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.down)
+        const spaceJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.space)
+
+
+        if (upJustPressed) {
+            this.selectNextButton(-1)
+        } else if (downJustPressed) {
+            this.selectNextButton(1)
+        } else if (spaceJustPressed) {
+            this.confirmSelection()
+            const currentValue = this.selectedValues[this.selectedValues.length-1]
+            const anwserValue = this.answerSheet[this.selectedValues.length - 1]
+            
+            this.gameOver = !(currentValue === anwserValue);
+            if (this.selectedValues.length === this.pickedButtonValue.length) {
+                this.checkList()
+            }
+        }
+        this.gameIsOver()
+        }
+    }
+
     addImgToButtons() {
 
-        for (let i = 0; i < this.buttonPositions.length; i++) {
-            // create a button then add the button to this.buttons list.
-            // we want to randomized the equations here, and generate the correct key order.
-            // first randomly pick this.buttonImgNames[random number] to get a random image value.
-            // then at the end of the for loop we want to sort the array in descending order.
+        for (let i = 0; i < this.buttonPositions.length; i++) {  
             let randomIndex = Phaser.Math.Between(0, this.buttonImgNames.length - 1)
             this.pickedButtonValue[i] = this.buttonValues.splice(randomIndex, 1)[0]
             this.buttons[i] = this.add.image(this.buttonPositions[i][0], this.buttonPositions[i][1], this.buttonImgNames.splice(randomIndex, 1)[0]).setScale(0.68, 0.5);
-            // setting buttons to interactive.
             this.buttons[i].setInteractive();
+            
         }
 
-        this.pickedButtonValue.sort((a,b)=>b-a)
+
+        this.answerSheet = [...this.pickedButtonValue];
+        this.answerSheet = this.answerSheet.sort((a,b)=>b-a)
 
     }
 
@@ -156,52 +182,19 @@ export default class MicroGame31 extends Phaser.Scene {
         button.emit('selected')
     }
 
-    update(time, delta) {
-
-        // console.log('reach me');
-        this.currentTime += delta;
-        // console.log(this.currentTime);
-        this.timer()
-
-        const upJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.up)
-        const downJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.down)
-        const spaceJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.space)
-
-
-        if (upJustPressed) {
-            this.selectNextButton(-1)
-        } else if (downJustPressed) {
-            this.selectNextButton(1)
-        } else if (spaceJustPressed) {
-            this.confirmSelection()
-            const currentValue = this.selectedValues[this.selectedValues.length-1]
-            const anwserValue = this.pickedButtonValue[this.selectedValues.length - 1]
-            console.log(this.selectedValues)
-            console.log(currentValue, anwserValue)
-            this.gameOver = !(currentValue === anwserValue);
-            if (this.selectedValues.length === this.pickedButtonValue.length) {
-                this.checkList()
-            }
-        }
-        this.gameIsOver()
-    }
 
     checkList() {
         let result = true;
         for (let i = 0; i < this.selectedValues.length; i++) {
-            // console.log('SelectedValues: ' + this.selectedValues);
-            // console.log('Button Values: ' + this.buttonValues);
 
-            if (this.selectedValues[i] != this.pickedButtonValue[i]) {
+            if (this.selectedValues[i] != this.answerSheet[i]) {
                 result = false
                 break;
             }
         }
         if (result) {
-            console.log("You won!")
-            this.add.image(540, 360, "winimage");
+            this.add.image(600, 480, "winimage");
         } else {
-            console.log("You lost!")
             this.gameOver = true;
         }
     }
@@ -210,20 +203,17 @@ export default class MicroGame31 extends Phaser.Scene {
 
         for (let i = 0; i < this.buttons.length; i++) {
             this.buttons[i].on('selected', () => {
-                console.log(i)
                 this.selectedValues.push(this.pickedButtonValue[i]);
             })
-
         }
     }
-        //
+       
     timer() {
         if (this.activeTime === false) {
 
             this.gameTime -= 1;
             this.activeTime = true;
             this.currentTime = 0;
-            // this.incrementScore();
         }
         if (this.activeTime === true && this.currentTime > 1000) {
             this.currentTime -= 1000;
@@ -242,24 +232,14 @@ export default class MicroGame31 extends Phaser.Scene {
             this.gameOver = true;
         }
         if (this.gameOver) {
-            //this.resetGame();
-            console.log("Game over")
-            //this.add.image(540, 360, "loseimage").setScale(1, 1);
+            this.youLostImg.setVisible(true)
+
         }
     }
     setScoreText() {
         this.text.setText('Time: ' + this.gameTime)
     }
-        //
-    setText() {
-        // this.myText = this.add.text(400, 360, '')
-        // this.myText.setStyle({
-        //     fontSize: '100px',
-        //     fill: '#000000',
-        //     align: 'center',
-        // });
-        // this.myText.setText('TeamInflation');
-    }
+       
+    setText(){}
 }
 
-// add math logic, for winning and losing conditions  
