@@ -254,19 +254,19 @@ export default class ColorLab extends Phaser.Scene {
       frameHeight: 558
     });
 
-    this.load.spritesheet("purple beaker", new URL("../8Bitties/assets/colorlab/beakerpurplefull.png",
+    this.load.spritesheet("purple beaker", new URL("../8Bitties/assets/colorlab/purplebeakersprites.png",
       import.meta.url).href, {
       frameWidth: 463,
       frameHeight: 558
     });
 
-    this.load.spritesheet("green beaker", new URL("../8Bitties/assets/colorlab/beakergreenfull.png",
+    this.load.spritesheet("green beaker", new URL("../8Bitties/assets/colorlab/greenbeakersprites.png",
       import.meta.url).href, {
       frameWidth: 463,
       frameHeight: 558
     });
 
-    this.load.spritesheet("orange beaker", new URL("../8Bitties/assets/colorlab/beakerorangefull.png",
+    this.load.spritesheet("orange beaker", new URL("../8Bitties/assets/colorlab/orangebeakersprites.png",
       import.meta.url).href, {
       frameWidth: 463,
       frameHeight: 558
@@ -432,7 +432,52 @@ export default class ColorLab extends Phaser.Scene {
       frames: [{
         key: "purple beaker",
         frame: 0
-      }],
+      },
+      {
+        key: "purple beaker",
+        frame: 1
+      },    
+      {
+        key: "purple beaker",
+        frame: 2
+      },    
+      {
+        key: "purple beaker",
+        frame: 3
+      },
+      {
+        key: "purple beaker",
+        frame: 4
+      },
+      {
+        key: "purple beaker",
+        frame: 5
+      },
+      {
+        key: "purple beaker",
+        frame: 6
+      },
+      {
+        key: "purple beaker",
+        frame: 7
+      },
+      {
+        key: "purple beaker",
+        frame: 8
+      },
+      {
+        key: "purple beaker",
+        frame: 9
+      },
+      {
+        key: "purple beaker",
+        frame: 10
+      },
+      {
+        key: "purple beaker",
+        frame: 11
+      },
+    ],
       frameRate: 10,
       repeat: -1
     });
@@ -443,7 +488,51 @@ export default class ColorLab extends Phaser.Scene {
       frames: [{
         key: "green beaker",
         frame: 0
-      }],
+      },
+      {
+        key: "green beaker",
+        frame: 1
+      },    
+      {
+        key: "green beaker",
+        frame: 2
+      },    
+      {
+        key: "green beaker",
+        frame: 3
+      },
+      {
+        key: "green beaker",
+        frame: 4
+      },
+      {
+        key: "green beaker",
+        frame: 5
+      },
+      {
+        key: "green beaker",
+        frame: 6
+      },
+      {
+        key: "green beaker",
+        frame: 7
+      },
+      {
+        key: "green beaker",
+        frame: 8
+      },
+      {
+        key: "green beaker",
+        frame: 9
+      },
+      {
+        key: "green beaker",
+        frame: 10
+      },
+      {
+        key: "green beaker",
+        frame: 11
+      },],
       frameRate: 10,
       repeat: -1
     });
@@ -454,6 +543,50 @@ export default class ColorLab extends Phaser.Scene {
       frames: [{
         key: "orange beaker",
         frame: 0
+      },
+      {
+        key: "orange beaker",
+        frame: 1
+      },    
+      {
+        key: "orange beaker",
+        frame: 2
+      },    
+      {
+        key: "orange beaker",
+        frame: 3
+      },
+      {
+        key: "orange beaker",
+        frame: 4
+      },
+      {
+        key: "orange beaker",
+        frame: 5
+      },
+      {
+        key: "orange beaker",
+        frame: 6
+      },
+      {
+        key: "orange beaker",
+        frame: 7
+      },
+      {
+        key: "orange beaker",
+        frame: 8
+      },
+      {
+        key: "orange beaker",
+        frame: 9
+      },
+      {
+        key: "orange beaker",
+        frame: 10
+      },
+      {
+        key: "orange beaker",
+        frame: 11
       }],
       frameRate: 10,
       repeat: -1
