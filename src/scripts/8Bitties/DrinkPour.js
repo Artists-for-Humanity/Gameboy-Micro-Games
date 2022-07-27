@@ -81,6 +81,7 @@ export default class DrinkPour extends Phaser.Scene {
 
     if(!this.cursors.space.isDown && !this.unpoured){
       this.stopped = true
+      console.log(this.game_won)
     }
 
     if(this.fill_value < 50 && this.fill_value >= 1){
@@ -91,6 +92,7 @@ export default class DrinkPour extends Phaser.Scene {
     if(this.cursors.space.isUp && this.fill_value <50 && this.fill_value >= 1) {
       this.gamestart = false;
       this.game_won = true;
+      console.log(this.game_won)
     }
     if(this.cursors.space.isUp && this.fill_value == 0) {
       this.gamestart = false;
