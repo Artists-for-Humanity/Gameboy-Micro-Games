@@ -14,12 +14,13 @@ export default class MicroGame12 extends Phaser.Scene {
     this.currTrashItem;
     this.playerScore = 0;
     this.firstTrash = Phaser.Math.Between(0, 3);
+    this.gameOver = false;
   }
 
   preload() {
     this.load.image(
       "startScreen",
-      new URL("./assets1/startScreen.png", import.meta.url).href
+      new URL("./assets1/sort-screen.png", import.meta.url).href
     );
     this.load.image(
       "background",
@@ -56,9 +57,6 @@ export default class MicroGame12 extends Phaser.Scene {
   }
 
   create() {
-    this.gameOver = false;
-    this.gameWidth = this.game.config.width;
-    this.gameHeight = this.game.config.height;
     this.add.image(
       this.game.config.width / 2,
       this.game.config.height / 2,
@@ -70,7 +68,7 @@ export default class MicroGame12 extends Phaser.Scene {
     this.trashBin = this.physics.add
       .image(320, 540, "trash-bin")
       .setScale(0.2, 0.2);
-    this.currTrashItem;
+
     this.trashBinMap = {
       "chicken-leg": "trash-bin",
       "plastic-bag": "recycle-bin",
@@ -78,24 +76,6 @@ export default class MicroGame12 extends Phaser.Scene {
       pizza: "trash-bin",
     };
 
-    this.listOfTrashItems = [
-      {
-        image: "chicken-leg",
-        destination: "trash-bin",
-        wrongDest: "recycle-bin",
-      },
-      { image: "pizza", destination: "trash-bin", wrongDest: "recycle-bin" },
-      {
-        image: "plastic-bag",
-        destination: "recycle-bin",
-        wrongDest: "trash-bin",
-      },
-      {
-        image: "plastic-can-holder",
-        destination: "recycle-bin",
-        wrongDest: "trash-bin",
-      },
-    ];
     this.gameOverScreen = this.add.image(
       this.game.config.width / 2,
       this.game.config.height / 2,
@@ -131,9 +111,9 @@ export default class MicroGame12 extends Phaser.Scene {
       if (this.currTrashItem === undefined) {
         this.currTrashItem = this.physics.add
           .image(
-            this.gameWidth / 2,
+            this.game.config.width / 2,
             -100,
-            this.listOfTrashItems[this.firstTrash].image
+            Object.keys(this.trashBinMap)[this.firstTrash]
           )
           .setScale(0.12, 0.12);
         this.addTrashCollider(this.recycleBin);
@@ -172,9 +152,9 @@ export default class MicroGame12 extends Phaser.Scene {
   spawnTrash() {
     this.currTrashItem = this.physics.add
       .image(
-        this.gameWidth / 2,
+        this.game.config.width / 2,
         0,
-        this.listOfTrashItems[Phaser.Math.Between(0, 3)].image
+        Object.keys(this.trashBinMap)[Phaser.Math.Between(0, 3)]
       )
       .setScale(0.12, 0.12);
   }
