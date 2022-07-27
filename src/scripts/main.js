@@ -22,7 +22,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [Highest2Lowest],
+  scene: [FrogJump],
   audio: {
     disableWebAudio: true,
   },
