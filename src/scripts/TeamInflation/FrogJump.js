@@ -1,5 +1,5 @@
 export default class FrogJump extends Phaser.Scene {
-    // Game Class Constructor
+    
 
     constructor() {
         super({
@@ -8,7 +8,6 @@ export default class FrogJump extends Phaser.Scene {
             key: 'FrogJump',
         });
 
-        // Game Object Declarations
         this.myText;
         this.keySpace;
         this.delayed = false;
@@ -22,7 +21,7 @@ export default class FrogJump extends Phaser.Scene {
         this.load.spritesheet("dude", new URL("./assets/FillerAssets/dude.png",
             import.meta.url).href, {
             frameWidth: 32,
-            frameHeight: 48
+            frameHeight: 48,
         });
         this.load.image('sky', new URL("./assets/bkg.png",
             import.meta.url).href);
@@ -40,22 +39,22 @@ export default class FrogJump extends Phaser.Scene {
         this.background.setScrollFactor(0);
 
 
-        this.loseText = this.add.text(330, 310)
+        this.loseText = this.add.text(330, 310);
         this.loseText.setText('You Lose');
         this.loseText.setStyle({
             fontSize: '100px',
             fill: '#00ff00'
-        })
+        });
         this.loseText.setScrollFactor(0);
 
         this.loseText.setVisible(false);
 
-        this.winText = this.add.text(330, 310)
+        this.winText = this.add.text(330, 310);
         this.winText.setText('You Win');
         this.winText.setStyle({
             fontSize: '100px',
             fill: '#00ff00'
-        })
+        });
 
         this.winText.setScrollFactor(0);
 
@@ -65,11 +64,11 @@ export default class FrogJump extends Phaser.Scene {
         this.grounds = this.physics.add.staticGroup();
         this.grounds.create(200, 820, 'ground').setScale(11).refreshBody();
 
-        this.generatePlatform(2);
+        this.generatePlatform(this.randomNum);
 
         this.playerSprite = this.physics.add.sprite(500, 620, 'dude');
 
-        // this.playerSprite.setBounce(0.2);
+       
         this.playerSprite.setCollideWorldBounds(false);
         this.playerSprite.body.setGravityY(700);
 
@@ -114,7 +113,7 @@ export default class FrogJump extends Phaser.Scene {
             this.platforms.create(850, 75, 'ground').setScale(0.2).refreshBody();
             this.stars = this.physics.add.group();
             this.stars.create(900, 40, 'star');
-            this.delayTime = 10800;
+            this.delayTime = 13000;
         }
         else {
             this.platforms = this.physics.add.staticGroup();
@@ -128,8 +127,8 @@ export default class FrogJump extends Phaser.Scene {
             this.platforms.create(620, 40, 'ground').setScale(1, 0.2).refreshBody();
             this.platforms.create(900, -30, 'ground').setScale(0.2).refreshBody();
             this.stars = this.physics.add.group();
-            this.stars.create(1070, 180, 'star')
-            this.delayTime = 120000;
+            this.stars.create(1070, 180, 'star');
+            this.delayTime = 14000;
         }
     }
 
@@ -138,11 +137,11 @@ export default class FrogJump extends Phaser.Scene {
         if(this.playerSprite.x <= 16) this.playerSprite.x = 16;
         if (this.cursors.left.isDown && !this.leftLock) {
             this.playerSprite.setVelocityX(-160);
-            // this.rightLock = true;
+            
             this.playerSprite.anims.play('left', true);
         } else if (this.cursors.right.isDown && !this.rightLock) {
             this.playerSprite.setVelocityX(160);
-            // this.leftLock = true;
+            
             this.playerSprite.anims.play('right', true);
         } else {
             this.playerSprite.setVelocityX(0);
@@ -156,7 +155,7 @@ export default class FrogJump extends Phaser.Scene {
     }
 
     destroyStar(playerSprite, star) {
-        star.destroy()
+        star.destroy();
         this.winText.setVisible(true);
         this.winState = true;
         this.physics.pause();
@@ -176,14 +175,14 @@ export default class FrogJump extends Phaser.Scene {
     }
 
     testGroundCollide() {
-        // if (this.offGround === true) {
-        //     this.physics.pause();
-        //     this.loseText.setVisible(true);
-        // }
+        if (this.offGround === true) {
+            this.physics.pause();
+            this.loseText.setVisible(true);
+        }
     }
 
     startGame() {
-        this.JumpImg.destroy()
+        this.JumpImg.destroy();
         this.physics.resume();
 
     }
