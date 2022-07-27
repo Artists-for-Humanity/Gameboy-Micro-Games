@@ -26,10 +26,11 @@ export default class MicroGame31 extends Phaser.Scene {
         this.gameOver = false;
         this.buttonImgNames = ['Button00', 'Button01', 'Button02', 'Button03', 'Button04','Button05', 'Button06', 'Button07', 'Button08', 'Button09'];
         this.answerSheet; 
-        this.gameTime = 50;
+        this.gameTime = 20;
         this.activeTime = false;
         this.currentTime = 0;
         this.text;
+        this.winState = false;
         
     }
 
@@ -109,33 +110,37 @@ export default class MicroGame31 extends Phaser.Scene {
 
     update(time, delta) {
         
-        if (!this.gameOver) {
+        if (!this.gameOver && this.gameTime > 0) {
+            this.currentTime += delta;
             
-        this.currentTime += delta;
-        
-        this.timer()
+            this.timer()
 
-        const upJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.up)
-        const downJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.down)
-        const spaceJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.space)
+            const upJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.up)
+            const downJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.down)
+            const spaceJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.space)
 
 
-        if (upJustPressed) {
-            this.selectNextButton(-1)
-        } else if (downJustPressed) {
-            this.selectNextButton(1)
-        } else if (spaceJustPressed) {
-            this.confirmSelection()
-            const currentValue = this.selectedValues[this.selectedValues.length-1]
-            const anwserValue = this.answerSheet[this.selectedValues.length - 1]
-            
-            this.gameOver = !(currentValue === anwserValue);
-            if (this.selectedValues.length === this.pickedButtonValue.length) {
-                this.checkList()
+            if (upJustPressed) {
+                this.selectNextButton(-1)
+            } else if (downJustPressed) {
+                this.selectNextButton(1)
+            } else if (spaceJustPressed) {
+                this.confirmSelection()
+                const currentValue = this.selectedValues[this.selectedValues.length-1]
+                const anwserValue = this.answerSheet[this.selectedValues.length - 1]
+                
+                this.gameOver = !(currentValue === anwserValue);
+                if (this.selectedValues.length === this.pickedButtonValue.length) {
+                    this.checkList()
+                }
             }
-        }
-        this.gameIsOver()
-        }
+            
+            if ( (this.gameOver || this.gameTime <= 0)  && !this.winState) { 
+                this.youLostImg.setVisible(true)
+                this.gameOver = true; 
+                }
+            }
+        
     }
 
     addImgToButtons() {
@@ -194,6 +199,8 @@ export default class MicroGame31 extends Phaser.Scene {
         }
         if (result) {
             this.add.image(600, 480, "winimage");
+            this.gameOver = true;
+            this.winState = true;
         } else {
             this.gameOver = true;
         }
@@ -227,15 +234,16 @@ export default class MicroGame31 extends Phaser.Scene {
         this.gameOver = false;
     }
 
-    gameIsOver(){
-        if (this.gameTime === 0) {
-            this.gameOver = true;
-        }
-        if (this.gameOver) {
-            this.youLostImg.setVisible(true)
+    // gameIsOver(){
+    //     if (this.gameTime === 0) {
+    //         this.gameOver = true;
+    //     }
+    //     if (this.gameOver) {
 
-        }
-    }
+    //         this.youLostImg.setVisible(true)
+
+    //     }
+    // }
     setScoreText() {
         this.text.setText('Time: ' + this.gameTime)
     }
