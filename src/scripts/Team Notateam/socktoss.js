@@ -11,6 +11,12 @@ export default class SockToss extends Phaser.Scene {
             active: false,
             visible: false,
             key: 'SockToss',
+            physics: {
+                default: 'arcade',
+                arcade: { 
+                  gravity: { y: 4500 }
+                }
+            }
         });
         // determines how low the sock can fall     
         this.floorval
@@ -93,11 +99,11 @@ export default class SockToss extends Phaser.Scene {
         this.hand.body.setAllowGravity(false)
         this.sock.body.setAllowGravity(false)
         // Add win and lose text
-        this.toss = this.add.image(720/2, 1080/2, 'toss')
+        this.toss = this.add.image(1080/2, 720/2, 'toss')
         this.toss.setVisible(true)
-        this.win = this.add.image(720/2, 1080/2, 'win')
+        this.win = this.add.image(1080/2, 720/2, 'win')
         this.win.setVisible(false)
-        this.lose = this.add.image(720/2, 1080/2, 'lose')
+        this.lose = this.add.image(1080/2, 720/2, 'lose')
         this.lose.setVisible(false)
         // Add meter and frame
         this.meter = this.add.image(125 * SCALE_MULTIPLIER, 140 * SCALE_MULTIPLIER, 'meter')
@@ -264,13 +270,13 @@ export default class SockToss extends Phaser.Scene {
             this.basket_f.setOrigin(0, 0);
             this.basket_f.setScale(SCALE_MULTIPLIER)
             this.basket_f.body.setAllowGravity(false)
-            this.floorval = 1080/2
+            this.floorval = 720 /2
             this.victory = 1;
         }
         else{
             this.xrange = (-70 * this.meterX/(METER_WIDTH)) * SCALE_MULTIPLIER
             this.yrange = (-755 * this.meterX/(METER_WIDTH-28)) * SCALE_MULTIPLIER
-            this.floorval = 1080 * .75
+            this.floorval = 720 * .75
             this.victory = 2;
         }
 
