@@ -24,7 +24,7 @@ export default class MicroGame22 extends Phaser.Scene {
         this.arrow2;
         this.arrows = [];
         this.arrowTimer = 0;
-        
+
         this.Left;
         this.Right;
 
@@ -66,7 +66,7 @@ export default class MicroGame22 extends Phaser.Scene {
                 frameWidth: 241,
                 frameHeight: 180,
             }
-            );
+        );
         this.load.spritesheet(
             'laser',
             new URL('assets/HideFromCat/laser.png', import.meta.url).href,
@@ -74,7 +74,7 @@ export default class MicroGame22 extends Phaser.Scene {
                 frameWidth: 1080,
                 frameHeight: 720,
             }
-            );
+        );
     }
 
     create() {
@@ -107,10 +107,13 @@ export default class MicroGame22 extends Phaser.Scene {
         this.Left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         this.Right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
-        this.physics.add.collider(this.mouse, this.hitboxes, () => { //collision detection between mouse and laser hitboxes
+        //collision detection between mouse and laser hitboxes
+        this.physics.add.collider(this.mouse, this.hitboxes, () => {
             this.lose();
         });
-        this.physics.add.collider(this.mouse, this.cheese, () => { //collision detection between mouse and cheese
+
+        //collision detection between mouse and cheese
+        this.physics.add.collider(this.mouse, this.cheese, () => {
             this.touched = true;
             this.cheese.y = 620;
         });
@@ -120,15 +123,17 @@ export default class MicroGame22 extends Phaser.Scene {
         if (!this.textDisplayed) {
             this.textDisplayed = true;
             this.displayStartText();
-            this.time.delayedCall(3000, () => { //delete text and start game after 3 seconds
-                this.startText.visible = 0; 
-                this.gamestarted = true; 
-            }, [], this); 
+
+            //delete text and start game after 3 seconds
+            this.time.delayedCall(3000, () => {
+                this.startText.visible = 0;
+                this.gamestarted = true;
+            }, [], this);
         }
         if (!this.gameover && this.gamestarted) {
             this.startSweeping();
             this.updatePlayer();
-            if (this.touched) {    
+            if (this.touched) {
                 this.arrowTimer += delta;
                 if (this.mouse.flipX) this.cheese.x = this.mouse.x + 10;
                 if (!this.mouse.flipX) this.cheese.x = this.mouse.x - 10;
@@ -186,9 +191,9 @@ export default class MicroGame22 extends Phaser.Scene {
         this.anims.create({
             key: 'run',
             frames: [
-            { key: 'mouse', frame: 0 },
-            { key: 'mouse', frame: 1 },
-            { key: 'mouse', frame: 2 },] ,
+                { key: 'mouse', frame: 0 },
+                { key: 'mouse', frame: 1 },
+                { key: 'mouse', frame: 2 },],
             frameRate: 12
         });
     }
@@ -234,7 +239,7 @@ export default class MicroGame22 extends Phaser.Scene {
             this.hitbox2.setPosition(0);
         }, [], this);
         this.time.delayedCall(900, () => {
-            this.laser.anims.play('6'); 
+            this.laser.anims.play('6');
             this.hitbox1.x = 620;
         }, [], this);
 
@@ -268,7 +273,8 @@ export default class MicroGame22 extends Phaser.Scene {
         }, [], this);
     }
 
-    startSweeping() { //this.side used to prevent multiple calls of sweepRight and sweepLeft
+    //this.side used to prevent multiple calls of sweepRight and sweepLeft
+    startSweeping() {
         if (this.laser.frame.name === 0 && this.side === 0) {
             this.side = 1;
             this.time.delayedCall(1400, this.sweepRight, [], this);
@@ -295,7 +301,7 @@ export default class MicroGame22 extends Phaser.Scene {
 
     flashArrows(ms) { //ms = flash duration
         this.arrows.forEach((param) => { param.visible = true });
-        this.time.delayedCall(ms, () => { this.arrows.forEach((param) => { param.visible = false}); }, [], this);
+        this.time.delayedCall(ms, () => { this.arrows.forEach((param) => { param.visible = false }); }, [], this);
     }
 
     lose() {
@@ -317,7 +323,7 @@ export default class MicroGame22 extends Phaser.Scene {
         });
         this.deadText.setText(
             ["You were",
-            "spotted!"]);
+                "spotted!"]);
         this.deadText.setOrigin(0.5);
         this.deadText.depth = 20;
     }
