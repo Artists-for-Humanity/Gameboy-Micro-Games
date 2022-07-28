@@ -16,10 +16,14 @@ export default class MicroGame22 extends Phaser.Scene {
         this.eyebeams;
         this.plates;
         this.laser;
+        this.mouse;
         this.hitbox1;
         this.hitbox2;
         this.hitboxes = [];
-        this.mouse;
+        this.arrow1;
+        this.arrow2;
+        this.arrows = [];
+        this.arrowTimer = 0;
         
         this.Left;
         this.Right;
@@ -53,6 +57,8 @@ export default class MicroGame22 extends Phaser.Scene {
             import.meta.url).href);
         this.load.image('hitbox', new URL('assets/HideFromCat/hitbox.png',
             import.meta.url).href);
+        this.load.image('arrow', new URL('assets/HideFromCat/arrow.png',
+            import.meta.url).href);
         this.load.spritesheet(
             'mouse',
             new URL('assets/HideFromCat/mouse.png', import.meta.url).href,
@@ -72,6 +78,7 @@ export default class MicroGame22 extends Phaser.Scene {
     }
 
     create() {
+        this.createAnims();
         this.background = this.add.image(540, 360, 'background');
         this.cat = this.add.image(540, 360, 'cat');
         this.eyes = this.add.image(540, 360, 'eyes');
@@ -81,19 +88,24 @@ export default class MicroGame22 extends Phaser.Scene {
         this.plates = this.add.image(590, 360, 'plates');
         this.plates.depth = 1;
         this.cheese = this.physics.add.sprite(910, 665, 'cheese');
-        this.cheese.setScale(0.6);
-        this.cheese.depth = 3;
+        this.cheese.setScale(0.6).depth = 3;
         this.laser = this.physics.add.sprite(540, 360, 'laser');
         this.hitbox1 = this.physics.add.sprite(0, 0, 'hitbox');
-        this.hitbox1.alpha = 0;
         this.hitbox2 = this.physics.add.sprite(0, 0, 'hitbox');
-        this.hitbox2.alpha = 0;
         this.hitboxes = [this.hitbox1, this.hitbox2];
+        this.hitboxes.forEach((param) => { param.visible = 0; })
         this.mouse = this.physics.add.sprite(150, 660, 'mouse');
-        this.mouse.setScale(0.4);
-        this.mouse.flipX = true;
-        this.mouse.depth = 2;
-        this.createAnims();
+        this.mouse.setScale(0.4).toggleFlipX().depth = 2;
+        this.mouse.setCollideWorldBounds(true);
+        this.arrow1 = this.add.image(140, 500, 'arrow');
+        this.arrow2 = this.add.image(400, 500, 'arrow');
+        this.arrows = [this.arrow1, this.arrow2];
+        this.arrows.forEach((param) => {
+            param.setScale(0.3);
+            param.visible = 0;
+        });
+        this.Left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        this.Right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
         this.physics.add.collider(this.mouse, this.hitboxes, () => { //collision detection between mouse and laser hitboxes
             this.lose();
@@ -102,27 +114,29 @@ export default class MicroGame22 extends Phaser.Scene {
             this.touched = true;
             this.cheese.y = 620;
         });
-
-        this.Left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-        this.Right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
     }
 
-    update() {
+    update(time, delta) {
         if (!this.textDisplayed) {
             this.textDisplayed = true;
             this.displayStartText();
             this.time.delayedCall(3000, () => { //delete text and start game after 3 seconds
-                this.startText.alpha = 0; 
+                this.startText.visible = 0; 
                 this.gamestarted = true; 
             }, [], this); 
         }
         if (!this.gameover && this.gamestarted) {
             this.startSweeping();
             this.updatePlayer();
-            if (this.touched) {
+            if (this.touched) {    
+                this.arrowTimer += delta;
                 if (this.mouse.flipX) this.cheese.x = this.mouse.x + 10;
                 if (!this.mouse.flipX) this.cheese.x = this.mouse.x - 10;
                 if (this.mouse.x <= 360) this.win();
+                if (this.arrowTimer >= 300) {
+                    this.flashArrows(300);
+                    this.time.delayedCall(300, () => { this.arrowTimer = 0; }, [], this);
+                }
             }
         }
     }
@@ -192,9 +206,9 @@ export default class MicroGame22 extends Phaser.Scene {
             "Steal the ",
             "cheese without",
             "getting spotted!"]);
-        this.startText.setOrigin(0.5);
+        this.startText.setOrigin(0.5)
         this.startText.depth = 20;
-        this.startText.alpha = 1;
+        this.startText.visible = 1;
     }
 
     sweepRight() {
@@ -257,11 +271,11 @@ export default class MicroGame22 extends Phaser.Scene {
     startSweeping() { //this.side used to prevent multiple calls of sweepRight and sweepLeft
         if (this.laser.frame.name === 0 && this.side === 0) {
             this.side = 1;
-            this.time.delayedCall(1800, this.sweepRight, [], this);
+            this.time.delayedCall(1400, this.sweepRight, [], this);
         }
         if (this.laser.frame.name === 6 && this.side === 1) {
             this.side = 0;
-            this.time.delayedCall(1800, this.sweepLeft, [], this);
+            this.time.delayedCall(1400, this.sweepLeft, [], this);
         }
     }
 
@@ -277,6 +291,11 @@ export default class MicroGame22 extends Phaser.Scene {
             this.mouse.x -= 8;
         }
         else this.mouse.anims.play('idle');
+    }
+
+    flashArrows(ms) { //ms = flash duration
+        this.arrows.forEach((param) => { param.visible = true });
+        this.time.delayedCall(ms, () => { this.arrows.forEach((param) => { param.visible = false}); }, [], this);
     }
 
     lose() {
@@ -320,7 +339,7 @@ export default class MicroGame22 extends Phaser.Scene {
             stroke: '#808080',
             strokeThickness: 8
         });
-        this.winText.setText("You won!");
+        this.winText.setText("YOU WON!");
         this.winText.setOrigin(0.5);
         this.winText.depth = 20;
     }
