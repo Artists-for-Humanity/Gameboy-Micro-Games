@@ -20,6 +20,11 @@ export default class FlySwat extends Phaser.Scene {
       new Phaser.Math.Vector2(780, 317),
       new Phaser.Math.Vector2(540, 360),
     ];
+    this.deadFlytimer =0; 
+    this.deadFlyScale = 0;
+    this.deadFly;
+    this.swatTimer = 2;
+    this.swingTimer =0;
     this.path;
     this.swatTextTimer = 0;
     this.swatTextScale = 0;
@@ -39,12 +44,21 @@ export default class FlySwat extends Phaser.Scene {
       new URL("../8Bitties/assets/flySwat/swatText.png", import.meta.url).href
     );
   }
+  
   create() {
     this.swat = this.add.image(540, 360, "swat");
     this.kitchen = this.add.image(540, 360, "kitchen");
+    this.spacebar = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.SPACE
+    );
   }
+
   update() {
     this.playSwatText();
+    this.swing();
+    if(this.deadFly){
+      this.animateDeadFly();
+    }
   }
   makepath() {
     this.path = new Phaser.Curves.Path(540, 360);
@@ -56,6 +70,7 @@ export default class FlySwat extends Phaser.Scene {
       rotateToPath: true,
     });
   }
+
   gameStart() {
     this.swatter = this.physics.add.sprite(540, 360, "holder");
     this.makepath();
@@ -65,6 +80,7 @@ export default class FlySwat extends Phaser.Scene {
       }
     });
   }
+
   playSwatText() {
     if (this.swatTextScale < 1) {
       this.swatTextTimer++;
@@ -75,6 +91,28 @@ export default class FlySwat extends Phaser.Scene {
       this.swatTextTimer = 0;
       this.swat.destroy();
       this.gameStart();
+    }
+  }
+
+  sing(){
+    if(Phaser.Input.Keyboard.JustDown(this.spacebar)){ 
+      this.swatdown = true;
+      this.swattyer.play.anim('down');
+    } else{
+      this.swatdown = false; 
+    }
+  }
+
+  killFly(){
+    this.deadFly = this.add.image(this.fly.x, thuis.fly.y , 'dead');
+    this.fly.destroy();
+  }
+
+  animateDeadFly(){
+    if (this.deadFlyScale > .25){
+      this.deadFlyTimer ++;
+      this.deadFlyScale += this.deadFlytimer/1;
+      this.deadFly.setScale(this.deadFlyScale);
     }
   }
 }
