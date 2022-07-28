@@ -15,7 +15,7 @@ export default class TugOWar extends Phaser.Scene {
     this.progressBar;
     this.dash;
     this.player;
-    this.npcs;
+    this.npc;
     this.rope;
     this.meter;
     this.dash;
@@ -109,10 +109,14 @@ export default class TugOWar extends Phaser.Scene {
       .sprite(270, 560, "player")
       .setDepth(2)
       .play("pulling");
-    this.npc = this.add.sprite(810, 560, "player").setDepth(2).play("pulling");
+    this.npc = this.add.sprite(810, 560, "player").setDepth(2);
     this.npc.flipX = true;
   }
   update() {
+    if (this.imageCreated === true) {
+      this.npc.anims.play("pulling");
+      this.player.anims.play("pulling");
+    }
     this.winOrLose();
     this.scalePull();
     this.startDashMovement();
