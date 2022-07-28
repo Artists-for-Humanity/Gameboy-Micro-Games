@@ -7,6 +7,7 @@ import MicroGame21 from "./MicroGamers/MicroGame21";
 import Highest2Lowest from "./TeamInflation/Highest2Lowest";
 import FrogJump from "./TeamInflation/FrogJump";
 import CircleGame from "./TeamInflation/CircleGame";
+import BewteenSpace from "./TeamInflation/BetweenSpace";
 // Set configuration for phaser game instance
 const config = {
   type: Phaser.AUTO,
@@ -23,7 +24,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [CircleGame],
+  scene: [BewteenSpace],
   audio: {
     disableWebAudio: true,
   },
