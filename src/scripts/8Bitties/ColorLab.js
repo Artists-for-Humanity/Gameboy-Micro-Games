@@ -399,7 +399,52 @@ export default class ColorLab extends Phaser.Scene {
       frames: [{
         key: "red beaker",
         frame: 0
-      }],
+      },
+      {
+        key: "red beaker",
+        frame: 1
+      },    
+      {
+        key: "red beaker",
+        frame: 2
+      },    
+      {
+        key: "red beaker",
+        frame: 3
+      },
+      {
+        key: "red beaker",
+        frame: 4
+      },
+      {
+        key: "red beaker",
+        frame: 5
+      },
+      {
+        key: "red beaker",
+        frame: 6
+      },
+      {
+        key: "red beaker",
+        frame: 7
+      },
+      {
+        key: "red beaker",
+        frame: 8
+      },
+      {
+        key: "red beaker",
+        frame: 9
+      },
+      {
+        key: "red beaker",
+        frame: 10
+      },
+      {
+        key: "red beaker",
+        frame: 11
+      },
+    ],
       frameRate: 10,
       repeat: -1
     });
@@ -410,7 +455,52 @@ export default class ColorLab extends Phaser.Scene {
       frames: [{
         key: "blue beaker",
         frame: 0
-      }],
+      },
+      {
+        key: "blue beaker",
+        frame: 1
+      },    
+      {
+        key: "blue beaker",
+        frame: 2
+      },    
+      {
+        key: "blue beaker",
+        frame: 3
+      },
+      {
+        key: "blue beaker",
+        frame: 4
+      },
+      {
+        key: "blue beaker",
+        frame: 5
+      },
+      {
+        key: "blue beaker",
+        frame: 6
+      },
+      {
+        key: "blue beaker",
+        frame: 7
+      },
+      {
+        key: "blue beaker",
+        frame: 8
+      },
+      {
+        key: "blue beaker",
+        frame: 9
+      },
+      {
+        key: "blue beaker",
+        frame: 10
+      },
+      {
+        key: "blue beaker",
+        frame: 11
+      },
+    ],
       frameRate: 10,
       repeat: -1
     });
@@ -421,7 +511,52 @@ export default class ColorLab extends Phaser.Scene {
       frames: [{
         key: "yellow beaker",
         frame: 0
-      }],
+      },
+      {
+        key: "yellow beaker",
+        frame: 1
+      },    
+      {
+        key: "yellow beaker",
+        frame: 2
+      },    
+      {
+        key: "yellow beaker",
+        frame: 3
+      },
+      {
+        key: "yellow beaker",
+        frame: 4
+      },
+      {
+        key: "yellow beaker",
+        frame: 5
+      },
+      {
+        key: "yellow beaker",
+        frame: 6
+      },
+      {
+        key: "yellow beaker",
+        frame: 7
+      },
+      {
+        key: "yellow beaker",
+        frame: 8
+      },
+      {
+        key: "yellow beaker",
+        frame: 9
+      },
+      {
+        key: "yellow beaker",
+        frame: 10
+      },
+      {
+        key: "yellow beaker",
+        frame: 11
+      },
+    ],
       frameRate: 10,
       repeat: -1
     });
