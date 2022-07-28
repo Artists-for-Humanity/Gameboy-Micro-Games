@@ -23,7 +23,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [FrogJump],
+  scene: [CircleGame],
   audio: {
     disableWebAudio: true,
   },

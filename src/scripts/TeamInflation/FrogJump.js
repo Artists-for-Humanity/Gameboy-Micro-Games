@@ -25,7 +25,7 @@ export default class FrogJump extends Phaser.Scene {
         });
         this.load.image('sky', new URL("./assets/bkg2.png",
             import.meta.url).href);
-        this.load.image('ground', new URL("./assets/platform 2.png",
+        this.load.image('ground', new URL("./assets/FillerAssets/platform.png",
             import.meta.url).href);
         this.load.image('star', new URL("./assets/FillerAssets/star.png",
             import.meta.url).href);
@@ -62,7 +62,7 @@ export default class FrogJump extends Phaser.Scene {
        
         this.cursors = this.input.keyboard.createCursorKeys();
         this.grounds = this.physics.add.staticGroup();
-        this.grounds.create(200, 900, 'ground').setScale(2.3).refreshBody();
+        this.grounds.create(1080, 820, 'ground').setScale(11).refreshBody();
 
         this.generatePlatform(this.randomNum);
 
@@ -92,40 +92,40 @@ export default class FrogJump extends Phaser.Scene {
     generatePlatform(level) {
         if(level === 0) {
             this.platforms = this.physics.add.staticGroup();
-            this.platforms.create(500, 450, 'ground').setScale(0.1).refreshBody();
-            this.platforms.create(720, 250, 'ground').setScale(0.1).refreshBody();
-            this.platforms.create(0, 30, "ground").setScale(1.5,0.1).refreshBody();
-            this.platforms.create(500, 150, "ground").setScale(0.1).refreshBody();
+            this.platforms.create(500, 450, 'ground').setScale(0.2).refreshBody();
+            this.platforms.create(720, 250, 'ground').setScale(0.2).refreshBody();
+            this.platforms.create(0, 30, "ground").setScale(1.5,0.2).refreshBody();
+            this.platforms.create(500, 150, "ground").setScale(0.2).refreshBody();
             this.stars = this.physics.add.group();
             this.stars.create(150, -5, 'star');
             this.delayTime = 10000;
         }
         else if(level === 1) {
             this.platforms = this.physics.add.staticGroup();
-            this.platforms.create(680, 450, 'ground').setScale(0.1).refreshBody();
-            this.platforms.create(535, 250, 'ground').setScale(0.1).refreshBody();
-            this.platforms.create(250, 150, "ground").setScale(0.1).refreshBody();
-            this.platforms.create(440, -60, "ground").setScale(0.1).refreshBody();
-            this.platforms.create(680, -150, 'ground').setScale(0.1).refreshBody();
-            this.platforms.create(900, 5, "ground").setScale(0.1).refreshBody();
-            this.platforms.create(900, 75, "ground").setScale(0.1).refreshBody();
-            this.platforms.create(980, 75, 'ground').setScale(0.1).refreshBody();
-            this.platforms.create(850, 75, 'ground').setScale(0.1).refreshBody();
+            this.platforms.create(680, 450, 'ground').setScale(0.2).refreshBody();
+            this.platforms.create(535, 250, 'ground').setScale(0.2).refreshBody();
+            this.platforms.create(250, 150, "ground").setScale(0.2).refreshBody();
+            this.platforms.create(440, -60, "ground").setScale(0.2).refreshBody();
+            this.platforms.create(680, -150, 'ground').setScale(0.2).refreshBody();
+            this.platforms.create(900, 5, "ground").setScale(0.2).refreshBody();
+            this.platforms.create(900, 75, "ground").setScale(0.2).refreshBody();
+            this.platforms.create(980, 75, 'ground').setScale(0.2).refreshBody();
+            this.platforms.create(850, 75, 'ground').setScale(0.2).refreshBody();
             this.stars = this.physics.add.group();
             this.stars.create(900, 40, 'star');
             this.delayTime = 13000;
         }
         else {
             this.platforms = this.physics.add.staticGroup();
-            this.platforms.create(40, 450, 'ground').setScale(0.1).refreshBody();
-            this.platforms.create(800, 430, 'ground').setScale(0.1).refreshBody();
-            this.platforms.create(1090, 200, 'ground').setScale(0.1).refreshBody();
-            this.platforms.create(700, 230, 'ground').setScale(0.1).refreshBody();
-            this.platforms.create(600, 150, 'ground').setScale(0.1).refreshBody();
-            this.platforms.create(500, 110, 'ground').setScale(0.1).refreshBody();
-            this.platforms.create(360, 200, 'ground').setScale(0.1).refreshBody();
-            this.platforms.create(620, 30, 'ground').setScale(1, 0.1).refreshBody();
-            this.platforms.create(900, -30, 'ground').setScale(0.1).refreshBody();
+            this.platforms.create(40, 450, 'ground').setScale(0.2).refreshBody();
+            this.platforms.create(800, 430, 'ground').setScale(0.2).refreshBody();
+            this.platforms.create(1090, 200, 'ground').setScale(0.2).refreshBody();
+            this.platforms.create(700, 230, 'ground').setScale(0.2).refreshBody();
+            this.platforms.create(600, 150, 'ground').setScale(0.2).refreshBody();
+            this.platforms.create(500, 110, 'ground').setScale(0.2).refreshBody();
+            this.platforms.create(360, 200, 'ground').setScale(0.2).refreshBody();
+            this.platforms.create(620, 30, 'ground').setScale(1, 0.2).refreshBody();
+            this.platforms.create(900, -30, 'ground').setScale(0.2).refreshBody();
             this.stars = this.physics.add.group();
             this.stars.create(1070, 180, 'star');
             this.delayTime = 14000;
