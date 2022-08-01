@@ -9,6 +9,8 @@ import MicroGame21 from "./MicroGamers/MicroGame21";
 import MicroGame31 from "./Team4/MicroGame31";
 import SockToss from "./Team Notateam/socktoss";
 import CutScreen from "./Team Notateam/CutScreen";
+import MainMenu from "./MainMenu";
+
 // Set configuration for phaser game instance
 const config = {
   type: Phaser.AUTO,
@@ -26,9 +28,9 @@ const config = {
       debug: false,
     },
   },
-  scene: [CutScreen],
+  scene: [MicroGame11, Emeowgency, MicroGame21],
   audio: {
-    disableWebAudio: false,
+    disableWebAudio: true,
   },
   plugins: {
     global: [
@@ -41,5 +43,6 @@ const config = {
     ],
   },
 };
+
 // Initialize game instance
 new Phaser.Game(config);
