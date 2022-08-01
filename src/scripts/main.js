@@ -28,7 +28,7 @@ const config = {
   },
   scene: [MicroGame11, Emeowgency, MicroGame21],
   audio: {
-    disableWebAudio: false,
+    disableWebAudio: true,
   },
   plugins: {
     global: [

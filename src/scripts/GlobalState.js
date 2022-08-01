@@ -14,7 +14,7 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
   }
 
   preload(game) {
-    console.log(game);
+    // console.log(game);
     game.load.image('mask', new URL('./globalAssets/mask.png', import.meta.url).href);
     game.load.image('bomb', new URL('./globalAssets/bomb.png', import.meta.url).href);
     game.load.image('fuse', new URL('./globalAssets/fuse.png', import.meta.url).href);
@@ -22,7 +22,7 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
 
   createBombTimer(bombPosX, bombPosY, sec, game) {
     this.fuseImg = game.add.sprite(bombPosX, bombPosY, 'fuse');
-    console.log('hello', this.fuseImg);
+    // console.log('hello', this.fuseImg);
 
     this.fuseImg.setScale(0.25, 0.25);
     this.bombImg = game.add.sprite(this.fuseImg.x, this.fuseImg.y, 'bomb');
@@ -73,7 +73,7 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
   initCountDown(game) {
 
     this.createBombTimer(250, 625, this.initialTime, game);
-    console.log('reachme');
+    // console.log('reachme');
 
     // Each 1000 ms call onEvent
     this.timedEvent = game.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
