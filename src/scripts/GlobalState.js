@@ -2,19 +2,14 @@ import Phaser from 'phaser';
 
 class GlobalState extends Phaser.Plugins.BasePlugin {
 
-
   constructor(pluginManager) {
     super(pluginManager);
 
     this.initialTime = 10
     this.timedEvent;
-
-
   }
 
-  test() {
-    console.log(this.game.scene.scenes.length);
-    console.log(this.game.scene.scenes[Phaser.Math.Between(0, this.game.scene.scenes.length)].scene.key);
+  randomGame() {
     this.pluginManager.game.scene.start(this.game.scene.scenes[Phaser.Math.Between(0, this.game.scene.scenes.length)])
   }
 
@@ -23,7 +18,6 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
     game.load.image('mask', new URL('./globalAssets/mask.png', import.meta.url).href);
     game.load.image('bomb', new URL('./globalAssets/bomb.png', import.meta.url).href);
     game.load.image('fuse', new URL('./globalAssets/fuse.png', import.meta.url).href);
-
   }
 
   createBombTimer(bombPosX, bombPosY, sec, game) {
@@ -80,13 +74,10 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
 
     this.createBombTimer(250, 625, this.initialTime, game);
     console.log('reachme');
+
     // Each 1000 ms call onEvent
     this.timedEvent = game.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
-
-
   }
-
-
 }
 
 export default GlobalState;
