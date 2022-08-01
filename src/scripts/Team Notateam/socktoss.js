@@ -8,8 +8,8 @@ export default class SockToss extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
         super({
-            active: false,
-            visible: false,
+            active: true,
+            visible: true,
             key: 'SockToss',
             physics: {
                 default: 'arcade',

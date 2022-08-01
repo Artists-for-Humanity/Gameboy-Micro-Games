@@ -12,8 +12,8 @@ export default class CutScreen extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
         super({
-            active: false,
-            visible: false,
+            active: true,
+            visible: true,
             key: 'CutScreen',
             physics: {
                 default: 'arcade',
@@ -126,7 +126,7 @@ export default class CutScreen extends Phaser.Scene {
             repeat: 2
         })   
 
-        this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
+        this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP)
 
         this.l_life.children.iterate((child) => {
             child.anims.play('life')
