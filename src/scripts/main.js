@@ -16,7 +16,7 @@ const config = {
   type: Phaser.AUTO,
   width: 1080,
   height: 720,
-  backgroundColor: "#808080",
+  transparent: true,
 
   // Add physics, arcade, scene, and audio
   physics: {
@@ -28,7 +28,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [MicroGame11, Emeowgency, MicroGame21],
+  scene: [MicroGame31, MicroGame11, Emeowgency, MicroGame21, SockToss],
   audio: {
     disableWebAudio: true,
   },

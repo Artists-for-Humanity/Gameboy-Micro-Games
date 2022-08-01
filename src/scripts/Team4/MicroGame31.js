@@ -17,6 +17,7 @@ export default class MicroGame31 extends Phaser.Scene {
 
     create() {
         this.setText();
+        this.globalState.randomGame();
     }
 
     update() {

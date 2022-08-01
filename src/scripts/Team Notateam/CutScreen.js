@@ -36,8 +36,6 @@ export default class CutScreen extends Phaser.Scene {
         this.socket_group
         this.l_door
         this.r_door
-        this.l_group
-        this.r_group
 
         this.l_sockets
         this.r_sockets
@@ -61,8 +59,8 @@ export default class CutScreen extends Phaser.Scene {
     create() {
 
         // Add images to Scene
-        this.l_door = this.add.image(0, 0, 'l_door')
-        this.r_door = this.add.image(0, 0, 'r_door')
+        this.l_door = this.add.image(L_START, Y/2, 'l_door')
+        this.r_door = this.add.image(R_START, Y/2, 'r_door')
 
         //TO BE CONTINUED
         this.l_sockets = this.physics.add.group({
@@ -95,12 +93,6 @@ export default class CutScreen extends Phaser.Scene {
         this.r_sockets.setDepth(1)
         this.l_life.setDepth(1)
         this.r_life.setDepth(1)
-
-        this.l_group = this.add.container(L_START, Y/2)
-        this.l_group.add(this.l_door)
-
-        this.r_group = this.add.container(R_START, Y/2)
-        this.r_group.add(this.r_door)  
 
         this.anims.create({
             key: 'life',
@@ -164,7 +156,7 @@ export default class CutScreen extends Phaser.Scene {
 
     close_doors(){
         // If left door is not yet in closed position
-        if(this.l_group.x < L_END){
+        if(this.l_door.x < L_END){
             this.l_close()
             this.r_close()
         }
@@ -176,7 +168,7 @@ export default class CutScreen extends Phaser.Scene {
     }
 
     open_doors(){
-        if(this.l_group.x > L_START){
+        if(this.l_door.x > L_START){
             this.l_open()
             this.r_open()
         }
@@ -189,10 +181,10 @@ export default class CutScreen extends Phaser.Scene {
 
     l_close(){
         // If left door would overshoot closed position
-        if(this.l_group.x + this.close_timer >= L_END){
+        if(this.l_door.x + this.close_timer >= L_END){
 
             // Move Door
-            this.l_group.x = L_END
+            this.l_door.x = L_END
 
             //Move Life Objects
             this.l_sockets.children.iterate((child) => {
@@ -204,7 +196,7 @@ export default class CutScreen extends Phaser.Scene {
         }
         else{
             // Move Door
-            this.l_group.x += this.close_timer
+            this.l_door.x += this.close_timer
 
             // Move Life Objects
             this.l_sockets.children.iterate((child) => {
@@ -218,10 +210,10 @@ export default class CutScreen extends Phaser.Scene {
 
     l_open(){
         // code for right door based on code for left door
-        if(this.l_group.x - this.close_timer <= L_START){
+        if(this.l_door.x - this.close_timer <= L_START){
 
             // Move Door
-            this.l_group.x = L_START
+            this.l_door.x = L_START
 
             // Move Life Objects
             this.l_sockets.children.iterate((child) => {
@@ -234,7 +226,7 @@ export default class CutScreen extends Phaser.Scene {
         }
         else{
             // Move Door
-            this.l_group.x -= this.close_timer
+            this.l_door.x -= this.close_timer
 
             // Move Life Objects
             this.l_sockets.children.iterate((child) => {
@@ -248,10 +240,10 @@ export default class CutScreen extends Phaser.Scene {
 
     r_close(){
         // code for right door based on code for left door
-        if(this.r_group.x - this.close_timer <= R_END){
+        if(this.r_door.x - this.close_timer <= R_END){
 
             // Move Door
-            this.r_group.x = R_END
+            this.r_door.x = R_END
 
             // Move Life Objects
             this.r_sockets.children.iterate((child) => {
@@ -264,7 +256,7 @@ export default class CutScreen extends Phaser.Scene {
         }
         else{
             // Move Door
-            this.r_group.x -= this.close_timer
+            this.r_door.x -= this.close_timer
 
             // Move Life Objects
             this.r_sockets.children.iterate((child) => {
@@ -278,10 +270,10 @@ export default class CutScreen extends Phaser.Scene {
 
     r_open(){
         // If left door would overshoot closed position
-        if(this.r_group.x + this.close_timer >= R_START){
+        if(this.r_door.x + this.close_timer >= R_START){
 
             // Move Door
-            this.r_group.x = R_START
+            this.r_door.x = R_START
 
             //Move Life Objects
             this.r_sockets.children.iterate((child) => {
@@ -293,7 +285,7 @@ export default class CutScreen extends Phaser.Scene {
         }
         else{
             // Move Door
-            this.r_group.x += this.close_timer
+            this.r_door.x += this.close_timer
 
             // Move Life Objects
             this.r_sockets.children.iterate((child) => {
