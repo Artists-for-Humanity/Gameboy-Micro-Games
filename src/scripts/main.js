@@ -7,6 +7,8 @@ import MicroGame11 from "./DebugginDaOpps/MicroGame11";
 import MicroGame12 from "./DebugginDaOpps/MicroGame12";
 import MicroGame21 from "./MicroGamers/MicroGame21";
 import MicroGame31 from "./Team4/MicroGame31";
+import SockToss from "./Team Notateam/socktoss";
+import CutScreen from "./Team Notateam/CutScreen";
 import MainMenu from "./MainMenu";
 
 // Set configuration for phaser game instance
