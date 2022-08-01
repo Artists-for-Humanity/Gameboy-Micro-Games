@@ -7,6 +7,7 @@ import MicroGame11 from "./DebugginDaOpps/MicroGame11";
 import MicroGame12 from "./DebugginDaOpps/MicroGame12";
 import MicroGame21 from "./MicroGamers/MicroGame21";
 import MicroGame31 from "./Team4/MicroGame31";
+import MainMenu from "./MainMenu";
 
 // Set configuration for phaser game instance
 const config = {
@@ -25,7 +26,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [MicroGame21],
+  scene: [MicroGame11, Emeowgency, MicroGame21],
   audio: {
     disableWebAudio: false,
   },
@@ -40,5 +41,6 @@ const config = {
     ],
   },
 };
+
 // Initialize game instance
 new Phaser.Game(config);
