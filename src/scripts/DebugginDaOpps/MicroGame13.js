@@ -10,6 +10,7 @@ export default class MicroGame13 extends Phaser.Scene {
     // Game Object Declarations
     this.cannon;
     this.barrels;
+    this.totalBarrels;
   }
 
   preload() {
@@ -22,12 +23,16 @@ export default class MicroGame13 extends Phaser.Scene {
       new URL("./assets2/game-over.png", import.meta.url).href
     );
     this.load.image(
+      "boats",
+      new URL("./assets2/boats.png", import.meta.url).href
+    );
+    this.load.image(
       "waves",
       new URL("./assets2/wave-pixel.png", import.meta.url).href
     );
     this.load.image(
       "barrel",
-      new URL("./assets2/pixel-barrel.png", import.meta.url).href
+      new URL("./assets2/barrel.png", import.meta.url).href
     );
     this.load.image(
       "1-ball",
@@ -72,16 +77,31 @@ export default class MicroGame13 extends Phaser.Scene {
     this.load.spritesheet(
       "cannon",
       new URL("./assets2/cannon-spritesheet.png", import.meta.url).href,
-      { frameWidth: 700, frameHeight: 500 }
+      { frameWidth: 980, frameHeight: 720 }
     );
   }
 
   create() {
-    // this.add.image(
-    //   this.game.config.width / 2,
-    //   this.game.config.height / 2,
-    //   "ocean-bg"
-    // );
+    this.cannonBallGrp = this.physics.add.group();
+    this.totalBarrels = Phaser.Math.Between(3, 9);
+    this.totalCannonBalls = 4;
+    this.answer = [];
+    this.cannonBallPos = [
+      [200, 620],
+      [417, 620],
+      [634, 620],
+      [851, 620],
+    ];
+    this.add.image(
+      this.game.config.width / 2,
+      this.game.config.height / 2,
+      "ocean-bg"
+    );
+    this.add.image(
+      this.game.config.width / 2,
+      this.game.config.height / 2,
+      "boats"
+    );
     this.barrelRowMap = [1, 1, 1, 1, 2, 2, 2, 3, 3, 4];
     this.cannonBallMap = {
       "1-ball": 1,
@@ -98,13 +118,16 @@ export default class MicroGame13 extends Phaser.Scene {
       .image(650, 350, "barrel")
       .setScale(0.9, 0.9)
       .setVisible(false);
-    this.createBarrels(10);
-    this.cannon = this.add.sprite(350, 350, "cannon").setScale(0.8, 0.8);
-    this.add.image(200, 620, "1-ball").setScale(1.7, 1.7);
-
-    // create barrels
+    this.createBarrels(this.totalBarrels, 600, 400);
+    this.cannon = this.add.sprite(420, 350, "cannon").setScale(0.8, 0.8);
 
     // spawn cannonballs
+    this.cannonBall = this.add
+      .image(0, 0, "1-ball")
+      .setScale(1.7, 1.7)
+      .setVisible(false);
+
+    this.createCannonBalls(this.cannonBallGrp, Object.keys(this.cannonBallMap));
 
     this.gameOverScreen = this.add.image(
       this.game.config.width / 2,
@@ -135,6 +158,7 @@ export default class MicroGame13 extends Phaser.Scene {
         { key: "cannon", frame: 6 },
         { key: "cannon", frame: 7 },
         { key: "cannon", frame: 8 },
+        { key: "cannon", frame: 9 },
       ],
       frameRate: 24,
     });
@@ -150,41 +174,67 @@ export default class MicroGame13 extends Phaser.Scene {
     this.tempScreen.visible = false;
   }
 
-  createCannonBalls() {}
+  createCannonBalls(cannonBallGrp, texture) {
+    let rand = Phaser.Math.Between(2, this.totalBarrels - 1);
+    this.answer = [rand, this.totalBarrels - rand];
 
-  createBarrels(num) {
+    delete this.cannonBallMap[this.answer[0] + "-ball"];
+    delete this.cannonBallMap[this.answer[1] + "-ball"];
+
+    for (let i = 0; i < this.totalCannonBalls; i++) {
+      let randIdx = Phaser.Math.Between(0, this.cannonBallPos.length - 1);
+      let randPos = this.cannonBallPos.splice(randIdx, 1)[0];
+
+      if (i <= 1) {
+        cannonBallGrp
+          .create(randPos[0], randPos[1], texture[this.answer[i] - 1])
+          .setScale(1.7, 1.7);
+      } else {
+        let keys = Object.keys(this.cannonBallMap);
+        cannonBallGrp
+          .create(
+            randPos[0],
+            randPos[1],
+            keys[Phaser.Math.Between(0, keys.length - 1)]
+          )
+          .setScale(1.7, 1.7);
+      }
+    }
+  }
+
+  createBarrels(num, xposition, yposition) {
     for (let i = 0; i < num; i++) {
       if (this.barrelRowMap[i] === 1) {
         this.add.image(
-          550 + this.barrel.displayWidth * i + i * 10,
-          400,
+          xposition + this.barrel.displayWidth * i + i * 10,
+          yposition,
           "barrel"
         );
       }
       if (this.barrelRowMap[i] === 2) {
         this.add.image(
-          550 +
+          xposition +
             this.barrel.displayWidth * (i - 4) +
             this.barrel.displayWidth / 2 +
             (i - 4) * 10,
-          400 - this.barrel.displayHeight,
+          yposition - this.barrel.displayHeight,
           "barrel"
         );
       }
       if (this.barrelRowMap[i] === 3) {
         this.add.image(
-          550 + this.barrel.displayWidth * (i - 6) + (i - 6) * 10,
-          400 - this.barrel.displayHeight * 2,
+          xposition + this.barrel.displayWidth * (i - 6) + (i - 6) * 10,
+          yposition - this.barrel.displayHeight * 2,
           "barrel"
         );
       }
       if (this.barrelRowMap[i] === 4) {
         this.add.image(
-          550 +
+          xposition +
             this.barrel.displayWidth * (i - 8) +
-            this.displayWidth / 2 +
-            (i - 8),
-          400 - this.barrel.displayHeight * 3,
+            this.barrel.displayWidth / 2 +
+            10,
+          yposition - this.barrel.displayHeight * 3,
           "barrel"
         );
       }
