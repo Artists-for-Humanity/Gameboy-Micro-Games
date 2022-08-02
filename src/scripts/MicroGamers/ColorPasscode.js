@@ -170,7 +170,7 @@ export default class MicroGame21 extends Phaser.Scene {
     }
 
     showWinText() {
-        this.winText = this.add.text(180, 260, 'YOU WON!');
+        this.winText = this.add.text(540, 360, 'YOU WON!');
         this.winText.setStyle({
             fontSize: '160px',
             fill: '#00ff00',
@@ -178,10 +178,11 @@ export default class MicroGame21 extends Phaser.Scene {
             stroke: '#808080',
             strokeThickness: 8
         });
+        this.winText.setOrigin(0.5);
     }
 
     showLossText() {
-        this.lossText = this.add.text(140, 260, 'YOU LOST!')
+        this.lossText = this.add.text(540, 360, 'YOU LOST!')
         this.lossText.setStyle({
             fontSize: '160px',
             fill: '#ff0000',
@@ -190,6 +191,7 @@ export default class MicroGame21 extends Phaser.Scene {
             strokeThickness: 8
         });
         this.lossText.alpha = 1;
+        this.lossText.setOrigin(0.5);
     }
 
     showBoard() {
