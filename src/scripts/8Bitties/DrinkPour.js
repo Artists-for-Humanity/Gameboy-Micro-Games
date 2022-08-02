@@ -17,18 +17,17 @@ export default class DrinkPour extends Phaser.Scene {
     this.juicemask;
     this.glass;
     this.fill_value = H;
-    this.glass_group
-    this.gameLost = false
+    this.glass_group;
+    this.gameLost = false;
     this.pourScale = 0;
     this.gamestart = false;
     this.stopped = false;
-    this.unpoured = true
+    this.unpoured = true;
     this.spillplay;
     this.overfill = false;
 
   }
   preload() {
-    
     this.load.image('dottedline', new URL('./assets/drink pour/dotted.png',
       import.meta.url).href);
     this.load.image('pour', new URL('./assets/drink pour/pourtext.png',
@@ -57,11 +56,13 @@ export default class DrinkPour extends Phaser.Scene {
   create() {
     //background
     this.add.image(540, 360, 'background');
+
     //add juice and glass
     this.glass = this.physics.add.sprite(X, Y, 'glass');
     this.glass.setOrigin(0);
     this.juice = this.add.image(451, 366, 'juice');
     this.juice.setOrigin(0);
+
     //add juice mask
     this.juicemask = this.make.graphics();
     this.juicemask.fillStyle(0xffffff);
@@ -73,127 +74,43 @@ export default class DrinkPour extends Phaser.Scene {
     this.glass_group = this.add.container();
     this.glass_group.add(this.glass);
     this.glass_group.add(this.juice);
+
     //add dotted line
     this.dotted = this.add.image(525, 410, 'dottedline');
+
     //keyboard
     this.cursors = this.input.keyboard.createCursorKeys();
+
     //pour popup booleans
     this.timer = 1;
     this.pour = this.add.image(540, Y, 'pour');
     this.pour.setScale(0);
+
     //lemonade jug
     this.pitcher = this.add.sprite(200, 460, 'pitcher');
     this.pitcher.setScale(0.8);
-    //lemonade spill anim
-    this.anims.create({
-      key: 'spill anim',
-      frames: [{
-          key: "spill",
-          frame: 0
-        },
-        {
-          key: "spill",
-          frame: 1
-        },
-        {
-          key: "spill",
-          frame: 2
-        },
-        {
-          key: "spill",
-          frame: 3
-        },
-        {
-          key: "spill",
-          frame: 4
-        },
-        {
-          key: "spill",
-          frame: 5
-        },
-        {
-          key: "spill",
-          frame: 6
-        },
-        {
-          key: "spill",
-          frame: 7
-        },
-        {
-          key: "spill",
-          frame: 8
-        },
-        {
-          key: "spill",
-          frame: 9
-        },
-        {
-          key: "spill",
-          frame: 10
-        },
-      ],
-      frameRate: 10,
-      repeat: 0
-    });
-    this.anims.create({
-      key: 'pitcher anim',
-      frames: [{
-          key: "pitcher",
-          frame: 0
-        },
-        {
-          key: "pitcher",
-          frame: 1
-        },
-        {
-          key: "pitcher",
-          frame: 2
-        },
-        {
-          key: "pitcher",
-          frame: 3
-        },
-        {
-          key: "pitcher",
-          frame: 4
-        },
-        {
-          key: "pitcher",
-          frame: 5
-        },
-        {
-          key: "pitcher",
-          frame: 6
-        },
-        {
-          key: "pitcher",
-          frame: 7
-        },
-        ],
-        frameRate: 13,
-        repeat: 0
-    });
-  }
-  
 
+    // create scene animations
+    this.animate();
+  }
 
   update() {
-
     this.playPour();
-
     if (this.cursors.space.isDown && this.stopped === false) {
       if (this.fill_value > 0 && this.gamestart) {
         this.fill_value -= 9
         this.maskdraw();
         this.unpoured = false
         this.pourAnim();
-
       }
     }
-    if (this.cursors.space.isUp && this.fill_value < 50 && this.fill_value >= 1) {
-      this.gameLost = false;
+    if (this.fill_value <= 50 && this.fill_value >= 1 && this.cursors.space.isUp && this.gamestart) {
+      this.gameState();
     }
-
+    if (this.cursors.space.isUp && this.fill_value > 50 && this.fill_value < 287 && this.gamestart) {
+      this.gameLost = true;
+      this.gameState();
+    }
     if (!this.cursors.space.isDown && !this.unpoured) {
       this.stopped = true
     }
@@ -201,9 +118,111 @@ export default class DrinkPour extends Phaser.Scene {
       this.gameLost = true;
       this.overfill = true;
       this.gamestart = false;
+      this.gameState();
       this.spillAnim();
-
     }
+  }
+
+  gameState() {
+    this.gamestart = false;
+    if (this.gameLost === true) {
+      console.log('You Lost');
+    }
+    else if (this.gameLost === false) {
+      console.log('You Won');
+    }
+  }
+
+  animate() {
+    //lemonade spill anim
+    this.anims.create({
+      key: 'spill anim',
+      frames: [{
+        key: "spill",
+        frame: 0
+      },
+      {
+        key: "spill",
+        frame: 1
+      },
+      {
+        key: "spill",
+        frame: 2
+      },
+      {
+        key: "spill",
+        frame: 3
+      },
+      {
+        key: "spill",
+        frame: 4
+      },
+      {
+        key: "spill",
+        frame: 5
+      },
+      {
+        key: "spill",
+        frame: 6
+      },
+      {
+        key: "spill",
+        frame: 7
+      },
+      {
+        key: "spill",
+        frame: 8
+      },
+      {
+        key: "spill",
+        frame: 9
+      },
+      {
+        key: "spill",
+        frame: 10
+      },
+      ],
+      frameRate: 10,
+      repeat: 0
+    });
+    this.anims.create({
+      key: 'pitcher anim',
+      frames: [{
+        key: "pitcher",
+        frame: 0
+      },
+      {
+        key: "pitcher",
+        frame: 1
+      },
+      {
+        key: "pitcher",
+        frame: 2
+      },
+      {
+        key: "pitcher",
+        frame: 3
+      },
+      {
+        key: "pitcher",
+        frame: 4
+      },
+      {
+        key: "pitcher",
+        frame: 5
+      },
+      {
+        key: "pitcher",
+        frame: 6
+      },
+      {
+        key: "pitcher",
+        frame: 7
+      },
+      ],
+      frameRate: 13,
+      repeat: 0
+    });
   }
 
   maskdraw() {
@@ -223,7 +242,6 @@ export default class DrinkPour extends Phaser.Scene {
       this.timer = 0;
     }
   }
-
 
   spillAnim() {
     this.juice.setVisible(false);
