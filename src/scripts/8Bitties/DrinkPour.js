@@ -47,6 +47,11 @@ export default class DrinkPour extends Phaser.Scene {
       frameWidth: 185,
       frameHeight: 331
     });
+    this.load.spritesheet('pitcher', new URL('./assets/drink pour/pitchers.png',
+      import.meta.url).href, {
+      frameWidth: 391,
+      frameHeight: 538
+    });
   }
 
   create() {
@@ -72,12 +77,13 @@ export default class DrinkPour extends Phaser.Scene {
     this.dotted = this.add.image(525, 410, 'dottedline');
     //keyboard
     this.cursors = this.input.keyboard.createCursorKeys();
-
     //pour popup booleans
     this.timer = 1;
     this.pour = this.add.image(540, Y, 'pour');
     this.pour.setScale(0);
-
+    //lemonade jug
+    this.pitcher = this.add.sprite(200, 460, 'pitcher');
+    this.pitcher.setScale(0.8);
     //lemonade spill anim
     this.anims.create({
       key: 'spill anim',
@@ -129,8 +135,47 @@ export default class DrinkPour extends Phaser.Scene {
       frameRate: 10,
       repeat: 0
     });
-
+    this.anims.create({
+      key: 'pitcher anim',
+      frames: [{
+          key: "pitcher",
+          frame: 0
+        },
+        {
+          key: "pitcher",
+          frame: 1
+        },
+        {
+          key: "pitcher",
+          frame: 2
+        },
+        {
+          key: "pitcher",
+          frame: 3
+        },
+        {
+          key: "pitcher",
+          frame: 4
+        },
+        {
+          key: "pitcher",
+          frame: 5
+        },
+        {
+          key: "pitcher",
+          frame: 6
+        },
+        {
+          key: "pitcher",
+          frame: 7
+        },
+        ],
+        frameRate: 13,
+        repeat: 0
+    });
   }
+  
+
 
   update() {
 
@@ -141,10 +186,10 @@ export default class DrinkPour extends Phaser.Scene {
         this.fill_value -= 9
         this.maskdraw();
         this.unpoured = false
+        this.pourAnim();
 
       }
     }
-
     if (this.cursors.space.isUp && this.fill_value < 50 && this.fill_value >= 1) {
       this.gameLost = false;
     }
@@ -159,10 +204,7 @@ export default class DrinkPour extends Phaser.Scene {
       this.spillAnim();
 
     }
-
   }
-
-
 
   maskdraw() {
     this.juicemask.clear()
@@ -188,6 +230,13 @@ export default class DrinkPour extends Phaser.Scene {
     this.glass.setOrigin(.03)
     this.glass.setY(354)
     this.spillplay = this.glass.anims.play("spill anim", true);
+  }
+
+  pourAnim() {
+    this.pitcher.setAngle(50);
+    this.pitcher.setY(340);
+    this.pitcher.setX(250)
+    this.pitcher.anims.play("pitcher anim", true);
   }
 
 }
