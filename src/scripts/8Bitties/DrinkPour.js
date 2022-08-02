@@ -89,6 +89,7 @@ export default class DrinkPour extends Phaser.Scene {
     //lemonade jug
     this.pitcher = this.add.sprite(200, 460, 'pitcher');
     this.pitcher.setScale(0.8);
+    this.pitcher.setDepth(0)
 
     // create scene animations
     this.animate();
@@ -239,6 +240,7 @@ export default class DrinkPour extends Phaser.Scene {
       this.timer++;
       this.pourScale += 0.27 / this.timer;
       this.pour.setScale(this.pourScale);
+      this.pour.setDepth(1)
 
     } else if (this.timer === 62) {
       this.pour.destroy();
