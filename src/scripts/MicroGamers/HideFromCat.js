@@ -1,10 +1,10 @@
-export default class MicroGame22 extends Phaser.Scene {
+export default class HideFromCat extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
         super({
             active: false,
             visible: false,
-            key: 'MicroGame22',
+            key: 'HideFromCat',
         });
 
         // Game Object Declarations
@@ -63,8 +63,8 @@ export default class MicroGame22 extends Phaser.Scene {
             'mouse',
             new URL('assets/HideFromCat/mouse.png', import.meta.url).href,
             {
-                frameWidth: 265,
-                frameHeight: 167,
+                frameWidth: 241,
+                frameHeight: 180,
             }
         );
         this.load.spritesheet(
@@ -299,7 +299,8 @@ export default class MicroGame22 extends Phaser.Scene {
         else this.mouse.anims.play('idle');
     }
 
-    flashArrows(ms) { //ms = flash duration
+    //ms = flash duration
+    flashArrows(ms) {
         this.arrows.forEach((param) => { param.visible = true });
         this.time.delayedCall(ms, () => { this.arrows.forEach((param) => { param.visible = false }); }, [], this);
     }

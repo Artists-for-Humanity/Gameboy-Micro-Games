@@ -1,10 +1,10 @@
-export default class MicroGame21 extends Phaser.Scene {
+export default class ColorPasscode extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
         super({
             active: false,
             visible: false,
-            key: 'MicroGame21',
+            key: 'ColorPasscode',
         });
 
         // Game Object Declarations
@@ -155,7 +155,7 @@ export default class MicroGame21 extends Phaser.Scene {
         this.time.delayedCall(this.pattern.length * 500 + 2500, () => {
             this.interactive = true //turns on interaction 4.5 seconds after board appear (4 * 500 + 2500 = 4500ms)
             console.log('start interactive');
-        }, [], this); 
+        }, [], this);
     }
 
     showMemorizeText() {
@@ -285,7 +285,7 @@ export default class MicroGame21 extends Phaser.Scene {
         if (num === 2) key = 'lightPurple';
         if (num === 3) key = 'lightBlue';
         this.guessBlocks[this.guessNum].setTexture(key);
-        this.guessBlocks[this.guessNum].visible = true; 
+        this.guessBlocks[this.guessNum].visible = true;
     }
 
     win() { //hides UI then opens door after 1 second
