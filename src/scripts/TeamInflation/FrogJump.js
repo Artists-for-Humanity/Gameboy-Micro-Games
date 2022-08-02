@@ -13,17 +13,33 @@ export default class FrogJump extends Phaser.Scene {
         this.delayed = false;
         this.winState = false;
         this.offGround = false;
+        this.background;
+        this.loseText;
+        this.winText;
+        this.cursors;
+        this.grounds;
+        this.playerSprite;
+        this.cam;
+        this.delayedEvent;
+        this.JumpImg;
+        this.startGameDelay;
+        this.platforms;
+        this.stars;
         this.delayTime;
         this.randomNum = Math.floor(Math.random() * 3);
 
     }
     preload() {
-        this.load.spritesheet("dude", new URL("./assets/FillerAssets/dude.png",
+        this.load.spritesheet("frogs", new URL("./assets/frogs.png",
             import.meta.url).href, {
-            frameWidth: 32,
-            frameHeight: 48,
+            frameWidth: 46,
+            frameHeight: 38
         });
         this.load.image('sky', new URL("./assets/bkg2.png",
+            import.meta.url).href);
+        this.load.image('jump1', new URL("./assets/frog_jump_1.png",
+            import.meta.url).href);
+        this.load.image('jump2', new URL("./assets/frog_jump_2.png",
             import.meta.url).href);
         this.load.image('ground', new URL("./assets/FillerAssets/platform.png",
             import.meta.url).href);
@@ -31,12 +47,22 @@ export default class FrogJump extends Phaser.Scene {
             import.meta.url).href);
         this.load.image('Jump', new URL("./assets/Jump.png",
             import.meta.url).href);
+        
     }
     create() {
 
         this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, "sky");
         this.background.setOrigin(0, 0);
         this.background.setScrollFactor(0);
+
+        this.generatePlatform(this.randomNum);
+
+        this.playerSprite = this.physics.add.sprite(500, 620, 'frogs');
+
+       
+        this.playerSprite.setCollideWorldBounds(false);
+        this.playerSprite.body.setGravityY(700);
+
 
 
         this.loseText = this.add.text(330, 310);
@@ -64,13 +90,8 @@ export default class FrogJump extends Phaser.Scene {
         this.grounds = this.physics.add.staticGroup();
         this.grounds.create(1080, 820, 'ground').setScale(11).refreshBody();
 
-        this.generatePlatform(this.randomNum);
 
-        this.playerSprite = this.physics.add.sprite(500, 620, 'dude');
-
-       
-        this.playerSprite.setCollideWorldBounds(false);
-        this.playerSprite.body.setGravityY(700);
+        
 
         this.createAnimation();
 
@@ -83,10 +104,8 @@ export default class FrogJump extends Phaser.Scene {
 
         this.delayedEvent = this.time.delayedCall(this.delayTime, this.loseState, [], this);
         this.physics.pause();
-        this.JumpImg = this.add.image(505, 400, 'Jump');
+        this.JumpImg = this.add.image(505, 360, 'Jump').setScale(1.3);
         this.startGameDelay = this.time.delayedCall(2000, this.startGame, null, this);
-        this.leftLock = false;
-        this.rightLock = false;
     }
 
     generatePlatform(level) {
@@ -135,20 +154,22 @@ export default class FrogJump extends Phaser.Scene {
     update() {   
         if (this.playerSprite.x >= 1064) this.playerSprite.x = 1064;
         if(this.playerSprite.x <= 16) this.playerSprite.x = 16;
-        if (this.cursors.left.isDown && !this.leftLock) {
-            this.playerSprite.setVelocityX(-160);
-            
-            this.playerSprite.anims.play('left', true);
-        } else if (this.cursors.right.isDown && !this.rightLock) {
-            this.playerSprite.setVelocityX(160);
-            
-            this.playerSprite.anims.play('right', true);
-        } else {
+
+        if (this.cursors.left.isDown) {
+            this.walk(true)
+        } else if (this.cursors.right.isDown) {
+            this.walk(false)
+        } 
+        else {
             this.playerSprite.setVelocityX(0);
-            this.playerSprite.anims.play('turn');
+            if(this.playerSprite.body.touching.down){
+                this.playerSprite.anims.play('turn');
+            }
         }
+        this.fall()
 
         if (this.cursors.up.isDown && this.playerSprite.body.touching.down) {
+            this.playerSprite.anims.play('jump')
             this.playerSprite.setVelocityY(-600);
         }
         this.background.tilePositionY = this.cameras.main.scrollY * 0.3;
@@ -188,39 +209,91 @@ export default class FrogJump extends Phaser.Scene {
     }
 
     createAnimation() {
-        this.anims.create({
-            key: 'left',
-            frames: this.anims.generateFrameNumbers('dude', {
-                start: 0,
-                end: 3
-            }),
-            frameRate: 10,
-            repeat: -1,
-        });
+        // this.anims.create({
+        //     key: 'left',
+        //     frames: this.anims.generateFrameNumbers('frogs', {
+        //         start: 0,
+        //         end: 1
+        //     }),
+        //     frameRate: 10,
+        //     repeat: -1,
+        // });
 
         this.anims.create({
             key: 'turn',
-            frames: [{
-                key: 'dude',
-                frame: 4
-            }],
-            frameRate: 20,
+            frames: [
+                {key: 'frogs', frame: 3}
+            ],
+            frameRate: -1,
         });
 
         this.anims.create({
-            key: 'right',
-            frames: this.anims.generateFrameNumbers('dude', {
-                start: 5,
-                end: 8
-            }),
-            frameRate: 10,
-            repeat: -1,
+            key: 'walk',
+            frames: [
+                {key: 'frogs', frame: 0},
+                {key: 'frogs', frame: 1},
+                {key: 'frogs', frame: 2}
+            ],
+            frameRate: 12,
+            repeat: -1
         });
+
+        this.anims.create({
+            key: 'fall',
+            frames: [
+                {key: 'jump1'}
+            ],
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'jump',
+            frames: [
+                {key: 'jump1'},
+                {key: 'jump2'}
+            ],
+            frameRate:12,
+            repeat: 0
+        });
+
+
+        // this.anims.create({
+        //     key: 'right',
+        //     frames: this.anims.generateFrameNumbers('frogs', {
+        //         start: 1,
+        //         end: 2
+        //     }),
+        //     frameRate: 10,
+        //     repeat: -1,
+        // });
         
     }
 
+    fall(){
+        if(this.playerSprite.body.velocity.y > 0){
+            this.playerSprite.anims.play('fall')
+        }
+    }
 
 
+    walk(left_down){
+        let v = 160
 
+        if(left_down){
+            v *= -1
+        }
+
+        this.playerSprite.setVelocityX(v);
+        
+        if(left_down){
+                this.playerSprite.flipX = true;
+        } else{
+            this.playerSprite.flipX = false;
+        }
+        
+        if(this.playerSprite.body.touching.down){
+            this.playerSprite.anims.play('walk', true);
+        }
+    }
 
 }

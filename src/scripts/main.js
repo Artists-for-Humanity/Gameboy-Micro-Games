@@ -24,7 +24,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [BewteenSpace],
+  scene: [CircleGame],
   audio: {
     disableWebAudio: true,
   },
