@@ -29,7 +29,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [MicroGame31, MicroGame11, Emeowgency, MicroGame21, SockToss],
+  scene: [MicroGame31, MicroGame11, Emeowgency, SockToss, ColorLab, ColorPasscode, HideFromCat],
   audio: {
     disableWebAudio: true,
   },
