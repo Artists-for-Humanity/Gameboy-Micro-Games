@@ -63,8 +63,8 @@ export default class MicroGame22 extends Phaser.Scene {
             'mouse',
             new URL('assets/HideFromCat/mouse.png', import.meta.url).href,
             {
-                frameWidth: 241,
-                frameHeight: 180,
+                frameWidth: 265,
+                frameHeight: 167,
             }
         );
         this.load.spritesheet(
