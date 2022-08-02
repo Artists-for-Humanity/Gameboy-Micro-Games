@@ -123,6 +123,7 @@ export default class DrinkPour extends Phaser.Scene {
     }
   }
 
+//checks whether you win or lose and displays it in the console
   gameState() {
     this.gamestart = false;
     if (this.gameLost === true) {
@@ -133,6 +134,7 @@ export default class DrinkPour extends Phaser.Scene {
     }
   }
 
+//creates animations for the pitcher and spilled over cup
   animate() {
     //lemonade spill anim
     this.anims.create({
@@ -225,11 +227,13 @@ export default class DrinkPour extends Phaser.Scene {
     });
   }
 
+  //creates mask for juice/lemonade
   maskdraw() {
     this.juicemask.clear()
     this.juicemask.fillRect(451, 366, 153, this.fill_value)
   }
 
+  //plays the "pour!" popup animation
   playPour() {
     if (this.pourScale <= 1) {
       this.timer++;
@@ -243,6 +247,7 @@ export default class DrinkPour extends Phaser.Scene {
     }
   }
 
+  //plays the spilled over glass animation where the glass used to be and makes sure the juice is no longer visible
   spillAnim() {
     this.juice.setVisible(false);
     this.glass.setOrigin(.03)
@@ -250,6 +255,7 @@ export default class DrinkPour extends Phaser.Scene {
     this.spillplay = this.glass.anims.play("spill anim", true);
   }
 
+  //plays the pitcher pouring animation
   pourAnim() {
     this.pitcher.setAngle(50);
     this.pitcher.setY(340);
