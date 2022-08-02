@@ -1,10 +1,10 @@
-export default class MicroGame21 extends Phaser.Scene {
+export default class ColorPasscode extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
         super({
             active: false,
             visible: false,
-            key: 'MicroGame21',
+            key: 'ColorPasscode',
         });
 
         // Game Object Declarations
@@ -31,7 +31,6 @@ export default class MicroGame21 extends Phaser.Scene {
         this.guesses = [];
         this.guessNum = 0;
 
-        this.cursors;
         this.interactive = false;
 
         this.Left;
@@ -41,37 +40,37 @@ export default class MicroGame21 extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('brickWall', new URL('assets21/brickWall.png',
+        this.load.image('brickWall', new URL('assets/ColorPasscode/brickWall.png',
             import.meta.url).href);
-        this.load.image('concrete', new URL('assets21/concrete.png',
+        this.load.image('concrete', new URL('assets/ColorPasscode/concrete.png',
             import.meta.url).href);
-        this.load.image('door1', new URL('assets21/door1.png',
+        this.load.image('door1', new URL('assets/ColorPasscode/door1.png',
             import.meta.url).href);
-        this.load.image('door2', new URL('assets21/door2.png',
+        this.load.image('door2', new URL('assets/ColorPasscode/door2.png',
             import.meta.url).href);
-        this.load.image('door3', new URL('assets21/door3.png',
+        this.load.image('door3', new URL('assets/ColorPasscode/door3.png',
             import.meta.url).href);
-        this.load.image('door4', new URL('assets21/door4.png',
+        this.load.image('door4', new URL('assets/ColorPasscode/door4.png',
             import.meta.url).href);
-        this.load.image('door5', new URL('assets21/door5.png',
+        this.load.image('door5', new URL('assets/ColorPasscode/door5.png',
             import.meta.url).href);
-        this.load.image('box', new URL('assets21/box.png',
+        this.load.image('box', new URL('assets/ColorPasscode/box.png',
             import.meta.url).href);
-        this.load.image('lightRed', new URL('assets21/lightRed.png',
+        this.load.image('lightRed', new URL('assets/ColorPasscode/lightRed.png',
             import.meta.url).href);
-        this.load.image('lightYellow', new URL('assets21/lightYellow.png',
+        this.load.image('lightYellow', new URL('assets/ColorPasscode/lightYellow.png',
             import.meta.url).href);
-        this.load.image('lightPurple', new URL('assets21/lightPurple.png',
+        this.load.image('lightPurple', new URL('assets/ColorPasscode/lightPurple.png',
             import.meta.url).href);
-        this.load.image('lightBlue', new URL('assets21/lightBlue.png',
+        this.load.image('lightBlue', new URL('assets/ColorPasscode/lightBlue.png',
             import.meta.url).href);
-        this.load.image('darkRed', new URL('assets21/darkRed.png',
+        this.load.image('darkRed', new URL('assets/ColorPasscode/darkRed.png',
             import.meta.url).href);
-        this.load.image('darkYellow', new URL('assets21/darkYellow.png',
+        this.load.image('darkYellow', new URL('assets/ColorPasscode/darkYellow.png',
             import.meta.url).href);
-        this.load.image('darkPurple', new URL('assets21/darkPurple.png',
+        this.load.image('darkPurple', new URL('assets/ColorPasscode/darkPurple.png',
             import.meta.url).href);
-        this.load.image('darkBlue', new URL('assets21/darkBlue.png',
+        this.load.image('darkBlue', new URL('assets/ColorPasscode/darkBlue.png',
             import.meta.url).href);
     }
 
@@ -155,7 +154,8 @@ export default class MicroGame21 extends Phaser.Scene {
         this.time.delayedCall(2000, this.flashPattern, [], this); //flash pattern 2 second after board appears
         this.time.delayedCall(this.pattern.length * 500 + 2500, () => {
             this.interactive = true //turns on interaction 4.5 seconds after board appear (4 * 500 + 2500 = 4500ms)
-        }, [], this); 
+            console.log('start interactive');
+        }, [], this);
     }
 
     showMemorizeText() {
@@ -170,7 +170,7 @@ export default class MicroGame21 extends Phaser.Scene {
     }
 
     showWinText() {
-        this.winText = this.add.text(180, 260, 'YOU WON!');
+        this.winText = this.add.text(540, 360, 'YOU WON!');
         this.winText.setStyle({
             fontSize: '160px',
             fill: '#00ff00',
@@ -178,10 +178,11 @@ export default class MicroGame21 extends Phaser.Scene {
             stroke: '#808080',
             strokeThickness: 8
         });
+        this.winText.setOrigin(0.5);
     }
 
     showLossText() {
-        this.lossText = this.add.text(140, 260, 'YOU LOST!')
+        this.lossText = this.add.text(540, 360, 'YOU LOST!')
         this.lossText.setStyle({
             fontSize: '160px',
             fill: '#ff0000',
@@ -190,6 +191,7 @@ export default class MicroGame21 extends Phaser.Scene {
             strokeThickness: 8
         });
         this.lossText.alpha = 1;
+        this.lossText.setOrigin(0.5);
     }
 
     showBoard() {
@@ -283,7 +285,7 @@ export default class MicroGame21 extends Phaser.Scene {
         if (num === 2) key = 'lightPurple';
         if (num === 3) key = 'lightBlue';
         this.guessBlocks[this.guessNum].setTexture(key);
-        this.guessBlocks[this.guessNum].visible = true; 
+        this.guessBlocks[this.guessNum].visible = true;
     }
 
     win() { //hides UI then opens door after 1 second
