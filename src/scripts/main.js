@@ -24,7 +24,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [BewteenSpace],
+  scene: [Highest2Lowest],
   audio: {
     disableWebAudio: true,
   },
