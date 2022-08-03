@@ -21,34 +21,62 @@ export default class CircleGame extends Phaser.Scene {
         import.meta.url).href));
         this.load.image(this.load.image('win', new URL("./assets/youwin.png",
         import.meta.url).href));
+        this.load.image(this.load.image('jump', new URL("./assets/Jump.png",
+        import.meta.url).href));
 
     }
 
 
     create() {
         this.graphics = this.add.graphics({ lineStyle: { width: 4, color: 0x00000 }, fillStyle: { color: 0x1110ba } });
-        this.player = this.physics.add.image(540, 10, 'dude');
+        this.player = this.physics.add.image(540, 10, 'ground');
         this.player.setGravityY(500);
         // this.lines =
         // new Phaser.Geom.Line(700, 200, 700, 400);
         // this.lines.add
-        this.plat = this.physics.add.group();
-        this.plat2 = this.physics.add.group();
-        this.makeCircle('ground', 900, 30, this.plat);
-        this.makeCircle('ground',1300, 10, this.plat2);
+        // this.plat = this.physics.add.group();
+        // this.plat2 = this.physics.add.group();
+        // this.makeCircle('ground', 900, 30, this.plat);
+        // this.makeCircle('ground',1300, 10, this.plat2);
         // this.makeCircle('ground', 800, 30, this.plat)
         // this.plat.create(1000,500,'ground').setScale(2).refreshBody();
-        this.loseText = this.add.image(540,360, 'lose').setVisible(false);
-        this.winText = this.add.image(540,360,'win').setVisible(false);
-        this.hole = this.physics.add.image(540, 500, 'dude').setVisible(false);
-        this.physics.add.collider(this.player, this.hole, this.winState, null, this);
+        
 
         this.points = 
         { x: 540, y: 500 }
 
         this.cursors = this.input.keyboard.createCursorKeys();
-        this.physics.add.collider(this.player, this.plat,this.loseState, null, this);
-        this.physics.add.collider(this.player, this.plat2, this.loseState, null, this);
+        // this.physics.add.collider(this.player, this.plat2, this.loseState, null, this);
+
+        const circle = new Phaser.Geom.Circle(540,500, 220);
+        const circle2 = new Phaser.Geom.Circle(540,500, 220);
+
+        this.groupS = this.physics.add.group();
+        this.groupB = this.physics.add.group();        
+        for(var i = 0; i < 11; i++) {
+            this.groupS.create(0,0, 'dude')
+        }
+        for(var i = 0; i < 5; i++) {
+            this.groupB.create(0,0,'dude');
+        }
+
+        this.loseText = this.add.image(540,360, 'lose').setVisible(false);
+        this.winText = this.add.image(540,360,'win').setVisible(false);
+        this.hole = this.physics.add.image(540, 500, 'ground').setVisible(true);
+        this.physics.add.collider(this.player, this.hole, this.winState, null, this);
+        this.physics.add.collider(this.player, this.groupS,this.loseState, null, this);
+        this.physics.add.collider(this.player, this.groupB,this.loseState, null, this);
+
+
+
+        Phaser.Actions.PlaceOnCircle(this.groupS.getChildren(), circle);
+        Phaser.Actions.PlaceOnCircle(this.groupB.getChildren(), circle2);
+
+        this.physics.pause();
+        this.JumpImg = this.add.image(505, 360, 'jump').setScale(1.3);
+        this.startGameDelay = this.time.delayedCall(2000, this.startGame, null, this);
+
+        
 
 
 
@@ -63,9 +91,12 @@ export default class CircleGame extends Phaser.Scene {
         //     this.graphics.strokeLineShape(this.lines);
     
         //     this.graphics.fillPointShape(this.points, 10);
+        Phaser.Actions.RotateAroundDistance(this.groupS.getChildren(),this.points,0.02,200)
+        Phaser.Actions.RotateAroundDistance(this.groupB.getChildren(),this.points,0.02,70)
+
+        // Phaser.Actions.RotateAroundDistance(this.plat2.getChildren(),this.points,0.02,60)
         
-        Phaser.Actions.RotateAroundDistance(this.plat.getChildren(),this.points,0.02,200)
-        Phaser.Actions.RotateAroundDistance(this.plat2.getChildren(),this.points,0.02,90)
+        
 
         if (this.cursors.up.isDown) {
             this.player.setVelocityY(-200);
@@ -100,5 +131,11 @@ export default class CircleGame extends Phaser.Scene {
     winState() {
         this.physics.pause();
         this.winText.setVisible(true);
+        this.hole.destroy();
+    }
+    startGame() {
+        this.JumpImg.destroy();
+        this.physics.resume();
+
     }
 }
