@@ -22,6 +22,9 @@ export default class MicroGame31 extends Phaser.Scene {
             [780, 620],
             [540, 469]
         ])
+
+        this.boxes = [];
+
         this.selectedValues = [];
         this.gameOver = false;
         this.buttonImgNames = ['Button00', 'Button01', 'Button02', 'Button03', 'Button04','Button05', 'Button06', 'Button07', 'Button08', 'Button09'];
@@ -31,7 +34,11 @@ export default class MicroGame31 extends Phaser.Scene {
         this.currentTime = 0;
         this.text;
         this.winState = false;
-        
+
+        this.num1 = []
+        this.opcode = []
+        this.num2 = []
+        this.evaluated = []
     }
 
     preload() {
@@ -67,7 +74,13 @@ export default class MicroGame31 extends Phaser.Scene {
             import.meta.url).href);
         this.load.image("winimage", new URL("./assets/youwin.png",
             import.meta.url).href);
-        
+
+        // this.load.spritesheet("frame", new URL("./assets/frame.png",
+        //     import.meta.url).href);
+        this.load.spritesheet("numbers", new URL("./assets/numbers.png", import.meta.url).href,
+        {frameWidth: 313 , frameHeight: 350});
+        this.load.spritesheet("operations", new URL("./assets/operations.png", import.meta.url).href,
+        {frameWidth: 1084/4 , frameHeight: 294 });
 
     }
 
@@ -105,8 +118,91 @@ export default class MicroGame31 extends Phaser.Scene {
             this.equation04.off('selected');
         })
 
+        console.log("Parse number 256")
+        //this.parseNumber(420)
+
+        this.setNumbers()
+
+        this.parseNumber(this.num1[0])
+
     
     }
+
+    parseNumber(val){
+        let hun = Math.floor(val/100) 
+        let ten = Math.floor((val - (hun * 100))/ 10)
+        let one = val % 10
+
+        // this.boxes[0] = this.physics.add.group()
+        // this.boxes[0].create(1080/2-301, 720/2, 'numbers', hun)
+        // this.boxes[0].create(1080/2, 720/2, 'numbers', ten)
+        // this.boxes[0].create(1080/2+301, 720/2, 'numbers', one)
+
+        this.boxes[0] = this.add.container(1080/4, 720/2)
+        this.addNumbers(this.boxes[0], hun, ten, one, 0 )
+        this.boxes[0].add(this.add.image(+600, 0, 'operations', 0))
+        this.addNumbers(this.boxes[0], 4, 2, 0, 1200)
+
+        this.boxes[0].setScale(.2)
+
+        console.log("Hundreds: " + hun +"\nTens: "+ ten + "\nOnes: " + one + "\nTotal: "+ val)
+    }
+
+    addNumbers(box, h, t, o, offset){
+        box.add(this.add.image(-300+ offset, 0, 'numbers', h))
+        box.add(this.add.image(0+ offset, 0, 'numbers', t))
+        box.add(this.add.image(+300+ offset, 0, 'numbers', o))
+    }
+
+    setNumbers(){
+        for(let i = 0; i < 5; i++){
+            this.opcode[i] = Math.round(Math.random()*4)
+            if(this.opcode[i] === 0){
+                this.num1[i] = Math.round(Math.random()*999)
+                this.num2[i] = 0
+                this.evaluated[i] = this.num1[i]
+            }
+            else{
+                this.rollNumbers(i)
+                this.equateNumbers(this.opcode[i], i)
+            }
+        }
+
+    }
+
+    equateNumbers(opcode, index){
+        switch(opcode){
+            case 1: // addition
+                this.evaluated[index] = this.num1[index]+this.num2[index]
+                console.log(this.num1[index]+" + " + this.num2[index] + " = " + this.evaluated[index])
+                break;
+            case 2:
+                this.evaluated[index] = this.num1[index]-this.num2[index]
+                console.log(this.num1[index]+" - " + this.num2[index] + " = " + this.evaluated[index])
+                break;
+            case 3:
+                this.evaluated[index] = this.num1[index]*this.num2[index]
+                console.log(this.num1[index]+" * " + this.num2[index] + " = " + this.evaluated[index])
+                break;
+            case 4:
+                this.evaluated[index] = this.num1[index]/this.num2[index]
+                console.log(this.num1[index]+" / " + this.num2[index] + " = " + this.evaluated[index])
+                break;
+            default:
+                this.evaluated[index] = this.num1[index]+this.num2[index]
+                console.log(this.num1[index]+" + " + this.num2[index] + " = " + this.evaluated[index])
+                break;
+        }
+    }
+
+    rollNumbers(index){
+        this.num1[index] = Math.round(Math.random()*99)
+        this.num2[index] = Math.round(Math.random()*98) + 1
+    }
+
+
+
+
 
     update(time, delta) {
         
