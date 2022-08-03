@@ -6,7 +6,6 @@ export default class FlySwat extends Phaser.Scene {
       visible: false,
       key: "FlySwat",
     });
-    this.fly;
     this.swatter;
     this.swatdown = false;
     this.deadFlytimer = 0;
@@ -17,12 +16,10 @@ export default class FlySwat extends Phaser.Scene {
     this.swatTextScale = 0;
     this.fly;
     this.gamestart = false;
-    this.swatter;
     this.timer = 0;
     this.flightPattern;
     this.swingCD = 100;
     this.swung = false;
-    this.overLaptoggle = 0;
   }
   preload() {
     this.load.image(
@@ -62,26 +59,13 @@ export default class FlySwat extends Phaser.Scene {
       }
     );
   }
-
   create() {
     this.makeAnimations();
     this.kitchen = this.add.image(540, 360, "kitchen").setDepth(-4);
     this.swat = this.add.image(540, 360, "swat");
     this.createKeys();
-    // this.createAnimations();
   }
-
   update() {
-    // if (this.overLaptoggle === 1) {
-    //   this.physics.add.overlap(this.fly, this.swatter, () => {
-    //     this.overLaptoggle = 0;
-    //     console.log("overlap check");
-    //     if (this.swung === true) {
-    //       this.killFly();
-    //     }
-    //     return;
-    //   });
-    // }
     this.moveSwatter();
     this.swing();
     this.moveFly();
@@ -91,19 +75,17 @@ export default class FlySwat extends Phaser.Scene {
       this.animateDeadFly();
     }
   }
-
   gameStart() {
-    this.swatter = this.physics.add.sprite(500, 450, "swatter").setDepth(1);
-    this.swatter.body.setSize(128, 160).setOffset(128, 32);
     this.flightPattern = Math.floor(Math.random() * 2);
     this.fly = this.physics.add
       .sprite(540, 360, "fly")
       .anims.play("flying", true)
       .body.setCircle(32)
       .setOffset(32, 32);
+    this.swatter = this.physics.add.sprite(500, 450, "swatter");
+    this.swatter.body.setSize(128, 160).setOffset(128, 32);
     this.gamestart = true;
   }
-
   playSwatText() {
     if (this.swatTextScale < 1) {
       this.swatTextTimer++;
@@ -114,21 +96,13 @@ export default class FlySwat extends Phaser.Scene {
       this.swatTextTimer = 0;
       this.swat.destroy();
       this.gameStart();
-      this.physics.add.overlap(this.fly, this.swatter, () => {
-        if (this.swung === false) {
-          console.log("yo");
-          this.killFly();
-        }
-      });
     }
   }
-
   killFly() {
     console.log("dead");
     this.deadFly = this.add.image(this.fly.x, this.fly.y, "dead");
     this.fly.destroy();
   }
-
   animateDeadFly() {
     if (this.deadFlyScale > 0.25) {
       this.deadFlyTimer++;
@@ -190,7 +164,10 @@ export default class FlySwat extends Phaser.Scene {
       if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
         this.swatter.anims.play("down", true);
         this.swung = true;
-        this.overlapToggle = 1;
+        if (Phaser.Geom.Rectangle.Overlaps(this.swatter.body, this.fly)) {
+          console.log("hit");
+          this.killFly();
+        }
       }
     }
   }
@@ -206,7 +183,7 @@ export default class FlySwat extends Phaser.Scene {
     this.down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
   }
   moveSwatter() {
-    if (this.swung === false) {
+    if (this.swung === false && this.swatter) {
       if (this.up.isDown) {
         this.swatter.y -= 5;
       }
