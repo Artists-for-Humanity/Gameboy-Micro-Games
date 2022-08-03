@@ -270,12 +270,14 @@ export default class SockToss extends Phaser.Scene {
             this.basket_f.setOrigin(0, 0);
             this.basket_f.setScale(SCALE_MULTIPLIER)
             this.basket_f.body.setAllowGravity(false)
+
             this.floorval = 720 /2
             this.victory = 1;
         }
         else{
             this.xrange = (-70 * this.meterX/(METER_WIDTH)) * SCALE_MULTIPLIER
             this.yrange = (-755 * this.meterX/(METER_WIDTH-28)) * SCALE_MULTIPLIER
+
             this.floorval = 720 * .75
             this.victory = 2;
         }
