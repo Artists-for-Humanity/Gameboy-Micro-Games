@@ -6,7 +6,7 @@ import ColorLab from "./8Bitties/ColorLab";
 import MicroGame11 from "./DebugginDaOpps/MicroGame11";
 import ColorPasscode from "./MicroGamers/ColorPasscode";
 import HideFromCat from "./MicroGamers/HideFromCat";
-
+import HitTheButton from "./MicroGamers/HitTheButton";
 import MicroGame31 from "./Team4/MicroGame31";
 import SockToss from "./Team Notateam/socktoss";
 import CutScreen from "./Team Notateam/CutScreen";
@@ -29,7 +29,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [MicroGame31, MicroGame11, Emeowgency, MicroGame21, SockToss],
+  scene: [HitTheButton],
   audio: {
     disableWebAudio: true,
   },
