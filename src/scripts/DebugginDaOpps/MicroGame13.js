@@ -9,8 +9,10 @@ export default class MicroGame13 extends Phaser.Scene {
 
     // Game Object Declarations
     this.cannon;
+    this.fire;
     this.barrels;
     this.totalBarrels;
+    this.inputNum = 1;
   }
 
   preload() {
@@ -77,7 +79,18 @@ export default class MicroGame13 extends Phaser.Scene {
     this.load.spritesheet(
       "cannon",
       new URL("./assets2/cannon-spritesheet.png", import.meta.url).href,
-      { frameWidth: 980, frameHeight: 720 }
+      {
+        frameWidth: 980,
+        frameHeight: 720,
+      }
+    );
+    this.load.spritesheet(
+      "fire",
+      new URL("./assets2/fire-spritesheet.png", import.meta.url).href,
+      {
+        frameWidth: 700,
+        frameHeight: 400,
+      }
     );
   }
 
@@ -90,7 +103,7 @@ export default class MicroGame13 extends Phaser.Scene {
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
     this.right = false;
-    this.gameNotWon = true;
+    this.gameNotWon = false;
     this.START_Y = 620;
     this.cannonSelect = 0;
     this.selectedValue = 0;
@@ -134,6 +147,7 @@ export default class MicroGame13 extends Phaser.Scene {
       .setVisible(false);
     this.createBarrels(this.totalBarrels, 600, 400);
     this.cannon = this.add.sprite(420, 350, "cannon").setScale(0.8, 0.8);
+    this.fire = this.add.sprite(600, 400, "fire").setVisible(false);
 
     // spawn cannonballs
     this.cannonBall = this.add
@@ -161,40 +175,81 @@ export default class MicroGame13 extends Phaser.Scene {
     this.timedEvent = this.time.delayedCall(1000, this.onEvent, [], this);
 
     this.anims.create({
+      key: "fire",
+      frames: [
+        { key: "fire", frame: 0 },
+        { key: "fire", frame: 1 },
+        { key: "fire", frame: 2 },
+        { key: "fire", frame: 3 },
+      ],
+      frameRate: 24,
+    });
+
+    this.anims.create({
       key: "cannon-shoot",
       frames: [
-        { key: "cannon", frame: 0 },
-        { key: "cannon", frame: 1 },
-        { key: "cannon", frame: 2 },
-        { key: "cannon", frame: 3 },
-        { key: "cannon", frame: 4 },
-        { key: "cannon", frame: 5 },
-        { key: "cannon", frame: 6 },
-        { key: "cannon", frame: 7 },
-        { key: "cannon", frame: 8 },
-        { key: "cannon", frame: 9 },
+        {
+          key: "cannon",
+          frame: 0,
+        },
+        {
+          key: "cannon",
+          frame: 1,
+        },
+        {
+          key: "cannon",
+          frame: 2,
+        },
+        {
+          key: "cannon",
+          frame: 3,
+        },
+        {
+          key: "cannon",
+          frame: 4,
+        },
+        {
+          key: "cannon",
+          frame: 5,
+        },
+        {
+          key: "cannon",
+          frame: 6,
+        },
+        {
+          key: "cannon",
+          frame: 7,
+        },
+        {
+          key: "cannon",
+          frame: 8,
+        },
+        {
+          key: "cannon",
+          frame: 9,
+        },
       ],
       frameRate: 24,
     });
   }
 
   update() {
-    if (this.gameNotWon) {
+    if (!this.gameNotWon) {
+      if (this.totalBarrels === 0) this.gameWon();
       if (
         Phaser.Input.Keyboard.JustDown(this.SPACE) &&
         this.selectedValue != 0
       ) {
+        console.log("reachme 00");
+        this.cannon.anims.play("cannon-shoot", true);
+        this.fire.anims.play("fire", true).setVisible(true);
         this.totalBarrels -= this.selectedValue;
-        if (
-          this.selectedValue > this.barrelGrp.getChildren().length ||
-          this.selectedValue > this.totalBarrels
-        ) {
+        if (this.selectedValue > this.barrelGrp.getChildren().length) {
           console.log("You lost!");
-          this.gameNotWon = false;
-          return;
-        }
-        for (let i = 0; i < this.selectedValue; i++) {
-          this.barrelGrp.getChildren()[i].setVisible(false);
+          this.gameNotWon = true;
+        } else {
+          this.removeBarrels();
+          this.inputNum += 1;
         }
       }
       if (
@@ -235,6 +290,28 @@ export default class MicroGame13 extends Phaser.Scene {
     }
   }
 
+  removeBarrels() {
+    if (this.inputNum === 1) {
+      for (let i = 0; i < this.selectedValue; i++) {
+        this.barrelGrp.getChildren()[i].setVisible(false);
+      }
+    } else {
+      for (
+        let i = this.barrelGrp.getChildren().length - 1;
+        i > this.barrelGrp.getChildren().length - this.selectedValue - 1;
+        i--
+      ) {
+        this.barrelGrp.getChildren()[i].setVisible(false);
+      }
+    }
+  }
+
+  gameWon() {
+    if (this.gameNotWon === false) {
+      console.log("Winner!!!");
+    }
+  }
+
   resetCannonBallPosition() {
     for (let i = 0; i < this.cannonBallGrp.getChildren().length; i++) {
       this.cannonBallGrp.getChildren()[i].y = this.START_Y;
@@ -248,6 +325,11 @@ export default class MicroGame13 extends Phaser.Scene {
       this.cannonBallMap[
         this.cannonBallGrp.getChildren()[this.cannonSelect].texture.key
       ];
+    // console.log(
+    //   this.cannonBallMap[
+    //     this.cannonBallGrp.getChildren()[this.cannonSelect].texture.key
+    //   ]
+    // );
   }
 
   onEvent() {
@@ -340,6 +422,6 @@ export default class MicroGame13 extends Phaser.Scene {
       sortedBarrelByLevel
     );
 
-    console.log(this.barrelGrp);
+    // console.log(this.barrelGrp);
   }
 }
