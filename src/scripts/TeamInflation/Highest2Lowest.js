@@ -23,8 +23,6 @@ export default class MicroGame31 extends Phaser.Scene {
             [540, 469]
         ])
 
-        this.boxes = [];
-
         this.selectedValues = [];
         this.gameOver = false;
         this.buttonImgNames = ['Button00', 'Button01', 'Button02', 'Button03', 'Button04','Button05', 'Button06', 'Button07', 'Button08', 'Button09'];
@@ -35,9 +33,17 @@ export default class MicroGame31 extends Phaser.Scene {
         this.text;
         this.winState = false;
 
+
+        // an array of containers, each one will contain each equation 
+        this.boxes = [];
+        // an array of each equation's first operand, or just the number to be displayed
         this.num1 = []
+        // tells us what operation to perform on each set of operands
         this.opcode = []
+        // the second set of operands, value will be 0 if the index represents a number rather than an equation
         this.num2 = []
+        // the resulting value of each equation, or a repeated number
+        // should be used to compare value of each equation 
         this.evaluated = []
     }
 
@@ -118,9 +124,6 @@ export default class MicroGame31 extends Phaser.Scene {
             this.equation04.off('selected');
         })
 
-        console.log("Parse number 256")
-        //this.parseNumber(420)
-
         this.setNumbers()
 
         this.parseNumber(this.num1[0])
@@ -129,39 +132,46 @@ export default class MicroGame31 extends Phaser.Scene {
     }
 
     parseNumber(val){
+        // represents the number in the hundreds place
         let hun = Math.floor(val/100) 
+        // represents the number in the tens place
         let ten = Math.floor((val - (hun * 100))/ 10)
+        // represents the number in the ones place
         let one = val % 10
 
-        // this.boxes[0] = this.physics.add.group()
-        // this.boxes[0].create(1080/2-301, 720/2, 'numbers', hun)
-        // this.boxes[0].create(1080/2, 720/2, 'numbers', ten)
-        // this.boxes[0].create(1080/2+301, 720/2, 'numbers', one)
-
+        // example code that shows how to add containers to this.boxes[]
         this.boxes[0] = this.add.container(1080/4, 720/2)
+        // add one number to boxes
         this.addNumbers(this.boxes[0], hun, ten, one, 0 )
+        // add an operator
         this.boxes[0].add(this.add.image(+600, 0, 'operations', 0))
+        // add a second operand
         this.addNumbers(this.boxes[0], 4, 2, 0, 1200)
 
+        // containers can be rescaled conveniently
         this.boxes[0].setScale(.2)
 
         console.log("Hundreds: " + hun +"\nTens: "+ ten + "\nOnes: " + one + "\nTotal: "+ val)
     }
 
+    // Helper function that takes numbers parsed in parseNumber and adds them as images to a container
     addNumbers(box, h, t, o, offset){
         box.add(this.add.image(-300+ offset, 0, 'numbers', h))
         box.add(this.add.image(0+ offset, 0, 'numbers', t))
         box.add(this.add.image(+300+ offset, 0, 'numbers', o))
     }
 
+    // sets values of num1, num2, opcode and evaluated arrays for use in equations
     setNumbers(){
         for(let i = 0; i < 5; i++){
             this.opcode[i] = Math.round(Math.random()*4)
+            // if opcode is 0, no operation is needed, just the raw number
             if(this.opcode[i] === 0){
                 this.num1[i] = Math.round(Math.random()*999)
                 this.num2[i] = 0
                 this.evaluated[i] = this.num1[i]
             }
+            // all other opcodes result in equations
             else{
                 this.rollNumbers(i)
                 this.equateNumbers(this.opcode[i], i)
@@ -170,38 +180,38 @@ export default class MicroGame31 extends Phaser.Scene {
 
     }
 
+    // records the result of generated equations in this.evaluated[]
     equateNumbers(opcode, index){
         switch(opcode){
             case 1: // addition
                 this.evaluated[index] = this.num1[index]+this.num2[index]
                 console.log(this.num1[index]+" + " + this.num2[index] + " = " + this.evaluated[index])
                 break;
-            case 2:
+            case 2: // subtraction
                 this.evaluated[index] = this.num1[index]-this.num2[index]
                 console.log(this.num1[index]+" - " + this.num2[index] + " = " + this.evaluated[index])
                 break;
-            case 3:
+            case 3: // multiplication
                 this.evaluated[index] = this.num1[index]*this.num2[index]
                 console.log(this.num1[index]+" * " + this.num2[index] + " = " + this.evaluated[index])
                 break;
-            case 4:
+            case 4: // division
                 this.evaluated[index] = this.num1[index]/this.num2[index]
                 console.log(this.num1[index]+" / " + this.num2[index] + " = " + this.evaluated[index])
                 break;
-            default:
+            default: // default is addition
                 this.evaluated[index] = this.num1[index]+this.num2[index]
                 console.log(this.num1[index]+" + " + this.num2[index] + " = " + this.evaluated[index])
                 break;
         }
     }
 
+    // randomly generates numbers for equations
     rollNumbers(index){
         this.num1[index] = Math.round(Math.random()*99)
+        // range for num2 is 1-99 to avoid division by 0
         this.num2[index] = Math.round(Math.random()*98) + 1
     }
-
-
-
 
 
     update(time, delta) {
