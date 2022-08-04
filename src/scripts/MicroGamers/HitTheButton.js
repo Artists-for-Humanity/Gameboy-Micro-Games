@@ -11,17 +11,17 @@ export default class HitTheButton extends Phaser.Scene {
         this.gameStarted = false;
         this.gameActive = false;
         this.roundActive = false;
-        this.buttonLit = false;
         this.table;
         this.button;
         this.myName;
         this.cpuName;
+        this.myHand;
+        this.cpuHand;
         this.myScoreTracker;
         this.cpuScoreTracker;
         this.myScore = 0;
         this.cpuScore = 0;
         this.round = 1;
-
         this.cpuTimer = 0;
 
         this.permaText;
@@ -29,6 +29,7 @@ export default class HitTheButton extends Phaser.Scene {
         this.endText;
 
         this.keyA;
+        this.delayedCallCheck = false;
     }
 
     preload() {
@@ -56,6 +57,14 @@ export default class HitTheButton extends Phaser.Scene {
                 frameHeight: 108,
             }
         );
+        this.load.spritesheet(
+            'hand',
+            new URL('assets/HitTheButton/hand.png', import.meta.url).href,
+            {
+                frameWidth: 1080,
+                frameHeight: 720,
+            }
+        );
     }
 
     create() {
@@ -66,6 +75,9 @@ export default class HitTheButton extends Phaser.Scene {
         this.button = this.physics.add.sprite(540, 360, 'button');
         this.myName = this.physics.add.image(0, 0, 'player').setDisplayOrigin(-5, -5).setScale(0.5);
         this.cpuName = this.physics.add.image(1080, 0, 'cpu').setDisplayOrigin(216, -9).setScale(0.5);
+        this.myHand = this.physics.add.sprite(540, 360, 'hand');
+        this.cpuHand = this.physics.add.sprite(540, 360, 'hand');
+        this.cpuHand.flipX = true;
         this.myScoreTracker = this.physics.add.sprite(0, 48, 'scoreTracker').setDisplayOrigin(-16, -12).setScale(0.38);
         this.cpuScoreTracker = this.physics.add.sprite(1080, 48, 'scoreTracker').setDisplayOrigin(321, -8).setScale(0.38);
 
@@ -94,20 +106,42 @@ export default class HitTheButton extends Phaser.Scene {
             this.time.delayedCall(4500, () => {
                 this.myText.visible = false;
                 this.gameActive = true;
+                this.myHand.anims.play('idle', true);
+                this.cpuHand.anims.play('idle', true);
             }, [], this);
         }
         if (this.gameActive) {
-            if (!this.roundActive) this.startRound();
+            // console.log(this.myHand.anims);
+            
+            if (!this.roundActive && !this.delayedCallCheck) {
+                this.time.delayedCall(1000, () => {
+                    this.startRound();
+                    console.log('round start');
+                }, [], this);
+                this.delayedCallCheck = true;
+            }
             if (this.roundActive) {
                 if (this.button.anims.currentFrame.textureFrame === 1) {
                     this.cpuTimer += delta;
-                    if (Phaser.Input.Keyboard.JustDown(this.keyA)) this.roundWon();
+                    if (Phaser.Input.Keyboard.JustDown(this.keyA)) {
+                        this.myHand.anims.play('slap');
+                        this.myHand.on('animationcomplete', () => { 
+                            this.time.delayedCall(250, () => { this.myHand.anims.play('idle') }, [], this);
+                        });
+                        this.roundWon();
+                    }
                 }
-                if (this.cpuTimer >= 400) this.roundLoss();
+                if (this.cpuTimer >= 300) {
+                    this.cpuHand.anims.play('slap');
+                    this.cpuHand.on('animationcomplete', () => { 
+                        this.time.delayedCall(250, () => { this.cpuHand.anims.play('idle') }, [], this);
+                    });
+                    this.roundLoss();
+                }
             }
             if (this.myScore === 3 || this.cpuScore === 3) {
                 this.gameActive = false;
-                this.time.delayedCall(1000, () => { this.endGame(); }, [], this);         
+                this.time.delayedCall(700, () => { this.endGame(); }, [], this);         
             }
         }
     }
@@ -142,6 +176,27 @@ export default class HitTheButton extends Phaser.Scene {
             key: '3',
             frames: [{ key: 'scoreTracker', frame: 3 }],
             frameRate: 10
+        });
+        this.anims.create({
+            key: 'idle',
+            frames: [
+                { key: 'hand', frame: 0 },
+                { key: 'hand', frame: 1 },
+                { key: 'hand', frame: 2 },
+                { key: 'hand', frame: 3 },
+                { key: 'hand', frame: 4 },],
+            frameRate: 8,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'slap',
+            frames: [
+                { key: 'hand', frame: 5 },
+                { key: 'hand', frame: 6 },
+                { key: 'hand', frame: 7 },
+                { key: 'hand', frame: 8 },
+                { key: 'hand', frame: 9 },],
+            frameRate: 16
         });
     }
 
@@ -193,14 +248,15 @@ export default class HitTheButton extends Phaser.Scene {
     lightButton() {
         this.time.delayedCall(this.getIntBetween(2000, 5000), () => { 
             this.button.anims.play('green');
-            this.buttonLit = true;
         }, [], this);
     }
     
     reset() {
-        this.button.anims.play('red');
-        this.buttonLit = false;
+        this.time.delayedCall(500, () => {
+            this.button.anims.play('red');
+        }, [], this);
         this.roundActive = false;
+        this.delayedCallCheck = false;
         this.cpuTimer = 0;
         this.round++;
     }
