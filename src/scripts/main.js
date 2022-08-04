@@ -24,7 +24,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [Highest2Lowest],
+  scene: [CircleGame],
   audio: {
     disableWebAudio: true,
   },
