@@ -75,7 +75,6 @@ export default class FlySwat extends Phaser.Scene {
     this.createKeys();
   }
   update() {
-    console.log(this.deadFlyTimer, "timer");
     this.playSwatText();
     this.moveFly();
     this.moveSwatter();
@@ -195,7 +194,7 @@ export default class FlySwat extends Phaser.Scene {
   swing() {
     if (this.swatter && this.gameover === false) {
       if (this.swung === true) {
-        this.swingCD -= 2;
+        this.swingCD -= 10;
       }
       if (this.swingCD <= 0) {
         this.swatter.anims.play("up", true);
@@ -211,7 +210,6 @@ export default class FlySwat extends Phaser.Scene {
             this.swatter.body
           )
         ) {
-          console.log("hit");
           this.killFly();
           this.gameover = true;
         }
