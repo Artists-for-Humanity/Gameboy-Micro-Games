@@ -28,7 +28,8 @@ export default class HitTheButton extends Phaser.Scene {
         this.myText;
         this.endText;
 
-        this.keyA;
+        this.keySPACE;
+        this.keyPressAvailable = true;
         this.delayedCallCheck = false;
     }
 
@@ -81,7 +82,7 @@ export default class HitTheButton extends Phaser.Scene {
         this.myScoreTracker = this.physics.add.sprite(0, 48, 'scoreTracker').setDisplayOrigin(-16, -12).setScale(0.38);
         this.cpuScoreTracker = this.physics.add.sprite(1080, 48, 'scoreTracker').setDisplayOrigin(321, -8).setScale(0.38);
 
-        this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         // let btt = this.add.text(0, 0, 'Best time!', {
         //     fontSize: '32px',
@@ -101,8 +102,6 @@ export default class HitTheButton extends Phaser.Scene {
         if (!this.gameStarted) {
             this.gameStarted = true;
             this.button.anims.play('red');
-            this.myScoreTracker.anims.play('0');
-            this.cpuScoreTracker.anims.play('0');
             this.time.delayedCall(4500, () => {
                 this.myText.visible = false;
                 this.gameActive = true;
@@ -111,8 +110,6 @@ export default class HitTheButton extends Phaser.Scene {
             }, [], this);
         }
         if (this.gameActive) {
-            // console.log(this.myHand.anims);
-            
             if (!this.roundActive && !this.delayedCallCheck) {
                 this.time.delayedCall(1000, () => {
                     this.startRound();
@@ -121,17 +118,25 @@ export default class HitTheButton extends Phaser.Scene {
                 this.delayedCallCheck = true;
             }
             if (this.roundActive) {
-                if (this.button.anims.currentFrame.textureFrame === 1) {
-                    this.cpuTimer += delta;
-                    if (Phaser.Input.Keyboard.JustDown(this.keyA)) {
-                        this.myHand.anims.play('slap');
-                        this.myHand.on('animationcomplete', () => { 
-                            this.time.delayedCall(250, () => { this.myHand.anims.play('idle') }, [], this);
-                        });
+                if (Phaser.Input.Keyboard.JustDown(this.keySPACE) && this.keyPressAvailable) {
+                    this.keyPressAvailable = false;
+                    this.myHand.anims.play('slap');
+                    this.myHand.on('animationcomplete', () => { 
+                        this.time.delayedCall(250, () => {
+                            this.myHand.anims.play('idle');
+                            this.keyPressAvailable = true;
+                        }, [], this);
+                    });
+                    if (this.button.anims.currentFrame.textureFrame === 1) {
                         this.roundWon();
+                    } else {
+                        this.roundLoss();
                     }
                 }
-                if (this.cpuTimer >= 300) {
+                if (this.button.anims.currentFrame.textureFrame === 1) {
+                    this.cpuTimer += delta;
+                }
+                if (this.cpuTimer >= 350) {
                     this.cpuHand.anims.play('slap');
                     this.cpuHand.on('animationcomplete', () => { 
                         this.time.delayedCall(250, () => { this.cpuHand.anims.play('idle') }, [], this);
@@ -224,7 +229,7 @@ export default class HitTheButton extends Phaser.Scene {
         });
         this.myText.setText([
             "When the button turns",
-            "green, hit 'A' before",
+            "green, hit 'SPACE' before",
             "your opponent does!"]);
         this.myText.setOrigin(0.5);
         this.myText.depth = 20;
@@ -242,10 +247,8 @@ export default class HitTheButton extends Phaser.Scene {
 
     startRound() {
         this.roundActive = true;
-        this.lightButton();
-    }
 
-    lightButton() {
+        //turn button green
         this.time.delayedCall(this.getIntBetween(2000, 5000), () => { 
             this.button.anims.play('green');
         }, [], this);
