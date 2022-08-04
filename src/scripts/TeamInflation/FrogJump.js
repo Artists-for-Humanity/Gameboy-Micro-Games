@@ -47,6 +47,10 @@ export default class FrogJump extends Phaser.Scene {
             import.meta.url).href);
         this.load.image('Jump', new URL("./assets/Jump.png",
             import.meta.url).href);
+            this.load.image('win', new URL("./assets/win!.png",
+            import.meta.url).href);
+            this.load.image('lose', new URL("./assets/lose.png",
+            import.meta.url).href);
         
     }
     create() {
@@ -65,25 +69,14 @@ export default class FrogJump extends Phaser.Scene {
 
 
 
-        this.loseText = this.add.text(330, 310);
-        this.loseText.setText('You Lose');
-        this.loseText.setStyle({
-            fontSize: '100px',
-            fill: '#00ff00'
-        });
+        this.loseText = this.add.image(240, 290,'lose')
         this.loseText.setScrollFactor(0);
-
+        this.loseText.setOrigin(0,0);
         this.loseText.setVisible(false);
 
-        this.winText = this.add.text(330, 310);
-        this.winText.setText('You Win');
-        this.winText.setStyle({
-            fontSize: '100px',
-            fill: '#00ff00'
-        });
-
+        this.winText = this.add.image(240, 220,'win');
+        this.winText.setOrigin(0,0);
         this.winText.setScrollFactor(0);
-
         this.winText.setVisible(false);
        
         this.cursors = this.input.keyboard.createCursorKeys();
