@@ -13,6 +13,8 @@ export default class MicroGame13 extends Phaser.Scene {
     this.barrels;
     this.totalBarrels;
     this.inputNum = 1;
+    this.gameOver = false;
+    this.tries = 0;
   }
 
   preload() {
@@ -86,7 +88,7 @@ export default class MicroGame13 extends Phaser.Scene {
     );
     this.load.spritesheet(
       "fire",
-      new URL("./assets2/fire-spritesheet.png", import.meta.url).href,
+      new URL("./assets2/test-fire-spritesheet1.png", import.meta.url).href,
       {
         frameWidth: 700,
         frameHeight: 400,
@@ -147,7 +149,7 @@ export default class MicroGame13 extends Phaser.Scene {
       .setVisible(false);
     this.createBarrels(this.totalBarrels, 600, 400);
     this.cannon = this.add.sprite(420, 350, "cannon").setScale(0.8, 0.8);
-    this.fire = this.add.sprite(600, 400, "fire").setVisible(false);
+    this.fire = this.add.sprite(710, 320, "fire").setVisible(false);
 
     // spawn cannonballs
     this.cannonBall = this.add
@@ -181,6 +183,23 @@ export default class MicroGame13 extends Phaser.Scene {
         { key: "fire", frame: 1 },
         { key: "fire", frame: 2 },
         { key: "fire", frame: 3 },
+        { key: "fire", frame: 4 },
+        { key: "fire", frame: 5 },
+        { key: "fire", frame: 6 },
+        { key: "fire", frame: 7 },
+        { key: "fire", frame: 8 },
+        { key: "fire", frame: 9 },
+        { key: "fire", frame: 10 },
+        { key: "fire", frame: 11 },
+        { key: "fire", frame: 12 },
+        { key: "fire", frame: 13 },
+        { key: "fire", frame: 14 },
+        { key: "fire", frame: 15 },
+        { key: "fire", frame: 16 },
+        { key: "fire", frame: 17 },
+        { key: "fire", frame: 18 },
+        { key: "fire", frame: 19 },
+        { key: "fire", frame: 20 },
       ],
       frameRate: 24,
     });
@@ -233,23 +252,35 @@ export default class MicroGame13 extends Phaser.Scene {
     });
   }
 
-  update() {
+  update(time, delta) {
     if (!this.gameNotWon) {
-      if (this.totalBarrels === 0) this.gameWon();
+      if (this.totalBarrels === 0 && this.tries <= 2) this.gameWon();
+      // if (this.totalBarrels < 0) this.gameover = true;
+      if (this.tries > 2) {
+        this.gameOver = true;
+      }
       if (
         Phaser.Input.Keyboard.JustDown(this.SPACE) &&
         this.selectedValue != 0
       ) {
-        console.log("reachme 00");
         this.cannon.anims.play("cannon-shoot", true);
         this.fire.anims.play("fire", true).setVisible(true);
         this.totalBarrels -= this.selectedValue;
         if (this.selectedValue > this.barrelGrp.getChildren().length) {
-          console.log("You lost!");
           this.gameNotWon = true;
+          //this.gameOverScreen.setVisible(true);
+          this.time.delayedCall(
+            2000,
+            () => {
+              this.gameOverScreen.setVisible(true);
+            },
+            [],
+            this
+          );
         } else {
           this.removeBarrels();
           this.inputNum += 1;
+          this.tries += 1;
         }
       }
       if (
@@ -308,7 +339,13 @@ export default class MicroGame13 extends Phaser.Scene {
 
   gameWon() {
     if (this.gameNotWon === false) {
-      console.log("Winner!!!");
+      this.endText = this.add.text(300, 250, "You Won!");
+      this.endText.setStyle({
+        fontSize: "100px",
+        fill: "000000",
+        align: "center",
+      });
+      this.gameOver = true;
     }
   }
 
@@ -421,7 +458,5 @@ export default class MicroGame13 extends Phaser.Scene {
       {},
       sortedBarrelByLevel
     );
-
-    // console.log(this.barrelGrp);
   }
 }
