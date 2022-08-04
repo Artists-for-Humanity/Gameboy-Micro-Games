@@ -1,6 +1,5 @@
 const X = 1080
 const Y = 720
-
 export default class MicroGame31 extends Phaser.Scene { 
     constructor() {
         super({
@@ -8,11 +7,12 @@ export default class MicroGame31 extends Phaser.Scene {
             visible: false,
             key: 'Highest2Lowest',
         });
-
-
-        this.selected = 2
+        // pointer graphic object
         this.pointer
-
+        // index of selected equation
+        this.selected = 2
+        // the correct value to match from evaluated[]
+        this.correct
         // an array of containers, each one will contain each equation 
         this.equations = [];
         // an array of sprites
@@ -26,38 +26,29 @@ export default class MicroGame31 extends Phaser.Scene {
         // the resulting value of each equation, or a repeated number
         // should be used to compare value of each equation 
         this.evaluated = []
-
+        // input objects
         this.up 
         this.down 
         this.left
         this.right
         this.space
-        this.correct
-
+        // game state booleans
         this.gameOver = false;
         this.win = false;
-
     }
-
     preload() {
-        this.load.image("background", new URL("./assets/NGbackground.png",
-            import.meta.url).href);
-        this.load.image("cursorimage", new URL("./assets/cursorimage.png",
-            import.meta.url).href);
-        this.load.image("loseimage", new URL("./assets/youlose.png",
-            import.meta.url).href);
-        this.load.image("winimage", new URL("./assets/youwin.png",
-            import.meta.url).href);
-
+        this.load.image("background", new URL("./assets/NGbackground.png", import.meta.url).href);
+        this.load.image("cursorimage", new URL("./assets/cursorimage.png", import.meta.url).href);
+        this.load.image("loseimage", new URL("./assets/youlose.png", import.meta.url).href);
+        this.load.image("winimage", new URL("./assets/youwin.png", import.meta.url).href);
         this.load.spritesheet("frames", new URL("./assets/frames.png", import.meta.url).href,
         {   frameWidth: 1368/3, frameHeight: 329});
         this.load.spritesheet("numbers", new URL("./assets/numbers.png", import.meta.url).href,
-        {frameWidth: 313 , frameHeight: 350});
+        {   frameWidth: 313 , frameHeight: 350});
         this.load.spritesheet("operations", new URL("./assets/operations.png", import.meta.url).href,
-        {frameWidth: 1408/4 , frameHeight: 294 });
+        {   frameWidth: 1408/4 , frameHeight: 294});
 
     }
-
     create() {
 
         // SET INPUTS
@@ -67,8 +58,8 @@ export default class MicroGame31 extends Phaser.Scene {
         this.right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
         this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
 
+        // CREATE GRAPHICS
         this.add.image(X / 2, Y / 2, "background");
-    
         this.anims.create({
             key: 'box',
             frames: [
@@ -100,7 +91,6 @@ export default class MicroGame31 extends Phaser.Scene {
         this.pointer.setScale(.15)
     
     }
-
     update() {
         if(!this.gameOver){
             // each if-statement passes the direction pressed to movePointer()
@@ -132,8 +122,7 @@ export default class MicroGame31 extends Phaser.Scene {
             else{}
         }
     }
-        
-    
+    // START HELPER FUNCTIONS
     // takes a number between 0 and 999 and returns an array with each digit separated
     parseNumber(val){
         // represents the number in the hundreds place
@@ -147,8 +136,6 @@ export default class MicroGame31 extends Phaser.Scene {
 
         return [hun, ten, one]
     }
-
-
     // creates a graphic for each equation
     fillBox(i, x, y){
         // changes number placement within box if needed
@@ -198,11 +185,9 @@ export default class MicroGame31 extends Phaser.Scene {
             }
             this.box[i].setScale(.6, .5) 
         }
-
         // containers can be rescaled conveniently
         this.equations[i].setScale(.2)
     }
-
     // Helper function that takes numbers parsed in parseNumber and adds them as images to a container
     addNumbers(equation, val, offset, index, operand){
         let nums = this.parseNumber(val)
@@ -221,7 +206,6 @@ export default class MicroGame31 extends Phaser.Scene {
         }
         equation.add(this.add.image(addset+ offset, 0, 'numbers', nums[2]))
     }
-
     // sets values of num1, num2, opcode and evaluated arrays for use in equations
     setNumbers(){
         for(let i = 0; i < 5; i++){
@@ -240,7 +224,6 @@ export default class MicroGame31 extends Phaser.Scene {
         }
 
     }
-
     // records the result of generated equations in this.evaluated[]
     equateNumbers(opcode, index){
         switch(opcode){
@@ -266,15 +249,13 @@ export default class MicroGame31 extends Phaser.Scene {
                 break;
         }
     }
-
     // randomly generates numbers for equations
     rollNumbers(index){
         this.num1[index] = Math.round(Math.random()*99)
         // range for num2 is 1-99 to avoid division by 0
         this.num2[index] = Math.round(Math.random()*98) + 1
     }
-
-
+    // used for making new selections
     movePointer(dir){
         // stop current animation 
         this.box[this.selected].anims.stop()
