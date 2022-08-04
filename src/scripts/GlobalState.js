@@ -15,9 +15,12 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
 
   preload(game) {
     // console.log(game);
-    game.load.image('mask', new URL('./globalAssets/mask.png', import.meta.url).href);
-    game.load.image('bomb', new URL('./globalAssets/bomb.png', import.meta.url).href);
-    game.load.image('fuse', new URL('./globalAssets/fuse.png', import.meta.url).href);
+    game.load.image('mask', new URL('./globalAssets/mask.png',
+      import.meta.url).href);
+    game.load.image('bomb', new URL('./globalAssets/bomb.png',
+      import.meta.url).href);
+    game.load.image('fuse', new URL('./globalAssets/fuse.png',
+      import.meta.url).href);
   }
 
   createBombTimer(bombPosX, bombPosY, sec, game) {
@@ -49,8 +52,7 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
       this.text.setText('Boom!!!!!');
       this.bombImg.visible = false;
       this.fuseImg.visible = false;
-    }
-    else {
+    } else {
       this.initialTime -= 1; // One second
       let stepWidth = this.fuseMask.displayWidth / this.initialTime;
       this.fuseMask.x -= stepWidth;
@@ -73,10 +75,25 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
   initCountDown(game) {
 
     this.createBombTimer(250, 625, this.initialTime, game);
-    // console.log('reachme');
-
     // Each 1000 ms call onEvent
-    this.timedEvent = game.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
+    this.timedEvent = game.time.addEvent({
+      delay: 1000,
+      callback: this.onEvent,
+      callbackScope: this,
+      loop: true
+    });
+  }
+
+  // Helper Functions
+
+  setText(myText, game) {
+    this.myText = game.add.text(250, 360, '')
+    this.myText.setStyle({
+      fontSize: '100px',
+      fill: '#ffffff',
+      align: 'center',
+    });
+    this.myText.setText(myText);
   }
 }
 
