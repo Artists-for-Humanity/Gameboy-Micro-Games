@@ -9,19 +9,18 @@ export default class FlySwat extends Phaser.Scene {
     this.swatter;
     this.fly;
     this.swatdown = false;
-    this.deadFlytimer = 1;
+    this.deadFlyTimer = 0;
     this.deadFlyScale = 1;
     this.deadFly;
     this.swatTimer = 2;
     this.swatTextTimer = 0;
     this.swatTextScale = 0;
     this.gamestart = false;
-    this.timer = 0;
     this.flightPattern;
     this.swingCD = 100;
     this.swung = false;
-    this.ToggleX = false;
-    this.toggleY = false;
+    this.timer = 0;
+    this.gameover = false;
   }
   preload() {
     this.load.image(
@@ -60,6 +59,14 @@ export default class FlySwat extends Phaser.Scene {
         frameHeight: 430,
       }
     );
+    this.load.spritesheet(
+      "explosion",
+      new URL("../8Bitties/assets/FlySwat/boomSheet.png", import.meta.url).href,
+      {
+        frameWidth: 140,
+        frameHeight: 130,
+      }
+    );
   }
   create() {
     this.makeAnimations();
@@ -68,6 +75,7 @@ export default class FlySwat extends Phaser.Scene {
     this.createKeys();
   }
   update() {
+    console.log(this.deadFlyTimer, "timer");
     this.playSwatText();
     this.moveFly();
     this.moveSwatter();
@@ -96,16 +104,24 @@ export default class FlySwat extends Phaser.Scene {
     }
   }
   killFly() {
-    console.log("dead");
     this.fly.destroy();
-    this.deadFly = this.add.image(this.fly.x, this.fly.y, "dead");
+    this.deadFly = this.physics.add.image(this.fly.x, this.fly.y, "dead");
   }
   animateDeadFly() {
     if (this.deadFly) {
-      if (this.deadFlyScale > 0.25) {
+      if (this.deadFlyScale > 0.6) {
+        this.deadFly.rotation += 0.75;
+        this.deadFly.x += 2;
         this.deadFlyTimer++;
-        // this.deadFlyScale -= 1 / this.deadFlyTimer;
+        this.deadFlyScale -= 0.08 / this.deadFlyTimer;
         this.deadFly.setScale(this.deadFlyScale);
+      }
+      if (this.deadFlyTimer === 83) {
+        this.deadFlyTimer = 0;
+        this.explosion = this.physics.add
+          .sprite(this.deadFly.x, this.deadFly.y, "explosion")
+          .anims.play("crash", true);
+        this.deadFly.destroy();
       }
     }
   }
@@ -149,9 +165,35 @@ export default class FlySwat extends Phaser.Scene {
       frameRate: 1,
       repeat: 0,
     });
+    this.anims.create({
+      key: "crash",
+      frames: [
+        { key: "explosion", frame: 0 },
+        { key: "explosion", frame: 1 },
+        { key: "explosion", frame: 2 },
+        { key: "explosion", frame: 3 },
+        { key: "explosion", frame: 4 },
+        { key: "explosion", frame: 5 },
+        { key: "explosion", frame: 6 },
+        { key: "explosion", frame: 7 },
+        { key: "explosion", frame: 8 },
+        { key: "explosion", frame: 9 },
+        { key: "explosion", frame: 12 },
+        { key: "explosion", frame: 13 },
+        { key: "explosion", frame: 14 },
+        { key: "explosion", frame: 15 },
+        { key: "explosion", frame: 16 },
+        { key: "explosion", frame: 17 },
+        { key: "explosion", frame: 18 },
+        { key: "explosion", frame: 19 },
+        { key: "explosion", frame: 20 },
+      ],
+      frameRate: 10,
+      repeat: 0,
+    });
   }
   swing() {
-    if (this.swatter) {
+    if (this.swatter && this.gameover === false) {
       if (this.swung === true) {
         this.swingCD -= 2;
       }
@@ -164,13 +206,14 @@ export default class FlySwat extends Phaser.Scene {
         this.swatter.anims.play("down", true);
         this.swung = true;
         if (
-          Phaser.Geom.Intersects.RectangleToRectangle(
-            this.swatter.body,
-            this.fly
+          Phaser.Geom.Intersects.CircleToRectangle(
+            this.fly.body,
+            this.swatter.body
           )
         ) {
           console.log("hit");
           this.killFly();
+          this.gameover = true;
         }
       }
     }
@@ -189,16 +232,16 @@ export default class FlySwat extends Phaser.Scene {
   moveSwatter() {
     if (this.swung === false && this.swatter) {
       if (this.up.isDown) {
-        this.swatter.y -= 5;
+        this.swatter.y -= 7;
       }
       if (this.down.isDown) {
-        this.swatter.y += 5;
+        this.swatter.y += 7;
       }
       if (this.left.isDown) {
-        this.swatter.x -= 5;
+        this.swatter.x -= 7;
       }
       if (this.right.isDown) {
-        this.swatter.x += 5;
+        this.swatter.x += 7;
       }
     }
   }
