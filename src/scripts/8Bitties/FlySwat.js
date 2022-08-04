@@ -7,41 +7,43 @@ export default class FlySwat extends Phaser.Scene {
       key: "FlySwat",
     });
     this.swatter;
+    this.fly;
     this.swatdown = false;
-    this.deadFlytimer = 0;
-    this.deadFlyScale = 0;
+    this.deadFlytimer = 1;
+    this.deadFlyScale = 1;
     this.deadFly;
     this.swatTimer = 2;
     this.swatTextTimer = 0;
     this.swatTextScale = 0;
-    this.fly;
     this.gamestart = false;
     this.timer = 0;
     this.flightPattern;
     this.swingCD = 100;
     this.swung = false;
+    this.ToggleX = false;
+    this.toggleY = false;
   }
   preload() {
     this.load.image(
       "dead",
-      new URL("../8Bitties/assets/flySwat/deadfly.png", import.meta.url).href
+      new URL("../8Bitties/assets/FlySwat/deadfly.png", import.meta.url).href
     );
     this.load.image(
       "holder",
-      new URL("../8Bitties/assets/flySwat/imageholder.png", import.meta.url)
+      new URL("../8Bitties/assets/FlySwat/imageholder.png", import.meta.url)
         .href
     );
     this.load.image(
       "swat",
-      new URL("../8Bitties/assets/flySwat/swatText.png", import.meta.url).href
+      new URL("../8Bitties/assets/FlySwat/swatText.png", import.meta.url).href
     );
     this.load.image(
       "kitchen",
-      new URL("../8Bitties/assets/flySwat/kitchenbg.png", import.meta.url).href
+      new URL("../8Bitties/assets/FlySwat/kitchenbg.png", import.meta.url).href
     );
     this.load.spritesheet(
       "fly",
-      new URL("../8Bitties/assets/flySwat/fly_sheet.png", import.meta.url).href,
+      new URL("../8Bitties/assets/FlySwat/fly_sheet.png", import.meta.url).href,
       {
         frameWidth: 190,
         frameHeight: 128,
@@ -50,7 +52,7 @@ export default class FlySwat extends Phaser.Scene {
     this.load.spritesheet(
       "swatter",
       new URL(
-        "../8Bitties/assets/flySwat/flyswatter_sheet.png",
+        "../8Bitties/assets/FlySwat/flyswatter_sheet.png",
         import.meta.url
       ).href,
       {
@@ -66,22 +68,17 @@ export default class FlySwat extends Phaser.Scene {
     this.createKeys();
   }
   update() {
+    this.playSwatText();
+    this.moveFly();
     this.moveSwatter();
     this.swing();
-    this.moveFly();
-    this.playSwatText();
-
-    if (this.deadFly) {
-      this.animateDeadFly();
-    }
+    this.animateDeadFly();
   }
   gameStart() {
     this.flightPattern = Math.floor(Math.random() * 2);
-    this.fly = this.physics.add
-      .sprite(540, 360, "fly")
-      .anims.play("flying", true)
-      .body.setCircle(32)
-      .setOffset(32, 32);
+    this.fly = this.physics.add.sprite(540, 360, "fly");
+    this.fly.anims.play("flying", true);
+    this.fly.body.setCircle(32).setOffset(32, 32);
     this.swatter = this.physics.add.sprite(500, 450, "swatter");
     this.swatter.body.setSize(128, 160).setOffset(128, 32);
     this.gamestart = true;
@@ -100,14 +97,16 @@ export default class FlySwat extends Phaser.Scene {
   }
   killFly() {
     console.log("dead");
-    this.deadFly = this.add.image(this.fly.x, this.fly.y, "dead");
     this.fly.destroy();
+    this.deadFly = this.add.image(this.fly.x, this.fly.y, "dead");
   }
   animateDeadFly() {
-    if (this.deadFlyScale > 0.25) {
-      this.deadFlyTimer++;
-      this.deadFlyScale += this.deadFlytimer / 1;
-      this.deadFly.setScale(this.deadFlyScale);
+    if (this.deadFly) {
+      if (this.deadFlyScale > 0.25) {
+        this.deadFlyTimer++;
+        // this.deadFlyScale -= 1 / this.deadFlyTimer;
+        this.deadFly.setScale(this.deadFlyScale);
+      }
     }
   }
   moveFly() {
@@ -164,7 +163,12 @@ export default class FlySwat extends Phaser.Scene {
       if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
         this.swatter.anims.play("down", true);
         this.swung = true;
-        if (Phaser.Geom.Rectangle.Overlaps(this.swatter.body, this.fly)) {
+        if (
+          Phaser.Geom.Intersects.RectangleToRectangle(
+            this.swatter.body,
+            this.fly
+          )
+        ) {
           console.log("hit");
           this.killFly();
         }
