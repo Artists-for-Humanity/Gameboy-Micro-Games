@@ -23,7 +23,7 @@ export default class CircleGame extends Phaser.Scene {
             import.meta.url).href));
         this.load.image(this.load.image('jump', new URL("./assets/Jump.png",
             import.meta.url).href));
-        this.load.spritesheet("ball", new URL("./assets/frogs.png",
+        this.load.spritesheet("ball", new URL("./assets/diamond.png",
             import.meta.url).href, {
             frameWidth: 46,
             frameHeight: 38

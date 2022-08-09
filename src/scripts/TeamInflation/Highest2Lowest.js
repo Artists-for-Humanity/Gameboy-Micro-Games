@@ -39,8 +39,8 @@ export default class MicroGame31 extends Phaser.Scene {
     preload() {
         this.load.image("background", new URL("./assets/NGbackground.png", import.meta.url).href);
         this.load.image("cursorimage", new URL("./assets/cursorimage.png", import.meta.url).href);
-        this.load.image("loseimage", new URL("./assets/youlose.png", import.meta.url).href);
-        this.load.image("winimage", new URL("./assets/youwin.png", import.meta.url).href);
+        this.load.image("loseimage", new URL("./assets/xmark.png", import.meta.url).href);
+        this.load.image("winimage", new URL("./assets/checkmark.png", import.meta.url).href);
         this.load.spritesheet("frames", new URL("./assets/frames.png", import.meta.url).href,
         {   frameWidth: 1368/3, frameHeight: 329});
         this.load.spritesheet("numbers", new URL("./assets/numbers.png", import.meta.url).href,

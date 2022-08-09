@@ -24,32 +24,40 @@ export default class FrogJump extends Phaser.Scene {
         this.JumpImg;
         this.startGameDelay;
         this.platforms;
+        this.ground
         this.stars;
         this.delayTime;
         this.randomNum = Math.floor(Math.random() * 3);
 
     }
     preload() {
-        this.load.spritesheet("frogs", new URL("./assets/frogs.png",
+        this.load.spritesheet("frogs", new URL("./assets/frogJump/frogs.png",
             import.meta.url).href, {
             frameWidth: 46,
             frameHeight: 38
         });
-        this.load.image('sky', new URL("./assets/bkg2.png",
+
+        this.load.spritesheet('platform', new URL("./assets/frogJump/fleafsheet.png",
+            import.meta.url).href, {
+                frameWidth: 332,
+                frameHeight: 163
+            });
+        this.load.image('sky', new URL("./assets/frogJump/bkg2.png",
             import.meta.url).href);
-        this.load.image('jump1', new URL("./assets/frog_jump_1.png",
+        this.load.image('jump1', new URL("./assets/frogJump/frogjump1.png",
             import.meta.url).href);
-        this.load.image('jump2', new URL("./assets/frog_jump_2.png",
+        this.load.image('jump2', new URL("./assets/frogJump/frogjump2.png",
             import.meta.url).href);
-        this.load.image('ground', new URL("./assets/FillerAssets/platform.png",
+        this.load.image('ground', new URL("./assets/frogJump/bigplatform.png",
             import.meta.url).href);
-        this.load.image('star', new URL("./assets/FillerAssets/star.png",
+            
+        this.load.image('star', new URL("./assets/frogJump/starPH.png",
             import.meta.url).href);
-        this.load.image('Jump', new URL("./assets/Jump.png",
+        this.load.image('Jump', new URL("./assets/frogJump/Jump.png",
             import.meta.url).href);
-            this.load.image('win', new URL("./assets/win!.png",
+            this.load.image('win', new URL("./assets/frogJump/win.png",
             import.meta.url).href);
-            this.load.image('lose', new URL("./assets/lose.png",
+            this.load.image('lose', new URL("./assets/frogJump/youlosefrog.png",
             import.meta.url).href);
         
     }
@@ -59,7 +67,11 @@ export default class FrogJump extends Phaser.Scene {
         this.background.setOrigin(0, 0);
         this.background.setScrollFactor(0);
 
-        this.generatePlatform(this.randomNum);
+        // this.generatePlatform(this.randomNum);
+        this.generatePlatform(0);
+        this.ground = this.physics.add.sprite(530, 685, 'ground');
+        this.ground.setScale(1.25, .75);
+        this.ground.setImmovable(true);
 
         this.playerSprite = this.physics.add.sprite(500, 620, 'frogs');
 
@@ -67,6 +79,7 @@ export default class FrogJump extends Phaser.Scene {
         this.playerSprite.setCollideWorldBounds(false);
         this.playerSprite.body.setGravityY(700);
 
+        console.log(this.playerSprite);
 
 
         this.loseText = this.add.image(240, 290,'lose')
@@ -81,7 +94,7 @@ export default class FrogJump extends Phaser.Scene {
        
         this.cursors = this.input.keyboard.createCursorKeys();
         this.grounds = this.physics.add.staticGroup();
-        this.grounds.create(1080, 820, 'ground').setScale(11).refreshBody();
+        // this.grounds.create(1080, 820, 'ground').setScale(5).refreshBody();
 
 
         
@@ -90,6 +103,7 @@ export default class FrogJump extends Phaser.Scene {
 
         this.physics.add.collider(this.playerSprite, this.platforms, this.offGroundMethod, null, this);
         this.physics.add.collider(this.playerSprite, this.grounds, this.testGroundCollide, null, this);
+        this.physics.add.collider(this.playerSprite, this.ground);
         this.physics.add.overlap(this.playerSprite, this.stars, this.destroyStar, null, this);
         this.cam = this.cameras.main;
         this.cam.setBounds(0, -500, 1080, 1220);
@@ -104,15 +118,18 @@ export default class FrogJump extends Phaser.Scene {
     generatePlatform(level) {
         if(level === 0) {
             this.platforms = this.physics.add.staticGroup();
-            this.platforms.create(500, 450, 'ground').setScale(0.2).refreshBody();
-            this.platforms.create(720, 250, 'ground').setScale(0.2).refreshBody();
-            this.platforms.create(0, 30, "ground").setScale(1.5,0.2).refreshBody();
-            this.platforms.create(500, 150, "ground").setScale(0.2).refreshBody();
+            console.log(this.platforms);
+
+            this.platforms.create(500, 450, 'platform').setScale(0.2).refreshBody();
+            this.platforms.create(720, 250, 'platform').setScale(0.2).refreshBody();
+            this.platforms.create(0, 30, "platform").setScale(1.5,0.2).refreshBody();
+            this.platforms.create(500, 150, "platform").setScale(0.2).refreshBody();
             this.stars = this.physics.add.group();
             this.stars.create(150, -5, 'star');
             this.delayTime = 10000;
         }
         else if(level === 1) {
+            console.log('reach me 00')
             this.platforms = this.physics.add.staticGroup();
             this.platforms.create(680, 450, 'ground').setScale(0.2).refreshBody();
             this.platforms.create(535, 250, 'ground').setScale(0.2).refreshBody();
@@ -144,7 +161,12 @@ export default class FrogJump extends Phaser.Scene {
         }
     }
 
-    update() {   
+    update() { 
+        // this.platforms.anims.play('idleLeaf')
+        this.platforms.getChildren().forEach((platform) => {
+            // console.log(platform);
+            platform.anims.play('idleLeaf', true);
+          });
         if (this.playerSprite.x >= 1064) this.playerSprite.x = 1064;
         if(this.playerSprite.x <= 16) this.playerSprite.x = 16;
 
@@ -202,15 +224,16 @@ export default class FrogJump extends Phaser.Scene {
     }
 
     createAnimation() {
-        // this.anims.create({
-        //     key: 'left',
-        //     frames: this.anims.generateFrameNumbers('frogs', {
-        //         start: 0,
-        //         end: 1
-        //     }),
-        //     frameRate: 10,
-        //     repeat: -1,
-        // });
+        this.anims.create({
+            key: 'idleLeaf',
+            frames: [
+                {key: 'platform', frame: 0},
+                {key: 'platform', frame: 1},
+                {key: 'platform', frame: 2}
+            ],
+            frameRate: 3,
+            repeat: -1
+        });
 
         this.anims.create({
             key: 'turn',
