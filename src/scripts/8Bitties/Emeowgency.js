@@ -86,7 +86,6 @@ export default class Emeowgency extends Phaser.Scene {
   }
 
   update() {
-    console.log(this.win);
     this.playSafe();
     this.playFail();
     this.scaleCatch();

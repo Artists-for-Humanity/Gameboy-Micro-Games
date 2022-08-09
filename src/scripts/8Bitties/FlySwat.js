@@ -9,8 +9,6 @@ export default class FlySwat extends Phaser.Scene {
     this.swatter;
     this.fly;
     this.swatdown = false;
-    this.deadFlyTimer = 0;
-    this.deadFlyScale = 1;
     this.deadFly;
     this.swatTimer = 2;
     this.swatTextTimer = 0;
@@ -21,6 +19,7 @@ export default class FlySwat extends Phaser.Scene {
     this.swung = false;
     this.timer = 0;
     this.gameover = false;
+    this.dead = false;
   }
   preload() {
     this.load.image(
@@ -76,10 +75,10 @@ export default class FlySwat extends Phaser.Scene {
   }
   update() {
     this.playSwatText();
-    this.moveFly();
+    if (!this.dead) this.moveFly();
     this.moveSwatter();
     this.swing();
-    this.animateDeadFly();
+    //this.animateDeadFly();
   }
   gameStart() {
     this.flightPattern = Math.floor(Math.random() * 2);
@@ -103,27 +102,10 @@ export default class FlySwat extends Phaser.Scene {
     }
   }
   killFly() {
-    this.fly.destroy();
-    this.deadFly = this.physics.add.image(this.fly.x, this.fly.y, "dead");
+    this.fly.anims.play("crash");
+    this.dead = true;
   }
-  animateDeadFly() {
-    if (this.deadFly) {
-      if (this.deadFlyScale > 0.6) {
-        this.deadFly.rotation += 0.75;
-        this.deadFly.x += 2;
-        this.deadFlyTimer++;
-        this.deadFlyScale -= 0.08 / this.deadFlyTimer;
-        this.deadFly.setScale(this.deadFlyScale);
-      }
-      if (this.deadFlyTimer === 83) {
-        this.deadFlyTimer = 0;
-        this.explosion = this.physics.add
-          .sprite(this.deadFly.x, this.deadFly.y, "explosion")
-          .anims.play("crash", true);
-        this.deadFly.destroy();
-      }
-    }
-  }
+
   moveFly() {
     if (this.fly) {
       this.timer += 0.1;

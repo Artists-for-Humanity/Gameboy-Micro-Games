@@ -19,9 +19,7 @@ export default class TugOWar extends Phaser.Scene {
     this.rope;
     this.meter;
     this.dash;
-    this.greenzone;
     this.gamestarted = false;
-    this.progNum = 0;
     this.youlose;
     this.loseScale = 0;
     this.LoseTimer = 0;
@@ -29,7 +27,10 @@ export default class TugOWar extends Phaser.Scene {
     this.winTimer = 0;
     this.winScale = 0;
     this.imageCreated = false;
-    this.loseDecrease = false;
+    this.dashPos = 50;
+    this.timer = 130;
+    this.win = false;
+    this.lose = false;
   }
   preload() {
     this.load.image(
@@ -90,36 +91,32 @@ export default class TugOWar extends Phaser.Scene {
     this.pull = this.add.image(540, 360, "pull").setDepth(1);
     this.grass = this.add.image(540, 360, "background").setDepth(-10);
     this.mud = this.add.sprite(540, 620, "mud").setDepth(-9);
-    this.progressBar = this.add.image(540, 75, "bar");
     this.spacebar = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
-
     this.rope = this.add.sprite(540, 580, "rope").setDepth(1);
     this.meter = this.add.image(75, 360, "meter");
-    this.dash = this.physics.add.image(90, 540, "dash");
+    this.dash = this.add.image(90, 360, "dash");
     this.graphics = this.make.graphics();
-    this.graphics.fillRect(280, 45, 512, 60);
+    this.graphics.fillRect(295, 550, 440, 60);
     this.mask = new Phaser.Display.Masks.GeometryMask(this, this.graphics);
-    this.progressBar.setMask(this.mask);
-    this.greenzone = this.physics.add
-      .image(75, 360, "greenzone")
-      .setVisible(false);
-    this.player = this.add
-      .sprite(270, 560, "player")
-      .setDepth(2)
-      .play("pulling");
-    this.npc = this.add.sprite(810, 560, "player").setDepth(2);
-    this.npc.flipX = true;
+    this.rope.setMask(this.mask);
   }
   update() {
-    if (this.imageCreated === true) {
-      this.npc.anims.play("pulling");
-      this.player.anims.play("pulling");
+    console.log(this.win);
+    if (this.timer !== 0) {
+      this.timer--;
     }
     this.winOrLose();
+    // if (this.lose === true) {
+    //   this.youLose();
+    // }
+    // if (this.win === true) {
+    //   this.youWin();
+    // }
     this.scalePull();
     this.startDashMovement();
+    this.playerPull();
   }
   scalePull() {
     if (this.pullScale <= 1) {
@@ -133,19 +130,11 @@ export default class TugOWar extends Phaser.Scene {
     }
   }
   startDashMovement() {
-    if (this.dash && this.gamestarted) {
-      if (this.dash.y <= 552) {
-        this.dash.y += 2;
-      }
-      if (
-        Phaser.Input.Keyboard.JustDown(this.spacebar) &
-        (this.imageCreated === false) &
-        (this.dash.y > 160)
-      ) {
-        this.dash.y -= 35;
-      }
-      if (this.dash.y > 264 && this.dash.y < 424) {
-        this.moveProgress();
+    if ((this.win === false) & (this.lose === false));
+    {
+      if (this.dash.y < 600) {
+        this.dash.y += 3;
+        this.rope.x += 2.5;
       }
     }
   }
@@ -153,48 +142,24 @@ export default class TugOWar extends Phaser.Scene {
   gameStart() {
     this.gamestarted = true;
     this.mud.anims.play("mud");
+    this.player = this.add
+      .sprite(270, 560, "player")
+      .setDepth(2)
+      .play("pulling");
+    this.player.anims.play("pulling");
+    this.npc = this.add.sprite(780, 560, "player").setDepth(2);
+    this.npc.flipX = true;
+    this.npc.anims.play("pulling");
   }
-  moveProgress() {
-    if (this.progressBar.x < 790) {
-      this.progressBar.x += 5;
-      this.progNum += 5;
-    }
-  }
-  winOrLose() {
-    if (this.progNum >= 250) {
-      this.youWin();
-    }
-    if (this.progNum <= -250) {
-      this.youLose();
-    }
-    if (
-      this.progressBar.x > 250 &&
-      this.gamestarted & (this.imageCreated === false)
-    ) {
-      this.progressBar.x -= 2;
-      this.progNum -= 2;
-    }
-  }
-  youLose() {
-    if (this.imageCreated === false) {
-      this.youlose = this.add.image(540, 360, "lose").setDepth(100);
-      this.imageCreated = true;
-    }
-    if (this.loseScale <= 1) {
-      this.LoseTimer += 1;
-      this.loseScale += 0.2 / this.LoseTimer;
-      this.youlose.setScale(this.loseScale);
-    }
-  }
-  youWin() {
-    if (this.imageCreated === false) {
-      this.youwin = this.add.image(540, 360, "safe").setDepth(100);
-      this.imageCreated = true;
-    }
-    if (this.winScale <= 1) {
-      this.winTimer += 1;
-      this.winScale += 0.2 / this.winTimer;
-      this.youwin.setScale(this.winScale);
+
+  playerPull() {
+    if (this.win === false && this.lose === false) {
+      if (this.dash.y > 140) {
+        if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
+          this.dash.y -= 48;
+          this.rope.x -= 40;
+        }
+      }
     }
   }
   createAnimations() {
@@ -232,5 +197,35 @@ export default class TugOWar extends Phaser.Scene {
       frameRate: 10,
       repeat: -1,
     });
+  }
+  winOrLose() {
+    if (this.timer === 0 && this.rope.x > 350) {
+      this.lose = true;
+    }
+    if (this.timer === 0 && this.rope.x < 350) {
+      this.win = true;
+    }
+  }
+  youLose() {
+    if (this.imageCreated === false) {
+      this.youlose = this.add.image(540, 360, "lose").setDepth(100);
+      this.imageCreated = true;
+    }
+    if (this.loseScale <= 1) {
+      this.LoseTimer += 1;
+      this.loseScale += 0.2 / this.LoseTimer;
+      this.youlose.setScale(this.loseScale);
+    }
+  }
+  youWin() {
+    if (this.imageCreated === false) {
+      this.youwin = this.add.image(540, 360, "safe").setDepth(100);
+      this.imageCreated = true;
+    }
+    if (this.winScale <= 1) {
+      this.winTimer += 1;
+      this.winScale += 0.2 / this.winTimer;
+      this.youwin.setScale(this.winScale);
+    }
   }
 }
