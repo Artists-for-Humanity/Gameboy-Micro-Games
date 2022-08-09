@@ -133,6 +133,10 @@ export default class ColorPasscode extends Phaser.Scene {
             this.started = true;
         }
 
+        if (this.goText.alpha > 0) {
+            this.time.delayedCall(400, () => { this.goText.alpha -= 0.08; })
+        }
+
         //only runs when BOTH interactive and gameState are true
         if (this.interactive && this.gameState === true) { 
             this.userInput();
@@ -202,18 +206,15 @@ export default class ColorPasscode extends Phaser.Scene {
          //flash pattern 1 second after board appears
         this.time.delayedCall(1000, this.flashPattern, [], this);
 
-        //turns on interaction 3 seconds after board appear (4 * 500 + 1000 = 3000ms)
-        this.time.delayedCall(this.pattern.length * 500 + 1000, () => {
-            this.goText.alpha = 1;
-            this.time.delayedCall(1500, () => {
-                this.goText.alpha = 0;
+        //turns on interaction 4 seconds after board appear (4 * 500 + 1500 = 4000ms)
+        this.time.delayedCall(this.pattern.length * 500 + 2000, () => {
+                this.goText.alpha = 1;
                 this.interactive = true
                 console.log('start interactive');
                 this.hideGuessBlocks();
                 for (var i = 0; i < this.guessBlocks.length; i++) {
                     this.guessBlocks[i].setTexture('');
                 }
-            }, [] , this);
         }, [], this);
     }
 
@@ -261,6 +262,7 @@ export default class ColorPasscode extends Phaser.Scene {
 
     flashPattern() {
         for (var i = 0; i < this.pattern.length; i++) {
+            
              //500ms between flashes and 300ms flash durations
             this.time.delayedCall(i * 500, this.flash, [this.pattern[i], 300, i], this);
         }
@@ -309,6 +311,7 @@ export default class ColorPasscode extends Phaser.Scene {
 
     //check win loss
     checkWL() {
+
         //loss
         if (JSON.stringify(this.guesses[this.guessNum]) != JSON.stringify(this.pattern[this.guessNum])) {
             this.lossText.visible = true;
@@ -337,7 +340,7 @@ export default class ColorPasscode extends Phaser.Scene {
         this.box.visible = false;
         this.hideBoard();
         this.hideGuessBlocks();
-        this.time.delayedCall(1000, this.openDoor, [], this);
+        this.time.delayedCall(600, this.openDoor, [], this);
     }
 
     openDoor() {
