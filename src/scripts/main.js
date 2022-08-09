@@ -20,6 +20,7 @@ const config = {
   width: 1080,
   height: 720,
   transparent: true,
+  // backgroundColor: '#4488aa',
 
   // Add physics, arcade, scene, and audio
   physics: {
@@ -32,7 +33,7 @@ const config = {
     },
   },
   // scene: [MicroGame31, MicroGame11, Emeowgency, SockToss, ColorLab, ColorPasscode, HideFromCat],
-  scene: [MainMenu, CutScreen],
+  scene: [MainMenu, ColorLab, CutScreen],
 
   audio: {
     disableWebAudio: true,

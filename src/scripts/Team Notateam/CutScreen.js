@@ -12,7 +12,7 @@ export default class CutScreen extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
         super({
-            active: false,
+            active: true,
             visible: true,
             key: 'CutScreen',
             physics: {
@@ -135,6 +135,7 @@ export default class CutScreen extends Phaser.Scene {
             this.close_doors()
         }
         else if (this.open) {
+            console.log('reachme 00')
             this.close_timer++
             this.open_doors()
         }

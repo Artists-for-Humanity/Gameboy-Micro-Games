@@ -14,7 +14,7 @@ export default class MainMenu extends Phaser.Scene {
     }
 
     create() {
-        // this.globalState.randomGame();
+        this.globalState.randomGame();
         this.globalState.setText('Micro Games', this);
         // this.globalState.
 
