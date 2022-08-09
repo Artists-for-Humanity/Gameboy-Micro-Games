@@ -113,7 +113,8 @@ export default class DrinkPour extends Phaser.Scene {
       this.gameState();
     }
     if (!this.cursors.space.isDown && !this.unpoured) {
-      this.stopped = true
+      this.stopped = true;
+      this.pitcherReset();
     }
     if (this.fill_value === 0 && this.gamestart) {
       this.gameLost = true;
@@ -226,6 +227,16 @@ export default class DrinkPour extends Phaser.Scene {
       frameRate: 13,
       repeat: 0
     });
+    this.anims.create({
+      key: 'pitcher static',
+      frames: [{
+        key: "pitcher",
+        frame: 0
+      }],
+      frameRate: 13,
+      repeat: 0
+    });
+
   }
 
   //creates mask for juice/lemonade
@@ -261,8 +272,15 @@ export default class DrinkPour extends Phaser.Scene {
   pourAnim() {
     this.pitcher.setAngle(50);
     this.pitcher.setY(340);
-    this.pitcher.setX(250)
+    this.pitcher.setX(250);
     this.pitcher.anims.play("pitcher anim", true);
+  }
+
+  pitcherReset() {
+    this.pitcher.setAngle(0);
+    this.pitcher.setY(460);
+    this.pitcher.setX(200);
+    this.pitcher.anims.play("pitcher static", true);
   }
 
 }
