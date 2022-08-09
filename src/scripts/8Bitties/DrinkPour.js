@@ -51,9 +51,16 @@ export default class DrinkPour extends Phaser.Scene {
       frameWidth: 391,
       frameHeight: 538
     });
+    this.load.spritesheet('idle pitcher', new URL('./assets/drink pour/lemonade_idle_sprites.png', import.meta.url).href, {
+      frameWidth: 391,
+      frameHeight: 538
+    });
   }
 
   create() {
+    // create scene animations
+    this.animate();
+
     //background
     this.add.image(540, 360, 'background');
 
@@ -88,11 +95,9 @@ export default class DrinkPour extends Phaser.Scene {
 
     //lemonade jug
     this.pitcher = this.add.sprite(200, 460, 'pitcher');
+    this.pitcher.anims.play("pitcher idle", true);
     this.pitcher.setScale(0.8);
-    this.pitcher.setDepth(0)
-
-    // create scene animations
-    this.animate();
+    this.pitcher.setDepth(0);
   }
 
   update() {
@@ -228,15 +233,43 @@ export default class DrinkPour extends Phaser.Scene {
       repeat: 0
     });
     this.anims.create({
-      key: 'pitcher static',
+      key: 'pitcher idle',
       frames: [{
-        key: "pitcher",
+        key: "idle pitcher",
         frame: 0
-      }],
+      },
+      {
+        key: "idle pitcher",
+        frame: 1
+      },
+      {
+        key: "idle pitcher",
+        frame: 2
+      },
+      {
+        key: "idle pitcher",
+        frame: 3
+      },
+      {
+        key: "idle pitcher",
+        frame: 4
+      },
+      {
+        key: "idle pitcher",
+        frame: 5
+      },
+      {
+        key: "idle pitcher",
+        frame: 6
+      },
+      {
+        key: "idle pitcher",
+        frame: 7
+      },
+      ],
       frameRate: 13,
-      repeat: 0
+      repeat: -1
     });
-
   }
 
   //creates mask for juice/lemonade
@@ -276,11 +309,12 @@ export default class DrinkPour extends Phaser.Scene {
     this.pitcher.anims.play("pitcher anim", true);
   }
 
+  //sets position of the pitcher and plays animation to set the pitcher back down after the player stops pouring
   pitcherReset() {
     this.pitcher.setAngle(0);
     this.pitcher.setY(460);
     this.pitcher.setX(200);
-    this.pitcher.anims.play("pitcher static", true);
+    this.pitcher.anims.play("pitcher idle", true);
   }
 
 }
