@@ -14,7 +14,8 @@ export default class ColorPasscode extends Phaser.Scene {
         this.doors = [];
         this.box;
 
-        this.myText;
+        this.goText;
+        this.goTextTimer = 0;
         this.lossText;
         this.winText;
         this.gameState = false;
@@ -76,6 +77,7 @@ export default class ColorPasscode extends Phaser.Scene {
 
     create() {
         this.drawUI();
+        this.setText();
         this.Left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         this.Right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         this.Down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
@@ -85,15 +87,16 @@ export default class ColorPasscode extends Phaser.Scene {
         this.lightYellow = this.add.sprite(678, 334, 'lightYellow');
         this.lightPurple = this.add.sprite(408, 522, 'lightPurple');
         this.lightBlue = this.add.sprite(678, 522, 'lightBlue');
-        this.lightColorButtons = [this.lightRed, this.lightYellow, this.lightPurple, this.lightBlue]; //put lightColorButtons into an array
+        this.lightColorButtons = [this.lightRed, this.lightYellow, this.lightPurple, this.lightBlue];
 
         this.darkRed = this.add.sprite(408, 334, 'darkRed');
         this.darkYellow = this.add.sprite(678, 334, 'darkYellow');
         this.darkPurple = this.add.sprite(408, 522, 'darkPurple');
         this.darkBlue = this.add.sprite(678, 522, 'darkBlue');
-        this.darkColorButtons = [this.darkRed, this.darkYellow, this.darkPurple, this.darkBlue]; //put darkColorButtons into an array
+        this.darkColorButtons = [this.darkRed, this.darkYellow, this.darkPurple, this.darkBlue];
 
-        for (var i = 0; i < this.lightColorButtons.length; i++) { //scale buttons
+        //scale buttons
+        for (var i = 0; i < this.lightColorButtons.length; i++) {
             this.lightColorButtons[i].setScale(1.8);
             this.darkColorButtons[i].setScale(1.8);
         }
@@ -103,10 +106,11 @@ export default class ColorPasscode extends Phaser.Scene {
         this.g2 = this.add.sprite(475.5, 160, '');
         this.g3 = this.add.sprite(610.5, 160, '');
         this.g4 = this.add.sprite(745.5, 160, '');
-        this.guessBlocks = [this.g1, this.g2, this.g3, this.g4]; //initialize guessBlocks into an array
+        this.guessBlocks = [this.g1, this.g2, this.g3, this.g4];
         this.hideGuessBlocks();
 
-        for (var i = 0; i < 4; i++) { //create pattern
+        //create pattern
+        for (var i = 0; i < 4; i++) {
             this.pattern.push(this.getRandomInt(4));
         }
         console.log(this.pattern);
@@ -114,18 +118,23 @@ export default class ColorPasscode extends Phaser.Scene {
 
     update(time, delta) {
         if (this.door1.alpha < 1) {
-            this.time.delayedCall(600, () => { //door fade in after 600ms
-                this.door1.alpha += 0.006;
+
+            //door fades in after 600ms
+            this.time.delayedCall(600, () => {
+                this.door1.alpha += 0.008;
             }, [], this);
         }
-        if (!this.started) this.startTimer += delta; //this.started prevents startGame from running > 1 time
-        if (this.startTimer >= 4500 && !this.started) { //start game after 4.5 seconds
-            this.startGame();
-            this.gameState = true;
+
+        if (!this.started && this.door1.alpha === 1) {
+            this.time.delayedCall(600, () => {
+                this.startGame();
+                this.gameState = true;
+            }, [], this);
             this.started = true;
         }
-        if (this.interactive && this.gameState === true) { //only runs when interactive mode is turned on AND gameState is TRUE
-            this.myText.alpha -= 0.0166; //fade memorizeText out
+
+        //only runs when BOTH interactive and gameState are true
+        if (this.interactive && this.gameState === true) { 
             this.userInput();
         }
     }
@@ -148,28 +157,20 @@ export default class ColorPasscode extends Phaser.Scene {
         }
     }
 
-    startGame() {
-        this.showMemorizeText();
-        this.showBoard();
-        this.time.delayedCall(2000, this.flashPattern, [], this); //flash pattern 2 second after board appears
-        this.time.delayedCall(this.pattern.length * 500 + 2500, () => {
-            this.interactive = true //turns on interaction 4.5 seconds after board appear (4 * 500 + 2500 = 4500ms)
-            console.log('start interactive');
-        }, [], this);
-    }
-
-    showMemorizeText() {
-        this.myText = this.add.text(200, 14, '')
-        this.myText.setStyle({
-            fontSize: '60px',
+    setText() {
+        this.goText = this.add.text(540, 360, '')
+        this.goText.setStyle({
+            fontSize: '120px',
             fill: '#000000',
             align: 'center',
+            stroke: '#ffffff',
+            strokeThickness: 12
         });
-        this.myText.setText('Memorize the pattern!');
-        this.myText.alpha = 1;
-    }
-
-    showWinText() {
+        this.goText.setText('Go!');
+        this.goText.setOrigin(0.5);
+        this.goText.alpha = 0;
+        this.goText.depth = 20;
+        
         this.winText = this.add.text(540, 360, 'YOU WON!');
         this.winText.setStyle({
             fontSize: '160px',
@@ -179,9 +180,9 @@ export default class ColorPasscode extends Phaser.Scene {
             strokeThickness: 8
         });
         this.winText.setOrigin(0.5);
-    }
+        this.winText.visible = false;
+        this.winText.depth = 20;
 
-    showLossText() {
         this.lossText = this.add.text(540, 360, 'YOU LOST!')
         this.lossText.setStyle({
             fontSize: '160px',
@@ -190,8 +191,30 @@ export default class ColorPasscode extends Phaser.Scene {
             stroke: '#808080',
             strokeThickness: 8
         });
-        this.lossText.alpha = 1;
         this.lossText.setOrigin(0.5);
+        this.lossText.visible = false;
+        this.lossText.depth = 20;
+    }
+
+    startGame() {
+        this.showBoard();
+
+         //flash pattern 1 second after board appears
+        this.time.delayedCall(1000, this.flashPattern, [], this);
+
+        //turns on interaction 3 seconds after board appear (4 * 500 + 1000 = 3000ms)
+        this.time.delayedCall(this.pattern.length * 500 + 1000, () => {
+            this.goText.alpha = 1;
+            this.time.delayedCall(1500, () => {
+                this.goText.alpha = 0;
+                this.interactive = true
+                console.log('start interactive');
+                this.hideGuessBlocks();
+                for (var i = 0; i < this.guessBlocks.length; i++) {
+                    this.guessBlocks[i].setTexture('');
+                }
+            }, [] , this);
+        }, [], this);
     }
 
     showBoard() {
@@ -215,14 +238,31 @@ export default class ColorPasscode extends Phaser.Scene {
         }
     }
 
-    flash(num, ms) { //num = the index that is flashed, ms = flash duration
+    //num = the pattern index that is flashed, ms = flash duration
+    flash(num, ms, index) {
+
+        //only used when flashing pattern
+        if (index > -1) {
+            var key;
+            if (this.pattern[index] === 0) key = 'lightRed';
+            if (this.pattern[index] === 1) key = 'lightYellow';
+            if (this.pattern[index] === 2) key = 'lightPurple';
+            if (this.pattern[index] === 3) key = 'lightBlue';
+            this.guessBlocks[index].setTexture(key);
+            this.guessBlocks[index].visible = true;
+        }
+        
         this.showDarkColor(num);
-        this.time.delayedCall(ms, this.showLightColor, [num], this);
+        this.time.delayedCall(ms, () => {
+            this.showLightColor(num);
+        }, [], this);
+
     }
 
     flashPattern() {
         for (var i = 0; i < this.pattern.length; i++) {
-            this.time.delayedCall(i * 500, this.flash, [this.pattern[i], 300], this); //500ms between flashes and 300ms flash durations
+             //500ms between flashes and 300ms flash durations
+            this.time.delayedCall(i * 500, this.flash, [this.pattern[i], 300, i], this);
         }
     }
 
@@ -236,7 +276,8 @@ export default class ColorPasscode extends Phaser.Scene {
         this.lightColorButtons[num].visible = true;
     }
 
-    getRandomInt(max) { //random int from 0 to max, EXCLUSIVE
+    //random int from 0 to max, EXCLUSIVE
+    getRandomInt(max) {
         return Math.floor(Math.random() * max);
     }
 
@@ -266,19 +307,23 @@ export default class ColorPasscode extends Phaser.Scene {
         this.guessNum++;
     }
 
-    checkWL() { //check win loss
-        if (JSON.stringify(this.guesses[this.guessNum]) != JSON.stringify(this.pattern[this.guessNum])) { //loss
-            this.showLossText();
+    //check win loss
+    checkWL() {
+        //loss
+        if (JSON.stringify(this.guesses[this.guessNum]) != JSON.stringify(this.pattern[this.guessNum])) {
+            this.lossText.visible = true;
             this.gameState = false;
         }
-        if (JSON.stringify(this.guesses) == JSON.stringify(this.pattern)) { //win
+
+        //win
+        if (JSON.stringify(this.guesses) == JSON.stringify(this.pattern)) {
             this.time.delayedCall(1500, this.win, [], this);
             this.gameState = false;
         }
     }
 
-
-    showGuess(num) { //uses index of each color to show each guess
+    //each color has an index from 0 to 3
+    showGuess(num) {
         var key;
         if (num === 0) key = 'lightRed';
         if (num === 1) key = 'lightYellow';
@@ -288,7 +333,7 @@ export default class ColorPasscode extends Phaser.Scene {
         this.guessBlocks[this.guessNum].visible = true;
     }
 
-    win() { //hides UI then opens door after 1 second
+    win() {
         this.box.visible = false;
         this.hideBoard();
         this.hideGuessBlocks();
@@ -306,6 +351,6 @@ export default class ColorPasscode extends Phaser.Scene {
         this.time.delayedCall(600, () => {
             this.door5.visible = true;
         }, [], this);
-        this.time.delayedCall(1000, this.showWinText, [], this);
+        this.time.delayedCall(1000, () => { this.winText.visible = true; }, [], this);
     }
 }
