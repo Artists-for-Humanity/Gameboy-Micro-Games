@@ -127,6 +127,8 @@ export default class HitTheButton extends Phaser.Scene {
                             this.keyPressAvailable = true;
                         }, [], this);
                     });
+
+                    //checks if button is green
                     if (this.button.anims.currentFrame.textureFrame === 1) {
                         this.roundWon();
                     } else {
