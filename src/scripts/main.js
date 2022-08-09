@@ -31,7 +31,7 @@ const config = {
       debug: true,
     },
   },
-  scene: [MicroGame31, MicroGame11, Emeowgency, SockToss, ColorLab, ColorPasscode, HideFromCat],
+  scene: [CutScreen],
   audio: {
     disableWebAudio: true,
   },
