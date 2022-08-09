@@ -2,12 +2,12 @@ import Phaser from 'phaser';
 const X = 1080
 const Y = 720
 
-const L_END = X/4
+const L_END = X / 4
 const L_START = -L_END
 
 
-const R_START = 5*L_END
-const R_END = 3*L_END
+const R_START = 5 * L_END
+const R_END = 3 * L_END
 export default class CutScreen extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
@@ -17,8 +17,8 @@ export default class CutScreen extends Phaser.Scene {
             key: 'CutScreen',
             physics: {
                 default: 'arcade',
-                arcade: { 
-                  gravity: { y: 0 }
+                arcade: {
+                    gravity: { y: 0 }
                 }
             }
         });
@@ -50,7 +50,7 @@ export default class CutScreen extends Phaser.Scene {
         this.r_sockets
         this.l_life
         this.r_life
-        
+
         this.fly
         this.timer = 0
 
@@ -59,6 +59,7 @@ export default class CutScreen extends Phaser.Scene {
     preload() {
         this.load.spritesheet(
             'gba', new URL('assets/gba.png', import.meta.url).href,
+
             {   frameWidth: 252, frameHeight: 162})
         this.load.spritesheet(
             'loss', new URL('assets/loss_cat.png', import.meta.url).href,
@@ -75,8 +76,8 @@ export default class CutScreen extends Phaser.Scene {
     create() {
 
         // Add images to Scene
-        this.l_door = this.add.image(L_START, Y/2, 'l_door')
-        this.r_door = this.add.image(R_START, Y/2, 'r_door')
+        this.l_door = this.add.image(L_START, Y / 2, 'l_door')
+        this.r_door = this.add.image(R_START, Y / 2, 'r_door')
 
         this.faceplate = this.physics.add.sprite(R_START, Y/4, 'loss')
 
@@ -90,26 +91,27 @@ export default class CutScreen extends Phaser.Scene {
         this.l_sockets = this.physics.add.group({
             key: 'gba_socket',
             repeat: 1,
-            setXY: { x:L_START, y: 5*Y/6 - 185, stepY: 185 }
+            setXY: { x: L_START, y: 5 * Y / 6 - 185, stepY: 185 }
         })
 
         this.l_life = this.physics.add.group({
             key: 'gba_socket',
             repeat: 1,
-            setXY: { x:L_START, y: 5*Y/6 - 185, stepY: 185 }
+            setXY: { x: L_START, y: 5 * Y / 6 - 185, stepY: 185 }
         })
 
         this.r_sockets = this.physics.add.group({
             key: 'gba_socket',
             repeat: 1,
-            setXY: { x:R_START, y: 5*Y/6 - 185, stepY: 185 }
+            setXY: { x: R_START, y: 5 * Y / 6 - 185, stepY: 185 }
         })
 
         this.r_life = this.physics.add.group({
             key: 'gba_socket',
             repeat: 1,
-            setXY: { x:R_START, y: 5*Y/6 - 185, stepY: 185 }
+            setXY: { x: R_START, y: 5 * Y / 6 - 185, stepY: 185 }
         })
+
 
         this.l_sockets.setDepth(1)
         this.r_sockets.setDepth(1)
@@ -128,17 +130,18 @@ export default class CutScreen extends Phaser.Scene {
             ],
             frameRate: 6,
             repeat: -1
-        })    
+        })
 
         this.anims.create({
             key: 'blink',
             frames: [
                 { key: 'gba', frame: 0 },
-                { key: 'gba_socket'}
+                { key: 'gba_socket' }
             ],
             frameRate: 6,
             repeat: 2
         })
+<
         
         this.anims.create({
             key:'cry',
@@ -169,11 +172,13 @@ export default class CutScreen extends Phaser.Scene {
     }
 
     update() {
+
         if(!this.closed){
             this.close_timer++
             this.close_doors()
         }
-        else if(this.open){
+        else if (this.open) {
+            console.log('reachme 00')
             this.close_timer++
             this.open_doors()
         }
@@ -186,11 +191,11 @@ export default class CutScreen extends Phaser.Scene {
 
     close_doors(){
         // If left door is not yet in closed position
-        if(this.l_door.x < L_END){
+        if (this.l_door.x < L_END) {
             this.l_close()
             this.r_close()
         }
-        else{
+        else {
             this.close_timer = 0
             console.log("timer reset")
             this.closed = true
@@ -198,12 +203,12 @@ export default class CutScreen extends Phaser.Scene {
         }
     }
 
-    open_doors(){
-        if(this.l_door.x > L_START){
+    open_doors() {
+        if (this.l_door.x > L_START) {
             this.l_open()
             this.r_open()
         }
-        else{
+        else {
             this.close_timer = 0
             console.log("timer reset")
             this.open = false
@@ -211,9 +216,9 @@ export default class CutScreen extends Phaser.Scene {
         }
     }
 
-    l_close(){
+    l_close() {
         // If left door would overshoot closed position
-        if(this.l_door.x + this.close_timer >= L_END){
+        if (this.l_door.x + this.close_timer >= L_END) {
 
             // Move Door
             this.l_door.x = L_END
@@ -231,7 +236,7 @@ export default class CutScreen extends Phaser.Scene {
                 child.x = L_END
             });
         }
-        else{
+        else {
             // Move Door
             this.l_door.x += this.close_timer
 
@@ -250,9 +255,9 @@ export default class CutScreen extends Phaser.Scene {
         }
     }
 
-    l_open(){
+    l_open() {
         // code for right door based on code for left door
-        if(this.l_door.x - this.close_timer <= L_START){
+        if (this.l_door.x - this.close_timer <= L_START) {
 
             // Move Door
             this.l_door.x = L_START
@@ -271,7 +276,7 @@ export default class CutScreen extends Phaser.Scene {
             });
 
         }
-        else{
+        else {
             // Move Door
             this.l_door.x -= this.close_timer
 
@@ -292,9 +297,9 @@ export default class CutScreen extends Phaser.Scene {
         }
     }
 
-    r_close(){
+    r_close() {
         // code for right door based on code for left door
-        if(this.r_door.x - this.close_timer <= R_END){
+        if (this.r_door.x - this.close_timer <= R_END) {
 
             // Move Door
             this.r_door.x = R_END
@@ -308,7 +313,7 @@ export default class CutScreen extends Phaser.Scene {
             });
 
         }
-        else{
+        else {
             // Move Door
             this.r_door.x -= this.close_timer
             this.faceplate.x -= this.close_timer
@@ -322,9 +327,9 @@ export default class CutScreen extends Phaser.Scene {
         }
     }
 
-    r_open(){
+    r_open() {
         // If left door would overshoot closed position
-        if(this.r_door.x + this.close_timer >= R_START){
+        if (this.r_door.x + this.close_timer >= R_START) {
 
             // Move Door
             this.r_door.x = R_START
@@ -337,7 +342,7 @@ export default class CutScreen extends Phaser.Scene {
                 child.x = R_START
             });
         }
-        else{
+        else {
             // Move Door
             this.r_door.x += this.close_timer
             this.faceplate.x += this.close_timer
@@ -352,20 +357,20 @@ export default class CutScreen extends Phaser.Scene {
         }
     }
 
-    reduce_life(){
-        switch(this.life_total){
+    reduce_life() {
+        switch (this.life_total) {
             case 1: case 2: this.r_disable(this.life_total); break;
             case 3: case 4: this.l_disable(this.life_total); break;
             default: return;
         }
     }
 
-    l_disable(index){
-        this.l_life.getChildren()[4-index].anims.play('blink')
+    l_disable(index) {
+        this.l_life.getChildren()[4 - index].anims.play('blink')
     }
 
-    r_disable(index){
-        this.r_life.getChildren()[2-index].anims.play('blink')
+    r_disable(index) {
+        this.r_life.getChildren()[2 - index].anims.play('blink')
     }
 
     setScore(score){

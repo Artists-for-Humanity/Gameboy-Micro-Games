@@ -20,6 +20,7 @@ const config = {
   width: 1080,
   height: 720,
   transparent: true,
+  // backgroundColor: '#4488aa',
 
   // Add physics, arcade, scene, and audio
   physics: {
@@ -31,6 +32,8 @@ const config = {
       debug: true,
     },
   },
+
+
   scene: [CutScreen],
   audio: {
     disableWebAudio: true,
