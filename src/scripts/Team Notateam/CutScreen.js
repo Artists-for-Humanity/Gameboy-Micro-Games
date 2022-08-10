@@ -15,8 +15,8 @@ export default class CutScreen extends Phaser.Scene {
             key: 'CutScreen',
             physics: {
                 default: 'arcade',
-                arcade: { 
-                  gravity: { y: 0 }
+                arcade: {
+                    gravity: { y: 0 }
                 }
             }
         });
@@ -51,21 +51,23 @@ export default class CutScreen extends Phaser.Scene {
         this.r_sockets
         this.l_life
         this.r_life
+
     }
 
     preload() {
         this.load.spritesheet(
             'gba', new URL('assets/gba.png', import.meta.url).href,
-            {   frameWidth: 252, frameHeight: 162})
+
+            { frameWidth: 252, frameHeight: 162 })
         this.load.spritesheet(
             'loss', new URL('assets/loss_cat.png', import.meta.url).href,
-            {   frameWidth: 419, frameHeight: 162})
+            { frameWidth: 419, frameHeight: 162 })
         this.load.spritesheet(
             'win', new URL('assets/win_cat.png', import.meta.url).href,
             {   frameWidth: 419, frameHeight: 162})
         this.load.spritesheet(
             'numbers', new URL('assets/numsheet.png', import.meta.url).href,
-            {   frameWidth: 77, frameHeight: 122})
+            { frameWidth: 77, frameHeight: 122 })
         this.load.image('gba_socket', new URL('assets/gba_socket.png', import.meta.url).href)
         this.load.image('num_plate', new URL('assets/num_plate.png', import.meta.url).href)
         this.load.image('l_door', new URL('assets/l_door.png', import.meta.url).href)
@@ -83,11 +85,14 @@ export default class CutScreen extends Phaser.Scene {
 
     }
     update() {
-        if(!this.closed){
+        // this.globalState.test();
+
+        if (!this.closed) {
             this.close_timer++
             this.close_doors()
         }
-        else if(this.open){
+        else if (this.open) {
+            console.log('reachme 00')
             this.close_timer++
             this.open_doors()
         }
@@ -97,12 +102,13 @@ export default class CutScreen extends Phaser.Scene {
     }
 
     close_doors(){
+
         // If left door is not yet in closed position
-        if(this.l_door.x < L_END){
+        if (this.l_door.x < L_END) {
             this.l_close()
             this.r_close()
         }
-        else{
+        else {
             this.close_timer = 0
             console.log("timer reset")
             this.closed = true
@@ -111,19 +117,21 @@ export default class CutScreen extends Phaser.Scene {
     }
     open_doors(){
         if(this.l_door.x > L_START){
+
             this.l_open()
             this.r_open()
         }
-        else{
+        else {
             this.close_timer = 0
-            console.log("timer reset")
+            // console.log("timer reset")
             this.open = false
             this.closed = true
         }
     }
     l_close(){
+
         // If left door would overshoot closed position
-        if(this.l_door.x + this.close_timer >= L_END){
+        if (this.l_door.x + this.close_timer >= L_END) {
 
             // Move Door
             this.l_door.x = L_END
@@ -141,7 +149,7 @@ export default class CutScreen extends Phaser.Scene {
                 child.x = L_END
             });
         }
-        else{
+        else {
             // Move Door
             this.l_door.x += this.close_timer
 
@@ -160,12 +168,13 @@ export default class CutScreen extends Phaser.Scene {
         }
     }
     l_open(){
+
         // code for right door based on code for left door
-        if(this.l_door.x - this.close_timer <= L_START){
+        if (this.l_door.x - this.close_timer <= L_START) {
 
             // Move Door
             this.l_door.x = L_START
-            
+
             this.numplate.x = L_START
             this.ones.x = L_START + 82
             this.tens.x = L_START
@@ -180,7 +189,7 @@ export default class CutScreen extends Phaser.Scene {
             });
 
         }
-        else{
+        else {
             // Move Door
             this.l_door.x -= this.close_timer
 
@@ -201,8 +210,9 @@ export default class CutScreen extends Phaser.Scene {
         }
     }
     r_close(){
+
         // code for right door based on code for left door
-        if(this.r_door.x - this.close_timer <= R_END){
+        if (this.r_door.x - this.close_timer <= R_END) {
 
             // Move Door
             this.r_door.x = R_END
@@ -216,7 +226,7 @@ export default class CutScreen extends Phaser.Scene {
             });
 
         }
-        else{
+        else {
             // Move Door
             this.r_door.x -= this.close_timer
             this.faceplate.x -= this.close_timer
@@ -231,7 +241,7 @@ export default class CutScreen extends Phaser.Scene {
     }
     r_open(){
         // If left door would overshoot closed position
-        if(this.r_door.x + this.close_timer >= R_START){
+        if (this.r_door.x + this.close_timer >= R_START) {
 
             // Move Door
             this.r_door.x = R_START
@@ -244,7 +254,7 @@ export default class CutScreen extends Phaser.Scene {
                 child.x = R_START
             });
         }
-        else{
+        else {
             // Move Door
             this.r_door.x += this.close_timer
             this.faceplate.x += this.close_timer
@@ -275,10 +285,11 @@ export default class CutScreen extends Phaser.Scene {
         let o = score%10
         let h = Math.floor(score/100)
         let t = Math.floor((score-(h*100))/10)
+
         this.ones.setFrame(o + 1)
-        if(score >= 10)
+        if (score >= 10)
             this.tens.setFrame(t + 1)
-        if(score >= 100)
+        if (score >= 100)
             this.huns.setFrame(h + 1)
     }
     closecon(){
@@ -291,6 +302,7 @@ export default class CutScreen extends Phaser.Scene {
             this.faceplate.anims.play('win1').once('animationcomplete', () => {
                 this.faceplate.anims.play('win2')
             })
+
             this.score++
             setTimeout(()=>{
                 this.setScore(this.score)
@@ -300,6 +312,7 @@ export default class CutScreen extends Phaser.Scene {
             this.faceplate.anims.play('lose1').once('animationcomplete', () => {
                 this.faceplate.anims.play('lose2')
             })
+
             this.life_total--
             this.reduce_life()
         }
