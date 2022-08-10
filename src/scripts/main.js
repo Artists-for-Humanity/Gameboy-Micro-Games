@@ -17,6 +17,9 @@ import DrinkPour from "./8Bitties/DrinkPour";
 import SockToss from "./Team Notateam/socktoss";
 import CutScreen from "./Team Notateam/CutScreen";
 import MainMenu from "./MainMenu";
+import CarPump from "./DebugginDaOpps/CarPump";
+import TrashSort from "./DebugginDaOpps/TrashSort";
+import Cannon from "./DebugginDaOpps/Cannon";
 
 // Set configuration for phaser game instance
 const config = {
