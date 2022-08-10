@@ -187,3 +187,13 @@ export default class MicroGame12 extends Phaser.Scene {
     });
   }
 }
+
+/**
+ *
+ * Food dropping down game ends immediately.
+ * Sorts correctly, but game ends before all items are sorted.
+ * Trash to bin = immediate game over
+ * Recycle, Trash = game over
+ * Trash, trash, recycle, recycle = game won
+ * 4 recycle = game won
+ */

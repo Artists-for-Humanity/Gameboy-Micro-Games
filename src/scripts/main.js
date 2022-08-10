@@ -23,10 +23,10 @@ const config = {
       gravity: {
         y: 0,
       },
-      debug: false,
+      debug: true,
     },
   },
-  scene: [MicroGame13],
+  scene: [MicroGame12],
   audio: {
     disableWebAudio: false,
   },

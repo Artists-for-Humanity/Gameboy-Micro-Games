@@ -104,8 +104,8 @@ export default class MicroGame13 extends Phaser.Scene {
     this.SPACE = this.Up = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
+    this.gameOver = false;
     this.right = false;
-    this.gameNotWon = false;
     this.START_Y = 620;
     this.cannonSelect = 0;
     this.selectedValue = 0;
@@ -253,11 +253,21 @@ export default class MicroGame13 extends Phaser.Scene {
   }
 
   update(time, delta) {
-    if (!this.gameNotWon) {
-      if (this.totalBarrels === 0 && this.tries <= 2) this.gameWon();
-      // if (this.totalBarrels < 0) this.gameover = true;
-      if (this.tries > 2) {
+    if (!this.gameOver) {
+      if (this.totalBarrels === 0 && this.tries <= 2) {
         this.gameOver = true;
+        this.gameWon();
+      }
+      if (this.tries >= 2) {
+        this.gameOver = true;
+        this.time.delayedCall(
+          2000,
+          () => {
+            this.gameOverScreen.setVisible(true);
+          },
+          [],
+          this
+        );
       }
       if (
         Phaser.Input.Keyboard.JustDown(this.SPACE) &&
@@ -267,7 +277,7 @@ export default class MicroGame13 extends Phaser.Scene {
         this.fire.anims.play("fire", true).setVisible(true);
         this.totalBarrels -= this.selectedValue;
         if (this.selectedValue > this.barrelGrp.getChildren().length) {
-          this.gameNotWon = true;
+          this.gameOver = true;
           //this.gameOverScreen.setVisible(true);
           this.time.delayedCall(
             2000,
@@ -338,14 +348,13 @@ export default class MicroGame13 extends Phaser.Scene {
   }
 
   gameWon() {
-    if (this.gameNotWon === false) {
+    if (this.gameOver === true) {
       this.endText = this.add.text(300, 250, "You Won!");
       this.endText.setStyle({
         fontSize: "100px",
         fill: "000000",
         align: "center",
       });
-      this.gameOver = true;
     }
   }
 
@@ -362,11 +371,6 @@ export default class MicroGame13 extends Phaser.Scene {
       this.cannonBallMap[
         this.cannonBallGrp.getChildren()[this.cannonSelect].texture.key
       ];
-    // console.log(
-    //   this.cannonBallMap[
-    //     this.cannonBallGrp.getChildren()[this.cannonSelect].texture.key
-    //   ]
-    // );
   }
 
   onEvent() {
@@ -380,6 +384,8 @@ export default class MicroGame13 extends Phaser.Scene {
     delete backUpMap[this.answer[0] + "-ball"];
     delete backUpMap[this.answer[1] + "-ball"];
 
+    console.log(backUpMap);
+
     for (let i = 0; i < this.totalCannonBalls; i++) {
       let randIdx = Phaser.Math.Between(0, this.cannonBallPos.length - 1);
       let randPos = this.cannonBallPos.splice(randIdx, 1)[0];
@@ -390,12 +396,9 @@ export default class MicroGame13 extends Phaser.Scene {
           .setScale(1.7, 1.7);
       } else {
         let keys = Object.keys(backUpMap);
+        let barrelStr = this.barrelNumCheck(this.totalBarrels, keys);
         cannonBallGrp
-          .create(
-            randPos[0],
-            randPos[1],
-            keys[Phaser.Math.Between(0, keys.length - 1)]
-          )
+          .create(randPos[0], randPos[1], barrelStr)
           .setScale(1.7, 1.7);
       }
     }
@@ -411,6 +414,15 @@ export default class MicroGame13 extends Phaser.Scene {
     );
   }
 
+  // recursively generating the barrel num as long as it is not equal to total barrel value.
+  barrelNumCheck(notThisNum, keys) {
+    let barrelStr = keys[Phaser.Math.Between(0, keys.length - 1)];
+    let barrelNum = parseInt(barrelStr[0]);
+    if (notThisNum === barrelNum) {
+      return this.barrelNumCheck(notThisNum, keys);
+    }
+    return barrelStr;
+  }
   createBarrels(num, xposition, yposition) {
     for (let i = 0; i < num; i++) {
       if (this.barrelRowMap[i] === 1) {
