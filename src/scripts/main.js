@@ -37,7 +37,7 @@ const config = {
       debug: true,
     },
   },
-  scene: [FrogJump],
+  scene: [CircleGame],
   audio: {
     disableWebAudio: true,
   },

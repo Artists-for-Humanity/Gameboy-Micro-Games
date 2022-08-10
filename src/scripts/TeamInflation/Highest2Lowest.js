@@ -113,12 +113,12 @@ export default class MicroGame31 extends Phaser.Scene {
         this.pointer.setScale(.15)
 
         // WIN & LOSE CONDITIONS
-        this.loseText = this.add.image(240, 290, 'lose')
+        this.loseText = this.add.image(400, 220, 'lose');   
         this.loseText.setScrollFactor(0);
         this.loseText.setOrigin(0, 0);
         this.loseText.setVisible(false);
 
-        this.winText = this.add.image(240, 220, 'win');
+        this.winText = this.add.image(400, 220, 'win');
         this.winText.setOrigin(0, 0);
         this.winText.setScrollFactor(0);
         this.winText.setVisible(false);
@@ -148,7 +148,7 @@ export default class MicroGame31 extends Phaser.Scene {
                     this.victory = true
                 }
                 if (this.victory) {
-                    this.victoryText.setVisible(true);
+                    this.winText.setVisible(true);
                     console.log("good job'n such")
                 } else {
                     console.log("Less good job")

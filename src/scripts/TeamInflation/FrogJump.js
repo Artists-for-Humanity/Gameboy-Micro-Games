@@ -138,8 +138,8 @@ export default class FrogJump extends Phaser.Scene {
             this.platforms.create(250, 150, "platform").setScale(0.2).refreshBody();
             this.platforms.create(440, -60, "platform").setScale(0.2).refreshBody();
             this.platforms.create(680, -150, 'platform').setScale(0.2).refreshBody();
-            this.platforms.create(900, 5, "platform").setScale(0.2).refreshBody();
-            this.platforms.create(900, 75, "platform").setScale(0.2).refreshBody();
+            this.platforms.create(890, 1, "platform").setScale(0.2).refreshBody();
+            this.platforms.create(910, 75, "platform").setScale(0.2).refreshBody();
             this.platforms.create(980, 75, 'platform').setScale(0.2).refreshBody();
             this.platforms.create(850, 75, 'platform').setScale(0.2).refreshBody();
             this.fly = this.physics.add.sprite(900, 40, 'fly').setScale(0.2, 0.2);
@@ -150,14 +150,14 @@ export default class FrogJump extends Phaser.Scene {
 
             this.platforms.create(40, 450, 'platform').setScale(0.2).refreshBody();
             this.platforms.create(800, 430, 'platform').setScale(0.2).refreshBody();
-            this.platforms.create(1090, 200, 'platform').setScale(0.2).refreshBody();
+            this.platforms.create(1040, 200, 'platform').setScale(0.2).refreshBody();
             this.platforms.create(700, 230, 'platform').setScale(0.2).refreshBody();
             this.platforms.create(600, 150, 'platform').setScale(0.2).refreshBody();
             this.platforms.create(500, 110, 'platform').setScale(0.2).refreshBody();
             this.platforms.create(360, 200, 'platform').setScale(0.2).refreshBody();
             this.platforms.create(620, 30, 'platform').setScale(1, 0.2).refreshBody();
             this.platforms.create(900, -30, 'platform').setScale(0.2).refreshBody();
-            this.fly = this.physics.add.sprite(1070, 180, 'fly').setScale(0.2, 0.2);
+            this.fly = this.physics.add.sprite(1050, 170, 'fly').setScale(0.2, 0.2);
             this.delayTime = 14000;
         }
     }
