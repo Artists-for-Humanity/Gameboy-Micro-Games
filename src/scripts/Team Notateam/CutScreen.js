@@ -60,13 +60,13 @@ export default class CutScreen extends Phaser.Scene {
         this.load.spritesheet(
             'gba', new URL('assets/gba.png', import.meta.url).href,
 
-            {   frameWidth: 252, frameHeight: 162})
+            { frameWidth: 252, frameHeight: 162 })
         this.load.spritesheet(
             'loss', new URL('assets/loss_cat.png', import.meta.url).href,
-            {   frameWidth: 419, frameHeight: 162})
+            { frameWidth: 419, frameHeight: 162 })
         this.load.spritesheet(
             'numbers', new URL('assets/numsheet.png', import.meta.url).href,
-            {   frameWidth: 77, frameHeight: 122})
+            { frameWidth: 77, frameHeight: 122 })
         this.load.image('gba_socket', new URL('assets/gba_socket.png', import.meta.url).href)
         this.load.image('num_plate', new URL('assets/num_plate.png', import.meta.url).href)
         this.load.image('l_door', new URL('assets/l_door.png', import.meta.url).href)
@@ -79,15 +79,15 @@ export default class CutScreen extends Phaser.Scene {
         this.l_door = this.add.image(L_START, Y / 2, 'l_door')
         this.r_door = this.add.image(R_START, Y / 2, 'r_door')
 
-        this.faceplate = this.physics.add.sprite(R_START, Y/4, 'loss')
+        this.faceplate = this.physics.add.sprite(R_START, Y / 4, 'loss')
 
-        this.numplate = this.physics.add.sprite(L_START, Y/4, 'num_plate')
-        this.numplate.setScale(2/3, 1)
-        this.ones = this.physics.add.sprite(L_START + 82, Y/4, 'numbers')
-        this.tens = this.physics.add.sprite(L_START, Y/4, 'numbers')
-        this.huns = this.physics.add.sprite(L_START - 82, Y/4, 'numbers')
+        this.numplate = this.physics.add.sprite(L_START, Y / 4, 'num_plate')
+        this.numplate.setScale(2 / 3, 1)
+        this.ones = this.physics.add.sprite(L_START + 82, Y / 4, 'numbers')
+        this.tens = this.physics.add.sprite(L_START, Y / 4, 'numbers')
+        this.huns = this.physics.add.sprite(L_START - 82, Y / 4, 'numbers')
 
-        //TO BE CONTINUED
+        // TO BE CONTINUED
         this.l_sockets = this.physics.add.group({
             key: 'gba_socket',
             repeat: 1,
@@ -141,20 +141,20 @@ export default class CutScreen extends Phaser.Scene {
             frameRate: 6,
             repeat: 2
         })
-<
-        
-        this.anims.create({
-            key:'cry',
-            frames: [
-                { key: 'loss', frame: 0 },
-                { key: 'loss', frame: 1},
-                { key: 'loss', frame: 2},
-                { key: 'loss', frame: 3}
-            ],
-            frameRate: 6,
-            repeat: -1,
-            yoyo:true
-        })
+            <
+
+            this.anims.create({
+                key: 'cry',
+                frames: [
+                    { key: 'loss', frame: 0 },
+                    { key: 'loss', frame: 1 },
+                    { key: 'loss', frame: 2 },
+                    { key: 'loss', frame: 3 }
+                ],
+                frameRate: 6,
+                repeat: -1,
+                yoyo: true
+            })
 
         this.setScore(this.score)
 
@@ -172,8 +172,9 @@ export default class CutScreen extends Phaser.Scene {
     }
 
     update() {
+        // this.globalState.test();
 
-        if(!this.closed){
+        if (!this.closed) {
             this.close_timer++
             this.close_doors()
         }
@@ -183,13 +184,17 @@ export default class CutScreen extends Phaser.Scene {
             this.open_doors()
         }
 
-        if(Phaser.Input.Keyboard.JustDown(this.space)){
+
+    }
+
+    testing() {
+        if (Phaser.Input.Keyboard.JustDown(this.space)) {
             this.open = true
         }
     }
 
 
-    close_doors(){
+    close_doors() {
         // If left door is not yet in closed position
         if (this.l_door.x < L_END) {
             this.l_close()
@@ -210,7 +215,7 @@ export default class CutScreen extends Phaser.Scene {
         }
         else {
             this.close_timer = 0
-            console.log("timer reset")
+            // console.log("timer reset")
             this.open = false
             this.closed = false
         }
@@ -261,7 +266,7 @@ export default class CutScreen extends Phaser.Scene {
 
             // Move Door
             this.l_door.x = L_START
-            
+
             this.numplate.x = L_START
             this.ones.x = L_START + 82
             this.tens.x = L_START
@@ -373,29 +378,29 @@ export default class CutScreen extends Phaser.Scene {
         this.r_life.getChildren()[2 - index].anims.play('blink')
     }
 
-    setScore(score){
-        let o = score%10
-        let h = Math.floor(score/100)
-        let t = Math.floor((score-(h*100))/10)
+    setScore(score) {
+        let o = score % 10
+        let h = Math.floor(score / 100)
+        let t = Math.floor((score - (h * 100)) / 10)
 
-        
+
         this.ones.setFrame(o + 1)
-        if(score >= 10)
+        if (score >= 10)
             this.tens.setFrame(t + 1)
-        if(score >= 100)
+        if (score >= 100)
             this.huns.setFrame(h + 1)
     }
 
-    closecon(){
-        if(!this.lost){
+    closecon() {
+        if (!this.lost) {
             this.score++
             this.setScore(this.score)
         }
-        else{
+        else {
             this.faceplate.anims.play('cry')
             this.life_total--
             this.reduce_life()
         }
     }
-    
+
 }

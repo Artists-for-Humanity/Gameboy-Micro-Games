@@ -34,7 +34,7 @@ const config = {
   },
 
 
-  scene: [CutScreen],
+  scene: [MainMenu],
   audio: {
     disableWebAudio: true,
   },
