@@ -10,6 +10,8 @@ export default class BetweenSpace extends Phaser.Scene {
         this.lose = false;
         this.gameOver = false;
         this.victory = false;
+        this.randomNum = Math.floor(Math.random() * 71);
+
   }
         
 
@@ -47,11 +49,8 @@ export default class BetweenSpace extends Phaser.Scene {
     this.player.setCollideWorldBounds();
     this.goal = this.physics.add.sprite(1000,360,'star');
     this.createAsteroids();
-    Phaser.Actions.Call(this.asteroid.getChildren(), child => {
-      child.rotation = Math.PI/2;
-      child.setSize(40,40)
-
-  });
+    this.createAsteroids2();
+    
     this.cursors = this.input.keyboard.createCursorKeys();
     this.physics.add.collider(this.player, this.asteroid, this.loseState, null, this);
     this.physics.add.overlap(this.player, this.goal, this.destroyStar, null, this);
@@ -118,21 +117,9 @@ export default class BetweenSpace extends Phaser.Scene {
           //   this.asteroid.body.setVelocityY(300);
           // }
 
-          Phaser.Actions.Call(this.asteroid.getChildren(), child => {
-            if(child.y >= 688) {
-              child.flipX = true;
-              child.body.setVelocityY(-300);
-            }
-            else if(child.y <= 32) {
-              child.flipX = false
-              child.body.setVelocityY(300);
-            }
-        });
-        Phaser.Actions.Call(this.asteroid.getChildren(), child => {
-          child.anims.play('walk',true);
-
-      });
+          
           // this.asteroid.anims.play('walk',true);
+          this.asteroidMovements();
     }
 
         }
@@ -145,16 +132,44 @@ export default class BetweenSpace extends Phaser.Scene {
     }
 
     createAsteroids() {
-    this.asteroid = this.physics.add.group()
-    this.asteroid.create(200,32,'asteroid');
-    this.asteroid.create(300,688,'asteroid');
-    this.asteroid.create(400,32,'asteroid');
-    this.asteroid.create(500,688,'asteroid');
-    this.asteroid.create(600,32,'asteroid');
-    this.asteroid.create(700,688,'asteroid');
-    this.asteroid.create(800,32,'asteroid');
-    this.asteroid.create(900,688,'asteroid');
+      this.asteroid = this.physics.add.group({
+        key: 'asteroid',
+        repeat: 3,
+        setXY: { x: 200, y: 32, stepX: 200, stepY: 30 + (this.randomNum) }
+    })
+    // this.asteroid.create(200,32,'asteroid');
+    // this.asteroid.create(400,32,'asteroid');
+    // this.asteroid.create(600,32,'asteroid');
+    // this.asteroid.create(800,32,'asteroid');
+    Phaser.Actions.Call(this.asteroid.getChildren(), child => {
+      child.setVelocityY(300);
 
+    });
+    Phaser.Actions.Call(this.asteroid.getChildren(), child => {
+      child.rotation = Math.PI/2;
+      child.setSize(40,40)
+
+  });
+    }
+    createAsteroids2() {
+      this.asteroid2 = this.physics.add.group({
+        key: 'asteroid',
+        repeat: 3,
+        setXY: { x: 300, y: 688, stepX: 200, stepY: -30 - (this.randomNum)}
+    })
+      // this.asteroid2.create(300,688,'asteroid');
+      // this.asteroid2.create(500,688,'asteroid');
+      // this.asteroid2.create(700,688,'asteroid');
+      // this.asteroid2.create(900,688,'asteroid');
+      Phaser.Actions.Call(this.asteroid2.getChildren(), child => {
+        child.setVelocityY(-300);
+  
+      });
+      Phaser.Actions.Call(this.asteroid2.getChildren(), child => {
+        child.rotation = Math.PI/2;
+        child.setSize(40,40)
+  
+    });
     }
 
     destroyStar() {
@@ -164,6 +179,37 @@ export default class BetweenSpace extends Phaser.Scene {
       this.winText.setVisible(true)
       this.gameOver = true;
       this.victory = true;
+    }
+
+    asteroidMovements() {
+      Phaser.Actions.Call(this.asteroid.getChildren(), child => {
+        if(child.y >= 688) {
+          child.flipX = true;
+          child.body.setVelocityY(-300);
+        }
+        else if(child.y <= 32) {
+          child.flipX = false
+          child.body.setVelocityY(300);
+        }
+    });
+    Phaser.Actions.Call(this.asteroid.getChildren(), child => {
+      child.anims.play('walk',true);
+
+  });
+  Phaser.Actions.Call(this.asteroid2.getChildren(), child => {
+    if(child.y >= 688) {
+      child.flipX = true;
+      child.body.setVelocityY(-300);
+    }
+    else if(child.y <= 32) {
+      child.flipX = false
+      child.body.setVelocityY(300);
+    }
+});
+Phaser.Actions.Call(this.asteroid2.getChildren(), child => {
+  child.anims.play('walk',true);
+
+});
     }
 
     }
