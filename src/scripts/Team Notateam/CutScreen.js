@@ -307,24 +307,9 @@ export default class CutScreen extends Phaser.Scene {
         this.nextGame()
         
     }
-    gamePicker(){
-        let r = Math.round(Math.random()*3)
-        console.log(r)
-        switch(r){
-            case 1:
-                return'SockToss'
-            case 2:
-                return 'Emeowgency'
-                
-            case 3:
-                return 'ColorLab'
-            default:
-                return 'DrinkPour'
-        }
-    }
     nextGame(){
         do{
-            this.currentScene = this.gamePicker()
+            this.currentScene = this.game.scene.scenes[this.roundNumber + 1]
         } while(this.playedGames.includes(this.currentScene) && !this.finishedGames)
 
         setTimeout(()=>{
