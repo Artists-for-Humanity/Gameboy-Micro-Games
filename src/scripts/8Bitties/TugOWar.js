@@ -103,17 +103,16 @@ export default class TugOWar extends Phaser.Scene {
     this.rope.setMask(this.mask);
   }
   update() {
-    console.log(this.win);
     if (this.timer !== 0) {
       this.timer--;
     }
     this.winOrLose();
-    // if (this.lose === true) {
-    //   this.youLose();
-    // }
-    // if (this.win === true) {
-    //   this.youWin();
-    // }
+    if (this.lose === true) {
+      this.youLose();
+    }
+    if (this.win === true) {
+      this.youWin();
+    }
     this.scalePull();
     this.startDashMovement();
     this.playerPull();
@@ -130,8 +129,7 @@ export default class TugOWar extends Phaser.Scene {
     }
   }
   startDashMovement() {
-    if ((this.win === false) & (this.lose === false));
-    {
+    if ((this.win === false) & (this.lose === false)) {
       if (this.dash.y < 600) {
         this.dash.y += 3;
         this.rope.x += 2.5;
@@ -201,9 +199,11 @@ export default class TugOWar extends Phaser.Scene {
   winOrLose() {
     if (this.timer === 0 && this.rope.x > 350) {
       this.lose = true;
+      console.log("lose");
     }
     if (this.timer === 0 && this.rope.x < 350) {
       this.win = true;
+      console.log("win");
     }
   }
   youLose() {
