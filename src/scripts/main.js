@@ -10,6 +10,7 @@ import CircleGame from "./TeamInflation/CircleGame";
 import BewteenSpace from "./TeamInflation/BetweenSpace";
 import ColorPasscode from "./MicroGamers/ColorPasscode";
 import HideFromCat from "./MicroGamers/HideFromCat";
+import HitTheButton from "./MicroGamers/HitTheButton";
 import TugOWar from "./8Bitties/TugOWar";
 import FlySwat from "./8Bitties/FlySwat";
 import DrinkPour from "./8Bitties/DrinkPour";
@@ -35,7 +36,7 @@ const config = {
       debug: true,
     },
   },
-  scene: [Highest2Lowest],
+  scene: [HitTheButton],
   audio: {
     disableWebAudio: true,
   },
