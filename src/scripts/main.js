@@ -19,6 +19,7 @@ import DrinkPour from "./8Bitties/DrinkPour";
 import SockToss from "./Team Notateam/socktoss";
 import CutScreen from "./Team Notateam/CutScreen";
 import MainMenu from "./MainMenu";
+
 // Set configuration for phaser game instance
 const config = {
   type: Phaser.AUTO,
@@ -37,8 +38,22 @@ const config = {
       debug: false,
     },
   },
+  scene: [
+    MainMenu,
+    Emeowgency,
+    ColorLab,
+    Highest2Lowest,
+    FrogJump,
+    CircleGame,
+    BewteenSpace,
+    ColorPasscode,
+    HideFromCat,
+    HitTheButton,
+    TugOWar,
+    FlySwat,
+    DrinkPour,
+  ],
 
-  scene: [HitTheButton],
   audio: {
     disableWebAudio: true,
   },

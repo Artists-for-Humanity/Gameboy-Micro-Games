@@ -5,14 +5,23 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
   constructor(pluginManager) {
     super(pluginManager);
 
-    this.initialTime = 10
+    this.initialTime = 10;
     this.timedEvent;
+    this.cutScreen;
+  }
+
+  test() {
+
+    // this.cutScreen = this.scene.get('CutScreen');
+    // this.cutScreen.testing();
+
   }
 
   randomGame() {
     // this.pluginManager.game.scene.start(this.game.scene.scenes[Phaser.Math.Between(0, this.game.scene.scenes.length)])
-    this.pluginManager.game.scene.start(this.game.scene.scenes[this.game.scene.scenes.length - 1]);
-    console.log(this.game.scene.scenes.length);
+    //this.pluginManager.game.scene.start(this.game.scene.scenes[this.game.scene.scenes.length - 1]);
+    console.log(this.game.scene.scenes[this.game.scene.scenes.length - 1]);
+    this.pluginManager.game.scene.start();
   }
 
   preload(game) {
@@ -89,13 +98,15 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
   // Helper Functions
 
   setText(myText, game) {
-    this.myText = game.add.text(250, 360, '')
+    this.myText = game.add.text('');
     this.myText.setStyle({
       fontSize: '100px',
       fill: '#ffffff',
       align: 'center',
     });
     this.myText.setText(myText);
+    const width = this.myText.displayWidth / 2;
+    this.myText.setX(540 - width).setY(170);
   }
 }
 
