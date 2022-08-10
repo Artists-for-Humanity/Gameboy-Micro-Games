@@ -37,26 +37,26 @@ export default class MicroGame31 extends Phaser.Scene {
         this.victory = false;
     }
     preload() {
-        this.load.image("background", new URL("./assets/highest2Lowest/NGbackground.png",
+        this.load.image("background", new URL("./assets/Lowest/NGbackground.png",
             import.meta.url).href);
-        this.load.image("cursorimage", new URL("./assets/highest2Lowest/cursorimage.png",
+        this.load.image("cursorimage", new URL("./assets/Lowest/cursorimage.png",
             import.meta.url).href);
-        this.load.image("lose", new URL("./assets/highest2Lowest/xmark.png",
+        this.load.image("lose", new URL("./assets/Lowest/xmark.png",
             import.meta.url).href);
-        this.load.image("win", new URL("./assets/highest2Lowest/checkmark.png",
+        this.load.image("win", new URL("./assets/Lowest/checkmark.png",
             import.meta.url).href);
 
-        this.load.spritesheet("frames", new URL("./assets/highest2Lowest/frames.png",
+        this.load.spritesheet("frames", new URL("./assets/Lowest/frames.png",
             import.meta.url).href, {
             frameWidth: 1368 / 3,
             frameHeight: 329
         });
-        this.load.spritesheet("numbers", new URL("./assets/highest2Lowest/numbers.png",
+        this.load.spritesheet("numbers", new URL("./assets/Lowest/numbers.png",
             import.meta.url).href, {
             frameWidth: 313,
             frameHeight: 350
         });
-        this.load.spritesheet("operations", new URL("./assets/highest2Lowest/operations.png",
+        this.load.spritesheet("operations", new URL("./assets/Lowest/operations.png",
             import.meta.url).href, {
             frameWidth: 1408 / 4,
             frameHeight: 294
