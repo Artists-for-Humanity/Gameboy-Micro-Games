@@ -1,7 +1,6 @@
 import Phaser from "phaser";
 
 export default class Emeowgency extends Phaser.Scene {
-
   // Game Class Constructor
   constructor() {
     super({
@@ -41,38 +40,38 @@ export default class Emeowgency extends Phaser.Scene {
   preload() {
     this.load.image(
       "catch",
-      new URL("../8Bitties/assets/Catch_Text.png",
-        import.meta.url).href
+      new URL("../8Bitties/assets/Emeowgency/Catch_Text.png", import.meta.url)
+        .href
     );
     this.load.image(
       "fail",
-      new URL("../8Bitties/assets/fail_text.png",
-        import.meta.url).href
+      new URL("../8Bitties/assets/Emeowgency/fail_text.png", import.meta.url)
+        .href
     );
     this.load.image(
       "safe",
-      new URL("../8Bitties/assets/safe_text.png",
-        import.meta.url).href
+      new URL("../8Bitties/assets/Emeowgency/safe_text.png", import.meta.url)
+        .href
     );
     this.load.image(
       "Blanket",
-      new URL("../8Bitties/assets/blanket.png",
-        import.meta.url).href
+      new URL("../8Bitties/assets/Emeowgency/blanket.png", import.meta.url).href
     );
     this.load.image(
       "grass",
-      new URL("../8Bitties/assets/grass_bg.png",
-        import.meta.url).href
+      new URL("../8Bitties/assets/Emeowgency/grass_bg.png", import.meta.url)
+        .href
     );
     this.load.spritesheet(
       "yang",
       new URL(
-        "../8Bitties/assets/animations/yangSpriteSheet.png",
+        "../8Bitties/assets/Emeowgency/yangSpriteSheet.png",
         import.meta.url
-      ).href, {
-      frameWidth: 86.8,
-      frameHeight: 58,
-    }
+      ).href,
+      {
+        frameWidth: 86.8,
+        frameHeight: 58,
+      }
     );
   }
 
@@ -145,7 +144,7 @@ export default class Emeowgency extends Phaser.Scene {
     this.shadow = this.physics.add
       .sprite(position.x, position.y, "yang")
       .setDepth(-8);
-    this.shadow.alpha = .5;
+    this.shadow.alpha = 0.5;
   }
 
   spawnBlanket() {
@@ -202,7 +201,6 @@ export default class Emeowgency extends Phaser.Scene {
     }
   }
 
-
   //moves the blanket with arrow keys
   moveBlanket() {
     if (this.up.isDown) {
@@ -225,7 +223,6 @@ export default class Emeowgency extends Phaser.Scene {
       if (this.createImage === false) {
         this.safe = this.add.image(540, 360, "safe").setDepth(100);
         this.createImage = true;
-
       }
       if (this.safeScale <= 1) {
         this.safeTimer++;
@@ -259,37 +256,45 @@ export default class Emeowgency extends Phaser.Scene {
   createAnimations() {
     this.anims.create({
       key: "shadow",
-      frames: [{
-        key: "yang",
-        frame: 0,
-      },],
+      frames: [
+        {
+          key: "yang",
+          frame: 0,
+        },
+      ],
       frameRate: 1,
       repeat: -1,
     });
     this.anims.create({
       key: "safe",
-      frames: [{
-        key: "yang",
-        frame: 3,
-      },],
+      frames: [
+        {
+          key: "yang",
+          frame: 3,
+        },
+      ],
       frameRate: 1,
       repeat: -1,
     });
     this.anims.create({
       key: "fail",
-      frames: [{
-        key: "yang",
-        frame: 2,
-      },],
+      frames: [
+        {
+          key: "yang",
+          frame: 2,
+        },
+      ],
       frameRate: 1,
       repeat: -1,
     });
     this.anims.create({
       key: "fall",
-      frames: [{
-        key: "yang",
-        frame: 1,
-      },],
+      frames: [
+        {
+          key: "yang",
+          frame: 1,
+        },
+      ],
       frameRate: 1,
       repeat: -1,
     });

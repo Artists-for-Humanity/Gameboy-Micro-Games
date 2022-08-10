@@ -69,6 +69,9 @@ export default class CarPump extends Phaser.Scene {
   }
 
   create() {
+
+
+
     this.add.image(1080 / 2, 720 / 2, "pumpgame_bg");
     this.lever = this.physics.add.sprite(955, 480, "lever");
     this.car25 = this.physics.add.sprite(540, 350, "car25");
@@ -90,6 +93,17 @@ export default class CarPump extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
 
     this.timedEvent = this.time.delayedCall(1000, this.onEvent, [], this);
+
+    this.createAnimations();
+    // console.log(this.load);
+
+    this.globalState.initCountDown(this);
+    // this.globalState.test();
+  }
+
+  
+
+  createAnimations() {
 
     // Animation for idle lever
     this.anims.create({
