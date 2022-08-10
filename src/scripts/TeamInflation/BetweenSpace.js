@@ -1,11 +1,11 @@
-export default class BewteenSpace extends Phaser.Scene {
+export default class BetweenSpace extends Phaser.Scene {
     
 
     constructor() {
         super({
             active: false,
             visible: false,
-            key: 'BewteenSpace',
+            key: 'BetweenSpace',
         });
   }
 
@@ -14,6 +14,9 @@ export default class BewteenSpace extends Phaser.Scene {
         import.meta.url).href));
         this.load.spritesheet(this.load.image('rocket', new URL("./assets/rocketPH.png",
         import.meta.url).href));
+        this.load.spritesheet(this.load.image('asteroid', new URL("./assets/asteroidspritesheet.png",
+        import.meta.url).href));
+        
     }
 
     create(){
@@ -22,12 +25,37 @@ export default class BewteenSpace extends Phaser.Scene {
 
     this.add.image(this.gameWidth / 2, this.gameHeight / 2, "background");
     this.player = this.physics.add.sprite(300,300, "rocket")
+    this.asteroid = this.physics.add.sprite(400,400,'asteroid')
+    this.cursors = this.input.keyboard.createCursorKeys();
+
+    this.anims.create({
+        key: 'walk',
+        frames: [
+            {key: 'frogs', frame: 0},
+            {key: 'frogs', frame: 1},
+            {key: 'frogs', frame: 2}
+        ],
+        frameRate: 12,
+        repeat: -1
+    });
     }
 
     update() {
-  
+        if (this.cursors.up.isDown) {
+            this.player.y -= 5;
+          }
+          if (this.cursors.down.isDown) {
+            this.player.y += 5;
+          }
+          if (this.cursors.left.isDown) {
+            this.player.x -= 5;
+          }
+          if (this.cursors.right.isDown) {
+            this.player.x += 5;
+          }
+        }
     }
-}
+
     
 
 

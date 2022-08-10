@@ -73,7 +73,7 @@ export default class FrogJump extends Phaser.Scene {
         this.background.setScrollFactor(0);
 
         // this.generatePlatform(this.randomNum);
-        this.generatePlatform(0);
+        this.generatePlatform(this.randomNum);
         this.ground = this.physics.add.sprite(530, 685, 'ground');
         this.ground.setScale(1.25, .75);
         this.ground.setImmovable(true);
