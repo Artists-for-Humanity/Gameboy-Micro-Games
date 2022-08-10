@@ -28,6 +28,8 @@ export default class FrogJump extends Phaser.Scene {
         this.stars;
         this.delayTime;
         this.randomNum = Math.floor(Math.random() * 3);
+        this.victory = false;
+        this.gameOver = false;
 
     }
     preload() {
@@ -193,6 +195,7 @@ export default class FrogJump extends Phaser.Scene {
             this.playerSprite.setVelocityY(-600);
         }
         this.background.tilePositionY = this.cameras.main.scrollY * 0.3;
+        console.log(this.gameOver, this.victory)
     }
 
     destroyStar(playerSprite, star) {
@@ -200,12 +203,15 @@ export default class FrogJump extends Phaser.Scene {
         this.winText.setVisible(true);
         this.winState = true;
         this.physics.pause();
+        this.victory = true;
+        this.gameOver = true;
     }
 
     loseState() {
         if (this.winState === false) {
             this.loseText.setVisible(true);
             this.physics.pause();
+            this.gameOver = true;
         }
     }
 

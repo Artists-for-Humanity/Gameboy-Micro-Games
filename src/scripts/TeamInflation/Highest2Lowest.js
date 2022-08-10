@@ -34,7 +34,7 @@ export default class MicroGame31 extends Phaser.Scene {
         this.space
         // game state booleans
         this.gameOver = false;
-        this.win = false;
+        this.victory = false;
     }
     preload() {
         this.load.image("background", new URL("./assets/NGbackground.png",
@@ -145,10 +145,10 @@ export default class MicroGame31 extends Phaser.Scene {
                 this.box[this.selected].anims.stop()
                 // IF CORRECT CHOICE MADE
                 if (this.evaluated[this.selected] === this.correct) {
-                    this.win = true
+                    this.victory = true
                 }
-                if (this.win) {
-                    this.winText.setVisible(true);
+                if (this.victory) {
+                    this.victoryText.setVisible(true);
                     console.log("good job'n such")
                 } else {
                     console.log("Less good job")
@@ -159,8 +159,8 @@ export default class MicroGame31 extends Phaser.Scene {
                 this.gameOver = true
             }
         } else {
-            // do stuff at end of game, win or lose
-            if (this.win) {} else {}
+            // do stuff at end of game, victory or lose
+            if (this.victory) {} else {}
         }
     }
     // START HELPER FUNCTIONS
