@@ -3,7 +3,9 @@ import Phaser from "phaser";
 import GlobalState from "./GlobalState";
 import Emeowgency from "./8Bitties/Emeowgency";
 import ColorLab from "./8Bitties/ColorLab";
-import MicroGame11 from "./DebugginDaOpps/MicroGame11";
+import CarPump from "./DebugginDaOpps/CarPump";
+import TrashSort from "./DebugginDaOpps/TrashSort";
+import Cannon from "./DebugginDaOpps/Cannon";
 import Highest2Lowest from "./TeamInflation/Highest2Lowest";
 import FrogJump from "./TeamInflation/FrogJump";
 import CircleGame from "./TeamInflation/CircleGame";
@@ -17,11 +19,6 @@ import DrinkPour from "./8Bitties/DrinkPour";
 import SockToss from "./Team Notateam/socktoss";
 import CutScreen from "./Team Notateam/CutScreen";
 import MainMenu from "./MainMenu";
-
-
-
-
-
 
 // Set configuration for phaser game instance
 const config = {
@@ -45,7 +42,6 @@ const config = {
     MainMenu,
     Emeowgency,
     ColorLab,
-    MicroGame11,
     Highest2Lowest,
     FrogJump,
     CircleGame,
@@ -57,6 +53,7 @@ const config = {
     FlySwat,
     DrinkPour,
   ],
+
   audio: {
     disableWebAudio: true,
   },

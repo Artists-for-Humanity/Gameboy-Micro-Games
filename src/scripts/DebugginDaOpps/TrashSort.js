@@ -1,10 +1,10 @@
-export default class MicroGame12 extends Phaser.Scene {
+export default class TrashSort extends Phaser.Scene {
   // Game Class Constructor
   constructor() {
     super({
       active: false,
       visible: false,
-      key: "MicroGame12",
+      key: "TrashSort",
     });
 
     // Game Object Declarations
@@ -14,6 +14,7 @@ export default class MicroGame12 extends Phaser.Scene {
     this.currTrashItem;
     this.playerScore = 0;
     this.firstTrash = Phaser.Math.Between(0, 3);
+    this.victory = false;
     this.gameOver = false;
   }
 
@@ -99,6 +100,7 @@ export default class MicroGame12 extends Phaser.Scene {
     if (!this.gameOver) {
       if (this.playerScore === this.triesToWin) {
         this.currTrashItem.visible = false;
+        this.victory = true;
         this.gameOver = true;
         this.endText = this.add.text(300, 250, "You Won!");
         this.endText.setStyle({
@@ -187,3 +189,13 @@ export default class MicroGame12 extends Phaser.Scene {
     });
   }
 }
+
+/**
+ *
+ * Food dropping down game ends immediately.
+ * Sorts correctly, but game ends before all items are sorted.
+ * Trash to bin = immediate game over
+ * Recycle, Trash = game over
+ * Trash, trash, recycle, recycle = game won
+ * 4 recycle = game won
+ */
