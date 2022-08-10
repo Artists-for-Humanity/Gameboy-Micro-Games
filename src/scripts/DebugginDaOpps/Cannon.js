@@ -101,7 +101,6 @@ export default class Cannon extends Phaser.Scene {
     this.SPACE = this.Up = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
-    this.gameOver = false;
     this.right = false;
     this.START_Y = 620;
     this.cannonSelect = 0;
@@ -367,7 +366,7 @@ export default class Cannon extends Phaser.Scene {
     this.cannonBallGrp.getChildren()[this.cannonSelect].y -= 20;
     this.selectedValue =
       this.cannonBallMap[
-        this.cannonBallGrp.getChildren()[this.cannonSelect].texture.key
+      this.cannonBallGrp.getChildren()[this.cannonSelect].texture.key
       ];
   }
 
@@ -431,9 +430,9 @@ export default class Cannon extends Phaser.Scene {
       if (this.barrelRowMap[i] === 2) {
         this.barrelGrp.create(
           xposition +
-            this.barrel.displayWidth * (i - 4) +
-            this.barrel.displayWidth / 2 +
-            (i - 4) * 10,
+          this.barrel.displayWidth * (i - 4) +
+          this.barrel.displayWidth / 2 +
+          (i - 4) * 10,
           yposition - this.barrel.displayHeight,
           "barrel"
         );
@@ -448,9 +447,9 @@ export default class Cannon extends Phaser.Scene {
       if (this.barrelRowMap[i] === 4) {
         this.barrelGrp.create(
           xposition +
-            this.barrel.displayWidth * (i - 8) +
-            this.barrel.displayWidth / 2 +
-            10,
+          this.barrel.displayWidth * (i - 8) +
+          this.barrel.displayWidth / 2 +
+          10,
           yposition - this.barrel.displayHeight * 3,
           "barrel"
         );

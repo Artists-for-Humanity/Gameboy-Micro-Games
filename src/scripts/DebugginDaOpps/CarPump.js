@@ -101,7 +101,7 @@ export default class CarPump extends Phaser.Scene {
     // this.globalState.test();
   }
 
-  
+
 
   createAnimations() {
 
@@ -229,6 +229,7 @@ export default class CarPump extends Phaser.Scene {
 
     if (time / 1000 > 10 && this.playerPumps >= this.pumpToWin) {
       this.gameState = false;
+      this.gameOver = true;
       this.victory = true;
       this.endText = this.add.text(300, 360, "You Won!");
       this.endText.setStyle({
