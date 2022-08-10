@@ -1,4 +1,5 @@
-import Phaser from 'phaser';
+import Phaser from 'phaser'
+import eventsCenter from '../EventsCenter'
 const X = 1080
 const Y = 720
 const L_END = X/4
@@ -19,6 +20,14 @@ export default class CutScreen extends Phaser.Scene {
                 }
             }
         });
+
+        this.finishedGames = false
+        
+        this.playedGames = []
+
+        this.currentScene
+        this.roundNumber = 0
+
         this.close_timer = 0
         this.life_total = 5
         this.closed = false
@@ -69,6 +78,9 @@ export default class CutScreen extends Phaser.Scene {
         this.buildAnimations()
         this.buildObjects()
         this.setScore(this.score)
+
+        eventsCenter.on('game-end', this.closeDoor, this)
+
     }
     update() {
         if(!this.closed){
@@ -106,7 +118,7 @@ export default class CutScreen extends Phaser.Scene {
             this.close_timer = 0
             console.log("timer reset")
             this.open = false
-            this.closed = false
+            this.closed = true
         }
     }
     l_close(){
@@ -270,6 +282,11 @@ export default class CutScreen extends Phaser.Scene {
             this.huns.setFrame(h + 1)
     }
     closecon(){
+
+        if(this.roundNumber > 0){
+            this.endGame()
+        }
+
         if(!this.lost){
             this.faceplate.anims.play('win1').once('animationcomplete', () => {
                 this.faceplate.anims.play('win2')
@@ -277,8 +294,7 @@ export default class CutScreen extends Phaser.Scene {
             this.score++
             setTimeout(()=>{
                 this.setScore(this.score)
-            }, 200)
-            
+            }, 200)            
         }
         else{
             this.faceplate.anims.play('lose1').once('animationcomplete', () => {
@@ -287,6 +303,41 @@ export default class CutScreen extends Phaser.Scene {
             this.life_total--
             this.reduce_life()
         }
+
+        this.nextGame()
+        
+    }
+    gamePicker(){
+        let r = Math.round(Math.random()*3)
+        console.log(r)
+        switch(r){
+            case 1:
+                return'SockToss'
+            case 2:
+                return 'Emeowgency'
+                
+            case 3:
+                return 'ColorLab'
+            default:
+                return 'DrinkPour'
+        }
+    }
+    nextGame(){
+        do{
+            this.currentScene = this.gamePicker()
+        } while(this.playedGames.includes(this.currentScene) && !this.finishedGames)
+
+        setTimeout(()=>{
+            console.log(this.currentScene)
+            this.scene.sendToBack(this.currentScene)
+            this.scene.run(this.currentScene)
+            console.log(this.currentScene +" should be running...")
+            this.roundNumber++
+            this.open = true
+        }, 2000)
+    }
+    endGame(){
+        this.scene.remove(this.currentScene)
     }
     buildObjects(){
         // Build Doors
@@ -348,7 +399,7 @@ export default class CutScreen extends Phaser.Scene {
             ],
             frameRate: 6,
             repeat: -1
-        })    
+        }) 
         this.anims.create({
             key: 'blink',
             frames: [
@@ -400,5 +451,12 @@ export default class CutScreen extends Phaser.Scene {
             repeat: -1,
             yoyo:true
         })
+    }
+
+    closeDoor(victory){
+        this.lost = !victory;
+        console.log('emission received')
+        //this.faceplate.anims.stop()
+        this.closed = false; 
     }
 }

@@ -31,7 +31,7 @@ const config = {
       debug: true,
     },
   },
-  scene: [CutScreen],
+  scene: [CutScreen,SockToss, Emeowgency, ColorLab, DrinkPour],
   audio: {
     disableWebAudio: true,
   },
