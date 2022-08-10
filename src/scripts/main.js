@@ -3,6 +3,9 @@ import Phaser from "phaser";
 import GlobalState from "./GlobalState";
 import Emeowgency from "./8Bitties/Emeowgency";
 import ColorLab from "./8Bitties/ColorLab";
+import CarPump from "./DebugginDaOpps/CarPump";
+import TrashSort from "./DebugginDaOpps/TrashSort";
+import Cannon from "./DebugginDaOpps/Cannon";
 import MicroGame11 from "./DebugginDaOpps/MicroGame11";
 import Highest2Lowest from "./TeamInflation/Highest2Lowest";
 import FrogJump from "./TeamInflation/FrogJump";
@@ -39,6 +42,7 @@ const config = {
       debug: false,
     },
   },
+
   scene: [HitTheButton],
   audio: {
     disableWebAudio: true,

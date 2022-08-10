@@ -66,13 +66,11 @@ export default class CarPump extends Phaser.Scene {
       new URL("./assets/100car_spritesheet.png", import.meta.url).href,
       { frameWidth: 1080, frameHeight: 720 }
     );
-    // console.log(this);
-    this.globalState.preload(this);
-
   }
 
   create() {
-    // this.globalState.test();
+
+
 
     this.add.image(1080 / 2, 720 / 2, "pumpgame_bg");
     this.lever = this.physics.add.sprite(955, 480, "lever");
@@ -103,30 +101,10 @@ export default class CarPump extends Phaser.Scene {
     // this.globalState.test();
   }
 
-  update(time, delta) {
-    if (this.gameState) {
-      this.clickTimer += delta;
-      this.timerCountdown(time);
-      if (this.clickTimer > 100) this.clickAvailable = true;
-      if (this.cursors.up.isDown && this.downWasPressed) {
-        this.downWasPressed = false;
-        this.upWasPressed = true;
-        this.lever.anims.play("lever-up", true);
-      } else if (
-        this.cursors.down.isDown &&
-        this.upWasPressed &&
-        this.clickAvailable
-      ) {
-        this.downWasPressed = true;
-        this.upWasPressed = false;
-        this.time.delayedCall(100, this.updatePump, [], this);
-        this.clickAvailable = false;
-        this.clickTimer = 0;
-      }
-    }
-  }
+  
 
   createAnimations() {
+
     // Animation for idle lever
     this.anims.create({
       key: "lever-idle",
@@ -219,6 +197,29 @@ export default class CarPump extends Phaser.Scene {
     });
   }
 
+  update(time, delta) {
+    if (this.gameState) {
+      this.clickTimer += delta;
+      this.timerCountdown(time);
+      if (this.clickTimer > 100) this.clickAvailable = true;
+      if (this.cursors.up.isDown && this.downWasPressed) {
+        this.downWasPressed = false;
+        this.upWasPressed = true;
+        this.lever.anims.play("lever-up", true);
+      } else if (
+        this.cursors.down.isDown &&
+        this.upWasPressed &&
+        this.clickAvailable
+      ) {
+        this.downWasPressed = true;
+        this.upWasPressed = false;
+        this.time.delayedCall(100, this.updatePump, [], this);
+        this.clickAvailable = false;
+        this.clickTimer = 0;
+      }
+    }
+  }
+
   timerCountdown(time) {
     if (time / 1000 > 10 && this.playerPumps < this.pumpToWin) {
       this.gameState = false;
@@ -240,6 +241,7 @@ export default class CarPump extends Phaser.Scene {
 
   updatePump() {
     this.playerPumps += 1;
+
     this.lever.anims.play("lever-down", true);
     if (this.playerPumps === 5) {
       this.car25.visible = true;
