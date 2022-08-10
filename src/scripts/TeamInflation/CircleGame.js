@@ -13,22 +13,22 @@ export default class CircleGame extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image(this.load.image('ground', new URL("./assets/FillerAssets/star.png",
+        // this.load.image(this.load.image('ground', new URL("./assets/CircleGame/backgroundsprites.png",
+        //     import.meta.url).href));
+        this.load.image(this.load.image('dude', new URL("./assets/CircleGame/ballsprite.png",
             import.meta.url).href));
-        this.load.image(this.load.image('dude', new URL("./assets/FillerAssets/bomb.png",
+        this.load.image(this.load.image('lose', new URL("./assets/FrogGame/youlosefrog.png",
             import.meta.url).href));
-        this.load.image(this.load.image('lose', new URL("./assets/youlose.png",
+        this.load.image(this.load.image('win', new URL("./assets/FrogGame/youwin.png",
             import.meta.url).href));
-        this.load.image(this.load.image('win', new URL("./assets/youwin.png",
+        this.load.image(this.load.image('jump', new URL("./assets/CircleGame/ballsprite.png",
             import.meta.url).href));
-        this.load.image(this.load.image('jump', new URL("./assets/Jump.png",
-            import.meta.url).href));
-        this.load.spritesheet("ball", new URL("./assets/diamond.png",
+        this.load.spritesheet("diamonds", new URL("./assets/CircleGame/diamond.png",
             import.meta.url).href, {
             frameWidth: 46,
             frameHeight: 38
         });
-
+        
 
     }
 
@@ -45,7 +45,7 @@ export default class CircleGame extends Phaser.Scene {
         });
         this.player = this.physics.add.image(540, 10, 'ground');
         this.player.setGravityY(500);
-        this.blue = this.add.sprite(100, 100, "ball");
+        this.blue = this.add.sprite(100, 100, "diamonds");
         // this.lines =
         // new Phaser.Geom.Line(700, 200, 700, 400);
         // this.lines.add
@@ -71,10 +71,10 @@ export default class CircleGame extends Phaser.Scene {
         this.groupS = this.physics.add.group();
         this.groupB = this.physics.add.group();
         for (var i = 0; i < 11; i++) {
-            this.groupS.create(0, 0, 'ball')
+            this.groupS.create(0, 0, 'diamonds')
         }
         for (var i = 0; i < 5; i++) {
-            this.groupB.create(0, 0, 'ball');
+            this.groupB.create(0, 0, 'diamonds');
         }
 
         this.loseText = this.add.image(540, 360, 'lose').setVisible(false);
@@ -171,15 +171,15 @@ export default class CircleGame extends Phaser.Scene {
         this.anims.create({
             key: 'walk',
             frames: [{
-                    key: 'ball',
+                    key: 'diamonds',
                     frame: 0
                 },
                 {
-                    key: 'ball',
+                    key: 'diamonds',
                     frame: 1
                 },
                 {
-                    key: 'ball',
+                    key: 'diamonds',
                     frame: 2
                 }
             ],
