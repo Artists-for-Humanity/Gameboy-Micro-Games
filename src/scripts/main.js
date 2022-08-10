@@ -17,14 +17,15 @@ import DrinkPour from "./8Bitties/DrinkPour";
 import SockToss from "./Team Notateam/socktoss";
 import CutScreen from "./Team Notateam/CutScreen";
 import MainMenu from "./MainMenu";
+import BetweenSpace from "./TeamInflation/BetweenSpace";
 
 // Set configuration for phaser game instance
 const config = {
   type: Phaser.AUTO,
   width: 1080,
   height: 720,
-  transparent: true,
-  // backgroundColor: '#4488aa',
+  transparent: false,
+  backgroundColor: '#4488aa',
 
   // Add physics, arcade, scene, and audio
   physics: {
@@ -33,10 +34,10 @@ const config = {
       gravity: {
         y: 0,
       },
-      debug: true,
+      debug: false,
     },
   },
-  scene: [HitTheButton],
+  scene: [BetweenSpace],
   audio: {
     disableWebAudio: true,
   },
