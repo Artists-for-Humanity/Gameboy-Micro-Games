@@ -3,9 +3,9 @@ import Phaser from "phaser";
 import GlobalState from "./GlobalState";
 import Emeowgency from "./8Bitties/Emeowgency";
 import ColorLab from "./8Bitties/ColorLab";
-import MicroGame11 from "./DebugginDaOpps/MicroGame11";
-import MicroGame12 from "./DebugginDaOpps/MicroGame12";
-import MicroGame13 from "./DebugginDaOpps/MicroGame13";
+import CarPump from "./DebugginDaOpps/CarPump";
+import TrashSort from "./DebugginDaOpps/TrashSort";
+import Cannon from "./DebugginDaOpps/Cannon";
 import MicroGame21 from "./MicroGamers/MicroGame21";
 import MicroGame31 from "./Team4/MicroGame31";
 
@@ -23,10 +23,10 @@ const config = {
       gravity: {
         y: 0,
       },
-      debug: true,
+      debug: false,
     },
   },
-  scene: [MicroGame12],
+  scene: [Cannon],
   audio: {
     disableWebAudio: false,
   },

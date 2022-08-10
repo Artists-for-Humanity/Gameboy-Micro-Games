@@ -1,10 +1,10 @@
-export default class MicroGame13 extends Phaser.Scene {
+export default class Cannon extends Phaser.Scene {
   // Game Class Constructor
   constructor() {
     super({
       active: false,
       visible: false,
-      key: "MicroGame13",
+      key: "Cannon",
     });
 
     // Game Object Declarations
@@ -258,7 +258,7 @@ export default class MicroGame13 extends Phaser.Scene {
         this.gameOver = true;
         this.gameWon();
       }
-      if (this.tries >= 2) {
+      if (this.tries >= 2 && this.totalBarrels > 0) {
         this.gameOver = true;
         this.time.delayedCall(
           2000,

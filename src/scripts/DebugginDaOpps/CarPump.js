@@ -1,10 +1,10 @@
-export default class MicroGame11 extends Phaser.Scene {
+export default class CarPump extends Phaser.Scene {
   // Game Class Constructor
   constructor() {
     super({
       active: false,
       visible: false,
-      key: "MicroGame11",
+      key: "CarPump",
     });
 
     // Game Object Declarations
