@@ -19,8 +19,9 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
 
   randomGame() {
     // this.pluginManager.game.scene.start(this.game.scene.scenes[Phaser.Math.Between(0, this.game.scene.scenes.length)])
-    // this.pluginManager.game.scene.start(this.game.scene.scenes[this.game.scene.scenes.length - 1]);
-    console.log(this.game.scene.scenes.length);
+    //this.pluginManager.game.scene.start(this.game.scene.scenes[this.game.scene.scenes.length - 1]);
+    console.log(this.game.scene.scenes[this.game.scene.scenes.length - 1]);
+    this.pluginManager.game.scene.start();
   }
 
   preload(game) {
