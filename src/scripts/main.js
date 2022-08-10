@@ -8,6 +8,7 @@ import Highest2Lowest from "./TeamInflation/Highest2Lowest";
 import FrogJump from "./TeamInflation/FrogJump";
 import CircleGame from "./TeamInflation/CircleGame";
 import BewteenSpace from "./TeamInflation/BetweenSpace";
+import BetweenSpace from "./TeamInflation/BetweenSpace";
 // Set configuration for phaser game instance
 const config = {
   type: Phaser.AUTO,
@@ -21,10 +22,10 @@ const config = {
       gravity: {
         y: 0,
       },
-      debug: true,
+      debug: false,
     },
   },
-  scene: [FrogJump],
+  scene: [BetweenSpace],
   audio: {
     disableWebAudio: true,
   },

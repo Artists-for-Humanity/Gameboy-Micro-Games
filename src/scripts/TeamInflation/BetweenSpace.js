@@ -1,11 +1,11 @@
-export default class BewteenSpace extends Phaser.Scene {
+export default class BetweenSpace extends Phaser.Scene {
     
 
     constructor() {
         super({
             active: false,
             visible: false,
-            key: 'BewteenSpace',
+            key: 'BetweenSpace',
         });
   }
 
