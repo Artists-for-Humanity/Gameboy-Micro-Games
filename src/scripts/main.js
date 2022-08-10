@@ -4,10 +4,16 @@ import GlobalState from "./GlobalState";
 import Emeowgency from "./8Bitties/Emeowgency";
 import ColorLab from "./8Bitties/ColorLab";
 import MicroGame11 from "./DebugginDaOpps/MicroGame11";
+import Highest2Lowest from "./TeamInflation/Highest2Lowest";
+import FrogJump from "./TeamInflation/FrogJump";
+import CircleGame from "./TeamInflation/CircleGame";
+import BewteenSpace from "./TeamInflation/BetweenSpace";
 import ColorPasscode from "./MicroGamers/ColorPasscode";
 import HideFromCat from "./MicroGamers/HideFromCat";
 import HitTheButton from "./MicroGamers/HitTheButton";
-import MicroGame31 from "./Team4/MicroGame31";
+import TugOWar from "./8Bitties/TugOWar";
+import FlySwat from "./8Bitties/FlySwat";
+import DrinkPour from "./8Bitties/DrinkPour";
 import SockToss from "./Team Notateam/socktoss";
 import CutScreen from "./Team Notateam/CutScreen";
 import MainMenu from "./MainMenu";
@@ -18,6 +24,7 @@ const config = {
   width: 1080,
   height: 720,
   transparent: true,
+  // backgroundColor: '#4488aa',
 
   // Add physics, arcade, scene, and audio
   physics: {
@@ -26,7 +33,7 @@ const config = {
       gravity: {
         y: 0,
       },
-      debug: false,
+      debug: true,
     },
   },
   scene: [HitTheButton],
