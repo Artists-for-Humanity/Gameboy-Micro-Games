@@ -38,6 +38,7 @@ const config = {
       debug: false,
     },
   },
+<<
   scene: [
     MainMenu,
     Emeowgency,
