@@ -42,6 +42,11 @@ export default class FrogJump extends Phaser.Scene {
                 frameWidth: 332,
                 frameHeight: 163
             });
+        this.load.spritesheet("flies", new URL("./assets/frogJump/fly.png",
+            import.meta.url).href, {
+            frameWidth: 299,
+            frameHeight: 160 
+        });    
         this.load.image('sky', new URL("./assets/frogJump/bkg2.png",
             import.meta.url).href);
         this.load.image('jump1', new URL("./assets/frogJump/frogjump1.png",
@@ -51,8 +56,8 @@ export default class FrogJump extends Phaser.Scene {
         this.load.image('ground', new URL("./assets/frogJump/bigplatform.png",
             import.meta.url).href);
             
-        this.load.image('star', new URL("./assets/frogJump/starPH.png",
-            import.meta.url).href);
+        // this.load.image('star', new URL("./assets/frogJump/starPH.png",
+        //     import.meta.url).href);
         this.load.image('Jump', new URL("./assets/frogJump/Jump.png",
             import.meta.url).href);
             this.load.image('win', new URL("./assets/frogJump/win.png",
@@ -125,7 +130,7 @@ export default class FrogJump extends Phaser.Scene {
             this.platforms.create(0, 30, "platform").setScale(1.5,0.2).refreshBody();
             this.platforms.create(500, 150, "platform").setScale(0.2).refreshBody();
             this.stars = this.physics.add.group();
-            this.stars.create(150, -5, 'star');
+            this.stars.create(150, -5, 'flies').setScale(0.2,0.2)
             this.delayTime = 10000;
         }
         else if(level === 1) {
@@ -141,7 +146,7 @@ export default class FrogJump extends Phaser.Scene {
             this.platforms.create(980, 75, 'ground').setScale(0.2).refreshBody();
             this.platforms.create(850, 75, 'ground').setScale(0.2).refreshBody();
             this.stars = this.physics.add.group();
-            this.stars.create(900, 40, 'star');
+            this.stars.create(900, 40, 'files');
             this.delayTime = 13000;
         }
         else {
@@ -156,7 +161,7 @@ export default class FrogJump extends Phaser.Scene {
             this.platforms.create(620, 30, 'ground').setScale(1, 0.2).refreshBody();
             this.platforms.create(900, -30, 'ground').setScale(0.2).refreshBody();
             this.stars = this.physics.add.group();
-            this.stars.create(1070, 180, 'star');
+            this.stars.create(1070, 180, 'flies');
             this.delayTime = 14000;
         }
     }

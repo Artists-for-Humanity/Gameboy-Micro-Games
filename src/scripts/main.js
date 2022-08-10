@@ -21,10 +21,10 @@ const config = {
       gravity: {
         y: 0,
       },
-      debug: true,
+      debug: false,
     },
   },
-  scene: [FrogJump],
+  scene: [Highest2Lowest],
   audio: {
     disableWebAudio: true,
   },
