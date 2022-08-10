@@ -32,9 +32,7 @@ const config = {
       debug: true,
     },
   },
-
-
-  scene: [CutScreen],
+  scene: [Highest2Lowest],
   audio: {
     disableWebAudio: true,
   },
