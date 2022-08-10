@@ -25,7 +25,7 @@ export default class FrogJump extends Phaser.Scene {
         this.startGameDelay;
         this.platforms;
         this.ground
-        this.stars;
+        this.fly;
         this.delayTime;
         this.randomNum = Math.floor(Math.random() * 3);
         this.victory = false;
@@ -44,7 +44,7 @@ export default class FrogJump extends Phaser.Scene {
                 frameWidth: 332,
                 frameHeight: 163
             });
-        this.load.spritesheet("flies", new URL("./assets/frogJump/fly.png",
+        this.load.spritesheet("fly", new URL("./assets/frogJump/fly.png",
             import.meta.url).href, {
             frameWidth: 299,
             frameHeight: 160 
@@ -57,9 +57,6 @@ export default class FrogJump extends Phaser.Scene {
             import.meta.url).href);
         this.load.image('ground', new URL("./assets/frogJump/bigplatform.png",
             import.meta.url).href);
-            
-        // this.load.image('star', new URL("./assets/frogJump/starPH.png",
-        //     import.meta.url).href);
         this.load.image('Jump', new URL("./assets/frogJump/Jump.png",
             import.meta.url).href);
             this.load.image('win', new URL("./assets/frogJump/win.png",
@@ -111,7 +108,7 @@ export default class FrogJump extends Phaser.Scene {
         this.physics.add.collider(this.playerSprite, this.platforms, this.offGroundMethod, null, this);
         this.physics.add.collider(this.playerSprite, this.grounds, this.testGroundCollide, null, this);
         this.physics.add.collider(this.playerSprite, this.ground);
-        this.physics.add.overlap(this.playerSprite, this.stars, this.destroyStar, null, this);
+        this.physics.add.overlap(this.playerSprite, this.fly, this.destroyFly, null, this);
         this.cam = this.cameras.main;
         this.cam.setBounds(0, -500, 1080, 1220);
         this.cameras.main.startFollow(this.playerSprite);
@@ -123,57 +120,55 @@ export default class FrogJump extends Phaser.Scene {
     }
 
     generatePlatform(level) {
+        this.platforms = this.physics.add.staticGroup();
         if(level === 0) {
-            this.platforms = this.physics.add.staticGroup();
-            console.log(this.platforms);
+            console.log('reach me 00')
 
             this.platforms.create(500, 450, 'platform').setScale(0.2).refreshBody();
             this.platforms.create(720, 250, 'platform').setScale(0.2).refreshBody();
             this.platforms.create(0, 30, "platform").setScale(1.5,0.2).refreshBody();
             this.platforms.create(500, 150, "platform").setScale(0.2).refreshBody();
-            this.stars = this.physics.add.group();
-            this.stars.create(150, -5, 'flies').setScale(0.2,0.2)
+            this.fly = this.physics.add.sprite(150, -5, 'fly').setScale(0.2, 0.2);
             this.delayTime = 10000;
         }
         else if(level === 1) {
-            console.log('reach me 00')
-            this.platforms = this.physics.add.staticGroup();
-            this.platforms.create(680, 450, 'ground').setScale(0.2).refreshBody();
-            this.platforms.create(535, 250, 'ground').setScale(0.2).refreshBody();
-            this.platforms.create(250, 150, "ground").setScale(0.2).refreshBody();
-            this.platforms.create(440, -60, "ground").setScale(0.2).refreshBody();
-            this.platforms.create(680, -150, 'ground').setScale(0.2).refreshBody();
-            this.platforms.create(900, 5, "ground").setScale(0.2).refreshBody();
-            this.platforms.create(900, 75, "ground").setScale(0.2).refreshBody();
-            this.platforms.create(980, 75, 'ground').setScale(0.2).refreshBody();
-            this.platforms.create(850, 75, 'ground').setScale(0.2).refreshBody();
-            this.stars = this.physics.add.group();
-            this.stars.create(900, 40, 'files');
+            console.log('reach me 01')
+            this.platforms.create(680, 450, 'platform').setScale(0.2).refreshBody();
+            this.platforms.create(535, 250, 'platform').setScale(0.2).refreshBody();
+            this.platforms.create(250, 150, "platform").setScale(0.2).refreshBody();
+            this.platforms.create(440, -60, "platform").setScale(0.2).refreshBody();
+            this.platforms.create(680, -150, 'platform').setScale(0.2).refreshBody();
+            this.platforms.create(900, 5, "platform").setScale(0.2).refreshBody();
+            this.platforms.create(900, 75, "platform").setScale(0.2).refreshBody();
+            this.platforms.create(980, 75, 'platform').setScale(0.2).refreshBody();
+            this.platforms.create(850, 75, 'platform').setScale(0.2).refreshBody();
+            this.fly = this.physics.add.sprite(900, 40, 'fly').setScale(0.2, 0.2);
             this.delayTime = 13000;
         }
         else {
-            this.platforms = this.physics.add.staticGroup();
-            this.platforms.create(40, 450, 'ground').setScale(0.2).refreshBody();
-            this.platforms.create(800, 430, 'ground').setScale(0.2).refreshBody();
-            this.platforms.create(1090, 200, 'ground').setScale(0.2).refreshBody();
-            this.platforms.create(700, 230, 'ground').setScale(0.2).refreshBody();
-            this.platforms.create(600, 150, 'ground').setScale(0.2).refreshBody();
-            this.platforms.create(500, 110, 'ground').setScale(0.2).refreshBody();
-            this.platforms.create(360, 200, 'ground').setScale(0.2).refreshBody();
-            this.platforms.create(620, 30, 'ground').setScale(1, 0.2).refreshBody();
-            this.platforms.create(900, -30, 'ground').setScale(0.2).refreshBody();
-            this.stars = this.physics.add.group();
-            this.stars.create(1070, 180, 'flies');
+            console.log('reach me 02')
+
+            this.platforms.create(40, 450, 'platform').setScale(0.2).refreshBody();
+            this.platforms.create(800, 430, 'platform').setScale(0.2).refreshBody();
+            this.platforms.create(1090, 200, 'platform').setScale(0.2).refreshBody();
+            this.platforms.create(700, 230, 'platform').setScale(0.2).refreshBody();
+            this.platforms.create(600, 150, 'platform').setScale(0.2).refreshBody();
+            this.platforms.create(500, 110, 'platform').setScale(0.2).refreshBody();
+            this.platforms.create(360, 200, 'platform').setScale(0.2).refreshBody();
+            this.platforms.create(620, 30, 'platform').setScale(1, 0.2).refreshBody();
+            this.platforms.create(900, -30, 'platform').setScale(0.2).refreshBody();
+            this.fly = this.physics.add.sprite(1070, 180, 'fly').setScale(0.2, 0.2);
             this.delayTime = 14000;
         }
     }
 
     update() { 
-        // this.platforms.anims.play('idleLeaf')
         this.platforms.getChildren().forEach((platform) => {
-            // console.log(platform);
             platform.anims.play('idleLeaf', true);
           });
+
+          this.fly.anims.play('flying', true);
+
         if (this.playerSprite.x >= 1064) this.playerSprite.x = 1064;
         if(this.playerSprite.x <= 16) this.playerSprite.x = 16;
 
@@ -198,8 +193,9 @@ export default class FrogJump extends Phaser.Scene {
         console.log(this.gameOver, this.victory)
     }
 
-    destroyStar(playerSprite, star) {
-        star.destroy();
+    destroyFly(playerSprite, fly) {
+        // fly.destroy();
+        this.fly.setVisible(false)
         this.winText.setVisible(true);
         this.winState = true;
         this.physics.pause();
@@ -235,6 +231,20 @@ export default class FrogJump extends Phaser.Scene {
     }
 
     createAnimation() {
+
+        this.anims.create({
+            key: 'flying',
+            frames: [
+                {key: 'fly', frame: 0},
+                {key: 'fly', frame: 1},
+                {key: 'fly', frame: 2},
+                {key: 'fly', frame: 3},
+                {key: 'fly', frame: 4},
+                {key: 'fly', frame: 5}
+            ],
+            frameRate: 3,
+            repeat: -1
+        });
         this.anims.create({
             key: 'idleLeaf',
             frames: [
