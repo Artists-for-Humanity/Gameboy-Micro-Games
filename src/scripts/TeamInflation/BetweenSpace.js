@@ -8,6 +8,8 @@ export default class BetweenSpace extends Phaser.Scene {
             key: 'BetweenSpace',
         });
         this.lose = false;
+        this.gameOver = false;
+        this.victory = false;
   }
         
 
@@ -27,14 +29,18 @@ export default class BetweenSpace extends Phaser.Scene {
         });
         this.load.image(this.load.image('star', new URL("./assets/frogJump/starPH.png",
             import.meta.url).href));
+
+        this.load.image('win', new URL("./assets/frogJump/win.png",
+            import.meta.url).href);
+        this.load.image('lose', new URL("./assets/frogJump/youlosefrog.png",
+            import.meta.url).href);
         
         
     }
 
     create(){
-    this.gameWidth = this.game.config.width;
-    this.gameHeight = this.game.config.height;
-
+      this.gameWidth = this.game.config.width;
+      this.gameHeight = this.game.config.height;
     this.add.image(this.gameWidth/2, this.gameHeight/2, "background");
     this.player = this.physics.add.sprite(100,360, "rocket")
     this.player.setSize(50, 50)
@@ -73,10 +79,21 @@ export default class BetweenSpace extends Phaser.Scene {
         frameRate: 30,
         repeat: -1
     });
+
+    
+    this.loseText = this.add.image(240, 290,'lose')
+    this.loseText.setScrollFactor(0);
+    this.loseText.setOrigin(0,0);
+    this.loseText.setVisible(false);
+
+    this.winText = this.add.image(240, 220,'win');
+    this.winText.setOrigin(0,0);
+    this.winText.setScrollFactor(0);
+    this.winText.setVisible(false);
     }
 
     update() {
-     
+     console.log(this.victory, this.gameOver)
       if(this.lose === false){
           if (this.cursors.up.isDown) {
             this.player.y -= 5;
@@ -123,6 +140,8 @@ export default class BetweenSpace extends Phaser.Scene {
     loseState() {
       this.physics.pause();
       this.lose = true;
+      this.loseText.setVisible(true);
+      this.gameOver = true;
     }
 
     createAsteroids() {
@@ -142,6 +161,9 @@ export default class BetweenSpace extends Phaser.Scene {
       this.goal.destroy();
       this.physics.pause();
       this.lose = true;
+      this.winText.setVisible(true)
+      this.gameOver = true;
+      this.victory = true;
     }
 
     }
