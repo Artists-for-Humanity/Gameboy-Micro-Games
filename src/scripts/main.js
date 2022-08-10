@@ -56,10 +56,6 @@ const config = {
     TugOWar,
     FlySwat,
     DrinkPour,
-    // SockToss,
-    // CutScreen,
-    // TODO: 
-    // figure out why the two scenes above will load on top of the main menu
   ],
   audio: {
     disableWebAudio: true,

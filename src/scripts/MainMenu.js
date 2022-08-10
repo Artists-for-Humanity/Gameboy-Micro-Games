@@ -27,8 +27,6 @@ export default class MainMenu extends Phaser.Scene {
 
         this.load.image('bg1', new URL('gameAssets/bgframe.png', import.meta.url).href);
         this.load.image('bg2', new URL('gameAssets/framemetalplates.png', import.meta.url).href);
-        this.load.image('exit', new URL('gameAssets/exit.png', import.meta.url).href);
-        this.load.image('options', new URL('gameAssets/options.png', import.meta.url).href);
         this.load.image('play', new URL('gameAssets/play.png', import.meta.url).href);
         this.load.image('finger', new URL('gameAssets/finger.png', import.meta.url).href);
 
@@ -39,11 +37,9 @@ export default class MainMenu extends Phaser.Scene {
         this.add.image(540, 360, 'bg1');
         this.add.image(540, 360, 'bg2');
         this.playBtn = this.add.image(540, 390, 'play');
-        this.optionBtn = this.add.image(540, this.playBtn.y + this.playBtn.displayHeight, 'options');
-        this.exitBtn = this.add.image(540, this.optionBtn.y + this.optionBtn.displayHeight, 'exit');
         this.fingerIcon = this.add.image(250, this.playBtn.y, 'finger').setScale(0.2);
 
-        this.globalState.setText('Micro Games', this);
+        //this.globalState.setText('title of the game', this);
 
         this.btns = [this.playBtn, this.optionBtn, this.exitBtn];
         this.currentBottonIndex = 0;
