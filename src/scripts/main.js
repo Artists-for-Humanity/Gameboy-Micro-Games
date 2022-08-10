@@ -31,7 +31,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [Emeowgency],
+  scene: [ColorLab],
   audio: {
     disableWebAudio: true,
   },

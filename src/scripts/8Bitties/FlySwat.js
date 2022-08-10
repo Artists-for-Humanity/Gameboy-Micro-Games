@@ -18,8 +18,9 @@ export default class FlySwat extends Phaser.Scene {
     this.swingCD = 100;
     this.swung = false;
     this.timer = 0;
-    this.gameover = false;
+    this.gameOver = false;
     this.dead = false;
+    this.victory = false;
   }
   preload() {
     this.load.image(
@@ -174,7 +175,7 @@ export default class FlySwat extends Phaser.Scene {
     });
   }
   swing() {
-    if (this.swatter && this.gameover === false) {
+    if (this.swatter && this.gameOver === false) {
       if (this.swung === true) {
         this.swingCD -= 10;
       }
@@ -193,7 +194,8 @@ export default class FlySwat extends Phaser.Scene {
           )
         ) {
           this.killFly();
-          this.gameover = true;
+          this.victory = true;
+          this.gameOver = true;
         }
       }
     }

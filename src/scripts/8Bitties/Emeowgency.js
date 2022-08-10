@@ -30,7 +30,7 @@ export default class Emeowgency extends Phaser.Scene {
     this.cat;
     this.blanket;
     this.shadow;
-    this.win = false;
+    this.victory = false;
     this.lose = false;
     this.gameOver = false;
   }
@@ -185,7 +185,7 @@ export default class Emeowgency extends Phaser.Scene {
         if (
           Phaser.Geom.Rectangle.Overlaps(this.shadow.body, this.blanket.body)
         ) {
-          this.win === true;
+          this.victory === true;
           this.blanket.anims.play("cushion", true);
           this.youWin();
           this.cat.setScale(0.5);
@@ -194,7 +194,7 @@ export default class Emeowgency extends Phaser.Scene {
           return;
         }
 
-        if (this.win === false) {
+        if (this.victory === false) {
           this.youLose();
           this.shadowTimer = 0;
         }
@@ -300,8 +300,9 @@ export default class Emeowgency extends Phaser.Scene {
         { key: "blanketSheet", frame: 2 },
         { key: "blanketSheet", frame: 3 },
         { key: "blanketSheet", frame: 4 },
+        { key: "blanketSheet", frame: 5 },
       ],
-      frameRate: 20,
+      frameRate: 15,
       repeat: 0,
     });
   }
