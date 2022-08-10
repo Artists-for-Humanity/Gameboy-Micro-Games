@@ -31,6 +31,7 @@ export default class Emeowgency extends Phaser.Scene {
     this.blanket;
     this.shadow;
     this.win = false;
+    this.lose = false;
     this.gameOver = false;
   }
 
@@ -68,6 +69,26 @@ export default class Emeowgency extends Phaser.Scene {
       {
         frameWidth: 86.8,
         frameHeight: 58,
+      }
+    );
+    this.load.spritesheet(
+      "blanketSheet",
+      new URL(
+        "../8Bitties/assets/Emeowgency/blanketSpriteSheet.png",
+        import.meta.url
+      ).href,
+      {
+        frameWidth: 617,
+        frameHeight: 465,
+      }
+    );
+    this.load.spritesheet(
+      "yangSafe",
+      new URL("../8Bitties/assets/Emeowgency/yangSafe.png", import.meta.url)
+        .href,
+      {
+        frameWidth: 354,
+        frameHeight: 185,
       }
     );
   }
@@ -134,20 +155,21 @@ export default class Emeowgency extends Phaser.Scene {
     const position = this.getRandomPosition();
     this.shadow = this.physics.add.sprite(position.x, position.y, "yang");
     this.shadow.alpha = 0.5;
+    this.shadow.body.setSize(24, 24);
   }
 
   spawnBlanket() {
     this.blanket = this.physics.add
-      .image(480, 360, "Blanket")
+      .sprite(480, 360, "blanketSheet")
       .setScale(0.65)
       .setDepth(-10);
-    this.blanket.body.setSize(400, 300);
+    this.blanket.body.setSize(350, 250);
   }
 
   //spawns the cat above the Shadow based on how long shadow takes to get big
   spawnCat() {
-    this.cat = this.physics.add
-      .sprite(this.shadow.x, this.shadow.y - 83 * 4, "yang")
+    this.cat = this.add
+      .sprite(this.shadow.x, this.shadow.y - 83 * 4, "yangSafe")
       .setScale(1.9);
   }
 
@@ -163,13 +185,18 @@ export default class Emeowgency extends Phaser.Scene {
         if (
           Phaser.Geom.Rectangle.Overlaps(this.shadow.body, this.blanket.body)
         ) {
-          this.win = true;
-        }
-        if (this.win === true) {
+          this.win === true;
+          this.blanket.anims.play("cushion", true);
           this.youWin();
+          this.cat.setScale(0.5);
+          this.cat.anims.play("safe");
+          this.shadowTimer = 0;
+          return;
         }
+
         if (this.win === false) {
           this.youLose();
+          this.shadowTimer = 0;
         }
         this.shadowTimer = 0;
       }
@@ -177,18 +204,8 @@ export default class Emeowgency extends Phaser.Scene {
   }
 
   playanimations() {
-    if (this.catSafe === true) {
-      this.cat.anims.play("safe", true);
-      return;
-    }
-    if (this.catFall === true) {
-      this.cat.anims.play("fall", true);
-      return;
-    }
-    if (this.catFail === true) {
-      this.cat.anims.play("fail", true);
-      return;
-    }
+    if (this.catFall === true) this.cat.anims.play("fall", true);
+    if (this.catFail === true) this.cat.anims.play("fail", true);
   }
 
   //moves the blanket with arrow keys
@@ -242,46 +259,49 @@ export default class Emeowgency extends Phaser.Scene {
   createAnimations() {
     this.anims.create({
       key: "shadow",
-      frames: [
-        {
-          key: "yang",
-          frame: 0,
-        },
-      ],
+      frames: [{ key: "yang", frame: 0 }],
       frameRate: 1,
       repeat: 0,
     });
     this.anims.create({
       key: "safe",
       frames: [
-        {
-          key: "yang",
-          frame: 3,
-        },
+        { key: "yangSafe", frame: 1 },
+        { key: "yangSafe", frame: 2 },
+        { key: "yangSafe", frame: 3 },
+        { key: "yangSafe", frame: 4 },
+        { key: "yangSafe", frame: 5 },
+        { key: "yangSafe", frame: 6 },
+        { key: "yangSafe", frame: 7 },
+        { key: "yangSafe", frame: 8 },
+        { key: "yangSafe", frame: 9 },
+        { key: "yangSafe", frame: 10 },
       ],
-      frameRate: 1,
+      frameRate: 15,
       repeat: 0,
     });
     this.anims.create({
       key: "fail",
-      frames: [
-        {
-          key: "yang",
-          frame: 2,
-        },
-      ],
+      frames: [{ key: "yang", frame: 2 }],
       frameRate: 1,
       repeat: 0,
     });
     this.anims.create({
       key: "fall",
-      frames: [
-        {
-          key: "yang",
-          frame: 1,
-        },
-      ],
+      frames: [{ key: "yang", frame: 1 }],
       frameRate: 1,
+      repeat: 0,
+    });
+    this.anims.create({
+      key: "cushion",
+      frames: [
+        { key: "blanketSheet", frame: 0 },
+        { key: "blanketSheet", frame: 1 },
+        { key: "blanketSheet", frame: 2 },
+        { key: "blanketSheet", frame: 3 },
+        { key: "blanketSheet", frame: 4 },
+      ],
+      frameRate: 20,
       repeat: 0,
     });
   }
