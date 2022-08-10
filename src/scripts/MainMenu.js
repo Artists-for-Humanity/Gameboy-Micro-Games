@@ -10,6 +10,21 @@ export default class MainMenu extends Phaser.Scene {
     }
 
     preload() {
+        this.listOfGames = [
+            "Emeowgency",
+            "ColorLab",
+            "MicroGame11",
+            "Highest2Lowest",
+            "FrogJump",
+            "CircleGame",
+            "BewteenSpace",
+            "ColorPasscode",
+            "HideFromCat",
+            "HitTheButton",
+            "TugOWar",
+            "FlySwat",
+            "DrinkPour"];
+
         this.load.image('bg1', new URL('gameAssets/bgframe.png', import.meta.url).href);
         this.load.image('bg2', new URL('gameAssets/framemetalplates.png', import.meta.url).href);
         this.load.image('exit', new URL('gameAssets/exit.png', import.meta.url).href);
@@ -47,10 +62,15 @@ export default class MainMenu extends Phaser.Scene {
             this.currentBottonIndex === 2 ? this.currentBottonIndex = 0 : this.currentBottonIndex += 1;
             this.fingerIcon.setPosition(250, this.btns[this.currentBottonIndex].y);
         } if (Phaser.Input.Keyboard.JustDown(this.space)) {
-            if (this.currentBottonIndex == 0) console.log("Game start");
+            if (this.currentBottonIndex == 0) {
+                this.scene.start(this.listOfGames[Phaser.Math.Between(0, this.listOfGames.length)]);
+            }
             if (this.currentBottonIndex == 1) console.log("Option menu");
             if (this.currentBottonIndex == 2) console.log("Exit game");
         }
     }
 
+
+
 }
+
