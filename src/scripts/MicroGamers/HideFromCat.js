@@ -32,8 +32,9 @@ export default class HideFromCat extends Phaser.Scene {
         this.sweeping = false;
         this.touched = false;
         this.textDisplayed = false;
-        this.gameover = false;
         this.gamestarted = false;
+        this.gameOver = false;
+        this.victory = false;
 
         this.startText;
         this.deadText;
@@ -130,7 +131,7 @@ export default class HideFromCat extends Phaser.Scene {
                 this.gamestarted = true;
             }, [], this);
         }
-        if (!this.gameover && this.gamestarted) {
+        if (!this.gameOver && this.gamestarted) {
             this.startSweeping();
             this.updatePlayer();
             if (this.touched) {
@@ -305,11 +306,21 @@ export default class HideFromCat extends Phaser.Scene {
         this.time.delayedCall(ms, () => { this.arrows.forEach((param) => { param.visible = false }); }, [], this);
     }
 
+    //gameOver conditional used to prevent win/loss functions from running multiple times (possible cause of lag)
     lose() {
-        if (!this.gameover) {
+        if (!this.gameOver) {
             this.time.removeAllEvents();
             this.displayDeadText();
-            this.gameover = true;
+            this.gameOver = true;
+        }
+    }
+
+    win() {
+        if (!this.gameOver) {
+            this.time.removeAllEvents();
+            this.displayWinText();
+            this.gameOver = true;
+            this.victory = true;
         }
     }
 
@@ -327,14 +338,6 @@ export default class HideFromCat extends Phaser.Scene {
                 "spotted!"]);
         this.deadText.setOrigin(0.5);
         this.deadText.depth = 20;
-    }
-
-    win() {
-        if (!this.gameover) {
-            this.time.removeAllEvents();
-            this.displayWinText();
-            this.gameover = true;
-        }
     }
 
     displayWinText() {
