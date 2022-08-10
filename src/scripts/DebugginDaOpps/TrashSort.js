@@ -14,6 +14,7 @@ export default class TrashSort extends Phaser.Scene {
     this.currTrashItem;
     this.playerScore = 0;
     this.firstTrash = Phaser.Math.Between(0, 3);
+    this.victory = false;
     this.gameOver = false;
   }
 
@@ -99,6 +100,7 @@ export default class TrashSort extends Phaser.Scene {
     if (!this.gameOver) {
       if (this.playerScore === this.triesToWin) {
         this.currTrashItem.visible = false;
+        this.victory = true;
         this.gameOver = true;
         this.endText = this.add.text(300, 250, "You Won!");
         this.endText.setStyle({

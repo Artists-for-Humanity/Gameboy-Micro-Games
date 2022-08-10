@@ -9,8 +9,9 @@ export default class CarPump extends Phaser.Scene {
 
     // Game Object Declarations
     this.gameState = true;
+    this.gameOver = false;
+    this.victory = false;
     this.startScreen;
-    this.gameOverScreen;
     this.timedEvent;
     this.lever;
     this.car25;
@@ -208,11 +209,13 @@ export default class CarPump extends Phaser.Scene {
   timerCountdown(time) {
     if (time / 1000 > 10 && this.playerPumps < this.pumpToWin) {
       this.gameState = false;
+      this.gameOver = true;
       this.gameOverScreen.visible = true;
     }
 
     if (time / 1000 > 10 && this.playerPumps >= this.pumpToWin) {
       this.gameState = false;
+      this.victory = true;
       this.endText = this.add.text(300, 360, "You Won!");
       this.endText.setStyle({
         fontSize: "100px",
@@ -224,7 +227,6 @@ export default class CarPump extends Phaser.Scene {
 
   updatePump() {
     this.playerPumps += 1;
-    console.log(this.playerPumps);
 
     this.lever.anims.play("lever-down", true);
     if (this.playerPumps === 5) {

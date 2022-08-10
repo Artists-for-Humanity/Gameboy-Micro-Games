@@ -14,13 +14,14 @@ export default class Cannon extends Phaser.Scene {
     this.totalBarrels;
     this.inputNum = 1;
     this.gameOver = false;
+    this.victory = false;
     this.tries = 0;
   }
 
   preload() {
     this.load.image(
       "startScreen",
-      new URL("./assets2/startScreen.png", import.meta.url).href
+      new URL("./assets2/add-screen.png", import.meta.url).href
     );
     this.load.image(
       "gameOverScreen",
@@ -29,10 +30,6 @@ export default class Cannon extends Phaser.Scene {
     this.load.image(
       "boats",
       new URL("./assets2/boats.png", import.meta.url).href
-    );
-    this.load.image(
-      "waves",
-      new URL("./assets2/wave-pixel.png", import.meta.url).href
     );
     this.load.image(
       "barrel",
@@ -88,7 +85,7 @@ export default class Cannon extends Phaser.Scene {
     );
     this.load.spritesheet(
       "fire",
-      new URL("./assets2/test-fire-spritesheet1.png", import.meta.url).href,
+      new URL("./assets2/fire-spritesheet.png", import.meta.url).href,
       {
         frameWidth: 700,
         frameHeight: 400,
@@ -258,7 +255,7 @@ export default class Cannon extends Phaser.Scene {
         this.gameOver = true;
         this.gameWon();
       }
-      if (this.tries >= 2 && this.totalBarrels > 0) {
+      if (this.tries >= 2 && this.totalBarrels != 0) {
         this.gameOver = true;
         this.time.delayedCall(
           2000,
@@ -278,7 +275,6 @@ export default class Cannon extends Phaser.Scene {
         this.totalBarrels -= this.selectedValue;
         if (this.selectedValue > this.barrelGrp.getChildren().length) {
           this.gameOver = true;
-          //this.gameOverScreen.setVisible(true);
           this.time.delayedCall(
             2000,
             () => {
@@ -349,6 +345,8 @@ export default class Cannon extends Phaser.Scene {
 
   gameWon() {
     if (this.gameOver === true) {
+      this.victory = true;
+      console.log(this.victory);
       this.endText = this.add.text(300, 250, "You Won!");
       this.endText.setStyle({
         fontSize: "100px",
@@ -383,8 +381,6 @@ export default class Cannon extends Phaser.Scene {
     let backUpMap = JSON.parse(JSON.stringify(this.cannonBallMap));
     delete backUpMap[this.answer[0] + "-ball"];
     delete backUpMap[this.answer[1] + "-ball"];
-
-    console.log(backUpMap);
 
     for (let i = 0; i < this.totalCannonBalls; i++) {
       let randIdx = Phaser.Math.Between(0, this.cannonBallPos.length - 1);
