@@ -1,23 +1,36 @@
 // Add imports for phaser library, scenes, and plugins
-import Phaser from 'phaser';
-import GlobalState from './GlobalState';
-import MicroGame01 from './8Bitties/MicroGame01';
-import MicroGame11 from './DebugginDaOpps/MicroGame11';
-import MicroGame21 from './MicroGamers/MicroGame21';
-import MicroGame31 from './Team4/MicroGame31';
-
-
+import Phaser from "phaser";
+import GlobalState from "./GlobalState";
+import Emeowgency from "./8Bitties/Emeowgency";
+import ColorLab from "./8Bitties/ColorLab";
+import CarPump from "./DebugginDaOpps/CarPump";
+import TrashSort from "./DebugginDaOpps/TrashSort";
+import Cannon from "./DebugginDaOpps/Cannon";
+import Highest2Lowest from "./TeamInflation/Highest2Lowest";
+import FrogJump from "./TeamInflation/FrogJump";
+import CircleGame from "./TeamInflation/CircleGame";
+import BewteenSpace from "./TeamInflation/BetweenSpace";
+import ColorPasscode from "./MicroGamers/ColorPasscode";
+import HideFromCat from "./MicroGamers/HideFromCat";
+import HitTheButton from "./MicroGamers/HitTheButton";
+import TugOWar from "./8Bitties/TugOWar";
+import FlySwat from "./8Bitties/FlySwat";
+import DrinkPour from "./8Bitties/DrinkPour";
+import SockToss from "./Team Notateam/socktoss";
+import CutScreen from "./Team Notateam/CutScreen";
+import MainMenu from "./MainMenu";
 
 // Set configuration for phaser game instance
 const config = {
   type: Phaser.AUTO,
   width: 1080,
   height: 720,
-  backgroundColor: '#808080',
+  transparent: true,
+  // backgroundColor: '#4488aa',
 
   // Add physics, arcade, scene, and audio
   physics: {
-    default: 'arcade',
+    default: "arcade",
     arcade: {
       gravity: {
         y: 0,
@@ -25,18 +38,20 @@ const config = {
       debug: false,
     },
   },
-  scene: [MicroGame21],
+  scene: [
+    CutScreen, SockToss, HideFromCat, ColorPasscode, HitTheButton
+  ],
   audio: {
     disableWebAudio: true,
   },
   plugins: {
     global: [
       {
-        key: 'GlobalState',
+        key: "GlobalState",
         plugin: GlobalState,
         start: false,
-        mapping: 'globalState'
-      }
+        mapping: "globalState",
+      },
     ],
   },
 };
