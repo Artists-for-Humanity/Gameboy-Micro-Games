@@ -4,7 +4,7 @@ import GlobalState from "./GlobalState";
 import Emeowgency from "./8Bitties/Emeowgency";
 import ColorLab from "./8Bitties/ColorLab";
 import MicroGame11 from "./DebugginDaOpps/MicroGame11";
-import Highest2Lowest from "./TeamInflation/Highest2Lowest";
+import Lowest from "./TeamInflation/Lowest";
 import FrogJump from "./TeamInflation/FrogJump";
 import CircleGame from "./TeamInflation/CircleGame";
 import BewteenSpace from "./TeamInflation/BetweenSpace";
