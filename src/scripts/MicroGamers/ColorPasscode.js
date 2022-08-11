@@ -1,3 +1,4 @@
+import eventsCenter from '../EventsCenter'
 export default class ColorPasscode extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
@@ -21,6 +22,7 @@ export default class ColorPasscode extends Phaser.Scene {
         this.started = false;
         this.gameOver = false;
         this.victory = false;
+        this.sent = false;
         this.startTimer = 0;
         this.lightRed, this.lightYellow, this.lightPurple, this.lightBlue;
         this.lightColorButtons = [];
@@ -139,6 +141,12 @@ export default class ColorPasscode extends Phaser.Scene {
 
         if (this.interactive && this.guessNum <= 4) { 
             this.userInput();
+        }
+
+        if(this.gameOver && !this.sent){
+            eventsCenter.emit('game-end', this.victory)
+            console.log('emission sent')
+            this.sent = true
         }
     }
 

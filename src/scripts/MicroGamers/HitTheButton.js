@@ -1,3 +1,5 @@
+import eventsCenter from '../EventsCenter'
+
 export default class HitTheButton extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
@@ -12,6 +14,7 @@ export default class HitTheButton extends Phaser.Scene {
         this.gameActive = false;
         this.gameOver = false;
         this.victory = false;
+        this.sent = false;
         this.table;
         this.button;
         this.myName;
@@ -141,7 +144,11 @@ export default class HitTheButton extends Phaser.Scene {
                 this.time.delayedCall(700, () => { this.endGame(); }, [], this);         
             }
         }
-
+        if(this.gameOver && !this.sent){
+            eventsCenter.emit('game-end', this.victory)
+            console.log('emission sent')
+            this.sent = true
+        }
     }
 
     createAnims() {

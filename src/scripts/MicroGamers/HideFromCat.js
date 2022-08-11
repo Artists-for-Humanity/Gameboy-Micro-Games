@@ -1,3 +1,4 @@
+import eventsCenter from '../EventsCenter'
 export default class HideFromCat extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
@@ -35,6 +36,7 @@ export default class HideFromCat extends Phaser.Scene {
         this.gamestarted = false;
         this.gameOver = false;
         this.victory = false;
+        this.sent = false;
 
         this.startText;
         this.deadText;
@@ -144,6 +146,11 @@ export default class HideFromCat extends Phaser.Scene {
                     this.time.delayedCall(300, () => { this.arrowTimer = 0; }, [], this);
                 }
             }
+        }
+        if(this.gameOver && !this.sent){
+            eventsCenter.emit('game-end', this.victory)
+            console.log('emission sent')
+            this.sent = true
         }
     }
 

@@ -294,9 +294,9 @@ export default class CutScreen extends Phaser.Scene {
     }
     closecon(){
 
-        if(this.roundNumber > 0){
-            this.endGame()
-        }
+        // if(this.roundNumber > 0){
+        //     this.endGame()
+        // }
 
         if(!this.lost){
             this.faceplate.anims.play('win1').once('animationcomplete', () => {
@@ -330,6 +330,9 @@ export default class CutScreen extends Phaser.Scene {
             this.scene.sendToBack(this.currentScene)
             this.scene.run(this.currentScene)
             console.log(this.currentScene +" should be running...")
+            console.log('00: ' + this.roundNumber);
+            console.log('01: ' + this.game.scene.scenes.length)
+
             this.roundNumber++
             this.open = true
         }, 2000)
