@@ -38,7 +38,6 @@ const config = {
       debug: false,
     },
   },
-<<
   scene: [
     MainMenu,
     Emeowgency,
@@ -54,7 +53,6 @@ const config = {
     FlySwat,
     DrinkPour,
   ],
-
   audio: {
     disableWebAudio: true,
   },

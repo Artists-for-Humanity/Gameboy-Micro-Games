@@ -7,41 +7,42 @@ export default class FlySwat extends Phaser.Scene {
       key: "FlySwat",
     });
     this.swatter;
+    this.fly;
     this.swatdown = false;
-    this.deadFlytimer = 0;
-    this.deadFlyScale = 0;
     this.deadFly;
     this.swatTimer = 2;
     this.swatTextTimer = 0;
     this.swatTextScale = 0;
-    this.fly;
     this.gamestart = false;
-    this.timer = 0;
     this.flightPattern;
     this.swingCD = 100;
     this.swung = false;
+    this.timer = 0;
+    this.gameOver = false;
+    this.dead = false;
+    this.victory = false;
   }
   preload() {
     this.load.image(
       "dead",
-      new URL("../8Bitties/assets/flySwat/deadfly.png", import.meta.url).href
+      new URL("../8Bitties/assets/FlySwat/deadfly.png", import.meta.url).href
     );
     this.load.image(
       "holder",
-      new URL("../8Bitties/assets/flySwat/imageholder.png", import.meta.url)
+      new URL("../8Bitties/assets/FlySwat/imageholder.png", import.meta.url)
         .href
     );
     this.load.image(
       "swat",
-      new URL("../8Bitties/assets/flySwat/swatText.png", import.meta.url).href
+      new URL("../8Bitties/assets/FlySwat/swatText.png", import.meta.url).href
     );
     this.load.image(
       "kitchen",
-      new URL("../8Bitties/assets/flySwat/kitchenbg.png", import.meta.url).href
+      new URL("../8Bitties/assets/FlySwat/kitchenbg.png", import.meta.url).href
     );
     this.load.spritesheet(
       "fly",
-      new URL("../8Bitties/assets/flySwat/fly_sheet.png", import.meta.url).href,
+      new URL("../8Bitties/assets/FlySwat/fly_sheet.png", import.meta.url).href,
       {
         frameWidth: 190,
         frameHeight: 128,
@@ -50,12 +51,20 @@ export default class FlySwat extends Phaser.Scene {
     this.load.spritesheet(
       "swatter",
       new URL(
-        "../8Bitties/assets/flySwat/flyswatter_sheet.png",
+        "../8Bitties/assets/FlySwat/flyswatter_sheet.png",
         import.meta.url
       ).href,
       {
         frameWidth: 322,
         frameHeight: 430,
+      }
+    );
+    this.load.spritesheet(
+      "explosion",
+      new URL("../8Bitties/assets/FlySwat/boomSheet.png", import.meta.url).href,
+      {
+        frameWidth: 140,
+        frameHeight: 130,
       }
     );
   }
@@ -66,22 +75,17 @@ export default class FlySwat extends Phaser.Scene {
     this.createKeys();
   }
   update() {
+    this.playSwatText();
+    if (!this.dead) this.moveFly();
     this.moveSwatter();
     this.swing();
-    this.moveFly();
-    this.playSwatText();
-
-    if (this.deadFly) {
-      this.animateDeadFly();
-    }
+    //this.animateDeadFly();
   }
   gameStart() {
     this.flightPattern = Math.floor(Math.random() * 2);
-    this.fly = this.physics.add
-      .sprite(540, 360, "fly")
-      .anims.play("flying", true)
-      .body.setCircle(32)
-      .setOffset(32, 32);
+    this.fly = this.physics.add.sprite(540, 360, "fly");
+    this.fly.anims.play("flying", true);
+    this.fly.body.setCircle(32).setOffset(32, 32);
     this.swatter = this.physics.add.sprite(500, 450, "swatter");
     this.swatter.body.setSize(128, 160).setOffset(128, 32);
     this.gamestart = true;
@@ -99,17 +103,10 @@ export default class FlySwat extends Phaser.Scene {
     }
   }
   killFly() {
-    console.log("dead");
-    this.deadFly = this.add.image(this.fly.x, this.fly.y, "dead");
-    this.fly.destroy();
+    this.fly.anims.play("crash");
+    this.dead = true;
   }
-  animateDeadFly() {
-    if (this.deadFlyScale > 0.25) {
-      this.deadFlyTimer++;
-      this.deadFlyScale += this.deadFlytimer / 1;
-      this.deadFly.setScale(this.deadFlyScale);
-    }
-  }
+
   moveFly() {
     if (this.fly) {
       this.timer += 0.1;
@@ -150,11 +147,37 @@ export default class FlySwat extends Phaser.Scene {
       frameRate: 1,
       repeat: 0,
     });
+    this.anims.create({
+      key: "crash",
+      frames: [
+        { key: "explosion", frame: 0 },
+        { key: "explosion", frame: 1 },
+        { key: "explosion", frame: 2 },
+        { key: "explosion", frame: 3 },
+        { key: "explosion", frame: 4 },
+        { key: "explosion", frame: 5 },
+        { key: "explosion", frame: 6 },
+        { key: "explosion", frame: 7 },
+        { key: "explosion", frame: 8 },
+        { key: "explosion", frame: 9 },
+        { key: "explosion", frame: 12 },
+        { key: "explosion", frame: 13 },
+        { key: "explosion", frame: 14 },
+        { key: "explosion", frame: 15 },
+        { key: "explosion", frame: 16 },
+        { key: "explosion", frame: 17 },
+        { key: "explosion", frame: 18 },
+        { key: "explosion", frame: 19 },
+        { key: "explosion", frame: 20 },
+      ],
+      frameRate: 10,
+      repeat: 0,
+    });
   }
   swing() {
-    if (this.swatter) {
+    if (this.swatter && this.gameOver === false) {
       if (this.swung === true) {
-        this.swingCD -= 2;
+        this.swingCD -= 10;
       }
       if (this.swingCD <= 0) {
         this.swatter.anims.play("up", true);
@@ -164,9 +187,15 @@ export default class FlySwat extends Phaser.Scene {
       if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
         this.swatter.anims.play("down", true);
         this.swung = true;
-        if (Phaser.Geom.Rectangle.Overlaps(this.swatter.body, this.fly)) {
-          console.log("hit");
+        if (
+          Phaser.Geom.Intersects.CircleToRectangle(
+            this.fly.body,
+            this.swatter.body
+          )
+        ) {
           this.killFly();
+          this.victory = true;
+          this.gameOver = true;
         }
       }
     }
@@ -185,16 +214,16 @@ export default class FlySwat extends Phaser.Scene {
   moveSwatter() {
     if (this.swung === false && this.swatter) {
       if (this.up.isDown) {
-        this.swatter.y -= 5;
+        this.swatter.y -= 7;
       }
       if (this.down.isDown) {
-        this.swatter.y += 5;
+        this.swatter.y += 7;
       }
       if (this.left.isDown) {
-        this.swatter.x -= 5;
+        this.swatter.x -= 7;
       }
       if (this.right.isDown) {
-        this.swatter.x += 5;
+        this.swatter.x += 7;
       }
     }
   }
