@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import eventsCenter from '../EventsCenter'
 
 const SCALE_MULTIPLIER = 4.5
 const METER_WIDTH= 108
@@ -8,7 +9,7 @@ export default class SockToss extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
         super({
-            active: true,
+            active: false,
             visible: true,
             key: 'SockToss',
             physics: {
@@ -21,7 +22,7 @@ export default class SockToss extends Phaser.Scene {
         // determines how low the sock can fall     
         this.floorval
         // number tells us if the game is won - 0 for ongoing, 1 for won, 2 for lost
-        this.victory
+        this.victory = false
         // tells us how full the meter is
         this.meterX
         // tells us if the meter should be decreasing or increasing
@@ -59,6 +60,9 @@ export default class SockToss extends Phaser.Scene {
         // tossing ranges
         this.xrange
         this.yrange
+
+        this.gameOver = false
+        this.sent = false
     }
 
     preload() {
@@ -75,8 +79,8 @@ export default class SockToss extends Phaser.Scene {
         this.load.image('meter_frame', new URL('assets/meter_frame.png', import.meta.url).href)
         this.load.image('sock', new URL('assets/sock.png', import.meta.url).href)
         this.load.image('toss', new URL('assets/toss.png', import.meta.url).href)
-        this.load.image('win', new URL('assets/win.png', import.meta.url).href)
-        this.load.image('lose', new URL('assets/lose.png', import.meta.url).href)
+        this.load.image('sock_win', new URL('assets/win.png', import.meta.url).href)
+        this.load.image('sock_lose', new URL('assets/lose.png', import.meta.url).href)
     }
 
     create() {
@@ -101,9 +105,9 @@ export default class SockToss extends Phaser.Scene {
         // Add win and lose text
         this.toss = this.add.image(1080/2, 720/2, 'toss')
         this.toss.setVisible(true)
-        this.win = this.add.image(1080/2, 720/2, 'win')
+        this.win = this.add.image(1080/2, 720/2, 'sock_win')
         this.win.setVisible(false)
-        this.lose = this.add.image(1080/2, 720/2, 'lose')
+        this.lose = this.add.image(1080/2, 720/2, 'sock_lose')
         this.lose.setVisible(false)
         // Add meter and frame
         this.meter = this.add.image(125 * SCALE_MULTIPLIER, 140 * SCALE_MULTIPLIER, 'meter')
@@ -127,7 +131,6 @@ export default class SockToss extends Phaser.Scene {
         this.thrown = false
         this.dropped = false
         this.player.angle += 30
-        this.victory = 0
         this.meterX = 0
         this.timer = 0
         this.timer2 = 0
@@ -146,7 +149,6 @@ export default class SockToss extends Phaser.Scene {
             frames: [{key: 'hand_lose'}]
         })      
     }
-
     update() {
         // this nested if-statement plays the intro "TOSS" text
         // Started will be set to true at the end
@@ -178,6 +180,11 @@ export default class SockToss extends Phaser.Scene {
                         this.sockstop()
                     }
                     this.endcon()
+                    if(this.gameOver && !this.sent){
+                        eventsCenter.emit('game-end', this.victory)
+                        console.log('emission sent')
+                        this.sent = true
+                    }
                 }
             }
         }
@@ -272,14 +279,14 @@ export default class SockToss extends Phaser.Scene {
             this.basket_f.body.setAllowGravity(false)
 
             this.floorval = 720 /2
-            this.victory = 1;
+            this.victory = true;
         }
         else{
             this.xrange = (-70 * this.meterX/(METER_WIDTH)) * SCALE_MULTIPLIER
             this.yrange = (-755 * this.meterX/(METER_WIDTH-28)) * SCALE_MULTIPLIER
 
             this.floorval = 720 * .75
-            this.victory = 2;
+            this.victory = false;
         }
 
         this.sock.setVelocityX(this.xrange)
@@ -297,15 +304,12 @@ export default class SockToss extends Phaser.Scene {
     endcon(){
         this.player.angle = 0
         this.hand.angle = 0
-        switch(this.victory){
-            case 1: 
-                this.wincon()
-                return
-            case 2: 
-                this.losecon()
-                return
-            default: return
+        if(this.victory){
+            this.wincon()
+        } else{
+            this.losecon()
         }
+        this.gameOver = true
     }
     wincon(){
         this.hand.anims.play('win')
@@ -323,6 +327,7 @@ export default class SockToss extends Phaser.Scene {
         else{
             this.player.scale += 0.01
         }
+        // close doors
     }
     losecon(){
         this.hand.anims.play('lose')
@@ -333,7 +338,6 @@ export default class SockToss extends Phaser.Scene {
         if (this.lose.scale < 4){
             this.lose.scale += 1/4 
         }
-        console.log(this.player.scale)
         this.dircheck(this.player.scale >= 1, this.player.scale <= 0.8)
         if(this.decreasing){
             this.player.scale -= 0.005
@@ -343,28 +347,3 @@ export default class SockToss extends Phaser.Scene {
         }
     }
 }
-
-// // Set configuration for phaser game instance
-// const config = {
-//     type: Phaser.AUTO,
-//     width: 240 * SCALE_MULTIPLIER,
-//     height: 160 * SCALE_MULTIPLIER,
-
-//     // Add physics, arcade, scene, and audio
-//     physics: {
-//         default: 'arcade',
-//         arcade: {
-//             gravity: {
-//                 y: 1000 * SCALE_MULTIPLIER,
-//             },
-//             debug: true,
-//         },
-//     },
-//     scene: GameScene,
-//     audio: {
-//         disableWebAudio: true,
-//     },
-// };
-
-// // Initialize game instance
-// new Phaser.Game(config);

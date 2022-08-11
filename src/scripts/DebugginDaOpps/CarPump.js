@@ -1,16 +1,17 @@
-export default class MicroGame11 extends Phaser.Scene {
+export default class CarPump extends Phaser.Scene {
   // Game Class Constructor
   constructor() {
     super({
       active: false,
       visible: false,
-      key: "MicroGame11",
+      key: "CarPump",
     });
 
     // Game Object Declarations
     this.gameState = true;
+    this.gameOver = false;
+    this.victory = false;
     this.startScreen;
-    this.gameOverScreen;
     this.timedEvent;
     this.lever;
     this.car25;
@@ -65,13 +66,11 @@ export default class MicroGame11 extends Phaser.Scene {
       new URL("./assets/100car_spritesheet.png", import.meta.url).href,
       { frameWidth: 1080, frameHeight: 720 }
     );
-    // console.log(this);
-    this.globalState.preload(this);
-
   }
 
   create() {
-    // this.globalState.test();
+
+
 
     this.add.image(1080 / 2, 720 / 2, "pumpgame_bg");
     this.lever = this.physics.add.sprite(955, 480, "lever");
@@ -102,30 +101,10 @@ export default class MicroGame11 extends Phaser.Scene {
     // this.globalState.test();
   }
 
-  update(time, delta) {
-    if (this.gameState) {
-      this.clickTimer += delta;
-      this.timerCountdown(time);
-      if (this.clickTimer > 100) this.clickAvailable = true;
-      if (this.cursors.up.isDown && this.downWasPressed) {
-        this.downWasPressed = false;
-        this.upWasPressed = true;
-        this.lever.anims.play("lever-up", true);
-      } else if (
-        this.cursors.down.isDown &&
-        this.upWasPressed &&
-        this.clickAvailable
-      ) {
-        this.downWasPressed = true;
-        this.upWasPressed = false;
-        this.time.delayedCall(100, this.updatePump, [], this);
-        this.clickAvailable = false;
-        this.clickTimer = 0;
-      }
-    }
-  }
+
 
   createAnimations() {
+
     // Animation for idle lever
     this.anims.create({
       key: "lever-idle",
@@ -218,14 +197,40 @@ export default class MicroGame11 extends Phaser.Scene {
     });
   }
 
+  update(time, delta) {
+    if (this.gameState) {
+      this.clickTimer += delta;
+      this.timerCountdown(time);
+      if (this.clickTimer > 100) this.clickAvailable = true;
+      if (this.cursors.up.isDown && this.downWasPressed) {
+        this.downWasPressed = false;
+        this.upWasPressed = true;
+        this.lever.anims.play("lever-up", true);
+      } else if (
+        this.cursors.down.isDown &&
+        this.upWasPressed &&
+        this.clickAvailable
+      ) {
+        this.downWasPressed = true;
+        this.upWasPressed = false;
+        this.time.delayedCall(100, this.updatePump, [], this);
+        this.clickAvailable = false;
+        this.clickTimer = 0;
+      }
+    }
+  }
+
   timerCountdown(time) {
     if (time / 1000 > 10 && this.playerPumps < this.pumpToWin) {
       this.gameState = false;
+      this.gameOver = true;
       this.gameOverScreen.visible = true;
     }
 
     if (time / 1000 > 10 && this.playerPumps >= this.pumpToWin) {
       this.gameState = false;
+      this.gameOver = true;
+      this.victory = true;
       this.endText = this.add.text(300, 360, "You Won!");
       this.endText.setStyle({
         fontSize: "100px",
@@ -237,7 +242,6 @@ export default class MicroGame11 extends Phaser.Scene {
 
   updatePump() {
     this.playerPumps += 1;
-    // console.log(this.playerPumps);
 
     this.lever.anims.play("lever-down", true);
     if (this.playerPumps === 5) {
