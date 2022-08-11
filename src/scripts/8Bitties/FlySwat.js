@@ -25,24 +25,24 @@ export default class FlySwat extends Phaser.Scene {
   }
   preload() {
     this.load.image(
-      "dead",
+      "8B5_dead",
       new URL("../8Bitties/assets/FlySwat/deadfly.png", import.meta.url).href
     );
     this.load.image(
-      "holder",
+      "8B5_holder",
       new URL("../8Bitties/assets/FlySwat/imageholder.png", import.meta.url)
         .href
     );
     this.load.image(
-      "swat",
+      "8B5_swat",
       new URL("../8Bitties/assets/FlySwat/swatText.png", import.meta.url).href
     );
     this.load.image(
-      "kitchen",
+      "8B5_kitchen",
       new URL("../8Bitties/assets/FlySwat/kitchenbg.png", import.meta.url).href
     );
     this.load.spritesheet(
-      "fly",
+      "8B5_fly",
       new URL("../8Bitties/assets/FlySwat/fly_sheet.png", import.meta.url).href,
       {
         frameWidth: 190,
@@ -50,7 +50,7 @@ export default class FlySwat extends Phaser.Scene {
       }
     );
     this.load.spritesheet(
-      "swatter",
+      "8B5_swatter",
       new URL(
         "../8Bitties/assets/FlySwat/flyswatter_sheet.png",
         import.meta.url
@@ -61,7 +61,7 @@ export default class FlySwat extends Phaser.Scene {
       }
     );
     this.load.spritesheet(
-      "explosion",
+      "8B5_explosion",
       new URL("../8Bitties/assets/FlySwat/boomSheet.png", import.meta.url).href,
       {
         frameWidth: 140,
@@ -71,8 +71,8 @@ export default class FlySwat extends Phaser.Scene {
   }
   create() {
     this.makeAnimations();
-    this.kitchen = this.add.image(540, 360, "kitchen").setDepth(-4);
-    this.swat = this.add.image(540, 360, "swat");
+    this.kitchen = this.add.image(540, 360, "8B5_kitchen").setDepth(-4);
+    this.swat = this.add.image(540, 360, "8B5_swat");
     this.createKeys();
   }
   update() {
@@ -90,10 +90,10 @@ export default class FlySwat extends Phaser.Scene {
   }
   gameStart() {
     this.flightPattern = Math.floor(Math.random() * 2);
-    this.fly = this.physics.add.sprite(540, 360, "fly");
-    this.fly.anims.play("flying", true);
+    this.fly = this.physics.add.sprite(540, 360, "8B5_fly");
+    this.fly.anims.play("8B5_flying", true);
     this.fly.body.setCircle(32).setOffset(32, 32);
-    this.swatter = this.physics.add.sprite(500, 450, "swatter");
+    this.swatter = this.physics.add.sprite(500, 450, "8B5_swatter");
     this.swatter.body.setSize(128, 160).setOffset(128, 32);
     this.gamestart = true;
   }
@@ -110,7 +110,7 @@ export default class FlySwat extends Phaser.Scene {
     }
   }
   killFly() {
-    this.fly.anims.play("crash");
+    this.fly.anims.play("8B5_crash");
     this.dead = true;
   }
 
@@ -129,53 +129,53 @@ export default class FlySwat extends Phaser.Scene {
   }
   makeAnimations() {
     this.anims.create({
-      key: "flying",
+      key: "8B5_flying",
       frames: [
-        { key: "fly", frame: 0 },
-        { key: "fly", frame: 1 },
-        { key: "fly", frame: 2 },
-        { key: "fly", frame: 3 },
-        { key: "fly", frame: 4 },
-        { key: "fly", frame: 5 },
-        { key: "fly", frame: 6 },
+        { key: "8B5_fly", frame: 0 },
+        { key: "8B5_fly", frame: 1 },
+        { key: "8B5_fly", frame: 2 },
+        { key: "8B5_fly", frame: 3 },
+        { key: "8B5_fly", frame: 4 },
+        { key: "8B5_fly", frame: 5 },
+        { key: "8B5_fly", frame: 6 },
       ],
       frameRate: 15,
       repeat: -1,
     });
     this.anims.create({
-      key: "up",
-      frames: [{ key: "swatter", frame: 0 }],
+      key: "8B5_up",
+      frames: [{ key: "8B5_swatter", frame: 0 }],
       frameRate: 1,
       repeat: 0,
     });
     this.anims.create({
-      key: "down",
-      frames: [{ key: "swatter", frame: 1 }],
+      key: "8B5_down",
+      frames: [{ key: "8B5_swatter", frame: 1 }],
       frameRate: 1,
       repeat: 0,
     });
     this.anims.create({
-      key: "crash",
+      key: "8B5_crash",
       frames: [
-        { key: "explosion", frame: 0 },
-        { key: "explosion", frame: 1 },
-        { key: "explosion", frame: 2 },
-        { key: "explosion", frame: 3 },
-        { key: "explosion", frame: 4 },
-        { key: "explosion", frame: 5 },
-        { key: "explosion", frame: 6 },
-        { key: "explosion", frame: 7 },
-        { key: "explosion", frame: 8 },
-        { key: "explosion", frame: 9 },
-        { key: "explosion", frame: 12 },
-        { key: "explosion", frame: 13 },
-        { key: "explosion", frame: 14 },
-        { key: "explosion", frame: 15 },
-        { key: "explosion", frame: 16 },
-        { key: "explosion", frame: 17 },
-        { key: "explosion", frame: 18 },
-        { key: "explosion", frame: 19 },
-        { key: "explosion", frame: 20 },
+        { key: "8B5_explosion", frame: 0 },
+        { key: "8B5_explosion", frame: 1 },
+        { key: "8B5_explosion", frame: 2 },
+        { key: "8B5_explosion", frame: 3 },
+        { key: "8B5_explosion", frame: 4 },
+        { key: "8B5_explosion", frame: 5 },
+        { key: "8B5_explosion", frame: 6 },
+        { key: "8B5_explosion", frame: 7 },
+        { key: "8B5_explosion", frame: 8 },
+        { key: "8B5_explosion", frame: 9 },
+        { key: "8B5_explosion", frame: 12 },
+        { key: "8B5_explosion", frame: 13 },
+        { key: "8B5_explosion", frame: 14 },
+        { key: "8B5_explosion", frame: 15 },
+        { key: "8B5_explosion", frame: 16 },
+        { key: "8B5_explosion", frame: 17 },
+        { key: "8B5_explosion", frame: 18 },
+        { key: "8B5_explosion", frame: 19 },
+        { key: "8B5_explosion", frame: 20 },
       ],
       frameRate: 10,
       repeat: 0,
@@ -187,12 +187,12 @@ export default class FlySwat extends Phaser.Scene {
         this.swingCD -= 10;
       }
       if (this.swingCD <= 0) {
-        this.swatter.anims.play("up", true);
+        this.swatter.anims.play("8B5_up", true);
         this.swung = false;
         this.swingCD = 100;
       }
       if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
-        this.swatter.anims.play("down", true);
+        this.swatter.anims.play("8B5_down", true);
         this.swung = true;
         if (
           Phaser.Geom.Intersects.CircleToRectangle(
