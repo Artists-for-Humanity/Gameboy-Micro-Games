@@ -18,8 +18,9 @@ export default class ColorPasscode extends Phaser.Scene {
         this.goTextTimer = 0;
         this.lossText;
         this.winText;
-        this.gameState = false;
         this.started = false;
+        this.gameOver = false;
+        this.victory = false;
         this.startTimer = 0;
         this.lightRed, this.lightYellow, this.lightPurple, this.lightBlue;
         this.lightColorButtons = [];
@@ -128,7 +129,6 @@ export default class ColorPasscode extends Phaser.Scene {
         if (!this.started && this.door1.alpha === 1) {
             this.time.delayedCall(600, () => {
                 this.startGame();
-                this.gameState = true;
             }, [], this);
             this.started = true;
         }
@@ -137,8 +137,7 @@ export default class ColorPasscode extends Phaser.Scene {
             this.time.delayedCall(400, () => { this.goText.alpha -= 0.08; })
         }
 
-        //only runs when BOTH interactive and gameState are true
-        if (this.interactive && this.gameState === true) { 
+        if (this.interactive && this.guessNum <= 4) { 
             this.userInput();
         }
     }
@@ -206,7 +205,7 @@ export default class ColorPasscode extends Phaser.Scene {
          //flash pattern 1 second after board appears
         this.time.delayedCall(1000, this.flashPattern, [], this);
 
-        //turns on interaction 4 seconds after board appear (4 * 500 + 1500 = 4000ms)
+        //turns on interaction 4 seconds after board appear (4 * 500 + 2000 = 4000ms)
         this.time.delayedCall(this.pattern.length * 500 + 2000, () => {
                 this.goText.alpha = 1;
                 this.interactive = true
@@ -242,7 +241,7 @@ export default class ColorPasscode extends Phaser.Scene {
     //num = the pattern index that is flashed, ms = flash duration
     flash(num, ms, index) {
 
-        //only used when flashing pattern
+        //only used with flashPattern function
         if (index > -1) {
             var key;
             if (this.pattern[index] === 0) key = 'lightRed';
@@ -262,7 +261,7 @@ export default class ColorPasscode extends Phaser.Scene {
 
     flashPattern() {
         for (var i = 0; i < this.pattern.length; i++) {
-            
+
              //500ms between flashes and 300ms flash durations
             this.time.delayedCall(i * 500, this.flash, [this.pattern[i], 300, i], this);
         }
@@ -283,9 +282,10 @@ export default class ColorPasscode extends Phaser.Scene {
         return Math.floor(Math.random() * max);
     }
 
+    //200ms flash duration
     userInput() {
         if (Phaser.Input.Keyboard.JustDown(this.Up)) {
-            this.flash(0, 200); //200ms flash duration
+            this.flash(0, 200);
             this.guesses.push(0);
             this.guess();
         } else if (Phaser.Input.Keyboard.JustDown(this.Right)) {
@@ -315,13 +315,13 @@ export default class ColorPasscode extends Phaser.Scene {
         //loss
         if (JSON.stringify(this.guesses[this.guessNum]) != JSON.stringify(this.pattern[this.guessNum])) {
             this.lossText.visible = true;
-            this.gameState = false;
+            this.gameOver = true;
         }
 
         //win
         if (JSON.stringify(this.guesses) == JSON.stringify(this.pattern)) {
             this.time.delayedCall(1500, this.win, [], this);
-            this.gameState = false;
+            this.victory = true;
         }
     }
 
@@ -354,6 +354,9 @@ export default class ColorPasscode extends Phaser.Scene {
         this.time.delayedCall(600, () => {
             this.door5.visible = true;
         }, [], this);
-        this.time.delayedCall(1000, () => { this.winText.visible = true; }, [], this);
+        this.time.delayedCall(1000, () => {
+            this.winText.visible = true;
+            this.gameOver = true;
+        }, [], this);
     }
 }
