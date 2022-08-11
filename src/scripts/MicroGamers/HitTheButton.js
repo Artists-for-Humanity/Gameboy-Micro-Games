@@ -38,9 +38,9 @@ export default class HitTheButton extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('background', new URL('assets/HitTheButton/background.png',
+        this.load.image('23background', new URL('assets/HitTheButton/23background.png',
             import.meta.url).href);
-        this.load.image('table', new URL('assets/HitTheButton/table.png',
+        this.load.image('23table', new URL('assets/HitTheButton/23table.png',
             import.meta.url).href);
         this.load.image('player', new URL('assets/HitTheButton/player.png',
             import.meta.url).href);
@@ -75,8 +75,8 @@ export default class HitTheButton extends Phaser.Scene {
     create() {
         this.createAnims();
         this.setText();
-        this.background = this.add.image(540, 360, 'background');
-        this.table = this.add.image(540, 360, 'table');
+        this.background = this.add.image(540, 360, '23background');
+        this.table = this.add.image(540, 360, '23table');
         this.button = this.physics.add.sprite(540, 360, 'button');
         this.myName = this.physics.add.image(0, 0, 'player').setDisplayOrigin(-5, -5).setScale(0.5);
         this.cpuName = this.physics.add.image(1080, 0, 'cpu').setDisplayOrigin(216, -9).setScale(0.5);
@@ -163,22 +163,17 @@ export default class HitTheButton extends Phaser.Scene {
             frameRate: 10
         });
         this.anims.create({
-            key: '0',
-            frames: [{ key: 'scoreTracker', frame: 0 }],
-            frameRate: 10
-        });
-        this.anims.create({
-            key: '1',
+            key: 'oneWin',
             frames: [{ key: 'scoreTracker', frame: 1 }],
             frameRate: 10
         });
         this.anims.create({
-            key: '2',
+            key: 'twoWins',
             frames: [{ key: 'scoreTracker', frame: 2 }],
             frameRate: 10
         });
         this.anims.create({
-            key: '3',
+            key: 'threeWins',
             frames: [{ key: 'scoreTracker', frame: 3 }],
             frameRate: 10
         });
@@ -266,18 +261,18 @@ export default class HitTheButton extends Phaser.Scene {
 
     roundWon() {
         this.myScore++;
-        if (this.myScore === 1) this.myScoreTracker.anims.play('1');
-        if (this.myScore === 2) this.myScoreTracker.anims.play('2');
-        if (this.myScore === 3) this.myScoreTracker.anims.play('3');
+        if (this.myScore === 1) this.myScoreTracker.anims.play('oneWin');
+        if (this.myScore === 2) this.myScoreTracker.anims.play('twoWins');
+        if (this.myScore === 3) this.myScoreTracker.anims.play('threeWins');
         this.reset();
     }
 
     roundLoss() {
         this.time.removeEvent(this.goGreen);
         this.cpuScore++;
-        if (this.cpuScore === 1) this.cpuScoreTracker.anims.play('1');
-        if (this.cpuScore === 2) this.cpuScoreTracker.anims.play('2');
-        if (this.cpuScore === 3) this.cpuScoreTracker.anims.play('3');
+        if (this.cpuScore === 1) this.cpuScoreTracker.anims.play('oneWin');
+        if (this.cpuScore === 2) this.cpuScoreTracker.anims.play('twoWins');
+        if (this.cpuScore === 3) this.cpuScoreTracker.anims.play('threeWins');
         this.reset();
     }
 

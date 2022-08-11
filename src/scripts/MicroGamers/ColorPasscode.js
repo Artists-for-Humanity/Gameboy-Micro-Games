@@ -139,7 +139,7 @@ export default class ColorPasscode extends Phaser.Scene {
             this.time.delayedCall(400, () => { this.goText.alpha -= 0.08; })
         }
 
-        if (this.interactive && this.guessNum <= 4) { 
+        if (this.interactive && !this.gameOver) { 
             this.userInput();
         }
 

@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-
+import eventsCenter from '../EventsCenter'
 export default class Emeowgency extends Phaser.Scene {
   // Game Class Constructor
   constructor() {
@@ -33,6 +33,7 @@ export default class Emeowgency extends Phaser.Scene {
     this.victory = false;
     this.lose = false;
     this.gameOver = false;
+    this.sent = false;
   }
 
   preload() {
@@ -118,6 +119,11 @@ export default class Emeowgency extends Phaser.Scene {
       }
     }
     this.moveBlanket();
+    if(this.gameOver && !this.sent){
+      eventsCenter.emit('game-end', this.victory)
+      console.log('emission sent')
+      this.sent = true
+    }
   }
 
   //Catch!, the image in the beggining

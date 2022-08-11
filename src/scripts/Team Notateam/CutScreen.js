@@ -26,7 +26,7 @@ export default class CutScreen extends Phaser.Scene {
         this.playedGames = []
 
         this.currentScene
-        this.roundNumber = 0
+        this.roundNumber = 1
 
         this.close_timer = 0
         this.life_total = 5
@@ -81,7 +81,13 @@ export default class CutScreen extends Phaser.Scene {
         this.buildObjects()
         this.setScore(this.score)
 
-        eventsCenter.on('game-end', this.closeDoor, this)
+        eventsCenter.on('game-end', (param) => {
+            this.closeDoor(param);
+        // this.scene.remove(this.game.scene.scenes[0]);
+
+            
+            this.time.delayedCall(450, () => this.scene.remove(this.game.scene.scenes[0]))
+        }, this)
 
     }
     update() {
@@ -294,9 +300,9 @@ export default class CutScreen extends Phaser.Scene {
     }
     closecon(){
 
-        // if(this.roundNumber > 0){
-        //     this.endGame()
-        // }
+        if(this.roundNumber > 1){
+            this.endGame()
+        }
 
         if(!this.lost){
             this.faceplate.anims.play('win1').once('animationcomplete', () => {
@@ -321,24 +327,29 @@ export default class CutScreen extends Phaser.Scene {
         
     }
     nextGame(){
-        do{
-            this.currentScene = this.game.scene.scenes[this.roundNumber + 1]
-        } while(this.playedGames.includes(this.currentScene) && !this.finishedGames)
+
+        this.currentScene = this.game.scene.scenes[1]
+        console.log(this.game.scene.scenes);
+        console.log(this.game.scene.scenes[1])
+
+        // if (this.roundNumber === 0) this.currentScene = this.game.scene.scenes[1]
+        // else {
+        //     this.currentScene = this.game.scene.scenes[this.roundNumber + 1]
+        // }
+
+        // do{
+        //     this.currentScene = this.game.scene.scenes[this.roundNumber + 1]
+        // } while(this.playedGames.includes(this.currentScene) && !this.finishedGames)
 
         setTimeout(()=>{
-            console.log(this.currentScene)
-            this.scene.sendToBack(this.currentScene)
             this.scene.run(this.currentScene)
-            console.log(this.currentScene +" should be running...")
-            console.log('00: ' + this.roundNumber);
-            console.log('01: ' + this.game.scene.scenes.length)
-
+            this.scene.sendToBack(this.currentScene);
+            console.log(this.game.scene.scenes);
             this.roundNumber++
             this.open = true
         }, 2000)
     }
     endGame(){
-        this.scene.remove(this.currentScene)
     }
     buildObjects(){
         // Build Doors
