@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import eventsCenter from "../EventsCenter";
 
 export default class Emeowgency extends Phaser.Scene {
   // Game Class Constructor
@@ -31,8 +32,8 @@ export default class Emeowgency extends Phaser.Scene {
     this.blanket;
     this.shadow;
     this.victory = false;
-    this.lose = false;
     this.gameOver = false;
+    this.sent = false;
   }
 
   preload() {
@@ -118,6 +119,13 @@ export default class Emeowgency extends Phaser.Scene {
       }
     }
     this.moveBlanket();
+
+    if (this.gameOver && !this.sent) {
+      eventsCenter.emit("game-end", this.victory);
+      console.log("victory = " + this.victory);
+      console.log("emission sent");
+      this.sent = true;
+    }
   }
 
   //Catch!, the image in the beggining
@@ -185,7 +193,6 @@ export default class Emeowgency extends Phaser.Scene {
         if (
           Phaser.Geom.Rectangle.Overlaps(this.shadow.body, this.blanket.body)
         ) {
-          this.victory === true;
           this.blanket.anims.play("cushion", true);
           this.youWin();
           this.cat.setScale(0.5);
@@ -311,6 +318,7 @@ export default class Emeowgency extends Phaser.Scene {
     this.catFall = false;
     this.gameOver = true;
     this.catSafe = true;
+    this.victory = true;
   }
   youLose() {
     this.catFail = true;

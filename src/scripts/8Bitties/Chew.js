@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import eventsCenter from "../EventsCenter";
 export default class chew extends Phaser.Scene {
   constructor() {
     super({
@@ -14,6 +15,12 @@ export default class chew extends Phaser.Scene {
     console.log("create");
   }
   update() {
+    if (this.gameOver && !this.sent) {
+      eventsCenter.emit("game-end", this.victory);
+      console.log("victory = " + this.victory);
+      console.log("emission sent");
+      this.sent = true;
+    }
     console.log("update");
   }
 }

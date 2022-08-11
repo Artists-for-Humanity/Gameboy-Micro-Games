@@ -1,3 +1,4 @@
+import eventsCenter from "../EventsCenter";
 export default class TugOWar extends Phaser.Scene {
   // Game Class Constructor
   constructor() {
@@ -111,6 +112,12 @@ export default class TugOWar extends Phaser.Scene {
     this.scalePull();
     this.startDashMovement();
     this.playerPull();
+    if (this.gameOver && !this.sent) {
+      eventsCenter.emit("game-end", this.victory);
+      console.log("victory = " + this.victory);
+      console.log("emission sent");
+      this.sent = true;
+    }
   }
   scalePull() {
     if (this.pullScale <= 1) {
