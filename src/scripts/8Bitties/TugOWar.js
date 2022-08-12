@@ -36,6 +36,10 @@ export default class TugOWar extends Phaser.Scene {
   }
   preload() {
     this.load.image(
+      "8B6_ropePile",
+      new URL("../8Bitties/assets/TugOWar/Rope_Pile.png", import.meta.url).href
+    );
+    this.load.image(
       "8B6_background",
       new URL("../8Bitties/assets/TugOWar/tugOwarBG.png", import.meta.url).href
     );
@@ -45,7 +49,7 @@ export default class TugOWar extends Phaser.Scene {
     );
     this.load.image(
       "8B6_rope",
-      new URL("../8Bitties/assets/TugOWar/rope.png", import.meta.url).href
+      new URL("../8Bitties/assets/TugOWar/Rope.png", import.meta.url).href
     );
     this.load.image(
       "8B6_safe",
@@ -103,6 +107,13 @@ export default class TugOWar extends Phaser.Scene {
     this.graphics.fillRect(295, 550, 440, 60);
     this.mask = new Phaser.Display.Masks.GeometryMask(this, this.graphics);
     this.rope.setMask(this.mask);
+    this.rope.setScale(0.4);
+    this.playerRopePile = this.add
+      .image(210, 600, "8B6_ropePile")
+      .setScale(0.45);
+    this.playerRopePile.flipX = true;
+
+    this.npcRopePile = this.add.image(840, 610, "8B6_ropePile").setScale(0.45);
   }
   update() {
     if (this.timer !== 0 && this.gameStarted) this.timer--;
