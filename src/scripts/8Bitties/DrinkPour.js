@@ -1,4 +1,7 @@
 import Phaser from "phaser";
+
+import eventsCenter from '../EventsCenter'
+
 const X = 440;
 const Y = 360;
 const W = 153;
@@ -27,6 +30,7 @@ export default class DrinkPour extends Phaser.Scene {
     this.overfill = false;
     this.gameOver = false;
     this.victory = false;
+    this.sent = false;
   }
   preload() {
     this.load.image(
@@ -161,6 +165,11 @@ export default class DrinkPour extends Phaser.Scene {
       this.gameStart = false;
       this.gameState();
       this.spillAnim();
+    }
+    if (this.gameOver && !this.sent) {
+      eventsCenter.emit('game-end', this.victory)
+      console.log('emission sent')
+      this.sent = true
     }
   }
 

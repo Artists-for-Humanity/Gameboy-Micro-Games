@@ -1,4 +1,6 @@
 import WebFontFile from "../../scripts/WebFontFile";
+import eventsCenter from '../EventsCenter'
+
 
 export default class ColorLab extends Phaser.Scene {
   constructor() {
@@ -9,6 +11,7 @@ export default class ColorLab extends Phaser.Scene {
     });
     this.victory = false;
     this.gameOver = false;
+    this.sent = false;
 
     this.timer;
     this.catchScale = 0;
@@ -128,7 +131,6 @@ export default class ColorLab extends Phaser.Scene {
   }
 
   update() {
-    console.log(this.victory);
     this.playAnims();
     if (this.lose === true) {
       if (this.fail) {
@@ -147,6 +149,7 @@ export default class ColorLab extends Phaser.Scene {
           this.safeScale += 0.2 / this.safeTimer;
           this.safe.setScale(this.safeScale);
           this.gameOver = true;
+          this.victory = true;
         }
       }
     }
@@ -177,6 +180,12 @@ export default class ColorLab extends Phaser.Scene {
     var liftHeight = 613;
     var dropHeight = 680;
     this.vialSelection(liftHeight, dropHeight);
+
+    if (this.gameOver && !this.sent) {
+      eventsCenter.emit('game-end', this.victory)
+      console.log('emission sent')
+      this.sent = true
+    }
   }
 
   vialSelection(liftHeight, dropHeight) {
