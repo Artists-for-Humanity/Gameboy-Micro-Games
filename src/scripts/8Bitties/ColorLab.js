@@ -56,7 +56,7 @@ export default class ColorLab extends Phaser.Scene {
         .href
     );
     this.load.image(
-      "background",
+      "G8background",
       new URL("../8Bitties/assets/colorlab/sciencelabbg.png", import.meta.url)
         .href
     );
@@ -81,7 +81,7 @@ export default class ColorLab extends Phaser.Scene {
   }
 
   create() {
-    this.background = this.add.image(540, 360, "background");
+    this.background = this.add.image(540, 360, "G8background");
     this.createSprites();
 
     // this.redVial.body.setAllowGravity(false);
