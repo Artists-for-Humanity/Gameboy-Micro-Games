@@ -181,8 +181,7 @@ export default class SockToss extends Phaser.Scene {
                     }
                     this.endcon()
                     if(this.gameOver && !this.sent){
-                        eventsCenter.emit('game-end', this.victory)
-                        console.log('emission sent')
+                        this.globalState.sendMessage(this.victory)
                         this.sent = true
                     }
                 }

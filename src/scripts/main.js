@@ -16,7 +16,7 @@ import HitTheButton from "./MicroGamers/HitTheButton";
 import TugOWar from "./8Bitties/TugOWar";
 import FlySwat from "./8Bitties/FlySwat";
 import DrinkPour from "./8Bitties/DrinkPour";
-import SockToss from "./Team Notateam/socktoss";
+import SockToss from "./Team Notateam/SockToss";
 import CutScreen from "./Team Notateam/CutScreen";
 import MainMenu from "./MainMenu";
 
@@ -40,6 +40,8 @@ const config = {
   },
   scene: [
     MainMenu,
+    CutScreen,
+    SockToss, 
     Emeowgency,
     ColorLab,
     Highest2Lowest,

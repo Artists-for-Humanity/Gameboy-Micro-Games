@@ -10,7 +10,7 @@ export default class CutScreen extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
         super({
-            active: true,
+            active: false,
             visible: true,
             key: 'CutScreen',
             physics: {
@@ -34,7 +34,7 @@ export default class CutScreen extends Phaser.Scene {
         this.open = false
 
         this.lost = false
-        this.score = 9
+        this.score = -1
 
         this.space
 
@@ -326,6 +326,7 @@ export default class CutScreen extends Phaser.Scene {
         } while(this.playedGames.includes(this.currentScene) && !this.finishedGames)
 
         setTimeout(()=>{
+            this.currentScene = "SockToss"
             console.log(this.currentScene)
             this.scene.sendToBack(this.currentScene)
             this.scene.run(this.currentScene)
