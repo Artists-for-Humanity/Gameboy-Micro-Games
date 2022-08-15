@@ -24,6 +24,9 @@ export default class MainMenu extends Phaser.Scene {
 
         this.sent = false
 
+        this.wobbleDir = false
+
+        this.wobbleTimer = 0
     }
 
     preload() {
@@ -74,12 +77,12 @@ export default class MainMenu extends Phaser.Scene {
 
     update() {
         this.buttonPresses()
+        this.verticalWobble(this.fingerIcon, .5, 4)
     }
 
     buttonPresses(){
         if (Phaser.Input.Keyboard.JustDown(this.left)){
             this.updateSelection("left")
-
         } 
         if(Phaser.Input.Keyboard.JustDown(this.right)){
             this.updateSelection("right")
@@ -87,6 +90,13 @@ export default class MainMenu extends Phaser.Scene {
         if(Phaser.Input.Keyboard.JustDown(this.action)){
             this.buttonEvents()
         }
+    }
+
+    verticalWobble(obj, amount, speed){
+        this.wobbleTimer+=speed
+        if(this.wobbleTimer % 100 === 0){
+            this.wobbleDir = !this.wobbleDir}
+        this.wobbleDir ? obj.y += amount : obj.y -= amount
     }
 
     updateSelection(input){
