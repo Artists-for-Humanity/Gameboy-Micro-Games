@@ -42,7 +42,7 @@ export default class DrinkPour extends Phaser.Scene {
       new URL("./assets/drink pour/pourtext.png", import.meta.url).href
     );
     this.load.image(
-      "background",
+      "GDPbackground",
       new URL("./assets/drink pour/restaurantbg.png", import.meta.url).href
     );
     this.load.spritesheet(
@@ -89,7 +89,7 @@ export default class DrinkPour extends Phaser.Scene {
     this.animate();
 
     //background
-    this.add.image(540, 360, "background");
+    this.add.image(540, 360, "GDPbackground");
 
     //add juice and glass
     this.glass = this.physics.add.sprite(X, Y, "glass");

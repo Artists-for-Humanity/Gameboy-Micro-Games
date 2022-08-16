@@ -1,4 +1,6 @@
 import Phaser from "phaser";
+import eventsCenter from '../EventsCenter'
+
 export default class FlySwat extends Phaser.Scene {
   constructor() {
     super({
@@ -21,6 +23,7 @@ export default class FlySwat extends Phaser.Scene {
     this.gameOver = false;
     this.dead = false;
     this.victory = false;
+    this.sent = false;
   }
   preload() {
     this.load.image(
@@ -79,6 +82,12 @@ export default class FlySwat extends Phaser.Scene {
     if (!this.dead) this.moveFly();
     this.moveSwatter();
     this.swing();
+
+    if (this.gameOver && !this.sent) {
+      eventsCenter.emit('game-end', this.victory)
+      console.log('emission sent')
+      this.sent = true
+    }
     //this.animateDeadFly();
   }
   gameStart() {

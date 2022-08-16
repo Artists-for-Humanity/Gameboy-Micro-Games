@@ -1,3 +1,4 @@
+import eventsCenter from "../EventsCenter";
 export default class TugOWar extends Phaser.Scene {
   // Game Class Constructor
   constructor() {
@@ -35,35 +36,39 @@ export default class TugOWar extends Phaser.Scene {
   }
   preload() {
     this.load.image(
-      "background",
+      "8B6_ropePile",
+      new URL("../8Bitties/assets/TugOWar/rope_Pile.png", import.meta.url).href
+    );
+    this.load.image(
+      "8B6_background",
       new URL("../8Bitties/assets/TugOWar/tugOwarBG.png", import.meta.url).href
     );
     this.load.image(
-      "pull",
+      "8B6_pull",
       new URL("../8Bitties/assets/TugOWar/pulltext.png", import.meta.url).href
     );
     this.load.image(
-      "rope",
-      new URL("../8Bitties/assets/TugOWar/rope.png", import.meta.url).href
+      "8B6_rope",
+      new URL("../8Bitties/assets/TugOWar/Rope.png", import.meta.url).href
     );
     this.load.image(
-      "safe",
+      "8B6_safe",
       new URL("../8Bitties/assets/TugOWar/safe_text.png", import.meta.url).href
     );
     this.load.image(
-      "lose",
+      "8B6_lose",
       new URL("../8Bitties/assets/TugOWar/fail_text.png", import.meta.url).href
     );
     this.load.image(
-      "meter",
+      "8B6_meter",
       new URL("../8Bitties/assets/TugOWar/meter.png", import.meta.url).href
     );
     this.load.image(
-      "dash",
+      "8B6_dash",
       new URL("../8Bitties/assets/TugOWar/pointer.png", import.meta.url).href
     );
     this.load.spritesheet(
-      "player",
+      "8B6_player",
       new URL("../8Bitties/assets/TugOWar/playerFrames.png", import.meta.url)
         .href,
       {
@@ -72,12 +77,12 @@ export default class TugOWar extends Phaser.Scene {
       }
     );
     this.load.image(
-      "bar",
+      "8B6_bar",
       new URL("../8Bitties/assets/TugOWar/progress_bar.png", import.meta.url)
         .href
     );
     this.load.spritesheet(
-      "mud",
+      "8B6_mud",
       new URL("../8Bitties/assets/TugOWar/mudidlesprite.png", import.meta.url)
         .href,
       {
@@ -89,19 +94,26 @@ export default class TugOWar extends Phaser.Scene {
 
   create() {
     this.createAnimations();
-    this.pull = this.add.image(540, 360, "pull").setDepth(1);
-    this.grass = this.add.image(540, 360, "background").setDepth(-10);
-    this.mud = this.add.sprite(540, 620, "mud").setDepth(-9);
+    this.pull = this.add.image(540, 360, "8B6_pull").setDepth(1);
+    this.grass = this.add.image(540, 360, "8B6_background").setDepth(-10);
+    this.mud = this.add.sprite(540, 620, "8B6_mud").setDepth(-9);
     this.spacebar = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
-    this.rope = this.add.sprite(540, 580, "rope").setDepth(1);
-    this.meter = this.add.image(75, 360, "meter");
-    this.dash = this.add.image(90, 360, "dash");
+    this.rope = this.add.sprite(540, 580, "8B6_rope").setDepth(1);
+    this.meter = this.add.image(75, 360, "8B6_meter");
+    this.dash = this.add.image(90, 360, "8B6_dash");
     this.graphics = this.make.graphics();
     this.graphics.fillRect(295, 550, 440, 60);
     this.mask = new Phaser.Display.Masks.GeometryMask(this, this.graphics);
     this.rope.setMask(this.mask);
+    this.rope.setScale(0.4);
+    this.playerRopePile = this.add
+      .image(210, 600, "8B6_ropePile")
+      .setScale(0.45);
+    this.playerRopePile.flipX = true;
+
+    this.npcRopePile = this.add.image(840, 610, "8B6_ropePile").setScale(0.45);
   }
   update() {
     if (this.timer !== 0 && this.gameStarted) this.timer--;
@@ -111,6 +123,12 @@ export default class TugOWar extends Phaser.Scene {
     this.scalePull();
     this.startDashMovement();
     this.playerPull();
+    if (this.gameOver && !this.sent) {
+      eventsCenter.emit("game-end", this.victory);
+      console.log("victory = " + this.victory);
+      console.log("emission sent");
+      this.sent = true;
+    }
   }
   scalePull() {
     if (this.pullScale <= 1) {
@@ -134,13 +152,13 @@ export default class TugOWar extends Phaser.Scene {
 
   gameStart() {
     this.gameStarted = true;
-    this.mud.anims.play("mud");
+    this.mud.anims.play("8B6_mud");
     this.player = this.add
-      .sprite(270, 560, "player")
+      .sprite(270, 560, "8B6_player")
       .setDepth(2)
       .play("pulling");
     this.player.anims.play("pulling");
-    this.npc = this.add.sprite(780, 560, "player").setDepth(2);
+    this.npc = this.add.sprite(780, 560, "8B6_player").setDepth(2);
     this.npc.flipX = true;
     this.npc.anims.play("pulling");
   }
@@ -159,33 +177,33 @@ export default class TugOWar extends Phaser.Scene {
     this.anims.create({
       key: "pulling",
       frames: [
-        { key: "player", frame: 0 },
-        { key: "player", frame: 1 },
+        { key: "8B6_player", frame: 0 },
+        { key: "8B6_player", frame: 1 },
       ],
       frameRate: 1,
       repeat: -1,
     });
 
     this.anims.create({
-      key: "mud",
+      key: "8B6_mud",
       frames: [
-        { key: "mud", frame: 0 },
-        { key: "mud", frame: 1 },
-        { key: "mud", frame: 2 },
-        { key: "mud", frame: 2 },
-        { key: "mud", frame: 3 },
-        { key: "mud", frame: 4 },
-        { key: "mud", frame: 5 },
-        { key: "mud", frame: 6 },
-        { key: "mud", frame: 7 },
-        { key: "mud", frame: 8 },
-        { key: "mud", frame: 9 },
-        { key: "mud", frame: 10 },
-        { key: "mud", frame: 11 },
-        { key: "mud", frame: 12 },
-        { key: "mud", frame: 13 },
-        { key: "mud", frame: 14 },
-        { key: "mud", frame: 15 },
+        { key: "8B6_mud", frame: 0 },
+        { key: "8B6_mud", frame: 1 },
+        { key: "8B6_mud", frame: 2 },
+        { key: "8B6_mud", frame: 2 },
+        { key: "8B6_mud", frame: 3 },
+        { key: "8B6_mud", frame: 4 },
+        { key: "8B6_mud", frame: 5 },
+        { key: "8B6_mud", frame: 6 },
+        { key: "8B6_mud", frame: 7 },
+        { key: "8B6_mud", frame: 8 },
+        { key: "8B6_mud", frame: 9 },
+        { key: "8B6_mud", frame: 10 },
+        { key: "8B6_mud", frame: 11 },
+        { key: "8B6_mud", frame: 12 },
+        { key: "8B6_mud", frame: 13 },
+        { key: "8B6_mud", frame: 14 },
+        { key: "8B6_mud", frame: 15 },
       ],
       frameRate: 10,
       repeat: -1,
@@ -194,16 +212,16 @@ export default class TugOWar extends Phaser.Scene {
   winOrLose() {
     if ((this.timer === 0) & (this.rope.x > 380)) {
       this.lose = true;
-      console.log("lose");
+      console.log("8B6_lose");
     }
     if ((this.timer === 0) & (this.rope.x < 380)) {
       this.victory = true;
-      console.log("win");
+      console.log("8B6_win");
     }
   }
   youLose() {
     if (this.imageCreated === false) {
-      this.youlose = this.add.image(540, 360, "lose").setDepth(100);
+      this.youlose = this.add.image(540, 360, "8B6_lose").setDepth(100);
       this.imageCreated = true;
     }
     if (this.loseScale <= 1) {
@@ -215,7 +233,7 @@ export default class TugOWar extends Phaser.Scene {
   }
   youWin() {
     if (this.imageCreated === false) {
-      this.youwin = this.add.image(540, 360, "safe").setDepth(100);
+      this.youwin = this.add.image(540, 360, "8B6_safe").setDepth(100);
       this.imageCreated = true;
     }
     if (this.winScale <= 1) {

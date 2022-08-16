@@ -103,7 +103,7 @@ export default class CarPump extends Phaser.Scene {
     this.createAnimations();
     // console.log(this.load);
 
-    this.globalState.initCountDown(this);
+    // this.globalState.initCountDown(this);
     // this.globalState.test();
   }
 
