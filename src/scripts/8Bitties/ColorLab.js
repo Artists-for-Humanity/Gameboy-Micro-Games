@@ -36,7 +36,7 @@ export default class ColorLab extends Phaser.Scene {
     this.left;
     this.right;
 
-    this.enter;
+    this.space;
     this.vialNotEmpty;
     this.tryOne;
     this.tryTwo;
@@ -112,7 +112,7 @@ export default class ColorLab extends Phaser.Scene {
 
     this.userInput();
 
-    this.enterPressed = false;
+    this.spacePressed = false;
     this.vialNotEmpty = true;
 
     this.decreasing = false;
@@ -193,7 +193,7 @@ export default class ColorLab extends Phaser.Scene {
         this.redVialHovered = true;
         this.blueVialHovered = false;
         this.yellowVialHovered = false;
-        this.enterPressed = Phaser.Input.Keyboard.JustDown(this.enter);
+        this.spacePressed = Phaser.Input.Keyboard.JustDown(this.space);
         this.vialPouring();
         this.time.delayedCall(
           0,
@@ -211,14 +211,14 @@ export default class ColorLab extends Phaser.Scene {
           this
         );
         this.playAnims;
-        this.enterPressed = false;
+        this.spacePressed = false;
         return;
       case 1:
         this.arrow.x = this.blueVial.x;
         this.redVialHovered = false;
         this.blueVialHovered = true;
         this.yellowVialHovered = false;
-        this.enterPressed = Phaser.Input.Keyboard.JustDown(this.enter);
+        this.spacePressed = Phaser.Input.Keyboard.JustDown(this.space);
         this.vialPouring();
         this.time.delayedCall(
           0,
@@ -236,14 +236,14 @@ export default class ColorLab extends Phaser.Scene {
           this
         );
         this.playAnims;
-        this.enterPressed = false;
+        this.spacePressed = false;
         return;
       case 2:
         this.arrow.x = this.yellowVial.x;
         this.redVialHovered = false;
         this.blueVialHovered = false;
         this.yellowVialHovered = true;
-        this.enterPressed = Phaser.Input.Keyboard.JustDown(this.enter);
+        this.spacePressed = Phaser.Input.Keyboard.JustDown(this.space);
         this.vialPouring();
         this.time.delayedCall(
           0,
@@ -261,7 +261,7 @@ export default class ColorLab extends Phaser.Scene {
           this
         );
         this.playAnims;
-        this.enterPressed = false;
+        this.spacePressed = false;
         return;
 
       default:
@@ -275,8 +275,8 @@ export default class ColorLab extends Phaser.Scene {
     this.right = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.RIGHT
     );
-    this.enter = this.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.ENTER
+    this.space = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.SPACE
     );
   }
 
@@ -647,13 +647,13 @@ export default class ColorLab extends Phaser.Scene {
 
   vialPouring() {
     if (this.tryOne) {
-      if (this.redVialHovered && this.enterPressed && this.redVialNotEmpty) {
+      if (this.redVialHovered && this.spacePressed && this.redVialNotEmpty) {
         this.beaker.anims.play("8B2_redbeaker anim");
         this.beakerColor = "8B2_red";
         this.redVialNotEmpty = false;
         this.checkTries(this.redVial);
       }
-      if (this.blueVialHovered && this.enterPressed && this.blueVialNotEmpty) {
+      if (this.blueVialHovered && this.spacePressed && this.blueVialNotEmpty) {
         this.beaker.anims.play("8B2_bluebeaker anim");
         this.beakerColor = "8B2_blue";
         this.blueVialNotEmpty = false;
@@ -661,7 +661,7 @@ export default class ColorLab extends Phaser.Scene {
       }
       if (
         this.yellowVialHovered &&
-        this.enterPressed &&
+        this.spacePressed &&
         this.yellowVialNotEmpty
       ) {
         this.beaker.anims.play("8B2_yellowbeaker anim");
@@ -671,7 +671,7 @@ export default class ColorLab extends Phaser.Scene {
       }
     }
     if (this.tryTwo) {
-      if (this.redVialHovered && this.enterPressed && this.redVialNotEmpty) {
+      if (this.redVialHovered && this.spacePressed && this.redVialNotEmpty) {
         this.beakerColor === "8B2_yellow"
           ? this.beaker.anims.play("8B2_orangebeaker anim")
           : this.beaker.anims.play("8B2_purplebeaker anim");
@@ -682,7 +682,7 @@ export default class ColorLab extends Phaser.Scene {
         this.redVial.anims.play("8B2_emptyvial anim");
         this.checkWin();
       }
-      if (this.blueVialHovered && this.enterPressed && this.blueVialNotEmpty) {
+      if (this.blueVialHovered && this.spacePressed && this.blueVialNotEmpty) {
         this.beakerColor === "8B2_red"
           ? this.beaker.anims.play("8B2_purplebeaker anim")
           : this.beaker.anims.play("8B2_greenbeaker anim");
@@ -695,7 +695,7 @@ export default class ColorLab extends Phaser.Scene {
       }
       if (
         this.yellowVialHovered &&
-        this.enterPressed &&
+        this.spacePressed &&
         this.yellowVialNotEmpty
       ) {
         this.beakerColor === "8B2_blue"
@@ -744,7 +744,7 @@ export default class ColorLab extends Phaser.Scene {
   youLose() {
     this.beaker.setPosition(540, 360).setOrigin(0.5);
     this.beaker.anims.play("8B2_explosion anim", true).setScale(2);
-    this.enter = false;
+    this.space = false;
     this.left = false;
     this.right = false;
     this.lose = true;
@@ -754,7 +754,7 @@ export default class ColorLab extends Phaser.Scene {
   youWin() {
     // console.log("you win")
     this.arrow.setVisible(false);
-    this.enter = false;
+    this.space = false;
     this.left = false;
     this.right = false;
     this.victory = true;
