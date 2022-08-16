@@ -38,7 +38,7 @@ const config = {
       debug: false,
     },
   },
-<<
+
   scene: [
     MainMenu,
     Emeowgency,
@@ -53,6 +53,9 @@ const config = {
     TugOWar,
     FlySwat,
     DrinkPour,
+    CarPump,
+    TrashSort,
+    Cannon,
   ],
 
   audio: {
