@@ -37,7 +37,7 @@ export default class TugOWar extends Phaser.Scene {
   preload() {
     this.load.image(
       "8B6_ropePile",
-      new URL("../8Bitties/assets/TugOWar/rope_Pile.png", import.meta.url).href
+      new URL("../8Bitties/assets/TugOWar/Rope_Pile.png", import.meta.url).href
     );
     this.load.image(
       "8B6_background",
@@ -49,7 +49,7 @@ export default class TugOWar extends Phaser.Scene {
     );
     this.load.image(
       "8B6_rope",
-      new URL("../8Bitties/assets/TugOWar/Rope.png", import.meta.url).href
+      new URL("../8Bitties/assets/TugOWar/rope.png", import.meta.url).href
     );
     this.load.image(
       "8B6_safe",
