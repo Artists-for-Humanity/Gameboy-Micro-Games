@@ -1,53 +1,51 @@
-export default class CircleGame extends Phaser.Scene {
+export default class CircleJump extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
         super({
             active: false,
             visible: false,
-            key: 'CircleGame',
+            key: 'CircleJump',
         });
 
 
         this.player;
         this.green;
-        this.ball;
+        this.ball;s
         this.blue;
         this.green;
 
     }
 
     preload() {
-        this.load.image(this.load.image('background', new URL("./assets/CircleGame/backgroundPH.png",
+        this.load.image(this.load.image('background', new URL("./assets/CircleJump/circlebackground.png",
             import.meta.url).href));
         
-        this.load.image(this.load.image('ground', new URL("./assets/CircleGame/diamond.png",
-            import.meta.url).href));
+        // this.load.image(this.load.image('ground', new URL("./assets/CircleJump/diamond.png",
+        //     import.meta.url).href));
         
-        // this.load.image(this.load.image('diamonds', new URL("./assets/CircleGame/diamond.png",
+        // this.load.image(this.load.image('diamonds', new URL("./assets/CircleJump/diamond.png",
         //       import.meta.url).href));
-        this.load.image(this.load.image('lose', new URL("./assets/CircleGame/loser.png",
+        this.load.image(this.load.image('lose', new URL("./assets/CircleJump/loser.png",
             import.meta.url).href));
-        this.load.image(this.load.image('win', new URL("./assets/CircleGame/winner.png",
+        this.load.image(this.load.image('win', new URL("./assets/CircleJump/winner.png",
             import.meta.url).href));
-        this.load.image(this.load.image('jump', new URL("./assets/CircleGame/diamond.png",
-            import.meta.url).href));
-        this.load.spritesheet("ball", new URL("./assets/CircleGame/ballSpriteSheet.png",
+        // this.load.image(this.load.image('jump', new URL("./assets/CircleJump/diamond.png",
+        //     import.meta.url).href));
+        this.load.spritesheet("ball", new URL("./assets/CircleJump/ballSpriteSheet.png",
             import.meta.url).href, {
             frameWidth: 19,
             frameHeight: 19
         });
-        // this.load.spritesheet("background", new URL("./assets/CircleGame/backgroundPH.png",
+        // this.load.spritesheet("background", new URL("./assets/CircleJump/backgroundPH.png",
         //     import.meta.url).href, {
         //     frameWidth: 1080,
         //     frameHeight: 1575
         // });
-        this.load.spritesheet("diamonds", new URL("./assets/CircleGame/diamond.png",
+        this.load.spritesheet("diamonds", new URL("./assets/CircleJump/diamond.png",
             import.meta.url).href, {
             frameWidth: 16,
             frameHeight: 16
-        });
-        
-
+        });        
     }
 
 
@@ -61,12 +59,12 @@ export default class CircleGame extends Phaser.Scene {
                 color: 0x1110ba
             }
         });
-        // this.background = this.add.sprite(500, 800, "background");
+        this.background = this.add.sprite(540, 360 , "background");
 
         this.player = this.physics.add.sprite(540, 10, 'diamonds');
-        // this.player.setGravityY(500);
-        this.blue = this.add.sprite(100, 100, "diamonds");
-        this.green = this.add.sprite(10.6, 64, "diamonds");
+        this.player.setGravityY(500);
+        // this.blue = this.add.sprite(100, 100, "diamonds");
+        // this.green = this.add.sprite(10.6, 64, "diamonds");
 
         this.points = {
             x: 540,
@@ -90,7 +88,7 @@ export default class CircleGame extends Phaser.Scene {
 
         this.loseText = this.add.image(540, 360, 'lose').setVisible(false);
         this.winText = this.add.image(540, 360, 'win').setVisible(false);
-        this.hole = this.physics.add.image(540, 500, 'ground').setVisible(true);
+        this.hole = this.physics.add.image(540, 500, 'diamonds').setVisible(true);
         this.physics.add.collider(this.player, this.hole, this.winState, null, this);
         this.physics.add.collider(this.player, this.groupS, this.loseState, null, this);
         this.physics.add.collider(this.player, this.groupB, this.loseState, null, this);
@@ -101,7 +99,7 @@ export default class CircleGame extends Phaser.Scene {
         Phaser.Actions.PlaceOnCircle(this.groupB.getChildren(), circle2);
 
         this.physics.pause();
-        this.JumpImg = this.add.image(505, 360, 'jump').setScale(1.3);
+        // this.JumpImg = this.add.image(505, 360, 'jump').setScale(1.3);
         this.startGameDelay = this.time.delayedCall(2300, this.startGame, null, this);
         // console.log('reachme 00');
         this.createAnimation();
@@ -118,7 +116,8 @@ export default class CircleGame extends Phaser.Scene {
     update() {
         // this.blue.anims.play('pulse');
         this.player.anims.play('spin');
-        this.blue.anims.play('spin')
+        console.log('reachme 01')
+        // this.blue.anims.play('spin')
         this.groupB.getChildren().forEach((child) => {
             child.anims.play('pulse', true);
           });
@@ -182,13 +181,13 @@ export default class CircleGame extends Phaser.Scene {
         this.hole.destroy();
     }
     startGame() {
-        this.JumpImg.destroy();
+        // this.JumpImg.destroy();
         this.physics.resume();
 
     }
 
     createAnimation() {
-        // console.log('reachme 01');
+        console.log('reachme 02');
         this.anims.create({
             key: 'pulse',
             frames: [{
@@ -204,7 +203,7 @@ export default class CircleGame extends Phaser.Scene {
                     frame: 2
                 }
             ],
-            frameRate: 3,
+            frameRate: 6,
             repeat: -1
         });
 
@@ -227,7 +226,7 @@ export default class CircleGame extends Phaser.Scene {
                     frame: 3
                 }
             ],
-            frameRate: 3,
+            frameRate: 6,
             repeat: -1
         });
         // console.log('reachme 03');
