@@ -30,8 +30,11 @@ export default class BetweenSpace extends Phaser.Scene {
       frameWidth: 64,
       frameHeight: 64
     });
-    this.load.image(this.load.image('star', new URL("./assets/frogJump/starPH.png",
-      import.meta.url).href));
+    this.load.spritesheet("star", new URL("./assets/wormhole sprite sheet.png",
+      import.meta.url).href, {
+      frameWidth: 38,
+      frameHeight: 38
+    });
 
     this.load.image('win', new URL("./assets/you win_.png",
       import.meta.url).href);
@@ -94,6 +97,7 @@ export default class BetweenSpace extends Phaser.Scene {
 
 
       this.player.anims.play('run', true);
+      this.goal.anims.play('spin',true)
 
     }
 
@@ -223,6 +227,31 @@ export default class BetweenSpace extends Phaser.Scene {
         },
         {
           key: 'rocket',
+          frame: 3
+        },
+
+
+      ],
+      frameRate: 7,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: 'spin',
+      frames: [{
+          key: 'star',
+          frame: 0
+        },
+        {
+          key: 'star',
+          frame: 1
+        },
+        {
+          key: 'star',
+          frame: 2
+        },
+        {
+          key: 'star',
           frame: 3
         },
 
