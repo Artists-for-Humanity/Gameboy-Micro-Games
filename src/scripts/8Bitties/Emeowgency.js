@@ -33,7 +33,10 @@ export default class Emeowgency extends Phaser.Scene {
     this.shadow;
     this.victory = false;
     this.gameOver = false;
+    this.gOtimerToggle = false;
     this.sent = false;
+    this.gOtimer = 0;
+    this.fallen = false;
   }
 
   preload() {
@@ -92,6 +95,15 @@ export default class Emeowgency extends Phaser.Scene {
         frameHeight: 185,
       }
     );
+    this.load.spritesheet(
+      "8B4_yangFail",
+      new URL("../8Bitties/assets/Emeowgency/yangfail.png", import.meta.url)
+        .href,
+      {
+        frameWidth: 102,
+        frameHeight: 58,
+      }
+    );
   }
 
   create() {
@@ -108,8 +120,9 @@ export default class Emeowgency extends Phaser.Scene {
   }
 
   update() {
-    this.playSafe();
-    this.playFail();
+    this.gameOverTimer();
+    // this.playSafe();
+    // this.playFail();
     this.scaleCatch();
     this.scaleShadow();
     if (this.cat) {
@@ -152,8 +165,8 @@ export default class Emeowgency extends Phaser.Scene {
   //makes a random x and y coordiante
   getRandomPosition() {
     const position = {
-      x: Math.floor(Phaser.Math.Between(100, 900)),
-      y: Math.floor(Phaser.Math.Between(100, 700)),
+      x: Math.floor(Phaser.Math.Between(200, 800)),
+      y: Math.floor(Phaser.Math.Between(200, 600)),
     };
     return position;
   }
@@ -211,8 +224,13 @@ export default class Emeowgency extends Phaser.Scene {
   }
 
   playanimations() {
-    if (this.catFall === true) this.cat.anims.play("8B4_fall", true);
-    if (this.catFail === true) this.cat.anims.play("8B4_fail", true);
+    if (this.catFall) this.cat.anims.play("8B4_fall", true);
+    if (this.catFail && !this.fallen) {
+      this.cat.anims.play("8B4_fail_1", true).once("animationcomplete", () => {
+        this.cat.anims.play("8B4_fail_2");
+      });
+      this.fallen = true;
+    }
   }
 
   //moves the blanket with arrow keys
@@ -288,10 +306,24 @@ export default class Emeowgency extends Phaser.Scene {
       repeat: 0,
     });
     this.anims.create({
-      key: "8B4_fail",
-      frames: [{ key: "8B4_yang", frame: 2 }],
-      frameRate: 1,
+      key: "8B4_fail_1",
+      frames: [
+        { key: "8B4_yangFail", frame: 0 },
+        { key: "8B4_yangFail", frame: 2 },
+        { key: "8B4_yangFail", frame: 3 },
+      ],
+      frameRate: 15,
       repeat: 0,
+    });
+    this.anims.create({
+      key: "8B4_fail_2",
+      frames: [
+        { key: "8B4_yangFail", frame: 3 },
+        { key: "8B4_yangFail", frame: 4 },
+        { key: "8B4_yangFail", frame: 5 },
+      ],
+      frameRate: 15,
+      repeat: -1,
     });
     this.anims.create({
       key: "8B4_fall",
@@ -316,14 +348,18 @@ export default class Emeowgency extends Phaser.Scene {
   youWin() {
     this.safeScaleToggle = true;
     this.catFall = false;
-    this.gameOver = true;
     this.catSafe = true;
     this.victory = true;
+    this.gOtimerToggle = true;
   }
   youLose() {
     this.catFail = true;
     this.catFall = false;
     this.failScaleToggle = true;
-    this.gameOver = true;
+    this.gOtimerToggle = true;
+  }
+  gameOverTimer() {
+    if (this.gOtimerToggle === true) this.gOtimer++;
+    if (this.gOtimer === 80) this.gameOver = true;
   }
 }
