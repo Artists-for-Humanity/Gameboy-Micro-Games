@@ -86,7 +86,7 @@ export default class CutScreen extends Phaser.Scene {
             // this.scene.remove(this.game.scene.scenes[0]);
 
 
-            this.time.delayedCall(500, () => this.scene.remove(this.game.scene.scenes[0]))
+            this.time.delayedCall(504, () => this.scene.remove(this.game.scene.scenes[0]))
         }, this)
 
     }
@@ -98,7 +98,6 @@ export default class CutScreen extends Phaser.Scene {
             this.close_doors()
         }
         else if (this.open) {
-            console.log('reachme 00')
             this.close_timer++
             this.open_doors()
         }
@@ -330,7 +329,7 @@ export default class CutScreen extends Phaser.Scene {
     nextGame() {
 
         this.currentScene = this.game.scene.scenes[1]
-        console.log(this.game.scene.scenes);
+        // console.log(this.game.scene.scenes);
         console.log(this.game.scene.scenes[1])
 
         // if (this.roundNumber === 0) this.currentScene = this.game.scene.scenes[1]

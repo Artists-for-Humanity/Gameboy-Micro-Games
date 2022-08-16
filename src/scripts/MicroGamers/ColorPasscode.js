@@ -139,11 +139,11 @@ export default class ColorPasscode extends Phaser.Scene {
             this.time.delayedCall(400, () => { this.goText.alpha -= 0.08; })
         }
 
-        if (this.interactive && !this.gameOver) { 
+        if (this.interactive && !this.gameOver) {
             this.userInput();
         }
 
-        if(this.gameOver && !this.sent){
+        if (this.gameOver && !this.sent) {
             eventsCenter.emit('game-end', this.victory)
             console.log('emission sent')
             this.sent = true
@@ -181,7 +181,7 @@ export default class ColorPasscode extends Phaser.Scene {
         this.goText.setOrigin(0.5);
         this.goText.alpha = 0;
         this.goText.depth = 20;
-        
+
         this.winText = this.add.text(540, 360, 'YOU WON!');
         this.winText.setStyle({
             fontSize: '160px',
@@ -210,18 +210,18 @@ export default class ColorPasscode extends Phaser.Scene {
     startGame() {
         this.showBoard();
 
-         //flash pattern 1 second after board appears
+        //flash pattern 1 second after board appears
         this.time.delayedCall(1000, this.flashPattern, [], this);
 
         //turns on interaction 4 seconds after board appear (4 * 500 + 2000 = 4000ms)
         this.time.delayedCall(this.pattern.length * 500 + 2000, () => {
-                this.goText.alpha = 1;
-                this.interactive = true
-                console.log('start interactive');
-                this.hideGuessBlocks();
-                for (var i = 0; i < this.guessBlocks.length; i++) {
-                    this.guessBlocks[i].setTexture('');
-                }
+            this.goText.alpha = 1;
+            this.interactive = true
+            // console.log('start interactive');
+            this.hideGuessBlocks();
+            for (var i = 0; i < this.guessBlocks.length; i++) {
+                this.guessBlocks[i].setTexture('');
+            }
         }, [], this);
     }
 
@@ -259,7 +259,7 @@ export default class ColorPasscode extends Phaser.Scene {
             this.guessBlocks[index].setTexture(key);
             this.guessBlocks[index].visible = true;
         }
-        
+
         this.showDarkColor(num);
         this.time.delayedCall(ms, () => {
             this.showLightColor(num);
@@ -270,7 +270,7 @@ export default class ColorPasscode extends Phaser.Scene {
     flashPattern() {
         for (var i = 0; i < this.pattern.length; i++) {
 
-             //500ms between flashes and 300ms flash durations
+            //500ms between flashes and 300ms flash durations
             this.time.delayedCall(i * 500, this.flash, [this.pattern[i], 300, i], this);
         }
     }

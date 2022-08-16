@@ -64,7 +64,7 @@ export default class ColorLab extends Phaser.Scene {
         .href
     );
     this.load.image(
-      "arrow",
+      "G8arrow",
       new URL("../8Bitties/assets/colorlab/arrow.png", import.meta.url).href
     );
     this.load.image(
@@ -304,7 +304,7 @@ export default class ColorLab extends Phaser.Scene {
       .setScale(0.8)
       .setOrigin(1);
     this.arrow = this.physics.add
-      .sprite(653, 430, "arrow")
+      .sprite(653, 430, "G8arrow")
       .setScale(0.5)
       .setOrigin(1);
   }

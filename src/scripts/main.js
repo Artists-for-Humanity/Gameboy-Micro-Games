@@ -39,7 +39,7 @@ const config = {
     },
   },
   scene: [
-    CutScreen, SockToss, Emeowgency, ColorLab, ColorPasscode, HideFromCat, HitTheButton,
+    CutScreen, SockToss, CarPump, Cannon, TrashSort, Emeowgency, ColorPasscode, HideFromCat, HitTheButton, ColorLab, DrinkPour
   ],
   audio: {
     disableWebAudio: true,
