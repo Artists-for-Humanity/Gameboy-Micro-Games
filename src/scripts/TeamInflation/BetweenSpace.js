@@ -1,24 +1,20 @@
-import eventsCenter from '../EventsCenter'
+import eventsCenter from "../EventsCenter";
 
 export default class BetweenSpace extends Phaser.Scene {
-
-
   constructor() {
     super({
       active: false,
       visible: false,
-      key: 'BetweenSpace',
+      key: "BetweenSpace",
     });
     this.lose = false;
     this.gameOver = false;
     this.victory = false;
     this.randomNum = Math.floor(Math.random() * 71);
-
-
   }
 
-
   preload() {
+
     this.load.spritesheet(this.load.image('TI_3background', new URL("./assets/spaceBKG.png",
       import.meta.url).href));
     this.load.image('TI_3win', new URL("./assets/youwin.png",
@@ -59,12 +55,37 @@ export default class BetweenSpace extends Phaser.Scene {
     this.asteroidg1 = this.createAsteroids(200, 32, 30 + (this.randomNum), 300)
     this.asteroidg2 = this.createAsteroids(300, 688, -30 + (this.randomNum), -300)
 
+    this.asteroidg1 = this.createAsteroids(200, 32, 30 + this.randomNum, 300);
+    this.asteroidg2 = this.createAsteroids(
+      300,
+      688,
+      -30 + this.randomNum,
+      -300
+    );
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
-    this.physics.add.collider(this.player, this.asteroidg1, this.loseState, null, this);
-    this.physics.add.collider(this.player, this.asteroidg2, this.loseState, null, this);
-    this.physics.add.overlap(this.player, this.goal, this.destroyStar, null, this);
+    this.physics.add.collider(
+      this.player,
+      this.asteroidg1,
+      this.loseState,
+      null,
+      this
+    );
+    this.physics.add.collider(
+      this.player,
+      this.asteroidg2,
+      this.loseState,
+      null,
+      this
+    );
+    this.physics.add.overlap(
+      this.player,
+      this.goal,
+      this.destroyStar,
+      null,
+      this
+    );
 
     this.createAnimations();
 
@@ -92,7 +113,6 @@ export default class BetweenSpace extends Phaser.Scene {
       }
       if (this.cursors.right.isDown) {
         this.player.x += 5;
-
       }
 
       this.asteroidMovements(this.asteroidg1);
@@ -106,15 +126,13 @@ export default class BetweenSpace extends Phaser.Scene {
       this.goal.anims.play('TI_3spin', true)
       console.log('reachme 02')
 
-
     }
 
     if (this.gameOver && !this.sent) {
-      eventsCenter.emit('game-end', this.victory)
-      console.log('emission sent')
-      this.sent = true
+      eventsCenter.emit("game-end", this.victory);
+      console.log("emission sent");
+      this.sent = true;
     }
-
   }
 
   loseState() {
@@ -126,24 +144,23 @@ export default class BetweenSpace extends Phaser.Scene {
 
   createAsteroids(xPos, yPos, step, veloc) {
     const ret = this.physics.add.group({
+
       key: 'TI_3asteroid',
       repeat: 3,
       setXY: {
         x: xPos,
         y: yPos,
         stepX: 200,
-        stepY: step
-      }
-    })
-
-    Phaser.Actions.Call(ret.getChildren(), child => {
-      child.setVelocityY(veloc);
-
+        stepY: step,
+      },
     });
-    Phaser.Actions.Call(ret.getChildren(), child => {
-      child.rotation = Math.PI / 2;
-      child.setSize(40, 40)
 
+    Phaser.Actions.Call(ret.getChildren(), (child) => {
+      child.setVelocityY(veloc);
+    });
+    Phaser.Actions.Call(ret.getChildren(), (child) => {
+      child.rotation = Math.PI / 2;
+      child.setSize(40, 40);
     });
     return ret;
   }
@@ -152,18 +169,18 @@ export default class BetweenSpace extends Phaser.Scene {
     this.goal.destroy();
     // this.physics.pause();
     this.lose = true;
-    this.winText.setVisible(true)
+    this.winText.setVisible(true);
     this.gameOver = true;
     this.victory = true;
   }
 
   asteroidMovements(groupRet) {
-    Phaser.Actions.Call(groupRet.getChildren(), child => {
+    Phaser.Actions.Call(groupRet.getChildren(), (child) => {
       if (child.y >= 688) {
         child.flipX = true;
         child.body.setVelocityY(-300);
       } else if (child.y <= 32) {
-        child.flipX = false
+        child.flipX = false;
         child.body.setVelocityY(300);
       }
     });
@@ -174,106 +191,47 @@ export default class BetweenSpace extends Phaser.Scene {
   }
   createAnimations() {
     this.anims.create({
-      key: 'TI_3walk',
-      frames: [{
-        key: 'TI_3asteroid',
-        frame: 0
-      },
-      {
-        key: 'TI_3asteroid',
-        frame: 1
-      },
-      {
-        key: 'TI_3asteroid',
-        frame: 2
-      },
-      {
-        key: 'TI_3asteroid',
-        frame: 4
-      },
-      {
-        key: 'TI_3asteroid',
-        frame: 5
-      },
-      {
-        key: 'TI_3asteroid',
-        frame: 6
-      },
-      {
-        key: 'TI_3asteroid',
-        frame: 8
-      },
-      {
-        key: 'TI_3asteroid',
-        frame: 9
-      },
-      {
-        key: 'TI_3asteroid',
-        frame: 10
-      },
-      {
-        key: 'TI_3asteroid',
-        frame: 12
-      },
-      {
-        key: 'TI_3asteroid',
-        frame: 13
-      },
-
+      key: "TI_3walk",
+      frames: [
+        { key: "TI_3asteroid", frame: 0 },
+        { key: "TI_3asteroid", frame: 1 },
+        { key: "TI_3asteroid", frame: 2 },
+        { key: "TI_3asteroid", frame: 4 },
+        { key: "TI_3asteroid", frame: 5 },
+        { key: "TI_3asteroid", frame: 6 },
+        { key: "TI_3asteroid", frame: 8 },
+        { key: "TI_3asteroid", frame: 9 },
+        { key: "TI_3asteroid", frame: 10 },
+        { key: "TI_3asteroid", frame: 12 },
+        { key: "TI_3asteroid", frame: 13 },
       ],
       frameRate: 30,
-      repeat: -1
+      repeat: -1,
     });
 
     this.anims.create({
-      key: 'TI_3run',
-      frames: [{
-        key: 'TI_3rocket',
-        frame: 0
-      },
-      {
-        key: 'TI_3rocket',
-        frame: 1
-      },
-      {
-        key: 'TI_3rocket',
-        frame: 2
-      },
-      {
-        key: 'TI_3rocket',
-        frame: 3
-      },
-
-
+      key: "TIBSrun",
+      frames: [
+        { key: "TI_3rocket", frame: 0 },
+        { key: "TI_3rocket", frame: 1 },
+        { key: "TI_3rocket", frame: 2 },
+        { key: "TI_3rocket", frame: 3 },
       ],
       frameRate: 7,
-      repeat: -1
+      repeat: -1,
     });
 
     this.anims.create({
-      key: 'TI_3spin',
-      frames: [{
-        key: 'TI_3star',
-        frame: 0
-      },
-      {
-        key: 'TI_3star',
-        frame: 1
-      },
-      {
-        key: 'TI_3star',
-        frame: 2
-      },
-      {
-        key: 'TI_3star',
-        frame: 3
-      },
-
+      key: "TIBSspin",
+      frames: [
+        { key: "TI_3star", frame: 0 },
+        { key: "TI_3star", frame: 1 },
+        { key: "TI_3star", frame: 2 },
+        { key: "TI_3star", frame: 3 },
 
       ],
       frameRate: 7,
-      repeat: -1
+      repeat: -1,
     });
   }
-
 }
