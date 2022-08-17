@@ -9,7 +9,7 @@ import Cannon from "./DebugginDaOpps/Cannon";
 import Highest2Lowest from "./TeamInflation/Highest2Lowest";
 import FrogJump from "./TeamInflation/FrogJump";
 import CircleGame from "./TeamInflation/CircleGame";
-import BewteenSpace from "./TeamInflation/BetweenSpace";
+import BetweenSpace from "./TeamInflation/BetweenSpace";
 import ColorPasscode from "./MicroGamers/ColorPasscode";
 import HideFromCat from "./MicroGamers/HideFromCat";
 import HitTheButton from "./MicroGamers/HitTheButton";
@@ -40,26 +40,10 @@ const config = {
     },
   },
 
-  scene: [
-    MainMenu,
-    Emeowgency,
-    ColorLab,
-    Highest2Lowest,
-    FrogJump,
-    CircleGame,
-    BewteenSpace,
-    ColorPasscode,
-    HideFromCat,
-    HitTheButton,
-    TugOWar,
-    FlySwat,
-    DrinkPour,
-    CarPump,
-    TrashSort,
-    Cannon,
-    Challenge,
-  ],
 
+  scene: [
+    CutScreen, SockToss, CarPump, Emeowgency, BetweenSpace, CircleGame, FrogJump, Highest2Lowest, TugOWar, FlySwat, DrinkPour, Cannon, TrashSort, ColorPasscode, HideFromCat, HitTheButton, ColorLab
+  ],
   audio: {
     disableWebAudio: true,
   },

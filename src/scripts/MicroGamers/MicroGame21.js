@@ -1,11 +1,10 @@
-import eventsCenter from '../EventsCenter'
-export default class ColorPasscode extends Phaser.Scene {
+export default class MicroGame21 extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
         super({
             active: false,
             visible: false,
-            key: 'ColorPasscode',
+            key: 'MicroGame21',
         });
 
         // Game Object Declarations
@@ -15,14 +14,11 @@ export default class ColorPasscode extends Phaser.Scene {
         this.doors = [];
         this.box;
 
-        this.goText;
-        this.goTextTimer = 0;
+        this.myText;
         this.lossText;
         this.winText;
+        this.gameState = false;
         this.started = false;
-        this.gameOver = false;
-        this.victory = false;
-        this.sent = false;
         this.startTimer = 0;
         this.lightRed, this.lightYellow, this.lightPurple, this.lightBlue;
         this.lightColorButtons = [];
@@ -35,6 +31,7 @@ export default class ColorPasscode extends Phaser.Scene {
         this.guesses = [];
         this.guessNum = 0;
 
+        this.cursors;
         this.interactive = false;
 
         this.Left;
@@ -44,43 +41,42 @@ export default class ColorPasscode extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('brickWall', new URL('assets/ColorPasscode/brickWall.png',
+        this.load.image('brickWall', new URL('assets21/brickWall.png',
             import.meta.url).href);
-        this.load.image('concrete', new URL('assets/ColorPasscode/concrete.png',
+        this.load.image('concrete', new URL('assets21/concrete.png',
             import.meta.url).href);
-        this.load.image('door1', new URL('assets/ColorPasscode/door1.png',
+        this.load.image('door1', new URL('assets21/door1.png',
             import.meta.url).href);
-        this.load.image('door2', new URL('assets/ColorPasscode/door2.png',
+        this.load.image('door2', new URL('assets21/door2.png',
             import.meta.url).href);
-        this.load.image('door3', new URL('assets/ColorPasscode/door3.png',
+        this.load.image('door3', new URL('assets21/door3.png',
             import.meta.url).href);
-        this.load.image('door4', new URL('assets/ColorPasscode/door4.png',
+        this.load.image('door4', new URL('assets21/door4.png',
             import.meta.url).href);
-        this.load.image('door5', new URL('assets/ColorPasscode/door5.png',
+        this.load.image('door5', new URL('assets21/door5.png',
             import.meta.url).href);
-        this.load.image('box', new URL('assets/ColorPasscode/box.png',
+        this.load.image('box', new URL('assets21/box.png',
             import.meta.url).href);
-        this.load.image('lightRed', new URL('assets/ColorPasscode/lightRed.png',
+        this.load.image('lightRed', new URL('assets21/lightRed.png',
             import.meta.url).href);
-        this.load.image('lightYellow', new URL('assets/ColorPasscode/lightYellow.png',
+        this.load.image('lightYellow', new URL('assets21/lightYellow.png',
             import.meta.url).href);
-        this.load.image('lightPurple', new URL('assets/ColorPasscode/lightPurple.png',
+        this.load.image('lightPurple', new URL('assets21/lightPurple.png',
             import.meta.url).href);
-        this.load.image('lightBlue', new URL('assets/ColorPasscode/lightBlue.png',
+        this.load.image('lightBlue', new URL('assets21/lightBlue.png',
             import.meta.url).href);
-        this.load.image('darkRed', new URL('assets/ColorPasscode/darkRed.png',
+        this.load.image('darkRed', new URL('assets21/darkRed.png',
             import.meta.url).href);
-        this.load.image('darkYellow', new URL('assets/ColorPasscode/darkYellow.png',
+        this.load.image('darkYellow', new URL('assets21/darkYellow.png',
             import.meta.url).href);
-        this.load.image('darkPurple', new URL('assets/ColorPasscode/darkPurple.png',
+        this.load.image('darkPurple', new URL('assets21/darkPurple.png',
             import.meta.url).href);
-        this.load.image('darkBlue', new URL('assets/ColorPasscode/darkBlue.png',
+        this.load.image('darkBlue', new URL('assets21/darkBlue.png',
             import.meta.url).href);
     }
 
     create() {
         this.drawUI();
-        this.setText();
         this.Left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         this.Right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         this.Down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
@@ -90,16 +86,15 @@ export default class ColorPasscode extends Phaser.Scene {
         this.lightYellow = this.add.sprite(678, 334, 'lightYellow');
         this.lightPurple = this.add.sprite(408, 522, 'lightPurple');
         this.lightBlue = this.add.sprite(678, 522, 'lightBlue');
-        this.lightColorButtons = [this.lightRed, this.lightYellow, this.lightPurple, this.lightBlue];
+        this.lightColorButtons = [this.lightRed, this.lightYellow, this.lightPurple, this.lightBlue]; //put lightColorButtons into an array
 
         this.darkRed = this.add.sprite(408, 334, 'darkRed');
         this.darkYellow = this.add.sprite(678, 334, 'darkYellow');
         this.darkPurple = this.add.sprite(408, 522, 'darkPurple');
         this.darkBlue = this.add.sprite(678, 522, 'darkBlue');
-        this.darkColorButtons = [this.darkRed, this.darkYellow, this.darkPurple, this.darkBlue];
+        this.darkColorButtons = [this.darkRed, this.darkYellow, this.darkPurple, this.darkBlue]; //put darkColorButtons into an array
 
-        //scale buttons
-        for (var i = 0; i < this.lightColorButtons.length; i++) {
+        for (var i = 0; i < this.lightColorButtons.length; i++) { //scale buttons
             this.lightColorButtons[i].setScale(1.8);
             this.darkColorButtons[i].setScale(1.8);
         }
@@ -109,11 +104,10 @@ export default class ColorPasscode extends Phaser.Scene {
         this.g2 = this.add.sprite(475.5, 160, '');
         this.g3 = this.add.sprite(610.5, 160, '');
         this.g4 = this.add.sprite(745.5, 160, '');
-        this.guessBlocks = [this.g1, this.g2, this.g3, this.g4];
+        this.guessBlocks = [this.g1, this.g2, this.g3, this.g4]; //initialize guessBlocks into an array
         this.hideGuessBlocks();
 
-        //create pattern
-        for (var i = 0; i < 4; i++) {
+        for (var i = 0; i < 4; i++) { //create pattern
             this.pattern.push(this.getRandomInt(4));
         }
         console.log(this.pattern);
@@ -121,32 +115,19 @@ export default class ColorPasscode extends Phaser.Scene {
 
     update(time, delta) {
         if (this.door1.alpha < 1) {
-
-            //door fades in after 600ms
-            this.time.delayedCall(600, () => {
-                this.door1.alpha += 0.008;
+            this.time.delayedCall(600, () => { //door fade in after 600ms
+                this.door1.alpha += 0.006;
             }, [], this);
         }
-
-        if (!this.started && this.door1.alpha === 1) {
-            this.time.delayedCall(600, () => {
-                this.startGame();
-            }, [], this);
+        if (!this.started) this.startTimer += delta; //this.started prevents startGame from running > 1 time
+        if (this.startTimer >= 4500 && !this.started) { //start game after 4.5 seconds
+            this.startGame();
+            this.gameState = true;
             this.started = true;
         }
-
-        if (this.goText.alpha > 0) {
-            this.time.delayedCall(400, () => { this.goText.alpha -= 0.08; })
-        }
-
-        if (this.interactive && !this.gameOver) {
+        if (this.interactive && this.gameState === true) { //only runs when interactive mode is turned on AND gameState is TRUE
+            this.myText.alpha -= 0.0166; //fade memorizeText out
             this.userInput();
-        }
-
-        if (this.gameOver && !this.sent) {
-            eventsCenter.emit('game-end', this.victory)
-            console.log('emission sent')
-            this.sent = true
         }
     }
 
@@ -168,21 +149,28 @@ export default class ColorPasscode extends Phaser.Scene {
         }
     }
 
-    setText() {
-        this.goText = this.add.text(540, 360, '')
-        this.goText.setStyle({
-            fontSize: '120px',
+    startGame() {
+        this.showMemorizeText();
+        this.showBoard();
+        this.time.delayedCall(2000, this.flashPattern, [], this); //flash pattern 2 second after board appears
+        this.time.delayedCall(this.pattern.length * 500 + 2500, () => {
+            this.interactive = true //turns on interaction 4.5 seconds after board appear (4 * 500 + 2500 = 4500ms)
+        }, [], this); 
+    }
+
+    showMemorizeText() {
+        this.myText = this.add.text(200, 14, '')
+        this.myText.setStyle({
+            fontSize: '60px',
             fill: '#000000',
             align: 'center',
-            stroke: '#ffffff',
-            strokeThickness: 12
         });
-        this.goText.setText('Go!');
-        this.goText.setOrigin(0.5);
-        this.goText.alpha = 0;
-        this.goText.depth = 20;
+        this.myText.setText('Memorize the pattern!');
+        this.myText.alpha = 1;
+    }
 
-        this.winText = this.add.text(540, 360, 'YOU WON!');
+    showWinText() {
+        this.winText = this.add.text(180, 260, 'YOU WON!');
         this.winText.setStyle({
             fontSize: '160px',
             fill: '#00ff00',
@@ -190,11 +178,10 @@ export default class ColorPasscode extends Phaser.Scene {
             stroke: '#808080',
             strokeThickness: 8
         });
-        this.winText.setOrigin(0.5);
-        this.winText.visible = false;
-        this.winText.depth = 20;
+    }
 
-        this.lossText = this.add.text(540, 360, 'YOU LOST!')
+    showLossText() {
+        this.lossText = this.add.text(140, 260, 'YOU LOST!')
         this.lossText.setStyle({
             fontSize: '160px',
             fill: '#ff0000',
@@ -202,27 +189,7 @@ export default class ColorPasscode extends Phaser.Scene {
             stroke: '#808080',
             strokeThickness: 8
         });
-        this.lossText.setOrigin(0.5);
-        this.lossText.visible = false;
-        this.lossText.depth = 20;
-    }
-
-    startGame() {
-        this.showBoard();
-
-        //flash pattern 1 second after board appears
-        this.time.delayedCall(1000, this.flashPattern, [], this);
-
-        //turns on interaction 4 seconds after board appear (4 * 500 + 2000 = 4000ms)
-        this.time.delayedCall(this.pattern.length * 500 + 2000, () => {
-            this.goText.alpha = 1;
-            this.interactive = true
-            // console.log('start interactive');
-            this.hideGuessBlocks();
-            for (var i = 0; i < this.guessBlocks.length; i++) {
-                this.guessBlocks[i].setTexture('');
-            }
-        }, [], this);
+        this.lossText.alpha = 1;
     }
 
     showBoard() {
@@ -246,32 +213,14 @@ export default class ColorPasscode extends Phaser.Scene {
         }
     }
 
-    //num = the pattern index that is flashed, ms = flash duration
-    flash(num, ms, index) {
-
-        //only used with flashPattern function
-        if (index > -1) {
-            var key;
-            if (this.pattern[index] === 0) key = 'lightRed';
-            if (this.pattern[index] === 1) key = 'lightYellow';
-            if (this.pattern[index] === 2) key = 'lightPurple';
-            if (this.pattern[index] === 3) key = 'lightBlue';
-            this.guessBlocks[index].setTexture(key);
-            this.guessBlocks[index].visible = true;
-        }
-
+    flash(num, ms) { //num = the index that is flashed, ms = flash duration
         this.showDarkColor(num);
-        this.time.delayedCall(ms, () => {
-            this.showLightColor(num);
-        }, [], this);
-
+        this.time.delayedCall(ms, this.showLightColor, [num], this);
     }
 
     flashPattern() {
         for (var i = 0; i < this.pattern.length; i++) {
-
-            //500ms between flashes and 300ms flash durations
-            this.time.delayedCall(i * 500, this.flash, [this.pattern[i], 300, i], this);
+            this.time.delayedCall(i * 500, this.flash, [this.pattern[i], 300], this); //500ms between flashes and 300ms flash durations
         }
     }
 
@@ -285,15 +234,13 @@ export default class ColorPasscode extends Phaser.Scene {
         this.lightColorButtons[num].visible = true;
     }
 
-    //random int from 0 to max, EXCLUSIVE
-    getRandomInt(max) {
+    getRandomInt(max) { //random int from 0 to max, EXCLUSIVE
         return Math.floor(Math.random() * max);
     }
 
-    //200ms flash duration
     userInput() {
         if (Phaser.Input.Keyboard.JustDown(this.Up)) {
-            this.flash(0, 200);
+            this.flash(0, 200); //200ms flash duration
             this.guesses.push(0);
             this.guess();
         } else if (Phaser.Input.Keyboard.JustDown(this.Right)) {
@@ -317,38 +264,33 @@ export default class ColorPasscode extends Phaser.Scene {
         this.guessNum++;
     }
 
-    //check win loss
-    checkWL() {
-
-        //loss
-        if (JSON.stringify(this.guesses[this.guessNum]) != JSON.stringify(this.pattern[this.guessNum])) {
-            this.lossText.visible = true;
-            this.gameOver = true;
+    checkWL() { //check win loss
+        if (JSON.stringify(this.guesses[this.guessNum]) != JSON.stringify(this.pattern[this.guessNum])) { //loss
+            this.showLossText();
+            this.gameState = false;
         }
-
-        //win
-        if (JSON.stringify(this.guesses) == JSON.stringify(this.pattern)) {
+        if (JSON.stringify(this.guesses) == JSON.stringify(this.pattern)) { //win
             this.time.delayedCall(1500, this.win, [], this);
-            this.victory = true;
+            this.gameState = false;
         }
     }
 
-    //each color has an index from 0 to 3
-    showGuess(num) {
+
+    showGuess(num) { //uses index of each color to show each guess
         var key;
         if (num === 0) key = 'lightRed';
         if (num === 1) key = 'lightYellow';
         if (num === 2) key = 'lightPurple';
         if (num === 3) key = 'lightBlue';
         this.guessBlocks[this.guessNum].setTexture(key);
-        this.guessBlocks[this.guessNum].visible = true;
+        this.guessBlocks[this.guessNum].visible = true; 
     }
 
-    win() {
+    win() { //hides UI then opens door after 1 second
         this.box.visible = false;
         this.hideBoard();
         this.hideGuessBlocks();
-        this.time.delayedCall(600, this.openDoor, [], this);
+        this.time.delayedCall(1000, this.openDoor, [], this);
     }
 
     openDoor() {
@@ -362,9 +304,6 @@ export default class ColorPasscode extends Phaser.Scene {
         this.time.delayedCall(600, () => {
             this.door5.visible = true;
         }, [], this);
-        this.time.delayedCall(1000, () => {
-            this.winText.visible = true;
-            this.gameOver = true;
-        }, [], this);
+        this.time.delayedCall(1000, this.showWinText, [], this);
     }
 }

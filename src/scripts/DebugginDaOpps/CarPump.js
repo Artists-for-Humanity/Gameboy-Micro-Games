@@ -1,3 +1,6 @@
+import eventsCenter from '../EventsCenter'
+
+
 export default class CarPump extends Phaser.Scene {
   // Game Class Constructor
   constructor() {
@@ -11,6 +14,7 @@ export default class CarPump extends Phaser.Scene {
     this.gameState = true;
     this.gameOver = false;
     this.victory = false;
+    this.sent = false;
     this.startScreen;
     this.timedEvent;
     this.lever;
@@ -19,11 +23,13 @@ export default class CarPump extends Phaser.Scene {
     this.car75;
     this.car100;
     this.pumpToWin = 20;
+    this.gameTime = 15;
     this.playerPumps = 0;
     this.clickAvailable = true;
     this.clickTimer = 0;
     this.downWasPressed = false;
     this.upWasPressed = true;
+
   }
 
   preload() {
@@ -112,7 +118,7 @@ export default class CarPump extends Phaser.Scene {
     this.createAnimations();
     // console.log(this.load);
 
-    this.globalState.initCountDown(this);
+    // this.globalState.initCountDown(this);
     // this.globalState.test();
   }
 
@@ -224,17 +230,23 @@ export default class CarPump extends Phaser.Scene {
         this.clickAvailable = false;
         this.clickTimer = 0;
       }
+      if (this.gameOver && !this.sent) {
+        eventsCenter.emit('game-end', this.victory)
+        console.log('emission sent')
+        this.sent = true
+      }
     }
+
   }
 
   timerCountdown(time) {
-    if (time / 1000 > 10 && this.playerPumps < this.pumpToWin) {
+    console.log(time / 1000);
+    // this.gameTime = (time / 1000) * 2;
+    if (time / 1000 > this.gameTime && this.playerPumps < this.pumpToWin) {
       this.gameState = false;
       this.gameOver = true;
       this.gameOverScreen.visible = true;
-    }
-
-    if (time / 1000 > 10 && this.playerPumps >= this.pumpToWin) {
+    } else if (time / 1000 > this.gameTime && this.playerPumps >= this.pumpToWin) {
       this.gameState = false;
       this.gameOver = true;
       this.victory = true;
