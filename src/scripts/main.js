@@ -20,9 +20,7 @@ import CutScreen from "./Team Notateam/CutScreen";
 import MainMenu from "./MainMenu";
 import Timer from "./Timer";
 import Challenge from "./DebugginDaOpps/Challenge";
-import BetweenSpace from "./TeamInflation/BetweenSpace";
 import CircleJump from "./TeamInflation/CircleJump";
-
 
 // Set configuration for phaser game instance
 const config = {
@@ -64,7 +62,6 @@ const config = {
     HideFromCat, 
     HitTheButton, 
     ColorLab
-
   ],
   audio: {
     disableWebAudio: true,
