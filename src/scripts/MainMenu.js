@@ -52,14 +52,22 @@ export default class MainMenu extends Phaser.Scene {
             { frameWidth: 239, frameHeight: 117 })
         this.load.image('finger', new URL('gameAssets/finger.png', import.meta.url).href);
 
-    }
+  create() {
+    this.globalState.randomGame();
+    this.add.image(540, 360, "bg1");
+    this.add.image(540, 360, "bg2");
+    this.playBtn = this.add.image(540, 390, "play");
+    this.fingerIcon = this.add
+      .image(250, this.playBtn.y, "finger")
+      .setScale(0.2);
 
     create() {
         this.globalState.randomGame();
         this.add.image(X/2, Y/2, 'bg1');
-        
 
-        //this.globalState.setText('title of the game', this);
+
+    this.btns = [this.playBtn, this.optionBtn, this.exitBtn];
+    this.currentBottonIndex = 0;
 
         this.btns.push(this.physics.add.sprite(X/4, Y*.80, 'play'))
         this.btns.push(this.physics.add.sprite(3*X/4, Y*.80, 'score'))
@@ -153,6 +161,4 @@ export default class MainMenu extends Phaser.Scene {
             }) 
         )
     }
-
 }
-

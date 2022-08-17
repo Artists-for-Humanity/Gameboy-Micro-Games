@@ -1,3 +1,4 @@
+import eventsCenter from '../EventsCenter'
 export default class ColorPasscode extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
@@ -21,6 +22,7 @@ export default class ColorPasscode extends Phaser.Scene {
         this.started = false;
         this.gameOver = false;
         this.victory = false;
+        this.sent = false;
         this.startTimer = 0;
         this.lightRed, this.lightYellow, this.lightPurple, this.lightBlue;
         this.lightColorButtons = [];
@@ -137,8 +139,14 @@ export default class ColorPasscode extends Phaser.Scene {
             this.time.delayedCall(400, () => { this.goText.alpha -= 0.08; })
         }
 
-        if (this.interactive && this.guessNum <= 4) { 
+        if (this.interactive && !this.gameOver) {
             this.userInput();
+        }
+
+        if (this.gameOver && !this.sent) {
+            eventsCenter.emit('game-end', this.victory)
+            console.log('emission sent')
+            this.sent = true
         }
     }
 
@@ -173,7 +181,7 @@ export default class ColorPasscode extends Phaser.Scene {
         this.goText.setOrigin(0.5);
         this.goText.alpha = 0;
         this.goText.depth = 20;
-        
+
         this.winText = this.add.text(540, 360, 'YOU WON!');
         this.winText.setStyle({
             fontSize: '160px',
@@ -202,18 +210,18 @@ export default class ColorPasscode extends Phaser.Scene {
     startGame() {
         this.showBoard();
 
-         //flash pattern 1 second after board appears
+        //flash pattern 1 second after board appears
         this.time.delayedCall(1000, this.flashPattern, [], this);
 
         //turns on interaction 4 seconds after board appear (4 * 500 + 2000 = 4000ms)
         this.time.delayedCall(this.pattern.length * 500 + 2000, () => {
-                this.goText.alpha = 1;
-                this.interactive = true
-                console.log('start interactive');
-                this.hideGuessBlocks();
-                for (var i = 0; i < this.guessBlocks.length; i++) {
-                    this.guessBlocks[i].setTexture('');
-                }
+            this.goText.alpha = 1;
+            this.interactive = true
+            // console.log('start interactive');
+            this.hideGuessBlocks();
+            for (var i = 0; i < this.guessBlocks.length; i++) {
+                this.guessBlocks[i].setTexture('');
+            }
         }, [], this);
     }
 
@@ -251,7 +259,7 @@ export default class ColorPasscode extends Phaser.Scene {
             this.guessBlocks[index].setTexture(key);
             this.guessBlocks[index].visible = true;
         }
-        
+
         this.showDarkColor(num);
         this.time.delayedCall(ms, () => {
             this.showLightColor(num);
@@ -262,7 +270,7 @@ export default class ColorPasscode extends Phaser.Scene {
     flashPattern() {
         for (var i = 0; i < this.pattern.length; i++) {
 
-             //500ms between flashes and 300ms flash durations
+            //500ms between flashes and 300ms flash durations
             this.time.delayedCall(i * 500, this.flash, [this.pattern[i], 300, i], this);
         }
     }
@@ -328,10 +336,18 @@ export default class ColorPasscode extends Phaser.Scene {
     //each color has an index from 0 to 3
     showGuess(num) {
         var key;
-        if (num === 0) key = 'lightRed';
-        if (num === 1) key = 'lightYellow';
-        if (num === 2) key = 'lightPurple';
-        if (num === 3) key = 'lightBlue';
+        if (num === 0) {
+            key = 'lightRed';
+        }
+        else if (num === 1) {
+            key = 'lightYellow';
+        }
+        else if (num === 2) {
+            key = 'lightPurple';
+        }
+        else if (num === 3) {
+            key = 'lightBlue';
+        }
         this.guessBlocks[this.guessNum].setTexture(key);
         this.guessBlocks[this.guessNum].visible = true;
     }

@@ -1,3 +1,6 @@
+import eventsCenter from '../EventsCenter'
+
+
 export default class TrashSort extends Phaser.Scene {
   // Game Class Constructor
   constructor() {
@@ -16,43 +19,45 @@ export default class TrashSort extends Phaser.Scene {
     this.firstTrash = Phaser.Math.Between(0, 3);
     this.victory = false;
     this.gameOver = false;
+    this.sent = false;
   }
 
   preload() {
     this.load.image(
-      "startScreen",
+      "DO3_startScreen",
       new URL("./assets1/sort-screen.png", import.meta.url).href
     );
     this.load.image(
-      "background",
+      "DO3_background",
+ 
       new URL("./assets1/game-background.png", import.meta.url).href
     );
     this.load.image(
-      "gameOverScreen",
+      "DO3_gameOverScreen",
       new URL("./assets1/game-over.png", import.meta.url).href
     );
     this.load.image(
-      "trash-bin",
+      "DO3_trash_bin",
       new URL("./assets1/pixel-trash-can.png", import.meta.url).href
     );
     this.load.image(
-      "recycle-bin",
+      "DO3_recycle_bin",
       new URL("./assets1/recycle-bin-pixel.png", import.meta.url).href
     );
     this.load.image(
-      "chicken-leg",
+      "DO3_chicken_leg",
       new URL("./assets1/pixel-chicken-leg.png", import.meta.url).href
     );
     this.load.image(
-      "pizza",
+      "DO3_pizza",
       new URL("./assets1/pizza-pixel.png", import.meta.url).href
     );
     this.load.image(
-      "plastic-bag",
+      "DO3_plastic_bag",
       new URL("./assets1/plastic-bag-pixel.png", import.meta.url).href
     );
     this.load.image(
-      "plastic-can-holder",
+      "DO3_plastic__can_holder",
       new URL("./assets1/plastic-can-holder.png", import.meta.url).href
     );
   }
@@ -61,32 +66,34 @@ export default class TrashSort extends Phaser.Scene {
     this.add.image(
       this.game.config.width / 2,
       this.game.config.height / 2,
-      "background"
+      "DO3_background"
+
     );
     this.recycleBin = this.physics.add
-      .image(760, 540, "recycle-bin")
+      .image(760, 540, "DO3_recycle_bin")
       .setScale(0.2, 0.2);
     this.trashBin = this.physics.add
-      .image(320, 540, "trash-bin")
+      .image(320, 540, "DO3_trash_bin")
       .setScale(0.2, 0.2);
 
     this.trashBinMap = {
-      "chicken-leg": "trash-bin",
-      "plastic-bag": "recycle-bin",
-      "plastic-can-holder": "recycle-bin",
-      pizza: "trash-bin",
+      DO3_chicken_leg: "DO3_trash_bin",
+      DO3_plastic_bag: "DO3_recycle_bin",
+      DO3_plastic__can_holder: "DO3_recycle_bin",
+      DO3_pizza: "DO3_trash_bin",
     };
 
     this.gameOverScreen = this.add.image(
       this.game.config.width / 2,
       this.game.config.height / 2,
-      "gameOverScreen"
+      "DO3_gameOverScreen"
     );
 
     this.tempBg = this.add.image(
       this.game.config.width / 2,
       this.game.config.height / 2,
-      "startScreen"
+      "DO3_startScreen"
+
     );
 
     this.gameOverScreen.visible = false;
@@ -98,10 +105,17 @@ export default class TrashSort extends Phaser.Scene {
 
   update() {
     if (!this.gameOver) {
+      console.log('reachme 00');
+
+
+
+
+
       if (this.playerScore === this.triesToWin) {
         this.currTrashItem.visible = false;
         this.victory = true;
         this.gameOver = true;
+        console.log('reachme 02');
         this.endText = this.add.text(300, 250, "You Won!");
         this.endText.setStyle({
           fontSize: "100px",
@@ -111,6 +125,7 @@ export default class TrashSort extends Phaser.Scene {
       }
 
       if (this.currTrashItem === undefined) {
+
         this.currTrashItem = this.physics.add
           .image(
             this.game.config.width / 2,
@@ -120,20 +135,42 @@ export default class TrashSort extends Phaser.Scene {
           .setScale(0.12, 0.12);
         this.addTrashCollider(this.recycleBin);
         this.addTrashCollider(this.trashBin);
+        console.log('reachme 06');
+
       }
+
+
 
       if (this.currTrashItem.y >= 720 + this.currTrashItem.displayWidth / 2) {
         this.gameOver = true;
+        console.log('reachme 01');
+
         this.gameOverScreen.visible = true;
         this.currTrashItem.visible = false;
+        console.log('reachme 04');
+
       }
       this.time.delayedCall(1000, this.dropTrash, [], this);
+
+
+
+
+    }
+
+    if (this.gameOver && !this.sent) {
+      console.log('reachme 07');
+
+      eventsCenter.emit('game-end', this.victory)
+      console.log('emission sent')
+      this.sent = true
+
     }
   }
 
   timerCountdown(time) {
     if (time / 1000 > 10) {
       this.gameState = false;
+      this.gameOver = true;
       this.gameOverScreen.visible = true;
     }
   }
@@ -170,17 +207,16 @@ export default class TrashSort extends Phaser.Scene {
     }
   }
 
-  // helper function that checks if the player lost the game or not.
-  // when the wrong trash goes to the wrong can we will set the gameOver
-  // flag to true
   addTrashCollider(trashBinType) {
     const destination = this.trashBinMap[this.currTrashItem.texture.key];
     this.physics.add.collider(this.currTrashItem, trashBinType, (a, b) => {
       if (destination !== trashBinType.texture.key) {
         this.gameOver = true;
+        console.log('reachme 03');
         this.gameOverScreen.visible = true;
         a.destroy();
         b.destroy();
+        console.log('reachme 03.1');
       } else {
         this.playerScore += 1;
         a.destroy();
@@ -189,13 +225,3 @@ export default class TrashSort extends Phaser.Scene {
     });
   }
 }
-
-/**
- *
- * Food dropping down game ends immediately.
- * Sorts correctly, but game ends before all items are sorted.
- * Trash to bin = immediate game over
- * Recycle, Trash = game over
- * Trash, trash, recycle, recycle = game won
- * 4 recycle = game won
- */
