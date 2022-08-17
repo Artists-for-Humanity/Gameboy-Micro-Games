@@ -21,14 +21,14 @@ export default class HitTheButton extends Phaser.Scene {
         this.cpuName;
         this.myHand;
         this.cpuHand;
-        this.myScoreTracker;
-        this.cpuScoreTracker;
+        // this.myScoreTracker;
+        // this.cpuScoreTracker;
         this.myScore = 0;
         this.cpuScore = 0;
         this.round = 1;
         this.cpuTimer = 0;
 
-        this.permaText;
+        // this.permaText;
         this.myText;
         this.endText;
 
@@ -83,8 +83,8 @@ export default class HitTheButton extends Phaser.Scene {
         this.myHand = this.physics.add.sprite(540, 360, 'hand');
         this.cpuHand = this.physics.add.sprite(540, 360, 'hand');
         this.cpuHand.flipX = true;
-        this.myScoreTracker = this.physics.add.sprite(0, 48, 'scoreTracker').setDisplayOrigin(-16, -12).setScale(0.38);
-        this.cpuScoreTracker = this.physics.add.sprite(1080, 48, 'scoreTracker').setDisplayOrigin(321, -8).setScale(0.38);
+        // this.myScoreTracker = this.physics.add.sprite(0, 48, 'scoreTracker').setDisplayOrigin(-16, -12).setScale(0.38);
+        // this.cpuScoreTracker = this.physics.add.sprite(1080, 48, 'scoreTracker').setDisplayOrigin(321, -8).setScale(0.38);
 
         this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     }
@@ -93,7 +93,7 @@ export default class HitTheButton extends Phaser.Scene {
         if (!this.startCheck) {
             this.startCheck = true;
             this.button.anims.play('red');
-            this.time.delayedCall(4500, () => {
+            this.time.delayedCall(2500, () => {
                 this.myText.visible = false;
                 this.gameActive = true;
                 this.myHand.anims.play('idle', true);
@@ -118,31 +118,43 @@ export default class HitTheButton extends Phaser.Scene {
                         this.time.delayedCall(250, () => {
                             this.myHand.anims.play('idle');
                             this.keyPressAvailable = true;
-                        }, [], this);
-                    });
 
-                    //checks if button is green
-                    if (this.button.anims.currentFrame.textureFrame === 1) {
-                        this.roundWon();
-                    } else {
-                        this.roundLoss();
-                    }
+                            //checks if button is green
+                            if (this.button.anims.currentFrame.textureFrame === 1) {
+                                this.myScore++;
+                                this.endGame();
+                                // this.roundWon();
+                            } else {
+                                this.cpuScore++;
+                                this.endGame();
+                            // this.roundLoss();
+                            }
+                        }, [], this);
+                    });   
                 }
+
                 if (this.button.anims.currentFrame.textureFrame === 1) {
                     this.cpuTimer += delta;
                 }
-                if (this.cpuTimer >= 350) {
+
+                if (this.cpuTimer >= 350 && this.keyPressAvailable) {
                     this.cpuHand.anims.play('slap');
+                    this.keyPressAvailable = false;
                     this.cpuHand.on('animationcomplete', () => { 
-                        this.time.delayedCall(250, () => { this.cpuHand.anims.play('idle') }, [], this);
+                        this.time.delayedCall(250, () => {
+                            this.cpuHand.anims.play('idle');
+                            this.cpuScore++;
+                            this.reset();
+                            this.endGame();
+                        }, [], this);
                     });
-                    this.roundLoss();
+                    // this.roundLoss();
                 }
             }
-            if (this.myScore === 3 || this.cpuScore === 3) {
-                this.gameActive = false;
-                this.time.delayedCall(700, () => { this.endGame(); }, [], this);         
-            }
+            // if (this.myScore === 3 || this.cpuScore === 3) {
+            //     this.gameActive = false;
+            //     this.time.delayedCall(700, () => { this.endGame(); }, [], this);         
+            // }
         }
         if(this.gameOver && !this.sent){
             eventsCenter.emit('game-end', this.victory)
@@ -201,31 +213,28 @@ export default class HitTheButton extends Phaser.Scene {
     }
 
     setText() {
-        this.permaText = this.add.text(540, 40, '');
-        this.permaText.setStyle({
-            fontSize: '36px',
-            fill: '#00ffff',
-            align: 'center',
-            stroke: '#808080',
-            strokeThickness: 8
-        });
-        this.permaText.setText([
-            "First to 3 wins!"]);
-        this.permaText.setOrigin(0.5);
-        this.permaText.depth = 20;
+        // this.permaText = this.add.text(540, 40, '');
+        // this.permaText.setStyle({
+        //     fontSize: '36px',
+        //     fill: '#00ffff',
+        //     align: 'center',
+        //     stroke: '#808080',
+        //     strokeThickness: 8
+        // });
+        // this.permaText.setText([
+        //     "First to 3 wins!"]);
+        // this.permaText.setOrigin(0.5);
+        // this.permaText.depth = 20;
 
-        this.myText = this.add.text(540, 360, '');
+        this.myText = this.add.text(540, 260, '');
         this.myText.setStyle({
             fontSize: '54px',
-            fill: '#00ffff',
+            fill: '#000000',
             align: 'center',
-            stroke: '#808080',
-            strokeThickness: 8
+            stroke: '#ffffff',
+            strokeThickness: 12
         });
-        this.myText.setText([
-            "When the button turns",
-            "green, hit 'SPACE' before",
-            "your opponent does!"]);
+        this.myText.setText("Hit when green!");
         this.myText.setOrigin(0.5);
         this.myText.depth = 20;
 
@@ -250,9 +259,9 @@ export default class HitTheButton extends Phaser.Scene {
     }
     
     reset() {
-        this.time.delayedCall(500, () => {
-            this.button.anims.play('red');
-        }, [], this);
+        // this.time.delayedCall(500, () => {
+        //     this.button.anims.play('red');
+        // }, [], this);
         this.roundActive = false;
         this.delayedCallCheck = false;
         this.cpuTimer = 0;
@@ -281,7 +290,7 @@ export default class HitTheButton extends Phaser.Scene {
         this.gameOver = true;
         this.anims.pauseAll();
         this.time.removeAllEvents();
-        if (this.myScore === 3) {
+        if (this.myScore === 1) {
             this.endText.setStyle({
                 fill: '#00ff00'
             });

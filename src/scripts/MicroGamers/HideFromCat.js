@@ -123,8 +123,8 @@ export default class HideFromCat extends Phaser.Scene {
             this.textDisplayed = true;
             this.displayStartText();
 
-            //delete text and start game after 3 seconds
-            this.time.delayedCall(3000, () => {
+            //delete text and start game after 2 seconds
+            this.time.delayedCall(2000, () => {
                 this.startText.visible = 0;
                 this.gamestarted = true;
             }, [], this);
@@ -206,15 +206,12 @@ export default class HideFromCat extends Phaser.Scene {
         this.startText = this.add.text(540, 160, '')
         this.startText.setStyle({
             fontSize: '72px',
-            fill: '#00ffff',
+            fill: '#000000',
             align: 'center',
-            stroke: '#808080',
-            strokeThickness: 8
+            stroke: '#ffffff',
+            strokeThickness: 12
         });
-        this.startText.setText([
-            "Steal the ",
-            "cheese without",
-            "getting spotted!"]);
+        this.startText.setText("Steal the cheese!");
         this.startText.setOrigin(0.5)
         this.startText.depth = 20;
         this.startText.visible = 1;
