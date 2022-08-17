@@ -99,9 +99,9 @@ export default class CutScreen extends Phaser.Scene {
             this.close_timer++
             this.open_doors()
         }
-        if (Phaser.Input.Keyboard.JustDown(this.space)) {
-            this.open = true
-        }
+        // if (Phaser.Input.Keyboard.JustDown(this.space)) {
+        //     this.open = true
+        // }
     }
 
     close_doors() {

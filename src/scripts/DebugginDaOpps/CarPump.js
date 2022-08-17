@@ -116,6 +116,7 @@ export default class CarPump extends Phaser.Scene {
     if (this.gameStarted === true) {
       this.endgameTimer++;
       if (this.endgameTimer === 290) {
+        this.gameStarted = false;
         this.gameOver = true;
         this.gameOverScreen.visible = true;
       }
@@ -161,8 +162,15 @@ export default class CarPump extends Phaser.Scene {
       this.car4 = true;
       this.car100.visible = true;
       this.victory = true;
+      this.gameStarted = false;
       this.gameOver = true;
       this.gameStarted = false;
+      this.endText = this.add.text(300, 360, "You Won!");
+      this.endText.setStyle({
+        fontSize: "100px",
+        fill: "#000000",
+        align: "center",
+      });
     }
   }
   upAndDown() {
