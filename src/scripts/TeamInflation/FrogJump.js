@@ -219,6 +219,7 @@ export default class FrogJump extends Phaser.Scene {
     loseState() {
         if (this.winState === false) {
             this.loseText.setVisible(true);
+            this.gameOver = true;
             this.game = true;
             // this.physics.pause();
         }

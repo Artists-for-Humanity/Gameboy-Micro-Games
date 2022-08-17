@@ -1,3 +1,6 @@
+import eventsCenter from '../EventsCenter'
+
+
 export default class CircleGame extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
@@ -7,30 +10,43 @@ export default class CircleGame extends Phaser.Scene {
             key: 'CircleGame',
         });
 
+        this.gameOver = false;
+        this.victory = false;
+        this.sent = false;
 
-
+        this.player;
+        this.green;
+        this.ball;
+        this.blue;
+        this.green;
 
     }
 
     preload() {
-        this.load.image(this.load.image('ground', new URL("./assets/FillerAssets/star.png",
+
+
+        this.load.image(this.load.image('TICGbackground', new URL("./assets/CircleJump/circlebackground.png",
             import.meta.url).href));
-        this.load.image(this.load.image('dude', new URL("./assets/FillerAssets/bomb.png",
+
+
+        this.load.image(this.load.image('TICGlose', new URL("./assets/CircleJump/loser.png",
             import.meta.url).href));
-        this.load.image(this.load.image('lose', new URL("./assets/youlose.png",
+        this.load.image(this.load.image('TICGwin', new URL("./assets/CircleJump/winner.png",
             import.meta.url).href));
-        this.load.image(this.load.image('win', new URL("./assets/youwin.png",
-            import.meta.url).href));
-        this.load.image(this.load.image('jump', new URL("./assets/Jump.png",
-            import.meta.url).href));
-        this.load.spritesheet("ball", new URL("./assets/diamond.png",
+
+        this.load.spritesheet("TICGball", new URL("./assets/CircleJump/ballSpriteSheet.png",
             import.meta.url).href, {
-            frameWidth: 46,
-            frameHeight: 38
+            frameWidth: 19,
+            frameHeight: 19
         });
 
-
+        this.load.spritesheet("TICGdiamonds", new URL("./assets/CircleJump/diamond.png",
+            import.meta.url).href, {
+            frameWidth: 16,
+            frameHeight: 16
+        });
     }
+
 
 
     create() {
@@ -43,9 +59,12 @@ export default class CircleGame extends Phaser.Scene {
                 color: 0x1110ba
             }
         });
-        this.player = this.physics.add.image(540, 10, 'ground');
+
+        this.background = this.add.sprite(540, 360, "TICGbackground");
+
+        this.player = this.physics.add.sprite(540, 10, 'diamonds');
         this.player.setGravityY(500);
-        this.blue = this.add.sprite(100, 100, "ball");
+        // this.blue = this.add.sprite(100, 100, "TICGball");
         // this.lines =
         // new Phaser.Geom.Line(700, 200, 700, 400);
         // this.lines.add
@@ -71,15 +90,15 @@ export default class CircleGame extends Phaser.Scene {
         this.groupS = this.physics.add.group();
         this.groupB = this.physics.add.group();
         for (var i = 0; i < 11; i++) {
-            this.groupS.create(0, 0, 'ball')
+            this.groupS.create(0, 0, 'TICGball')
         }
         for (var i = 0; i < 5; i++) {
-            this.groupB.create(0, 0, 'ball');
+            this.groupB.create(0, 0, 'TICGball');
         }
 
-        this.loseText = this.add.image(540, 360, 'lose').setVisible(false);
-        this.winText = this.add.image(540, 360, 'win').setVisible(false);
-        this.hole = this.physics.add.image(540, 500, 'ground').setVisible(true);
+        this.loseText = this.add.image(540, 360, 'TICGlose').setVisible(false);
+        this.winText = this.add.image(540, 360, 'TICGwin').setVisible(false);
+        this.hole = this.physics.add.image(540, 500, 'TICGdiamonds').setVisible(true);
         this.physics.add.collider(this.player, this.hole, this.winState, null, this);
         this.physics.add.collider(this.player, this.groupS, this.loseState, null, this);
         this.physics.add.collider(this.player, this.groupB, this.loseState, null, this);
@@ -89,32 +108,26 @@ export default class CircleGame extends Phaser.Scene {
         Phaser.Actions.PlaceOnCircle(this.groupS.getChildren(), circle);
         Phaser.Actions.PlaceOnCircle(this.groupB.getChildren(), circle2);
 
-        this.physics.pause();
-        this.JumpImg = this.add.image(505, 360, 'jump').setScale(1.3);
+        // this.physics.pause();
+        // this.JumpImg = this.add.image(505, 360, 'TICGjump').setScale(1.3);
         this.startGameDelay = this.time.delayedCall(2300, this.startGame, null, this);
-        console.log('reachme 00');
+        // console.log('reachme 00');
         this.createAnimation();
-
-
-
-
-
-
-
-
     }
 
+
+
     update() {
-        this.blue.anims.play('walk');
-        console.log('reachme 02')
-        // this.graphics.clear();
+        // this.blue.anims.play('TICGwalk');
+        this.player.anims.play('TICGspin');
 
+        this.groupB.getChildren().forEach((child) => {
+            child.anims.play('TICGpulse', true);
+        });
+        this.groupS.getChildren().forEach((child) => {
+            child.anims.play('TICGpulse', true);
+        });
 
-        //  Phaser.Geom.Line.RotateAroundPoint(this.lines, this.points, 0.02);
-
-        //     this.graphics.strokeLineShape(this.lines);
-
-        //     this.graphics.fillPointShape(this.points, 10);
         Phaser.Actions.RotateAroundDistance(this.groupS.getChildren(), this.points, 0.02, 200)
         Phaser.Actions.RotateAroundDistance(this.groupB.getChildren(), this.points, 0.02, 70)
 
@@ -126,10 +139,16 @@ export default class CircleGame extends Phaser.Scene {
             this.player.setVelocityY(-200);
         }
         Phaser.Actions.Call(this.groupB.getChildren(), child => {
-            child.anims.play('walk');
+            child.anims.play('TICGwalk');
         });
 
-        
+        if (this.gameOver && !this.sent) {
+            eventsCenter.emit('game-end', this.victory)
+            console.log('emission sent')
+            this.sent = true
+        }
+
+
     }
 
     makeCircle(texture, radius, points, pointGroup) {
@@ -151,17 +170,20 @@ export default class CircleGame extends Phaser.Scene {
         return degrees * (pi / 180);
     }
     loseState() {
-        this.physics.pause();
+        // this.physics.pause();
         this.loseText.setVisible(true);
+        this.gameOver = true;
 
     }
     winState() {
-        this.physics.pause();
+        // this.physics.pause();
+        this.victory = true;
+        this.gameOver = true;
         this.winText.setVisible(true);
-        this.hole.destroy();
+        // this.hole.destroy();
     }
     startGame() {
-        this.JumpImg.destroy();
+        // this.JumpImg.destroy();
         this.physics.resume();
 
     }
@@ -169,24 +191,46 @@ export default class CircleGame extends Phaser.Scene {
     createAnimation() {
         console.log('reachme 01');
         this.anims.create({
-            key: 'walk',
+            key: 'TICGpulse',
             frames: [{
-                    key: 'ball',
-                    frame: 0
-                },
-                {
-                    key: 'ball',
-                    frame: 1
-                },
-                {
-                    key: 'ball',
-                    frame: 2
-                }
+                key: 'TICGball',
+                frame: 0
+            },
+            {
+                key: 'TICGball',
+                frame: 1
+            },
+            {
+                key: 'TICGball',
+                frame: 2
+            }
             ],
-            frameRate: 12,
+            frameRate: 6,
             repeat: -1
         });
-        console.log('reachme 03');
+
+        this.anims.create({
+            key: 'TICGspin',
+            frames: [{
+                key: 'TICGdiamonds',
+                frame: 0
+            },
+            {
+                key: 'TICGdiamonds',
+                frame: 1
+            },
+            {
+                key: 'TICGdiamonds',
+                frame: 2
+            },
+            {
+                key: 'TICGdiamonds',
+                frame: 3
+            }
+            ],
+            frameRate: 6,
+            repeat: -1
+        });
 
     }
 }

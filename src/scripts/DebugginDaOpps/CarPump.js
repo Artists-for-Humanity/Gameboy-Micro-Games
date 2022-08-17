@@ -23,7 +23,7 @@ export default class CarPump extends Phaser.Scene {
     this.car75;
     this.car100;
     this.pumpToWin = 20;
-    this.gameTime = 16;
+    this.gameTime = 15;
     this.playerPumps = 0;
     this.clickAvailable = true;
     this.clickTimer = 0;
