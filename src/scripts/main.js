@@ -36,13 +36,27 @@ const config = {
       gravity: {
         y: 0,
       },
-      debug: false,
+      debug: true,
     },
   },
 
-
   scene: [
-    CutScreen, SockToss, CarPump, Emeowgency, BetweenSpace, CircleGame, FrogJump, Highest2Lowest, TugOWar, FlySwat, DrinkPour, Cannon, TrashSort, ColorPasscode, HideFromCat, HitTheButton, ColorLab
+    CutScreen,
+    SockToss,
+    CarPump,
+    Emeowgency,
+    BetweenSpace,
+    CircleGame,
+    Highest2Lowest,
+    TugOWar,
+    FlySwat,
+    DrinkPour,
+    Cannon,
+    TrashSort,
+    ColorPasscode,
+    HideFromCat,
+    HitTheButton,
+    ColorLab,
   ],
   audio: {
     disableWebAudio: true,
