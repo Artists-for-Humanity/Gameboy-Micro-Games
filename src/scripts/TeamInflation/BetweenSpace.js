@@ -21,6 +21,10 @@ export default class BetweenSpace extends Phaser.Scene {
   preload() {
     this.load.spritesheet(this.load.image('TI_3background', new URL("./assets/spaceBKG.png",
       import.meta.url).href));
+    this.load.image('TI_3win', new URL("./assets/youwin.png",
+      import.meta.url).href);
+    this.load.image('TI_3lose', new URL("./assets/losetext.png",
+      import.meta.url).href);
 
     this.load.spritesheet("TI_3asteroid", new URL("./assets/asteroidspritesheet.png",
       import.meta.url).href, {
@@ -38,10 +42,7 @@ export default class BetweenSpace extends Phaser.Scene {
       frameHeight: 38
     });
 
-    this.load.image('TI_3win', new URL("./assets/youwin.png",
-      import.meta.url).href);
-    this.load.image('TI_3lose', new URL("./assets/losetext.png",
-      import.meta.url).href);
+
 
 
   }
@@ -96,11 +97,22 @@ export default class BetweenSpace extends Phaser.Scene {
 
       this.asteroidMovements(this.asteroidg1);
       this.asteroidMovements(this.asteroidg2);
+      console.log('reachme 00')
 
 
       this.player.anims.play('TI_3run', true);
-      this.goal.anims.play('TI_3spin', true)
+      console.log('reachme 01')
 
+      this.goal.anims.play('TI_3spin', true)
+      console.log('reachme 02')
+
+
+    }
+
+    if (this.gameOver && !this.sent) {
+      eventsCenter.emit('game-end', this.victory)
+      console.log('emission sent')
+      this.sent = true
     }
 
   }

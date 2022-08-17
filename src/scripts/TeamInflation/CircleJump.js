@@ -1,3 +1,6 @@
+import eventsCenter from '../EventsCenter'
+
+
 export default class CircleJump extends Phaser.Scene {
   // Game Class Constructor
   constructor() {
@@ -8,22 +11,21 @@ export default class CircleJump extends Phaser.Scene {
     });
 
     this.player;
-    // this.green;
     this.ball;
     this.blue;
 
   }
 
   preload() {
-    this.load.image(this.load.image('background', new URL("./assets/CircleJump/circlebackground.png", import.meta.url).href));
-    this.load.image(this.load.image('player', new URL("./assets/CircleJump/player.png", import.meta.url).href));
-    this.load.image(this.load.image('lose', new URL("./assets/CircleJump/loser.png", import.meta.url).href));
-    this.load.image(this.load.image('win', new URL("./assets/CircleJump/winner.png", import.meta.url).href));
-    this.load.spritesheet("ball", new URL("./assets/CircleJump/ballSpriteSheet.png", import.meta.url).href, {
+    this.load.image(this.load.image('TI_4background', new URL("./assets/CircleJump/circlebackground.png", import.meta.url).href));
+    this.load.image(this.load.image('TI_4player', new URL("./assets/CircleJump/player.png", import.meta.url).href));
+    this.load.image(this.load.image('TI_4lose', new URL("./assets/CircleJump/loser.png", import.meta.url).href));
+    this.load.image(this.load.image('TI_4win', new URL("./assets/CircleJump/winner.png", import.meta.url).href));
+    this.load.spritesheet("TI_4ball", new URL("./assets/CircleJump/ballSpriteSheet.png", import.meta.url).href, {
       frameWidth: 19,
       frameHeight: 19
     });
-    this.load.spritesheet("diamonds", new URL("./assets/CircleJump/diamond.png", import.meta.url).href, {
+    this.load.spritesheet("TI_4diamonds", new URL("./assets/CircleJump/diamond.png", import.meta.url).href, {
       frameWidth: 16,
       frameHeight: 16
     });
@@ -39,9 +41,9 @@ export default class CircleJump extends Phaser.Scene {
         color: 0x1110ba
       }
     });
-    this.background = this.add.sprite(540, 360, "background");
+    this.background = this.add.sprite(540, 360, "TI_4background");
 
-    this.player = this.physics.add.sprite(550, 50, 'player').setScale(.10);
+    this.player = this.physics.add.sprite(550, 50, 'TI_4player').setScale(.10);
     this.player.setGravityY(500);
     this.player.body.setCircle(128, 400, 225);
 
@@ -58,15 +60,15 @@ export default class CircleJump extends Phaser.Scene {
     this.groupS = this.physics.add.group();
     this.groupB = this.physics.add.group();
     for (var i = 0; i < 11; i++) {
-      this.groupS.create(0, 0, 'ball').setScale(2);
+      this.groupS.create(0, 0, 'TI_4ball').setScale(2);
     }
     for (var i = 0; i < 5; i++) {
-      this.groupB.create(0, 0, 'ball').setScale(2);
+      this.groupB.create(0, 0, 'TI_4ball').setScale(2);
     }
 
-    this.loseText = this.add.sprite(540, 360, 'lose').setVisible(false);
-    this.winText = this.add.sprite(540, 360, 'win').setVisible(false);
-    this.hole = this.physics.add.sprite(540, 500, 'diamonds').setVisible(true).setScale(2);
+    this.loseText = this.add.sprite(540, 360, 'TI_4lose').setVisible(false);
+    this.winText = this.add.sprite(540, 360, 'TI_4win').setVisible(false);
+    this.hole = this.physics.add.sprite(540, 500, 'TI_4diamonds').setVisible(true).setScale(2);
     this.physics.add.collider(this.player, this.hole, this.winState, null, this);
     this.physics.add.collider(this.player, this.groupS, this.loseState, null, this);
     this.physics.add.collider(this.player, this.groupB, this.loseState, null, this);
@@ -85,14 +87,20 @@ export default class CircleJump extends Phaser.Scene {
   }
 
   update() {
-    this.hole.anims.play('spin', true);
+    this.hole.anims.play('TI_4spin', true);
+    console.log('00');
+
     this.groupB.getChildren().forEach((child) => {
       child.body.setCircle(6, 5, 5);
-      child.anims.play('pulse', true);
+      child.anims.play('TI_4pulse', true);
+      console.log('01');
+
     });
     this.groupS.getChildren().forEach((child) => {
       child.body.setCircle(6, 5, 5);
-      child.anims.play('pulse', true);
+      child.anims.play('TI_4pulse', true);
+      console.log('02 ');
+
     });
 
     Phaser.Actions.RotateAroundDistance(this.groupS.getChildren(), this.points, 0.02, 200)
@@ -103,6 +111,13 @@ export default class CircleJump extends Phaser.Scene {
     }
     Phaser.Actions.Call(this.groupB.getChildren(), child => {
     });
+
+    if (this.gameOver && !this.sent) {
+      eventsCenter.emit('game-end', this.victory)
+      console.log('emission sent')
+      this.sent = true
+    }
+
   }
 
   makeCircle(texture, radius, points, pointGroup) {
@@ -120,37 +135,28 @@ export default class CircleJump extends Phaser.Scene {
     }
   }
 
-  degrees_to_radians(degrees) {
-    var pi = Math.PI;
-    return degrees * (pi / 180);
-  }
-
-
   winState() {
-    this.physics.pause();
+    // this.physics.pause();
+    this.victory = true;
+    this.gameOver = true;
     this.winText.setVisible(true);
     // this.hole.destroy();
-  }
-  startGame() {
-    // this.JumpImg.destroy();
-    this.physics.resume();
-
   }
 
   createAnimation() {
 
     this.anims.create({
-      key: 'pulse',
+      key: 'TI_4pulse',
       frames: [{
-        key: 'ball',
+        key: 'TI_4ball',
         frame: 0
       },
       {
-        key: 'ball',
+        key: 'TI_4ball',
         frame: 1
       },
       {
-        key: 'ball',
+        key: 'TI_4ball',
         frame: 2
       }
       ],
@@ -159,21 +165,21 @@ export default class CircleJump extends Phaser.Scene {
     });
 
     this.anims.create({
-      key: 'spin',
+      key: 'TI_4spin',
       frames: [{
-        key: 'diamonds',
+        key: 'TI_4diamonds',
         frame: 0
       },
       {
-        key: 'diamonds',
+        key: 'TI_4diamonds',
         frame: 1
       },
       {
-        key: 'diamonds',
+        key: 'TI_4diamonds',
         frame: 2
       },
       {
-        key: 'diamonds',
+        key: 'TI_4diamonds',
         frame: 2
       }
       ],
@@ -188,64 +194,15 @@ export default class CircleJump extends Phaser.Scene {
     return degrees * (pi / 180);
   }
   loseState() {
-    this.physics.pause();
+    // this.physics.pause();
+    this.gameOver = true;
     this.loseText.setVisible(true);
   }
-  winState() {
-    this.physics.pause();
-    this.winText.setVisible(true);
-    this.hole.destroy();
-  }
+
   startGame() {
     // this.JumpImg.destroy();
     this.physics.resume();
   }
 
-  createAnimation() {
-    // console.log("reachme 02");
-    this.anims.create({
-      key: "pulse",
-      frames: [
-        {
-          key: "ball",
-          frame: 0,
-        },
-        {
-          key: "ball",
-          frame: 1,
-        },
-        {
-          key: "ball",
-          frame: 2,
-        },
-      ],
-      frameRate: 6,
-      repeat: -1,
-    });
-
-    this.anims.create({
-      key: "spin",
-      frames: [
-        {
-          key: "diamonds",
-          frame: 0,
-        },
-        {
-          key: "diamonds",
-          frame: 1,
-        },
-        {
-          key: "diamonds",
-          frame: 2,
-        },
-        {
-          key: "diamonds",
-          frame: 3,
-        },
-      ],
-      frameRate: 6,
-      repeat: -1,
-    });
-  }
 }
 

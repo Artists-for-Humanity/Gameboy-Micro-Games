@@ -1,5 +1,7 @@
 const X = 1080
 const Y = 720
+import eventsCenter from '../EventsCenter'
+
 export default class MicroGame31 extends Phaser.Scene {
     constructor() {
         super({
@@ -35,28 +37,29 @@ export default class MicroGame31 extends Phaser.Scene {
         // game state booleans
         this.gameOver = false;
         this.victory = false;
+        this.sent = false;
     }
     preload() {
-        this.load.image("background", new URL("./assets/Lowest/NGbackground.png",
+        this.load.image("TI_1background", new URL("./assets/Lowest/NGbackground.png",
             import.meta.url).href);
-        this.load.image("cursorimage", new URL("./assets/Lowest/cursorimage.png",
+        this.load.image("TI_1cursorimage", new URL("./assets/Lowest/cursorimage.png",
             import.meta.url).href);
-        this.load.image("lose", new URL("./assets/Lowest/xmark.png",
+        this.load.image("TI_1lose", new URL("./assets/Lowest/xmark.png",
             import.meta.url).href);
-        this.load.image("win", new URL("./assets/Lowest/checkmark.png",
+        this.load.image("TI_1win", new URL("./assets/Lowest/checkmark.png",
             import.meta.url).href);
 
-        this.load.spritesheet("frames", new URL("./assets/Lowest/frames.png",
+        this.load.spritesheet("TI_1frames", new URL("./assets/Lowest/frames.png",
             import.meta.url).href, {
             frameWidth: 1368 / 3,
             frameHeight: 329
         });
-        this.load.spritesheet("numbers", new URL("./assets/Lowest/numbers.png",
+        this.load.spritesheet("TI_1numbers", new URL("./assets/Lowest/numbers.png",
             import.meta.url).href, {
             frameWidth: 313,
             frameHeight: 350
         });
-        this.load.spritesheet("operations", new URL("./assets/Lowest/operations.png",
+        this.load.spritesheet("TI_1operations", new URL("./assets/Lowest/operations.png",
             import.meta.url).href, {
             frameWidth: 1408 / 4,
             frameHeight: 294
@@ -73,19 +76,19 @@ export default class MicroGame31 extends Phaser.Scene {
         this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
 
         // CREATE GRAPHICS
-        this.add.image(X / 2, Y / 2, "background");
+        this.add.image(X / 2, Y / 2, "TI_1background");
         this.anims.create({
-            key: 'box',
+            key: 'TI_1box',
             frames: [{
-                key: 'frames',
+                key: 'TI_1frames',
                 frame: 0
             },
             {
-                key: 'frames',
+                key: 'TI_1frames',
                 frame: 1
             },
             {
-                key: 'frames',
+                key: 'TI_1frames',
                 frame: 2
             }
             ],
@@ -98,7 +101,7 @@ export default class MicroGame31 extends Phaser.Scene {
 
         // DETERMINE CORRECT OPTIONS
         this.correct = Math.min(...this.evaluated)
-        console.log("correct:" + this.correct)
+        console.log("TI_1correct:" + this.correct)
 
         // POPULATE GRAPHICS
         this.fillBox(0, X * .25, Y * .2)
@@ -108,17 +111,17 @@ export default class MicroGame31 extends Phaser.Scene {
         this.fillBox(4, X * .75, Y * .8)
 
         // SET SELECTED STARTING BOX
-        this.box[this.selected].anims.play('box')
-        this.pointer = this.add.image(this.box[this.selected].x, this.box[this.selected].y + 80, 'cursorimage')
+        this.box[this.selected].anims.play('TI_1box')
+        this.pointer = this.add.image(this.box[this.selected].x, this.box[this.selected].y + 80, 'TI_1cursorimage')
         this.pointer.setScale(.15)
 
         // WIN & LOSE CONDITIONS
-        this.loseText = this.add.image(400, 220, 'lose');
+        this.loseText = this.add.image(400, 220, 'TI_1lose');
         this.loseText.setScrollFactor(0);
         this.loseText.setOrigin(0, 0);
         this.loseText.setVisible(false);
 
-        this.winText = this.add.image(400, 220, 'win');
+        this.winText = this.add.image(400, 220, 'TI_1win');
         this.winText.setOrigin(0, 0);
         this.winText.setScrollFactor(0);
         this.winText.setVisible(false);
@@ -149,6 +152,7 @@ export default class MicroGame31 extends Phaser.Scene {
                 }
                 if (this.victory) {
                     this.winText.setVisible(true);
+                    this.victory = true;
                     console.log("good job'n such")
                 } else {
                     console.log("Less good job")
@@ -161,6 +165,11 @@ export default class MicroGame31 extends Phaser.Scene {
         } else {
             // do stuff at end of game, victory or lose
             if (this.victory) { } else { }
+        }
+        if (this.gameOver && !this.sent) {
+            eventsCenter.emit('game-end', this.victory)
+            console.log('emission sent')
+            this.sent = true
         }
     }
     // START HELPER FUNCTIONS
@@ -185,14 +194,14 @@ export default class MicroGame31 extends Phaser.Scene {
         // add container to store equation number images
         this.equations[i] = this.add.container(x, y)
         // add a sprite for box frame
-        this.box[i] = this.physics.add.sprite(x, y, 'frames')
+        this.box[i] = this.physics.add.sprite(x, y, 'TI_1frames')
         this.box[i].setScale(1, 0.5)
 
         // if we're dealing with an equation, print the second operand and operation first
         if (this.opcode[i] !== 0) {
             placement = -1084 / 1.75
             // add an operator
-            this.equations[i].add(this.add.image(0, 0, 'operations', (this.opcode[i]) - 1))
+            this.equations[i].add(this.add.image(0, 0, 'TI_1operations', (this.opcode[i]) - 1))
             // add a second operand
 
             this.addNumbers(this.equations[i], this.num2[i], 1084 / 3.5, i, 2)
@@ -237,17 +246,17 @@ export default class MicroGame31 extends Phaser.Scene {
         let addset = 300
         // only add first digit if number is greater than 99
         if (val > 99) {
-            equation.add(this.add.image(-300 + offset, 0, 'numbers', nums[0]))
+            equation.add(this.add.image(-300 + offset, 0, 'TI_1numbers', nums[0]))
         }
         // only add second digit if number is greater than 9
         if (val > 9) {
-            equation.add(this.add.image(0 + offset, 0, 'numbers', nums[1]))
+            equation.add(this.add.image(0 + offset, 0, 'TI_1numbers', nums[1]))
         }
         // don't offset digit if number is less than 10, AND is the second operand OR sole number
         if (val < 10 && (operand === 2 || this.opcode[index] === 0)) {
             addset = 0
         }
-        equation.add(this.add.image(addset + offset, 0, 'numbers', nums[2]))
+        equation.add(this.add.image(addset + offset, 0, 'TI_1numbers', nums[2]))
     }
     // sets values of num1, num2, opcode and evaluated arrays for use in equations
     setNumbers() {
