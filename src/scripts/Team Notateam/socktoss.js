@@ -10,7 +10,7 @@ export default class SockToss extends Phaser.Scene {
     constructor() {
         super({
             active: false,
-            visible: true,
+            visible: false,
             key: 'SockToss',
             physics: {
                 default: 'arcade',
@@ -136,6 +136,8 @@ export default class SockToss extends Phaser.Scene {
         this.timer2 = 0
         this.toss.scale = 0
 
+        eventsCenter.on('start_game', () => {this.started = true; this.globalState.timerMessage('start_timer')})
+
         this.anims.create({
             key: 'throw',
             frames: [{key: 'hand_closed'}]
@@ -152,11 +154,7 @@ export default class SockToss extends Phaser.Scene {
     update() {
         // this nested if-statement plays the intro "TOSS" text
         // Started will be set to true at the end
-        if(!this.started){
-            this.tosstext()
-        }
-        // When game has started
-        else{
+        if(this.started){
             this.timer++;
             if(this.cursors.space.isDown){
                 this.thrown = true;
@@ -181,11 +179,13 @@ export default class SockToss extends Phaser.Scene {
                     }
                     this.endcon()
                     if(this.gameOver && !this.sent){
+                        this.globalState.timerMessage('stop_timer')
                         this.globalState.sendMessage(this.victory)
                         this.sent = true
                     }
                 }
             }
+            
         }
     }
     maskdraw(){

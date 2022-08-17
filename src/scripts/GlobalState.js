@@ -115,6 +115,11 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
       eventsCenter.emit('game-end', victory)
       console.log('emission sent')
   }
+
+  timerMessage(message){
+    eventsCenter.emit(message)
+    console.log('emission sent')
+  }
 }
 
 export default GlobalState;

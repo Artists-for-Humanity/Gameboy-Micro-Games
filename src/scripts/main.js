@@ -19,6 +19,7 @@ import DrinkPour from "./8Bitties/DrinkPour";
 import SockToss from "./Team Notateam/SockToss";
 import CutScreen from "./Team Notateam/CutScreen";
 import MainMenu from "./MainMenu";
+import Timer from "./Timer";
 
 // Set configuration for phaser game instance
 const config = {
@@ -41,7 +42,8 @@ const config = {
   scene: [
     MainMenu,
     CutScreen,
-    SockToss, 
+    Timer, 
+    SockToss,
     Emeowgency,
     ColorLab,
     Highest2Lowest,
