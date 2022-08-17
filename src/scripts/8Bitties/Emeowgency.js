@@ -233,14 +233,15 @@ export default class Emeowgency extends Phaser.Scene {
         }
 
 
-      if (this.catSafe === true) {
-        this.safeScaleToggle = true;
-        this.catFall = false;
-      }
-      if (this.catSafe === false) {
-        this.catFail = true;
-        this.catFall = false;
-        this.failScaleToggle = true;
+        if (this.catSafe === true) {
+          this.safeScaleToggle = true;
+          this.catFall = false;
+        }
+        if (this.catSafe === false) {
+          this.catFail = true;
+          this.catFall = false;
+          this.failScaleToggle = true;
+        }
       }
     }
   }
@@ -400,3 +401,4 @@ export default class Emeowgency extends Phaser.Scene {
   }
 
 }
+
