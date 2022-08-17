@@ -44,6 +44,14 @@ export default class CarPump extends Phaser.Scene {
       new URL("./assets/lever.png", import.meta.url).href,
       { frameWidth: 88, frameHeight: 162 }
     );
+    this.load.image(
+      "DO2_arrow_up",
+      new URL("./assets/arrow_up.png", import.meta.url).href
+    );
+    this.load.image(
+      "DO2_arrow_down",
+      new URL("./assets/arrow_down.png", import.meta.url).href
+    );
     this.load.spritesheet(
       "DO2_car25",
       new URL("./assets/25car_spritesheet.png", import.meta.url).href,
@@ -75,12 +83,22 @@ export default class CarPump extends Phaser.Scene {
     this.car50 = this.physics.add.sprite(540, 350, "DO2_car50");
     this.car75 = this.physics.add.sprite(540, 350, "DO2_car75");
     this.car100 = this.physics.add.sprite(540, 350, "DO2_car100");
+    this.upArrow = this.add
+      .image(1040, 350, "DO2_arrow_up")
+      .setScale(0.4, 0.4)
+      .setVisible(false);
+    this.downArrow = this.add
+      .image(1040, 450, "DO2_arrow_down")
+      .setScale(0.4, 0.4);
     this.gameOverScreen = this.add.image(
       this.game.config.width / 2,
       this.game.config.height / 2,
       "DO2_gameOverScreen"
     );
     this.tempBg = this.add.image(1080 / 2, 720 / 2, "DO2_startScreen");
+
+    this.up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+    this.down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
 
     this.car50.visible = false;
     this.car75.visible = false;
@@ -189,12 +207,14 @@ export default class CarPump extends Phaser.Scene {
       this.clickTimer += delta;
       this.timerCountdown(time);
       if (this.clickTimer > 100) this.clickAvailable = true;
-      if (this.cursors.up.isDown && this.downWasPressed) {
+      if (Phaser.Input.Keyboard.JustDown(this.up) && this.downWasPressed) {
         this.downWasPressed = false;
         this.upWasPressed = true;
         this.lever.anims.play("DO2_lever_up", true);
+        this.downArrow.setVisible(true);
+        this.upArrow.setVisible(false);
       } else if (
-        this.cursors.down.isDown &&
+        Phaser.Input.Keyboard.JustDown(this.down) &&
         this.upWasPressed &&
         this.clickAvailable
       ) {
@@ -231,6 +251,8 @@ export default class CarPump extends Phaser.Scene {
     this.playerPumps += 1;
 
     this.lever.anims.play("DO2_lever_down", true);
+    this.downArrow.setVisible(false);
+    this.upArrow.setVisible(true);
     if (this.playerPumps === 5) {
       this.car25.visible = true;
       this.car25.anims.play("DO2_car_inflate25%", true);

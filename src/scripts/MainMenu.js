@@ -26,6 +26,7 @@ export default class MainMenu extends Phaser.Scene {
       "CarPump",
       "TrashSort",
       "Cannon",
+      "Challenge",
     ];
 
     this.load.image(

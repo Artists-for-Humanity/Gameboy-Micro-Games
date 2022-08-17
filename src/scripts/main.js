@@ -19,6 +19,7 @@ import DrinkPour from "./8Bitties/DrinkPour";
 import SockToss from "./Team Notateam/socktoss";
 import CutScreen from "./Team Notateam/CutScreen";
 import MainMenu from "./MainMenu";
+import Challenge from "./DebugginDaOpps/Challenge";
 
 // Set configuration for phaser game instance
 const config = {
@@ -56,6 +57,7 @@ const config = {
     CarPump,
     TrashSort,
     Cannon,
+    Challenge,
   ],
 
   audio: {
