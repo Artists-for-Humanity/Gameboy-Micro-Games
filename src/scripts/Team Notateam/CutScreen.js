@@ -5,12 +5,30 @@ const Y = 720
 const L_END = X / 4
 const R_END = 3 * L_END
 const L_START = -L_END
-const R_START = 5 * L_END
+const R_START = 5*L_END
+const R_END = 3*L_END
+
+const listOfGames = [
+    'SockToss',
+    "Emeowgency",
+    "ColorLab",
+    "MicroGame11",
+    "Highest2Lowest",
+    "FrogJump",
+    "CircleGame",
+    "BewteenSpace",
+    "ColorPasscode",
+    "HideFromCat",
+    "HitTheButton",
+    "TugOWar",
+    "FlySwat",
+    "DrinkPour"];
+
 export default class CutScreen extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
         super({
-            active: true,
+            active: false,
             visible: true,
             key: 'CutScreen',
             physics: {
@@ -25,8 +43,9 @@ export default class CutScreen extends Phaser.Scene {
 
         this.playedGames = []
 
-        this.currentScene
-        this.roundNumber = 1
+        this.currentScene = "MainMenu"
+        this.roundNumber = 0 
+
 
         this.close_timer = 0
         this.life_total = 5
@@ -66,7 +85,7 @@ export default class CutScreen extends Phaser.Scene {
             'win', new URL('assets/win_cat.png', import.meta.url).href,
             { frameWidth: 419, frameHeight: 162 })
         this.load.spritesheet(
-            'numbers', new URL('assets/numsheet.png', import.meta.url).href,
+            'numbers', new URL('../globalAssets/numsheet.png', import.meta.url).href,
             { frameWidth: 77, frameHeight: 122 })
         this.load.image('gba_socket', new URL('assets/gba_socket.png', import.meta.url).href)
         this.load.image('num_plate', new URL('assets/num_plate.png', import.meta.url).href)
@@ -81,13 +100,7 @@ export default class CutScreen extends Phaser.Scene {
         this.buildObjects()
         this.setScore(this.score)
 
-        eventsCenter.on('game-end', (param) => {
-            this.closeDoor(param);
-
-
-            this.time.delayedCall(504, () => this.scene.remove(this.game.scene.scenes[0]))
-        }, this)
-
+        eventsCenter.on('game-end', this.closeDoor, this)
     }
     update() {
 
@@ -98,9 +111,6 @@ export default class CutScreen extends Phaser.Scene {
         else if (this.open) {
             this.close_timer++
             this.open_doors()
-        }
-        if (Phaser.Input.Keyboard.JustDown(this.space)) {
-            this.open = true
         }
     }
 
@@ -113,9 +123,8 @@ export default class CutScreen extends Phaser.Scene {
         }
         else {
             this.close_timer = 0
-            console.log("timer reset")
-            this.closed = true
             this.closecon()
+            this.closed = true
         }
     }
     open_doors() {
@@ -127,6 +136,8 @@ export default class CutScreen extends Phaser.Scene {
         else {
             this.close_timer = 0
             this.open = false
+            this.globalState.timerMessage('start_game')
+            console.log("start timer")
             this.closed = true
         }
     }
@@ -294,18 +305,18 @@ export default class CutScreen extends Phaser.Scene {
         if (score >= 100)
             this.huns.setFrame(h + 1)
     }
-    closecon() {
+    
+    closecon(){
+        console.log("Round ", this.roundNumber)
+        
+        if(!this.lost){
 
-        if (this.roundNumber > 1) {
-            this.endGame()
-        }
-
-        if (!this.lost) {
             this.faceplate.anims.play('win1').once('animationcomplete', () => {
                 this.faceplate.anims.play('win2')
             })
 
             this.score++
+
             setTimeout(() => {
                 this.setScore(this.score)
             }, 200)
@@ -318,27 +329,36 @@ export default class CutScreen extends Phaser.Scene {
             this.life_total--
             this.reduce_life()
         }
-
+        this.globalState.timerMessage('reset_timer')
+        if(this.roundNumber > 0 ){
+            this.endGame()
+        }
+        else{
+            if(this.scene.isActive('MainMenu'))
+            this.scene.remove('MainMenu')
+        }
         this.nextGame()
-
     }
-
-    nextGame() {
-
-        this.currentScene = this.game.scene.scenes[1]
-        // console.log(this.game.scene.scenes[1])
-
-        setTimeout(() => {
-            this.scene.run(this.currentScene)
-            this.scene.sendToBack(this.currentScene);
-            // console.log(this.game.scene.scenes);
-            this.roundNumber++
+    nextGame(){
+        // do{
+        //     this.currentScene = this.game.scene.scenes[this.roundNumber + 1]
+        // } while(this.playedGames.includes(this.currentScene) && !this.finishedGames)
+        //this.currentScene = "SockToss"
+        this.currentScene = listOfGames[this.roundNumber]
+        console.log(this.currentScene)
+        this.scene.sendToBack('Timer')
+        this.scene.sendToBack(this.currentScene)
+        this.scene.run('Timer')
+        this.scene.run(this.currentScene) 
+        console.log(this.currentScene +" should be running...")
+        this.roundNumber++
+        setTimeout(()=>{
             this.open = true
         }, 2000)
-    }
-
-
-    endGame() {
+    } 
+    endGame(){
+        console.log(this.currentScene)
+        this.scene.remove(this.currentScene)
     }
     buildObjects() {
         // Build Doors

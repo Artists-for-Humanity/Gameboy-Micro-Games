@@ -15,12 +15,14 @@ import HitTheButton from "./MicroGamers/HitTheButton";
 import TugOWar from "./8Bitties/TugOWar";
 import FlySwat from "./8Bitties/FlySwat";
 import DrinkPour from "./8Bitties/DrinkPour";
-import SockToss from "./Team Notateam/socktoss";
+import SockToss from "./Team Notateam/SockToss";
 import CutScreen from "./Team Notateam/CutScreen";
 import MainMenu from "./MainMenu";
+import Timer from "./Timer";
 import Challenge from "./DebugginDaOpps/Challenge";
 import BetweenSpace from "./TeamInflation/BetweenSpace";
 import CircleJump from "./TeamInflation/CircleJump";
+
 
 // Set configuration for phaser game instance
 const config = {
@@ -43,7 +45,26 @@ const config = {
 
 
   scene: [
-    CutScreen, SockToss, CarPump, Emeowgency, BetweenSpace, CircleJump, FrogJump, Highest2Lowest, TugOWar, FlySwat, DrinkPour, Cannon, TrashSort, ColorPasscode, HideFromCat, HitTheButton, ColorLab
+    MainMenu,
+    CutScreen,
+    Timer,
+    SockToss, 
+    CarPump, 
+    Emeowgency, 
+    BetweenSpace, 
+    CircleJump, 
+    FrogJump, 
+    Highest2Lowest, 
+    TugOWar, 
+    FlySwat, 
+    DrinkPour, 
+    Cannon, 
+    TrashSort, 
+    ColorPasscode, 
+    HideFromCat, 
+    HitTheButton, 
+    ColorLab
+
   ],
   audio: {
     disableWebAudio: true,
