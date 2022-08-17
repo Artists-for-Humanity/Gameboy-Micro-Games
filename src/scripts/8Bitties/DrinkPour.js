@@ -1,4 +1,7 @@
 import Phaser from "phaser";
+
+import eventsCenter from '../EventsCenter'
+
 const X = 440;
 const Y = 360;
 const W = 153;
@@ -27,6 +30,7 @@ export default class DrinkPour extends Phaser.Scene {
     this.overfill = false;
     this.gameOver = false;
     this.victory = false;
+    this.sent = false;
   }
   preload() {
     this.load.image(
@@ -38,7 +42,7 @@ export default class DrinkPour extends Phaser.Scene {
       new URL("./assets/drink pour/pourtext.png", import.meta.url).href
     );
     this.load.image(
-      "background",
+      "GDPbackground",
       new URL("./assets/drink pour/restaurantbg.png", import.meta.url).href
     );
     this.load.spritesheet(
@@ -85,7 +89,7 @@ export default class DrinkPour extends Phaser.Scene {
     this.animate();
 
     //background
-    this.add.image(540, 360, "background");
+    this.add.image(540, 360, "GDPbackground");
 
     //add juice and glass
     this.glass = this.physics.add.sprite(X, Y, "glass");
@@ -161,6 +165,11 @@ export default class DrinkPour extends Phaser.Scene {
       this.gameStart = false;
       this.gameState();
       this.spillAnim();
+    }
+    if (this.gameOver && !this.sent) {
+      eventsCenter.emit('game-end', this.victory)
+      console.log('emission sent')
+      this.sent = true
     }
   }
 

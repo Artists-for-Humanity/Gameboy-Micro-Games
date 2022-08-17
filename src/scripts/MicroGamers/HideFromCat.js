@@ -1,3 +1,4 @@
+import eventsCenter from '../EventsCenter'
 export default class HideFromCat extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
@@ -8,9 +9,8 @@ export default class HideFromCat extends Phaser.Scene {
         });
 
         // Game Object Declarations
-        this.background;
         this.table;
-        this.cat;
+        this.background;
         this.cheese;
         this.cup;
         this.eyebeams;
@@ -35,6 +35,7 @@ export default class HideFromCat extends Phaser.Scene {
         this.gamestarted = false;
         this.gameOver = false;
         this.victory = false;
+        this.sent = false;
 
         this.startText;
         this.deadText;
@@ -42,11 +43,9 @@ export default class HideFromCat extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('background', new URL('assets/HideFromCat/background.png',
-            import.meta.url).href);
         this.load.image('table', new URL('assets/HideFromCat/table.png',
             import.meta.url).href);
-        this.load.image('cat', new URL('assets/HideFromCat/cat.png',
+        this.load.image('22background', new URL('assets/HideFromCat/22background.png',
             import.meta.url).href);
         this.load.image('eyes', new URL('assets/HideFromCat/eyes.png',
             import.meta.url).href);
@@ -80,8 +79,7 @@ export default class HideFromCat extends Phaser.Scene {
 
     create() {
         this.createAnims();
-        this.background = this.add.image(540, 360, 'background');
-        this.cat = this.add.image(540, 360, 'cat');
+        this.background = this.add.image(540, 360, '22background');
         this.eyes = this.add.image(540, 360, 'eyes');
         this.table = this.add.image(540, 360, 'table');
         this.cup = this.add.image(500, 370, 'cup');
@@ -145,6 +143,11 @@ export default class HideFromCat extends Phaser.Scene {
                 }
             }
         }
+        if(this.gameOver && !this.sent){
+            eventsCenter.emit('game-end', this.victory)
+            console.log('emission sent')
+            this.sent = true
+        }
     }
 
     createAnims() {
@@ -185,7 +188,7 @@ export default class HideFromCat extends Phaser.Scene {
         });
 
         this.anims.create({
-            key: 'idle',
+            key: 'idleMouse',
             frames: [{ key: 'mouse', frame: 0 }],
             frameRate: 10
         });
@@ -297,7 +300,7 @@ export default class HideFromCat extends Phaser.Scene {
             this.mouse.anims.play('run', true);
             this.mouse.x -= 8;
         }
-        else this.mouse.anims.play('idle');
+        else this.mouse.anims.play('idleMouse');
     }
 
     //ms = flash duration

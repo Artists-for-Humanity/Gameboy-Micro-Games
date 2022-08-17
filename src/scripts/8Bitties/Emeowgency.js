@@ -1,4 +1,6 @@
 import Phaser from "phaser";
+import eventsCenter from '../EventsCenter'
+
 
 export default class Emeowgency extends Phaser.Scene {
   // Game Class Constructor
@@ -14,6 +16,7 @@ export default class Emeowgency extends Phaser.Scene {
     this.timer;
     this.catchScale = 0;
     this.catch;
+    this.grass;
     this.catfalling = true;
     this.catFail = false;
     this.catFall = true;
@@ -30,38 +33,43 @@ export default class Emeowgency extends Phaser.Scene {
     this.cat;
     this.blanket;
     this.shadow;
-    this.victory = false;
-    this.lose = false;
+    this.up;
+    this.down;
+    this.left;
+    this.right;
+
     this.gameOver = false;
+    this.victory = false;
+    this.sent = false;
   }
 
   preload() {
     this.load.image(
-      "catch",
+      "8BEcatch",
       new URL("../8Bitties/assets/Emeowgency/Catch_Text.png", import.meta.url)
         .href
     );
     this.load.image(
-      "fail",
+      "8BEfail",
       new URL("../8Bitties/assets/Emeowgency/fail_text.png", import.meta.url)
         .href
     );
     this.load.image(
-      "safe",
+      "8BEsafe",
       new URL("../8Bitties/assets/Emeowgency/safe_text.png", import.meta.url)
         .href
     );
     this.load.image(
-      "Blanket",
+      "8BEBlanket",
       new URL("../8Bitties/assets/Emeowgency/blanket.png", import.meta.url).href
     );
     this.load.image(
-      "grass",
+      "8BEgrass",
       new URL("../8Bitties/assets/Emeowgency/grass_bg.png", import.meta.url)
         .href
     );
     this.load.spritesheet(
-      "yang",
+      "8BEyang",
       new URL(
         "../8Bitties/assets/Emeowgency/yangSpriteSheet.png",
         import.meta.url
@@ -71,32 +79,13 @@ export default class Emeowgency extends Phaser.Scene {
         frameHeight: 58,
       }
     );
-    this.load.spritesheet(
-      "blanketSheet",
-      new URL(
-        "../8Bitties/assets/Emeowgency/blanketSpriteSheet.png",
-        import.meta.url
-      ).href,
-      {
-        frameWidth: 617,
-        frameHeight: 465,
-      }
-    );
-    this.load.spritesheet(
-      "yangSafe",
-      new URL("../8Bitties/assets/Emeowgency/yangSafe.png", import.meta.url)
-        .href,
-      {
-        frameWidth: 354,
-        frameHeight: 185,
-      }
-    );
   }
 
   create() {
-    this.grass = this.add.image(540, 360, "grass").setDepth(-10);
-    this.catch = this.add.image(540, 360, "catch");
+    this.grass = this.add.image(540, 360, "8BEgrass").setDepth(-10);
+    this.catch = this.add.image(540, 360, "8BEcatch");
     this.timer = 1;
+    this.catch.setScale(0);
     this.createAnimations();
     this.up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
     this.left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
@@ -110,14 +99,25 @@ export default class Emeowgency extends Phaser.Scene {
     this.playSafe();
     this.playFail();
     this.scaleCatch();
-    this.scaleShadow();
+
+    if (this.shadow) {
+      this.scaleShadow();
+    }
     if (this.cat) {
       this.playanimations();
       if (this.cat.y !== this.shadow.y) {
         this.cat.y += 4;
       }
     }
-    this.moveBlanket();
+    if (this.blanket) {
+      this.moveBlanket();
+    }
+
+    if (this.gameOver && !this.sent) {
+      eventsCenter.emit('game-end', this.victory)
+      console.log('emission sent')
+      this.sent = true
+    }
   }
 
   //Catch!, the image in the beggining
@@ -137,8 +137,8 @@ export default class Emeowgency extends Phaser.Scene {
   //starts the game after Catch! finnishes popping up
   gameStart() {
     this.spawnShadow();
-    this.spawnBlanket();
     this.spawnCat();
+    this.spawnBlanket();
   }
 
   //makes a random x and y coordiante
@@ -153,76 +153,79 @@ export default class Emeowgency extends Phaser.Scene {
   //spawns the shadow at a random location on the screen
   spawnShadow() {
     const position = this.getRandomPosition();
-    this.shadow = this.physics.add.sprite(position.x, position.y, "yang");
+    this.shadow = this.physics.add
+      .sprite(position.x, position.y, "8BEyang")
+      .setDepth(-8);
     this.shadow.alpha = 0.5;
-    this.shadow.body.setSize(24, 24);
   }
 
   spawnBlanket() {
     this.blanket = this.physics.add
-      .sprite(480, 360, "blanketSheet")
-      .setScale(0.65)
+      .image(480, 360, "8BEBlanket")
+      .setScale(0.4)
       .setDepth(-10);
-    this.blanket.body.setSize(350, 250);
+    this.physics.add.overlap(this.blanket, this.shadow, () => {
+      this.catSafe = true;
+    });
   }
 
   //spawns the cat above the Shadow based on how long shadow takes to get big
   spawnCat() {
-    this.cat = this.add
-      .sprite(this.shadow.x, this.shadow.y - 83 * 4, "yangSafe")
-      .setScale(1.9);
+    this.cat = this.physics.add
+      .sprite(this.shadow.x, this.shadow.y - 83 * 4, "8BEyang")
+      .setDepth(-7);
   }
 
   //scales the shadow up to 1 , also determines the end of the game
   scaleShadow() {
-    if (this.shadow) {
-      if (this.shadowScale <= 2) {
-        this.shadowTimer++;
-        this.shadowScale += 0.4 / this.shadowTimer;
-        this.shadow.setScale(this.shadowScale);
-      }
-      if (this.shadowTimer === 83) {
-        if (
-          Phaser.Geom.Rectangle.Overlaps(this.shadow.body, this.blanket.body)
-        ) {
-          this.victory === true;
-          this.blanket.anims.play("cushion", true);
-          this.youWin();
-          this.cat.setScale(0.5);
-          this.cat.anims.play("safe");
-          this.shadowTimer = 0;
-          return;
-        }
+    if (this.shadowScale <= 1) {
+      this.shadowTimer++;
+      this.shadowScale += 0.2 / this.shadowTimer;
+      this.shadow.setScale(this.shadowScale);
+    }
+    if (this.shadowTimer === 83) {
+      this.shadowTimer = 0;
 
-        if (this.victory === false) {
-          this.youLose();
-          this.shadowTimer = 0;
-        }
-        this.shadowTimer = 0;
+      if (this.catSafe === true) {
+        this.safeScaleToggle = true;
+        this.catFall = false;
+      }
+      if (this.catSafe === false) {
+        this.catFail = true;
+        this.catFall = false;
+        this.failScaleToggle = true;
       }
     }
   }
 
   playanimations() {
-    if (this.catFall === true) this.cat.anims.play("fall", true);
-    if (this.catFail === true) this.cat.anims.play("fail", true);
+    if (this.catSafe === true) {
+      this.cat.anims.play("8BEsafe", true);
+      return;
+    }
+    if (this.catFall === true) {
+      this.cat.anims.play("8BEfall", true);
+      return;
+    }
+    if (this.catFail === true) {
+      this.cat.anims.play("8BEfail", true);
+      return;
+    }
   }
 
   //moves the blanket with arrow keys
   moveBlanket() {
-    if (this.blanket && this.gameOver === false) {
-      if (this.up.isDown) {
-        this.blanket.y -= 5;
-      }
-      if (this.down.isDown) {
-        this.blanket.y += 5;
-      }
-      if (this.left.isDown) {
-        this.blanket.x -= 5;
-      }
-      if (this.right.isDown) {
-        this.blanket.x += 5;
-      }
+    if (this.up.isDown) {
+      this.blanket.y -= 5;
+    }
+    if (this.down.isDown) {
+      this.blanket.y += 5;
+    }
+    if (this.left.isDown) {
+      this.blanket.x -= 5;
+    }
+    if (this.right.isDown) {
+      this.blanket.x += 5;
     }
   }
 
@@ -230,7 +233,7 @@ export default class Emeowgency extends Phaser.Scene {
   playSafe() {
     if (this.safeScaleToggle === true) {
       if (this.createImage === false) {
-        this.safe = this.add.image(540, 360, "safe").setDepth(100);
+        this.safe = this.add.image(540, 360, "8BEsafe").setDepth(100);
         this.createImage = true;
       }
       if (this.safeScale <= 1) {
@@ -238,14 +241,20 @@ export default class Emeowgency extends Phaser.Scene {
         this.safeScale += 0.2 / this.safeTimer;
         this.safe.setScale(this.safeScale);
       }
+      if (this.safeTimer === 83) {
+        this.safeTimer = 0;
+      }
+      this.gameOver = true
+      this.victory = true;
+
     }
   }
 
-  //creates the image for fail on cene and scales it up gradually
+  //creates the image for fail on scene and scales it up gradually
   playFail() {
     if (this.failScaleToggle === true) {
       if (this.createImage === false) {
-        this.fail = this.add.image(540, 360, "fail").setDepth(100);
+        this.fail = this.add.image(540, 360, "8BEfail").setDepth(100);
         this.createImage = true;
       }
       if (this.failScale <= 1) {
@@ -253,69 +262,57 @@ export default class Emeowgency extends Phaser.Scene {
         this.failScale += 0.2 / this.failTimer;
         this.fail.setScale(this.failScale);
       }
+      if (this.failTimer === 83) {
+        this.failTimer = 0;
+      }
+      this.gameOver = true
     }
   }
 
   createAnimations() {
     this.anims.create({
-      key: "shadow",
-      frames: [{ key: "yang", frame: 0 }],
-      frameRate: 1,
-      repeat: 0,
-    });
-    this.anims.create({
-      key: "safe",
+      key: "8BEshadow",
       frames: [
-        { key: "yangSafe", frame: 1 },
-        { key: "yangSafe", frame: 2 },
-        { key: "yangSafe", frame: 3 },
-        { key: "yangSafe", frame: 4 },
-        { key: "yangSafe", frame: 5 },
-        { key: "yangSafe", frame: 6 },
-        { key: "yangSafe", frame: 7 },
-        { key: "yangSafe", frame: 8 },
-        { key: "yangSafe", frame: 9 },
-        { key: "yangSafe", frame: 10 },
+        {
+          key: "8BEyang",
+          frame: 0,
+        },
       ],
-      frameRate: 15,
-      repeat: 0,
-    });
-    this.anims.create({
-      key: "fail",
-      frames: [{ key: "yang", frame: 2 }],
       frameRate: 1,
-      repeat: 0,
+      repeat: -1,
     });
     this.anims.create({
-      key: "fall",
-      frames: [{ key: "yang", frame: 1 }],
-      frameRate: 1,
-      repeat: 0,
-    });
-    this.anims.create({
-      key: "cushion",
+      key: "8BEsafe",
       frames: [
-        { key: "blanketSheet", frame: 0 },
-        { key: "blanketSheet", frame: 1 },
-        { key: "blanketSheet", frame: 2 },
-        { key: "blanketSheet", frame: 3 },
-        { key: "blanketSheet", frame: 4 },
-        { key: "blanketSheet", frame: 5 },
+        {
+          key: "8BEyang",
+          frame: 3,
+        },
       ],
-      frameRate: 15,
-      repeat: 0,
+      frameRate: 1,
+      repeat: -1,
     });
-  }
-  youWin() {
-    this.safeScaleToggle = true;
-    this.catFall = false;
-    this.gameOver = true;
-    this.catSafe = true;
-  }
-  youLose() {
-    this.catFail = true;
-    this.catFall = false;
-    this.failScaleToggle = true;
-    this.gameOver = true;
+    this.anims.create({
+      key: "8BEfail",
+      frames: [
+        {
+          key: "8BEyang",
+          frame: 2,
+        },
+      ],
+      frameRate: 1,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "8BEfall",
+      frames: [
+        {
+          key: "8BEyang",
+          frame: 1,
+        },
+      ],
+      frameRate: 1,
+      repeat: -1,
+    });
   }
 }

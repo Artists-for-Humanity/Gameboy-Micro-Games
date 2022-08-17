@@ -1,3 +1,5 @@
+import eventsCenter from '../EventsCenter'
+
 const X = 1080;
 const Y = 720;
 export default class MicroGame31 extends Phaser.Scene {
@@ -35,15 +37,17 @@ export default class MicroGame31 extends Phaser.Scene {
         // game state booleans
         this.gameOver = false;
         this.win = false;
+        this.sent = false;
     }
+
     preload() {
-        this.load.image("background", new URL("./assets/NGbackground.png",
+        this.load.image("TILbackground", new URL("./assets/NGbackground.png",
             import.meta.url).href);
         this.load.image("cursorimage", new URL("./assets/cursorimage.png",
             import.meta.url).href);
-        this.load.image("lose", new URL("./assets/xmark.png",
+        this.load.image("TILlose", new URL("./assets/xmark.png",
             import.meta.url).href);
-        this.load.image("win", new URL("./assets/checkmark.png",
+        this.load.image("TILwin", new URL("./assets/checkmark.png",
             import.meta.url).href);
 
         this.load.spritesheet("frames", new URL("./assets/frames.png",
@@ -51,7 +55,7 @@ export default class MicroGame31 extends Phaser.Scene {
             frameWidth: 1368 / 3,
             frameHeight: 329
         });
-        this.load.spritesheet("numbers", new URL("./assets/numbers.png",
+        this.load.spritesheet("TILnumbers", new URL("./assets/numbers.png",
             import.meta.url).href, {
             frameWidth: 313,
             frameHeight: 350
@@ -73,7 +77,7 @@ export default class MicroGame31 extends Phaser.Scene {
         this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         // CREATE GRAPHICS
-        this.add.image(X / 2, Y / 2, "background");
+        this.add.image(X / 2, Y / 2, "TILbackground");
         this.anims.create({
             key: 'box',
             frames: [{
@@ -113,17 +117,19 @@ export default class MicroGame31 extends Phaser.Scene {
         this.pointer.setScale(.15);
 
         // WIN & LOSE CONDITIONS
-        this.loseText = this.add.image(240, 290, 'lose');
+        this.loseText = this.add.image(240, 290, 'TILlose');
         this.loseText.setScrollFactor(0);
         this.loseText.setOrigin(0, 0);
         this.loseText.setVisible(false);
 
-        this.winText = this.add.image(240, 220, 'win');
+        this.winText = this.add.image(240, 220, 'TILwin');
         this.winText.setOrigin(0, 0);
         this.winText.setScrollFactor(0);
         this.winText.setVisible(false);
 
     }
+
+
     update() {
         if (!this.gameOver) {
             // each if-statement passes the direction pressed to movePointer()
@@ -146,6 +152,7 @@ export default class MicroGame31 extends Phaser.Scene {
                 // IF CORRECT CHOICE MADE
                 if (this.evaluated[this.selected] === this.correct) {
                     this.win = true;
+                    this.victory = true;
                 }
                 if (this.win) {
                     this.winText.setVisible(true);
@@ -161,6 +168,11 @@ export default class MicroGame31 extends Phaser.Scene {
         } else {
             // do stuff at end of game, win or lose
             if (this.win) { } else { }
+        }
+        if (this.gameOver && !this.sent) {
+            eventsCenter.emit('game-end', this.victory)
+            console.log('emission sent')
+            this.sent = true
         }
     }
     // START HELPER FUNCTIONS
@@ -237,17 +249,17 @@ export default class MicroGame31 extends Phaser.Scene {
         let addset = 300;
         // only add first digit if number is greater than 99
         if (val > 99) {
-            equation.add(this.add.image(-300 + offset, 0, 'numbers', nums[0]));
+            equation.add(this.add.image(-300 + offset, 0, 'TILnumbers', nums[0]));
         }
         // only add second digit if number is greater than 9
         if (val > 9) {
-            equation.add(this.add.image(0 + offset, 0, 'numbers', nums[1]));
+            equation.add(this.add.image(0 + offset, 0, 'TILnumbers', nums[1]));
         }
         // don't offset digit if number is less than 10, AND is the second operand OR sole number
         if (val < 10 && (operand === 2 || this.opcode[index] === 0)) {
             addset = 0;
         }
-        equation.add(this.add.image(addset + offset, 0, 'numbers', nums[2]));
+        equation.add(this.add.image(addset + offset, 0, 'TILnumbers', nums[2]));
     }
     // sets values of num1, num2, opcode and evaluated arrays for use in equations
     setNumbers() {

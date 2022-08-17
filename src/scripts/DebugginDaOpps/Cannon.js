@@ -1,3 +1,6 @@
+import eventsCenter from '../EventsCenter'
+
+
 export default class Cannon extends Phaser.Scene {
   // Game Class Constructor
   constructor() {
@@ -15,16 +18,17 @@ export default class Cannon extends Phaser.Scene {
     this.inputNum = 1;
     this.gameOver = false;
     this.victory = false;
+    this.sent = false;
     this.tries = 0;
   }
 
   preload() {
     this.load.image(
-      "startScreen",
+      "GCstartScreen",
       new URL("./assets2/add-screen.png", import.meta.url).href
     );
     this.load.image(
-      "gameOverScreen",
+      "GCgameOverScreen",
       new URL("./assets2/game-over.png", import.meta.url).href
     );
     this.load.image(
@@ -158,12 +162,12 @@ export default class Cannon extends Phaser.Scene {
     this.gameOverScreen = this.add.image(
       this.game.config.width / 2,
       this.game.config.height / 2,
-      "gameOverScreen"
+      "GCgameOverScreen"
     );
     this.tempScreen = this.add.image(
       this.game.config.width / 2,
       this.game.config.height / 2,
-      "startScreen"
+      "GCstartScreen"
     );
 
     this.gameOverScreen.visible = false;
@@ -323,6 +327,11 @@ export default class Cannon extends Phaser.Scene {
         this.cannonSelect -= 1;
         this.time.delayedCall(100, this.animateCannonBall, [], this);
       }
+    }
+    if (this.gameOver && !this.sent) {
+      eventsCenter.emit('game-end', this.victory)
+      console.log('emission sent')
+      this.sent = true
     }
   }
 
