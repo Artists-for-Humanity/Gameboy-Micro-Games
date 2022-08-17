@@ -16,3 +16,7 @@ node_modules/
 .parcel-cache
 .cache
 /dist
+src/scripts/main.js
+src/scripts/DebugginDaOpps/Challenge.js
+src/scripts/main.js
+src/scripts/MainMenu.js
