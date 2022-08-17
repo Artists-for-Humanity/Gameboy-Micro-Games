@@ -43,7 +43,7 @@ export default class CutScreen extends Phaser.Scene {
         this.playedGames = []
 
         this.currentScene = "MainMenu"
-        this.roundNumber = -1
+        this.roundNumber = 0 
 
         this.close_timer = 0
         this.life_total = 5
@@ -114,9 +114,6 @@ export default class CutScreen extends Phaser.Scene {
             this.close_timer++
             this.open_doors()
         }
-        if(Phaser.Input.Keyboard.JustDown(this.space)){
-            this.open = true
-        }
     }
 
     close_doors(){
@@ -128,8 +125,8 @@ export default class CutScreen extends Phaser.Scene {
         }
         else {
             this.close_timer = 0
-            this.closed = true
             this.closecon()
+            this.closed = true
         }
     }
     open_doors(){
@@ -313,18 +310,14 @@ export default class CutScreen extends Phaser.Scene {
     }
     closecon(){
         console.log("Round ", this.roundNumber)
-        if(this.roundNumber > 0){
-            this.endGame()
-        }
-        if(this.score === 0){
-            this.lost = false
-        }
+        
         if(!this.lost){
             this.faceplate.anims.play('win1').once('animationcomplete', () => {
                 this.faceplate.anims.play('win2')
             })
 
             this.score++
+            console.log("score", this.score)
             setTimeout(()=>{
                 this.setScore(this.score)
             }, 200)            
@@ -338,16 +331,20 @@ export default class CutScreen extends Phaser.Scene {
             this.reduce_life()
         }
         this.globalState.timerMessage('reset_timer')
+        if(this.roundNumber > 0 ){
+            this.endGame()
+        }
+        else{
+            if(this.scene.isActive('MainMenu'))
+            this.scene.remove('MainMenu')
+        }
         this.nextGame()
-        
     }
     nextGame(){
         // do{
         //     this.currentScene = this.game.scene.scenes[this.roundNumber + 1]
         // } while(this.playedGames.includes(this.currentScene) && !this.finishedGames)
         //this.currentScene = "SockToss"
-        if(this.scene.isActive('MainMenu'))
-            this.scene.remove('MainMenu')
         this.currentScene = listOfGames[this.roundNumber]
         console.log(this.currentScene)
         this.scene.sendToBack('Timer')

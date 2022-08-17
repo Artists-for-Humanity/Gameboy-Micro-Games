@@ -35,21 +35,23 @@ export default class Timer extends Phaser.Scene {
         this.frame = this.add.image(1080/16+6, 720-90,'t_frame')
         this.timerSprite = this.physics.add.sprite(1080/16+6, 720-90,'num_sheet', this.timeLeft+1)
 
-        eventsCenter.on('reset_timer', () => {this.timeLeft = TIME; this.timerSprite.setFrame(TIME)})
-        eventsCenter.on('start_timer', () => {this.timeUp = false; this.sent = false})
-        eventsCenter.on('stop_timer', () => {this.timeUp = true; this.sent = true})
+        eventsCenter.on('reset_timer', () => {this.timeLeft = TIME; this.timerSprite.setFrame(TIME+1 )})
+        eventsCenter.on('start_timer', () => {this.started = true; this.timeUp = false; this.sent = false})
+        eventsCenter.on('stop_timer', () => {this.started = false; this.sent = true})
         
     }
 
     update() {
-        if(!this.timeUp){
-            this.updateTimer()
-            this.updateAnimation()
-        } else{
-            if(!this.sent){
-                this.globalState.timerMessage('stop_timer')
-                this.globalState.sendMessage(false)
-                this.sent = true
+        if(this.started){
+            if(!this.timeUp){
+                this.updateTimer()
+                this.updateAnimation()
+            } else{
+                if(!this.sent){
+                    this.globalState.timerMessage('stop_timer')
+                    this.globalState.sendMessage(false)
+                    this.sent = true
+                }
             }
         }
     }
