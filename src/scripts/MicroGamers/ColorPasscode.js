@@ -336,10 +336,18 @@ export default class ColorPasscode extends Phaser.Scene {
     //each color has an index from 0 to 3
     showGuess(num) {
         var key;
-        if (num === 0) key = 'lightRed';
-        if (num === 1) key = 'lightYellow';
-        if (num === 2) key = 'lightPurple';
-        if (num === 3) key = 'lightBlue';
+        if (num === 0) {
+            key = 'lightRed';
+        }
+        else if (num === 1) {
+            key = 'lightYellow';
+        }
+        else if (num === 2) {
+            key = 'lightPurple';
+        }
+        else if (num === 3) {
+            key = 'lightBlue';
+        }
         this.guessBlocks[this.guessNum].setTexture(key);
         this.guessBlocks[this.guessNum].visible = true;
     }
