@@ -6,7 +6,7 @@ import ColorLab from "./8Bitties/ColorLab";
 import MicroGame11 from "./DebugginDaOpps/MicroGame11";
 import Lowest from "./TeamInflation/Lowest";
 import FrogJump from "./TeamInflation/FrogJump";
-import CircleGame from "./TeamInflation/CircleGame";
+import CircleJump from "./TeamInflation/CircleJump";
 import BewteenSpace from "./TeamInflation/BetweenSpace";
 import ColorPasscode from "./MicroGamers/ColorPasscode";
 import HideFromCat from "./MicroGamers/HideFromCat";
@@ -25,7 +25,7 @@ const config = {
   width: 1080,
   height: 720,
   transparent: false,
-  backgroundColor: '#4488aa',
+  backgroundColor: "#4488aa",
 
   // Add physics, arcade, scene, and audio
   physics: {
@@ -37,7 +37,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [CircleGame],
+  scene: [CircleJump],
   audio: {
     disableWebAudio: true,
   },
