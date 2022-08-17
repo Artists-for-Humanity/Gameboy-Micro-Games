@@ -1,6 +1,5 @@
 import Phaser from "phaser";
-
-import eventsCenter from '../EventsCenter'
+import eventsCenter from '../EventsCenter';
 
 const X = 440;
 const Y = 360;
@@ -34,19 +33,20 @@ export default class DrinkPour extends Phaser.Scene {
   }
   preload() {
     this.load.image(
-      "dottedline",
+      "8B3_dottedline",
       new URL("./assets/drink pour/dotted.png", import.meta.url).href
     );
     this.load.image(
-      "pour",
+      "8B3_pour",
       new URL("./assets/drink pour/pourtext.png", import.meta.url).href
     );
     this.load.image(
-      "GDPbackground",
+      "8B3_background",
+
       new URL("./assets/drink pour/restaurantbg.png", import.meta.url).href
     );
     this.load.spritesheet(
-      "glass",
+      "8B3_glass",
       new URL("./assets/drink pour/glass.png", import.meta.url).href,
       {
         frameWidth: 175,
@@ -54,11 +54,11 @@ export default class DrinkPour extends Phaser.Scene {
       }
     );
     this.load.image(
-      "juice",
+      "8B3_juice",
       new URL("./assets/drink pour/liquid.png", import.meta.url).href
     );
     this.load.spritesheet(
-      "spill",
+      "8B3_spill",
       new URL("./assets/drink pour/lemonada.png", import.meta.url).href,
       {
         frameWidth: 185,
@@ -66,7 +66,7 @@ export default class DrinkPour extends Phaser.Scene {
       }
     );
     this.load.spritesheet(
-      "pitcher",
+      "8B3_pitcher",
       new URL("./assets/drink pour/pitchers.png", import.meta.url).href,
       {
         frameWidth: 391,
@@ -74,7 +74,7 @@ export default class DrinkPour extends Phaser.Scene {
       }
     );
     this.load.spritesheet(
-      "idle pitcher",
+      "8B3_idle pitcher",
       new URL("./assets/drink pour/lemonade_idle_sprites.png", import.meta.url)
         .href,
       {
@@ -89,12 +89,13 @@ export default class DrinkPour extends Phaser.Scene {
     this.animate();
 
     //background
-    this.add.image(540, 360, "GDPbackground");
+    this.add.image(540, 360, "8B3_background");
+
 
     //add juice and glass
-    this.glass = this.physics.add.sprite(X, Y, "glass");
+    this.glass = this.physics.add.sprite(X, Y, "8B3_glass");
     this.glass.setOrigin(0);
-    this.juice = this.add.image(451, 366, "juice");
+    this.juice = this.add.image(451, 366, "8B3_juice");
     this.juice.setOrigin(0);
 
     //add juice mask
@@ -110,24 +111,30 @@ export default class DrinkPour extends Phaser.Scene {
     this.glass_group.add(this.juice);
 
     //add dotted line
-    this.dotted = this.add.image(525, 410, "dottedline");
+    this.dotted = this.add.image(525, 410, "8B3_dottedline");
 
     //keyboard
     this.cursors = this.input.keyboard.createCursorKeys();
 
     //pour popup booleans
     this.timer = 1;
-    this.pour = this.add.image(540, Y, "pour");
+    this.pour = this.add.image(540, Y, "8B3_pour");
     this.pour.setScale(0);
 
     //lemonade jug
-    this.pitcher = this.add.sprite(200, 460, "pitcher");
-    this.pitcher.anims.play("pitcher idle", true);
+    this.pitcher = this.add.sprite(200, 460, "8B3_pitcher");
+    this.pitcher.anims.play("8B3_idle pitcher anim", true);
     this.pitcher.setScale(0.8);
     this.pitcher.setDepth(0);
   }
 
   update() {
+    if (this.gameOver && !this.sent) {
+      eventsCenter.emit("game-end", this.victory);
+      console.log("victory = " + this.victory);
+      console.log("emission sent");
+      this.sent = true;
+    };
     console.log(this.gameOver);
     this.playPour();
     if (this.cursors.space.isDown && this.stopped === false) {
@@ -177,10 +184,8 @@ export default class DrinkPour extends Phaser.Scene {
   gameState() {
     this.gameStart = false;
     if (this.gameLost === true) {
-      console.log("you lose");
       this.gameOver = true;
     } else if (this.gameLost === false) {
-      console.log("You Won");
       this.victory = true;
       this.gameOver = true;
     }
@@ -190,49 +195,49 @@ export default class DrinkPour extends Phaser.Scene {
   animate() {
     //lemonade spill anim
     this.anims.create({
-      key: "spill anim",
+      key: "8B3_spill anim",
       frames: [
-        { key: "spill", frame: 0 },
-        { key: "spill", frame: 1 },
-        { key: "spill", frame: 2 },
-        { key: "spill", frame: 3 },
-        { key: "spill", frame: 4 },
-        { key: "spill", frame: 5 },
-        { key: "spill", frame: 6 },
-        { key: "spill", frame: 7 },
-        { key: "spill", frame: 8 },
-        { key: "spill", frame: 9 },
-        { key: "spill", frame: 10 },
+        { key: "8B3_spill", frame: 0 },
+        { key: "8B3_spill", frame: 1 },
+        { key: "8B3_spill", frame: 2 },
+        { key: "8B3_spill", frame: 3 },
+        { key: "8B3_spill", frame: 4 },
+        { key: "8B3_spill", frame: 5 },
+        { key: "8B3_spill", frame: 6 },
+        { key: "8B3_spill", frame: 7 },
+        { key: "8B3_spill", frame: 8 },
+        { key: "8B3_spill", frame: 9 },
+        { key: "8B3_spill", frame: 10 },
       ],
       frameRate: 10,
       repeat: 0,
     });
     this.anims.create({
-      key: "pitcher anim",
+      key: "8B3_pitcher anim",
       frames: [
-        { key: "pitcher", frame: 0 },
-        { key: "pitcher", frame: 1 },
-        { key: "pitcher", frame: 2 },
-        { key: "pitcher", frame: 3 },
-        { key: "pitcher", frame: 4 },
-        { key: "pitcher", frame: 5 },
-        { key: "pitcher", frame: 6 },
-        { key: "pitcher", frame: 7 },
+        { key: "8B3_pitcher", frame: 0 },
+        { key: "8B3_pitcher", frame: 1 },
+        { key: "8B3_pitcher", frame: 2 },
+        { key: "8B3_pitcher", frame: 3 },
+        { key: "8B3_pitcher", frame: 4 },
+        { key: "8B3_pitcher", frame: 5 },
+        { key: "8B3_pitcher", frame: 6 },
+        { key: "8B3_pitcher", frame: 7 },
       ],
       frameRate: 13,
       repeat: 0,
     });
     this.anims.create({
-      key: "pitcher idle",
+      key: "8B3_idle pitcher anim",
       frames: [
-        { key: "idle pitcher", frame: 0 },
-        { key: "idle pitcher", frame: 1 },
-        { key: "idle pitcher", frame: 2 },
-        { key: "idle pitcher", frame: 3 },
-        { key: "idle pitcher", frame: 4 },
-        { key: "idle pitcher", frame: 5 },
-        { key: "idle pitcher", frame: 6 },
-        { key: "idle pitcher", frame: 7 },
+        { key: "8B3_idle pitcher", frame: 0 },
+        { key: "8B3_idle pitcher", frame: 1 },
+        { key: "8B3_idle pitcher", frame: 2 },
+        { key: "8B3_idle pitcher", frame: 3 },
+        { key: "8B3_idle pitcher", frame: 4 },
+        { key: "8B3_idle pitcher", frame: 5 },
+        { key: "8B3_idle pitcher", frame: 6 },
+        { key: "8B3_idle pitcher", frame: 7 },
       ],
       frameRate: 13,
       repeat: -1,
@@ -264,7 +269,7 @@ export default class DrinkPour extends Phaser.Scene {
     this.juice.setVisible(false);
     this.glass.setOrigin(0.03);
     this.glass.setY(354);
-    this.spillplay = this.glass.anims.play("spill anim", true);
+    this.spillplay = this.glass.anims.play("8B3_spill anim", true);
   }
 
   //plays the pitcher pouring animation
@@ -272,7 +277,7 @@ export default class DrinkPour extends Phaser.Scene {
     this.pitcher.setAngle(50);
     this.pitcher.setY(340);
     this.pitcher.setX(250);
-    this.pitcher.anims.play("pitcher anim", true);
+    this.pitcher.anims.play("8B3_pitcher anim", true);
   }
 
   //sets position of the pitcher and plays animation to set the pitcher back down after the player stops pouring
@@ -280,6 +285,6 @@ export default class DrinkPour extends Phaser.Scene {
     this.pitcher.setAngle(0);
     this.pitcher.setY(460);
     this.pitcher.setX(200);
-    this.pitcher.anims.play("pitcher idle", true);
+    this.pitcher.anims.play("8B3_idle pitcher anim", true);
   }
 }

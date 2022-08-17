@@ -1,5 +1,5 @@
 import WebFontFile from "../../scripts/WebFontFile";
-import eventsCenter from '../EventsCenter'
+import eventsCenter from '../EventsCenter';
 
 
 export default class ColorLab extends Phaser.Scene {
@@ -38,7 +38,7 @@ export default class ColorLab extends Phaser.Scene {
     this.left;
     this.right;
 
-    this.enter;
+    this.space;
     this.vialNotEmpty;
     this.tryOne;
     this.tryTwo;
@@ -54,29 +54,31 @@ export default class ColorLab extends Phaser.Scene {
     this.load.addFile(new WebFontFile(this.load, "Russo One"));
 
     this.load.image(
-      "empty beaker",
+      "8B2_empty beaker",
       new URL("../8Bitties/assets/colorlab/beakerempty.png", import.meta.url)
         .href
     );
     this.load.image(
-      "G8background",
+      "8B2_background",
+
       new URL("../8Bitties/assets/colorlab/sciencelabbg.png", import.meta.url)
         .href
     );
     this.load.image(
-      "G8arrow",
+      "8B2_arrow",
+
       new URL("../8Bitties/assets/colorlab/arrow.png", import.meta.url).href
     );
     this.load.image(
-      "prompt box",
+      "8B2_prompt box",
       new URL("../8Bitties/assets/colorlab/textbox.png", import.meta.url).href
     );
     this.load.image(
-      "safe",
+      "8B2_safe",
       new URL("../8Bitties/assets/colorlab/safe_text.png", import.meta.url).href
     );
     this.load.image(
-      "fail",
+      "8B2_fail",
       new URL("../8Bitties/assets/colorlab/fail_text.png", import.meta.url).href
     );
 
@@ -84,7 +86,8 @@ export default class ColorLab extends Phaser.Scene {
   }
 
   create() {
-    this.background = this.add.image(540, 360, "G8background");
+    this.background = this.add.image(540, 360, "8B2_background");
+
     this.createSprites();
 
     // this.redVial.body.setAllowGravity(false);
@@ -114,7 +117,7 @@ export default class ColorLab extends Phaser.Scene {
 
     this.userInput();
 
-    this.enterPressed = false;
+    this.spacePressed = false;
     this.vialNotEmpty = true;
 
     this.decreasing = false;
@@ -131,6 +134,14 @@ export default class ColorLab extends Phaser.Scene {
   }
 
   update() {
+    if (this.gameOver && !this.sent) {
+      eventsCenter.emit("game-end", this.victory);
+      console.log("victory = " + this.victory);
+      console.log("emission sent");
+      this.sent = true;
+    };
+    console.log(this.victory);
+
     this.playAnims();
     if (this.lose === true) {
       if (this.fail) {
@@ -195,7 +206,7 @@ export default class ColorLab extends Phaser.Scene {
         this.redVialHovered = true;
         this.blueVialHovered = false;
         this.yellowVialHovered = false;
-        this.enterPressed = Phaser.Input.Keyboard.JustDown(this.enter);
+        this.spacePressed = Phaser.Input.Keyboard.JustDown(this.space);
         this.vialPouring();
         this.time.delayedCall(
           0,
@@ -213,14 +224,14 @@ export default class ColorLab extends Phaser.Scene {
           this
         );
         this.playAnims;
-        this.enterPressed = false;
+        this.spacePressed = false;
         return;
       case 1:
         this.arrow.x = this.blueVial.x;
         this.redVialHovered = false;
         this.blueVialHovered = true;
         this.yellowVialHovered = false;
-        this.enterPressed = Phaser.Input.Keyboard.JustDown(this.enter);
+        this.spacePressed = Phaser.Input.Keyboard.JustDown(this.space);
         this.vialPouring();
         this.time.delayedCall(
           0,
@@ -238,14 +249,14 @@ export default class ColorLab extends Phaser.Scene {
           this
         );
         this.playAnims;
-        this.enterPressed = false;
+        this.spacePressed = false;
         return;
       case 2:
         this.arrow.x = this.yellowVial.x;
         this.redVialHovered = false;
         this.blueVialHovered = false;
         this.yellowVialHovered = true;
-        this.enterPressed = Phaser.Input.Keyboard.JustDown(this.enter);
+        this.spacePressed = Phaser.Input.Keyboard.JustDown(this.space);
         this.vialPouring();
         this.time.delayedCall(
           0,
@@ -263,7 +274,7 @@ export default class ColorLab extends Phaser.Scene {
           this
         );
         this.playAnims;
-        this.enterPressed = false;
+        this.spacePressed = false;
         return;
 
       default:
@@ -277,48 +288,49 @@ export default class ColorLab extends Phaser.Scene {
     this.right = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.RIGHT
     );
-    this.enter = this.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.ENTER
+    this.space = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.SPACE
     );
   }
 
   createSprites() {
     this.mix = this.physics.add
-      .sprite(490, 100, "prompt box")
+      .sprite(490, 100, "8B2_prompt box")
       .setScale(0.75)
       .setOrigin(0.5);
     this.redVial = this.physics.add
-      .sprite(653, 680, "red vial")
+      .sprite(653, 680, "8B2_red vial")
       .setScale(0.45)
       .setOrigin(1);
     this.blueVial = this.physics.add
-      .sprite(790, 680, "blue vial")
+      .sprite(790, 680, "8B2_blue vial")
       .setScale(0.45)
       .setOrigin(1);
     this.yellowVial = this.physics.add
-      .sprite(927, 680, "yellow vial")
+      .sprite(927, 680, "8B2_yellow vial")
       .setScale(0.45)
       .setOrigin(1);
     this.beaker = this.physics.add
-      .sprite(400, 680, "empty beaker")
+      .sprite(400, 680, "8B2_empty beaker")
       .setScale(0.8)
       .setOrigin(1);
     this.arrow = this.physics.add
-      .sprite(653, 430, "G8arrow")
+      .sprite(653, 430, "8B2_arrow")
+
       .setScale(0.5)
       .setOrigin(1);
   }
 
   loadSpriteSheets() {
     this.load.spritesheet(
-      "red vial",
+      "8B2_red vial",
       new URL("../8Bitties/assets/colorlab/redvialsprites.png", import.meta.url)
         .href,
       { frameWidth: 270, frameHeight: 367 }
     );
 
     this.load.spritesheet(
-      "blue vial",
+      "8B2_blue vial",
       new URL(
         "../8Bitties/assets/colorlab/bluevialsprites.png",
         import.meta.url
@@ -327,7 +339,7 @@ export default class ColorLab extends Phaser.Scene {
     );
 
     this.load.spritesheet(
-      "yellow vial",
+      "8B2_yellow vial",
       new URL(
         "../8Bitties/assets/colorlab/yellowvialsprites.png",
         import.meta.url
@@ -337,28 +349,28 @@ export default class ColorLab extends Phaser.Scene {
 
     //beaker sprites
     this.load.spritesheet(
-      "red beaker",
+      "8B2_red beaker",
       new URL("../8Bitties/assets/colorlab/beakerred.png", import.meta.url)
         .href,
       { frameWidth: 463, frameHeight: 558 }
     );
 
     this.load.spritesheet(
-      "blue beaker",
+      "8B2_blue beaker",
       new URL("../8Bitties/assets/colorlab/beakerblue.png", import.meta.url)
         .href,
       { frameWidth: 463, frameHeight: 558 }
     );
 
     this.load.spritesheet(
-      "yellow beaker",
+      "8B2_yellow beaker",
       new URL("../8Bitties/assets/colorlab/beakeryellow.png", import.meta.url)
         .href,
       { frameWidth: 463, frameHeight: 558 }
     );
 
     this.load.spritesheet(
-      "purple beaker",
+      "8B2_purple beaker",
       new URL(
         "../8Bitties/assets/colorlab/purplebeakersprites.png",
         import.meta.url
@@ -367,7 +379,7 @@ export default class ColorLab extends Phaser.Scene {
     );
 
     this.load.spritesheet(
-      "green beaker",
+      "8B2_green beaker",
       new URL(
         "../8Bitties/assets/colorlab/greenbeakersprites.png",
         import.meta.url
@@ -376,7 +388,7 @@ export default class ColorLab extends Phaser.Scene {
     );
 
     this.load.spritesheet(
-      "orange beaker",
+      "8B2_orange beaker",
       new URL(
         "../8Bitties/assets/colorlab/orangebeakersprites.png",
         import.meta.url
@@ -388,7 +400,7 @@ export default class ColorLab extends Phaser.Scene {
     );
 
     this.load.spritesheet(
-      "empty vial",
+      "8B2_empty vial",
       new URL("../8Bitties/assets/colorlab/emptyvial.png", import.meta.url)
         .href,
       {
@@ -399,7 +411,7 @@ export default class ColorLab extends Phaser.Scene {
 
     //explosion sprite
     this.load.spritesheet(
-      "explosion",
+      "8B2_explosion",
       new URL(
         "../8Bitties/assets/colorlab/explosionsprites.png",
         import.meta.url
@@ -414,14 +426,14 @@ export default class ColorLab extends Phaser.Scene {
   animate() {
     //red vial
     this.anims.create({
-      key: "red vial anim",
+      key: "8B2_redvial anim",
       frames: [
-        { key: "red vial", frame: 0 },
-        { key: "red vial", frame: 1 },
-        { key: "red vial", frame: 2 },
-        { key: "red vial", frame: 3 },
-        { key: "red vial", frame: 4 },
-        { key: "red vial", frame: 5 },
+        { key: "8B2_red vial", frame: 0 },
+        { key: "8B2_red vial", frame: 1 },
+        { key: "8B2_red vial", frame: 2 },
+        { key: "8B2_red vial", frame: 3 },
+        { key: "8B2_red vial", frame: 4 },
+        { key: "8B2_red vial", frame: 5 },
       ],
       frameRate: 8,
       repeat: -1,
@@ -429,14 +441,14 @@ export default class ColorLab extends Phaser.Scene {
 
     //blue vial
     this.anims.create({
-      key: "blue vial anim",
+      key: "8B2_bluevial anim",
       frames: [
-        { key: "blue vial", frame: 0 },
-        { key: "blue vial", frame: 1 },
-        { key: "blue vial", frame: 2 },
-        { key: "blue vial", frame: 3 },
-        { key: "blue vial", frame: 4 },
-        { key: "blue vial", frame: 5 },
+        { key: "8B2_blue vial", frame: 0 },
+        { key: "8B2_blue vial", frame: 1 },
+        { key: "8B2_blue vial", frame: 2 },
+        { key: "8B2_blue vial", frame: 3 },
+        { key: "8B2_blue vial", frame: 4 },
+        { key: "8B2_blue vial", frame: 5 },
       ],
       frameRate: 8,
       repeat: -1,
@@ -444,14 +456,14 @@ export default class ColorLab extends Phaser.Scene {
 
     //yellow vial
     this.anims.create({
-      key: "yellow vial anim",
+      key: "8B2_yellowvial anim",
       frames: [
-        { key: "yellow vial", frame: 0 },
-        { key: "yellow vial", frame: 1 },
-        { key: "yellow vial", frame: 2 },
-        { key: "yellow vial", frame: 3 },
-        { key: "yellow vial", frame: 4 },
-        { key: "yellow vial", frame: 5 },
+        { key: "8B2_yellow vial", frame: 0 },
+        { key: "8B2_yellow vial", frame: 1 },
+        { key: "8B2_yellow vial", frame: 2 },
+        { key: "8B2_yellow vial", frame: 3 },
+        { key: "8B2_yellow vial", frame: 4 },
+        { key: "8B2_yellow vial", frame: 5 },
       ],
       frameRate: 8,
       repeat: -1,
@@ -459,28 +471,28 @@ export default class ColorLab extends Phaser.Scene {
 
     //empty vial
     this.anims.create({
-      key: "emptyvial anim",
-      frames: [{ key: "empty vial", frame: 0 }],
+      key: "8B2_emptyvial anim",
+      frames: [{ key: "8B2_empty vial", frame: 0 }],
       frameRate: 10,
       repeat: -1,
     });
 
     //red beaker
     this.anims.create({
-      key: "redbeaker anim",
+      key: "8B2_redbeaker anim",
       frames: [
-        { key: "red beaker", frame: 0 },
-        { key: "red beaker", frame: 1 },
-        { key: "red beaker", frame: 2 },
-        { key: "red beaker", frame: 3 },
-        { key: "red beaker", frame: 4 },
-        { key: "red beaker", frame: 5 },
-        { key: "red beaker", frame: 6 },
-        { key: "red beaker", frame: 7 },
-        { key: "red beaker", frame: 8 },
-        { key: "red beaker", frame: 9 },
-        { key: "red beaker", frame: 10 },
-        { key: "red beaker", frame: 11 },
+        { key: "8B2_red beaker", frame: 0 },
+        { key: "8B2_red beaker", frame: 1 },
+        { key: "8B2_red beaker", frame: 2 },
+        { key: "8B2_red beaker", frame: 3 },
+        { key: "8B2_red beaker", frame: 4 },
+        { key: "8B2_red beaker", frame: 5 },
+        { key: "8B2_red beaker", frame: 6 },
+        { key: "8B2_red beaker", frame: 7 },
+        { key: "8B2_red beaker", frame: 8 },
+        { key: "8B2_red beaker", frame: 9 },
+        { key: "8B2_red beaker", frame: 10 },
+        { key: "8B2_red beaker", frame: 11 },
       ],
       frameRate: 10,
       repeat: -1,
@@ -488,20 +500,20 @@ export default class ColorLab extends Phaser.Scene {
 
     //blue beaker
     this.anims.create({
-      key: "bluebeaker anim",
+      key: "8B2_bluebeaker anim",
       frames: [
-        { key: "blue beaker", frame: 0 },
-        { key: "blue beaker", frame: 1 },
-        { key: "blue beaker", frame: 2 },
-        { key: "blue beaker", frame: 3 },
-        { key: "blue beaker", frame: 4 },
-        { key: "blue beaker", frame: 5 },
-        { key: "blue beaker", frame: 6 },
-        { key: "blue beaker", frame: 7 },
-        { key: "blue beaker", frame: 8 },
-        { key: "blue beaker", frame: 9 },
-        { key: "blue beaker", frame: 10 },
-        { key: "blue beaker", frame: 11 },
+        { key: "8B2_blue beaker", frame: 0 },
+        { key: "8B2_blue beaker", frame: 1 },
+        { key: "8B2_blue beaker", frame: 2 },
+        { key: "8B2_blue beaker", frame: 3 },
+        { key: "8B2_blue beaker", frame: 4 },
+        { key: "8B2_blue beaker", frame: 5 },
+        { key: "8B2_blue beaker", frame: 6 },
+        { key: "8B2_blue beaker", frame: 7 },
+        { key: "8B2_blue beaker", frame: 8 },
+        { key: "8B2_blue beaker", frame: 9 },
+        { key: "8B2_blue beaker", frame: 10 },
+        { key: "8B2_blue beaker", frame: 11 },
       ],
       frameRate: 10,
       repeat: -1,
@@ -509,20 +521,20 @@ export default class ColorLab extends Phaser.Scene {
 
     //yellow beaker
     this.anims.create({
-      key: "yellowbeaker anim",
+      key: "8B2_yellowbeaker anim",
       frames: [
-        { key: "yellow beaker", frame: 0 },
-        { key: "yellow beaker", frame: 1 },
-        { key: "yellow beaker", frame: 2 },
-        { key: "yellow beaker", frame: 3 },
-        { key: "yellow beaker", frame: 4 },
-        { key: "yellow beaker", frame: 5 },
-        { key: "yellow beaker", frame: 6 },
-        { key: "yellow beaker", frame: 7 },
-        { key: "yellow beaker", frame: 8 },
-        { key: "yellow beaker", frame: 9 },
-        { key: "yellow beaker", frame: 10 },
-        { key: "yellow beaker", frame: 11 },
+        { key: "8B2_yellow beaker", frame: 0 },
+        { key: "8B2_yellow beaker", frame: 1 },
+        { key: "8B2_yellow beaker", frame: 2 },
+        { key: "8B2_yellow beaker", frame: 3 },
+        { key: "8B2_yellow beaker", frame: 4 },
+        { key: "8B2_yellow beaker", frame: 5 },
+        { key: "8B2_yellow beaker", frame: 6 },
+        { key: "8B2_yellow beaker", frame: 7 },
+        { key: "8B2_yellow beaker", frame: 8 },
+        { key: "8B2_yellow beaker", frame: 9 },
+        { key: "8B2_yellow beaker", frame: 10 },
+        { key: "8B2_yellow beaker", frame: 11 },
       ],
       frameRate: 10,
       repeat: -1,
@@ -530,20 +542,20 @@ export default class ColorLab extends Phaser.Scene {
 
     //purple beaker
     this.anims.create({
-      key: "purplebeaker anim",
+      key: "8B2_purplebeaker anim",
       frames: [
-        { key: "purple beaker", frame: 0 },
-        { key: "purple beaker", frame: 1 },
-        { key: "purple beaker", frame: 2 },
-        { key: "purple beaker", frame: 3 },
-        { key: "purple beaker", frame: 4 },
-        { key: "purple beaker", frame: 5 },
-        { key: "purple beaker", frame: 6 },
-        { key: "purple beaker", frame: 7 },
-        { key: "purple beaker", frame: 8 },
-        { key: "purple beaker", frame: 9 },
-        { key: "purple beaker", frame: 10 },
-        { key: "purple beaker", frame: 11 },
+        { key: "8B2_purple beaker", frame: 0 },
+        { key: "8B2_purple beaker", frame: 1 },
+        { key: "8B2_purple beaker", frame: 2 },
+        { key: "8B2_purple beaker", frame: 3 },
+        { key: "8B2_purple beaker", frame: 4 },
+        { key: "8B2_purple beaker", frame: 5 },
+        { key: "8B2_purple beaker", frame: 6 },
+        { key: "8B2_purple beaker", frame: 7 },
+        { key: "8B2_purple beaker", frame: 8 },
+        { key: "8B2_purple beaker", frame: 9 },
+        { key: "8B2_purple beaker", frame: 10 },
+        { key: "8B2_purple beaker", frame: 11 },
       ],
       frameRate: 10,
       repeat: -1,
@@ -551,20 +563,20 @@ export default class ColorLab extends Phaser.Scene {
 
     //green beaker
     this.anims.create({
-      key: "greenbeaker anim",
+      key: "8B2_greenbeaker anim",
       frames: [
-        { key: "green beaker", frame: 0 },
-        { key: "green beaker", frame: 1 },
-        { key: "green beaker", frame: 2 },
-        { key: "green beaker", frame: 3 },
-        { key: "green beaker", frame: 4 },
-        { key: "green beaker", frame: 5 },
-        { key: "green beaker", frame: 6 },
-        { key: "green beaker", frame: 7 },
-        { key: "green beaker", frame: 8 },
-        { key: "green beaker", frame: 9 },
-        { key: "green beaker", frame: 10 },
-        { key: "green beaker", frame: 11 },
+        { key: "8B2_green beaker", frame: 0 },
+        { key: "8B2_green beaker", frame: 1 },
+        { key: "8B2_green beaker", frame: 2 },
+        { key: "8B2_green beaker", frame: 3 },
+        { key: "8B2_green beaker", frame: 4 },
+        { key: "8B2_green beaker", frame: 5 },
+        { key: "8B2_green beaker", frame: 6 },
+        { key: "8B2_green beaker", frame: 7 },
+        { key: "8B2_green beaker", frame: 8 },
+        { key: "8B2_green beaker", frame: 9 },
+        { key: "8B2_green beaker", frame: 10 },
+        { key: "8B2_green beaker", frame: 11 },
       ],
       frameRate: 10,
       repeat: -1,
@@ -572,20 +584,20 @@ export default class ColorLab extends Phaser.Scene {
 
     //orange beaker
     this.anims.create({
-      key: "orangebeaker anim",
+      key: "8B2_orangebeaker anim",
       frames: [
-        { key: "orange beaker", frame: 0 },
-        { key: "orange beaker", frame: 1 },
-        { key: "orange beaker", frame: 2 },
-        { key: "orange beaker", frame: 3 },
-        { key: "orange beaker", frame: 4 },
-        { key: "orange beaker", frame: 5 },
-        { key: "orange beaker", frame: 6 },
-        { key: "orange beaker", frame: 7 },
-        { key: "orange beaker", frame: 8 },
-        { key: "orange beaker", frame: 9 },
-        { key: "orange beaker", frame: 10 },
-        { key: "orange beaker", frame: 11 },
+        { key: "8B2_orange beaker", frame: 0 },
+        { key: "8B2_orange beaker", frame: 1 },
+        { key: "8B2_orange beaker", frame: 2 },
+        { key: "8B2_orange beaker", frame: 3 },
+        { key: "8B2_orange beaker", frame: 4 },
+        { key: "8B2_orange beaker", frame: 5 },
+        { key: "8B2_orange beaker", frame: 6 },
+        { key: "8B2_orange beaker", frame: 7 },
+        { key: "8B2_orange beaker", frame: 8 },
+        { key: "8B2_orange beaker", frame: 9 },
+        { key: "8B2_orange beaker", frame: 10 },
+        { key: "8B2_orange beaker", frame: 11 },
       ],
       frameRate: 10,
       repeat: -1,
@@ -593,19 +605,19 @@ export default class ColorLab extends Phaser.Scene {
 
     //explosion
     this.anims.create({
-      key: "explosion anim",
+      key: "8B2_explosion anim",
       frames: [
-        { key: "explosion", frame: 0 },
-        { key: "explosion", frame: 1 },
-        { key: "explosion", frame: 2 },
-        { key: "explosion", frame: 3 },
-        { key: "explosion", frame: 4 },
-        { key: "explosion", frame: 5 },
-        { key: "explosion", frame: 6 },
-        { key: "explosion", frame: 7 },
-        { key: "explosion", frame: 8 },
-        { key: "explosion", frame: 9 },
-        { key: "explosion", frame: 10 },
+        { key: "8B2_explosion", frame: 0 },
+        { key: "8B2_explosion", frame: 1 },
+        { key: "8B2_explosion", frame: 2 },
+        { key: "8B2_explosion", frame: 3 },
+        { key: "8B2_explosion", frame: 4 },
+        { key: "8B2_explosion", frame: 5 },
+        { key: "8B2_explosion", frame: 6 },
+        { key: "8B2_explosion", frame: 7 },
+        { key: "8B2_explosion", frame: 8 },
+        { key: "8B2_explosion", frame: 9 },
+        { key: "8B2_explosion", frame: 10 },
       ],
       frameRate: 12,
       repeat: 0,
@@ -613,10 +625,10 @@ export default class ColorLab extends Phaser.Scene {
   }
 
   playAnims() {
-    if (this.redVialNotEmpty) this.redVial.anims.play("red vial anim", true);
-    if (this.blueVialNotEmpty) this.blueVial.anims.play("blue vial anim", true);
+    if (this.redVialNotEmpty) this.redVial.anims.play("8B2_redvial anim", true);
+    if (this.blueVialNotEmpty) this.blueVial.anims.play("8B2_bluevial anim", true);
     if (this.yellowVialNotEmpty)
-      this.yellowVial.anims.play("yellow vial anim", true);
+      this.yellowVial.anims.play("8B2_yellowvial anim", true);
   }
 
   setVialHeight(
@@ -642,72 +654,72 @@ export default class ColorLab extends Phaser.Scene {
 
   checkTries(myVial) {
     this.checkWin();
-    myVial.anims.play("emptyvial anim", true);
+    myVial.anims.play("8B2_emptyvial anim", true);
     this.tryOne = false;
     this.tryTwo = true;
   }
 
   vialPouring() {
     if (this.tryOne) {
-      if (this.redVialHovered && this.enterPressed && this.redVialNotEmpty) {
-        this.beaker.anims.play("redbeaker anim");
-        this.beakerColor = "red";
+      if (this.redVialHovered && this.spacePressed && this.redVialNotEmpty) {
+        this.beaker.anims.play("8B2_redbeaker anim");
+        this.beakerColor = "8B2_red";
         this.redVialNotEmpty = false;
         this.checkTries(this.redVial);
       }
-      if (this.blueVialHovered && this.enterPressed && this.blueVialNotEmpty) {
-        this.beaker.anims.play("bluebeaker anim");
-        this.beakerColor = "blue";
+      if (this.blueVialHovered && this.spacePressed && this.blueVialNotEmpty) {
+        this.beaker.anims.play("8B2_bluebeaker anim");
+        this.beakerColor = "8B2_blue";
         this.blueVialNotEmpty = false;
         this.checkTries(this.blueVial);
       }
       if (
         this.yellowVialHovered &&
-        this.enterPressed &&
+        this.spacePressed &&
         this.yellowVialNotEmpty
       ) {
-        this.beaker.anims.play("yellowbeaker anim");
-        this.beakerColor = "yellow";
+        this.beaker.anims.play("8B2_yellowbeaker anim");
+        this.beakerColor = "8B2_yellow";
         this.yellowVialNotEmpty = false;
         this.checkTries(this.yellowVial);
       }
     }
     if (this.tryTwo) {
-      if (this.redVialHovered && this.enterPressed && this.redVialNotEmpty) {
-        this.beakerColor === "yellow"
-          ? this.beaker.anims.play("orangebeaker anim")
-          : this.beaker.anims.play("purplebeaker anim");
-        this.beakerColor === "yellow"
+      if (this.redVialHovered && this.spacePressed && this.redVialNotEmpty) {
+        this.beakerColor === "8B2_yellow"
+          ? this.beaker.anims.play("8B2_orangebeaker anim")
+          : this.beaker.anims.play("8B2_purplebeaker anim");
+        this.beakerColor === "8B2_yellow"
           ? (this.beakerColor = "Mix Orange")
           : (this.beakerColor = "Mix Purple");
         this.redVialNotEmpty = false;
-        this.redVial.anims.play("emptyvial anim");
+        this.redVial.anims.play("8B2_emptyvial anim");
         this.checkWin();
       }
-      if (this.blueVialHovered && this.enterPressed && this.blueVialNotEmpty) {
-        this.beakerColor === "red"
-          ? this.beaker.anims.play("purplebeaker anim")
-          : this.beaker.anims.play("greenbeaker anim");
-        this.beakerColor === "red"
+      if (this.blueVialHovered && this.spacePressed && this.blueVialNotEmpty) {
+        this.beakerColor === "8B2_red"
+          ? this.beaker.anims.play("8B2_purplebeaker anim")
+          : this.beaker.anims.play("8B2_greenbeaker anim");
+        this.beakerColor === "8B2_red"
           ? (this.beakerColor = "Mix Purple")
           : (this.beakerColor = "Mix Green");
         this.blueVialNotEmpty = false;
-        this.blueVial.anims.play("emptyvial anim");
+        this.blueVial.anims.play("8B2_emptyvial anim");
         this.checkWin();
       }
       if (
         this.yellowVialHovered &&
-        this.enterPressed &&
+        this.spacePressed &&
         this.yellowVialNotEmpty
       ) {
-        this.beakerColor === "blue"
-          ? this.beaker.anims.play("greenbeaker anim")
-          : this.beaker.anims.play("orangebeaker anim");
-        this.beakerColor === "blue"
+        this.beakerColor === "8B2_blue"
+          ? this.beaker.anims.play("8B2_greenbeaker anim")
+          : this.beaker.anims.play("8B2_orangebeaker anim");
+        this.beakerColor === "8B2_blue"
           ? (this.beakerColor = "Mix Green")
           : (this.beakerColor = "Mix Orange");
         this.yellowVialNotEmpty = false;
-        this.yellowVial.anims.play("emptyvial anim");
+        this.yellowVial.anims.play("8B2_emptyvial anim");
         this.checkWin();
       }
     }
@@ -715,17 +727,17 @@ export default class ColorLab extends Phaser.Scene {
 
   checkWin() {
     if (this.tryOne) {
-      if (this.beakerColor === "red" && this.finalColor === "Mix Green") {
+      if (this.beakerColor === "8B2_red" && this.finalColor === "Mix Green") {
         // console.log('You lost!');
         this.youLose();
         this.playFail();
       }
-      if (this.beakerColor === "blue" && this.finalColor === "Mix Orange") {
+      if (this.beakerColor === "8B2_blue" && this.finalColor === "Mix Orange") {
         // console.log('You lost!');
         this.youLose();
         this.playFail();
       }
-      if (this.beakerColor === "yellow" && this.finalColor === "Mix Purple") {
+      if (this.beakerColor === "8B2_yellow" && this.finalColor === "Mix Purple") {
         // console.log('You lost!');
         this.youLose();
         this.playFail();
@@ -745,8 +757,8 @@ export default class ColorLab extends Phaser.Scene {
 
   youLose() {
     this.beaker.setPosition(540, 360).setOrigin(0.5);
-    this.beaker.anims.play("explosion anim", true).setScale(2);
-    this.enter = false;
+    this.beaker.anims.play("8B2_explosion anim", true).setScale(2);
+    this.space = false;
     this.left = false;
     this.right = false;
     this.lose = true;
@@ -756,7 +768,7 @@ export default class ColorLab extends Phaser.Scene {
   youWin() {
     // console.log("you win")
     this.arrow.setVisible(false);
-    this.enter = false;
+    this.space = false;
     this.left = false;
     this.right = false;
     this.victory = true;
@@ -773,7 +785,7 @@ export default class ColorLab extends Phaser.Scene {
 
   playSafe() {
     if (this.createImage === false) {
-      this.safe = this.add.image(540, 360, "safe").setDepth(100);
+      this.safe = this.add.image(540, 360, "8B2_safe").setDepth(100);
       this.createImage = true;
       // console.log('created')
     }
@@ -781,7 +793,7 @@ export default class ColorLab extends Phaser.Scene {
 
   playFail() {
     if (this.createImage === false) {
-      this.fail = this.add.image(540, 360, "fail").setDepth(100);
+      this.fail = this.add.image(540, 360, "8B2_fail").setDepth(100);
       this.createImage = true;
     }
   }

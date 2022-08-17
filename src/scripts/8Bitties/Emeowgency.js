@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import eventsCenter from '../EventsCenter'
+import eventsCenter from "../EventsCenter";
 
 
 export default class Emeowgency extends Phaser.Scene {
@@ -33,43 +33,47 @@ export default class Emeowgency extends Phaser.Scene {
     this.cat;
     this.blanket;
     this.shadow;
-    this.up;
-    this.down;
-    this.left;
-    this.right;
-
-    this.gameOver = false;
     this.victory = false;
+    this.gameOver = false;
+    this.gOtimerToggle = false;
     this.sent = false;
+    this.gOtimer = 0;
+    this.fallen = false;
+
   }
 
   preload() {
     this.load.image(
-      "8BEcatch",
+      "8B4_catch",
+
       new URL("../8Bitties/assets/Emeowgency/Catch_Text.png", import.meta.url)
         .href
     );
     this.load.image(
-      "8BEfail",
+      "8B4_fail",
+
       new URL("../8Bitties/assets/Emeowgency/fail_text.png", import.meta.url)
         .href
     );
     this.load.image(
-      "8BEsafe",
+      "8B4_safe",
+
       new URL("../8Bitties/assets/Emeowgency/safe_text.png", import.meta.url)
         .href
     );
     this.load.image(
-      "8BEBlanket",
+      "8B4_Blanket",
       new URL("../8Bitties/assets/Emeowgency/blanket.png", import.meta.url).href
     );
     this.load.image(
-      "8BEgrass",
+      "8B4_grass",
+
       new URL("../8Bitties/assets/Emeowgency/grass_bg.png", import.meta.url)
         .href
     );
     this.load.spritesheet(
-      "8BEyang",
+      "8B4_yang",
+
       new URL(
         "../8Bitties/assets/Emeowgency/yangSpriteSheet.png",
         import.meta.url
@@ -79,11 +83,41 @@ export default class Emeowgency extends Phaser.Scene {
         frameHeight: 58,
       }
     );
+    this.load.spritesheet(
+      "8B4_blanketSheet",
+      new URL(
+        "../8Bitties/assets/Emeowgency/blanketSpriteSheet.png",
+        import.meta.url
+      ).href,
+      {
+        frameWidth: 617,
+        frameHeight: 465,
+      }
+    );
+    this.load.spritesheet(
+      "8B4_yangSafe",
+      new URL("../8Bitties/assets/Emeowgency/yangSafe.png", import.meta.url)
+        .href,
+      {
+        frameWidth: 354,
+        frameHeight: 185,
+      }
+    );
+    this.load.spritesheet(
+      "8B4_yangFail",
+      new URL("../8Bitties/assets/Emeowgency/yangfail.png", import.meta.url)
+        .href,
+      {
+        frameWidth: 102,
+        frameHeight: 58,
+      }
+    );
   }
 
   create() {
-    this.grass = this.add.image(540, 360, "8BEgrass").setDepth(-10);
-    this.catch = this.add.image(540, 360, "8BEcatch");
+    this.grass = this.add.image(540, 360, "8B4_grass").setDepth(-10);
+    this.catch = this.add.image(540, 360, "8B4_catch");
+
     this.timer = 1;
     this.catch.setScale(0);
     this.createAnimations();
@@ -96,8 +130,9 @@ export default class Emeowgency extends Phaser.Scene {
   }
 
   update() {
-    this.playSafe();
-    this.playFail();
+    this.gameOverTimer();
+    // this.playSafe();
+    // this.playFail();
     this.scaleCatch();
 
     if (this.shadow) {
@@ -109,14 +144,14 @@ export default class Emeowgency extends Phaser.Scene {
         this.cat.y += 4;
       }
     }
-    if (this.blanket) {
-      this.moveBlanket();
-    }
+    this.moveBlanket();
 
     if (this.gameOver && !this.sent) {
-      eventsCenter.emit('game-end', this.victory)
-      console.log('emission sent')
-      this.sent = true
+      eventsCenter.emit("game-end", this.victory);
+      console.log("victory = " + this.victory);
+      console.log("emission sent");
+      this.sent = true;
+
     }
   }
 
@@ -144,8 +179,8 @@ export default class Emeowgency extends Phaser.Scene {
   //makes a random x and y coordiante
   getRandomPosition() {
     const position = {
-      x: Math.floor(Phaser.Math.Between(100, 900)),
-      y: Math.floor(Phaser.Math.Between(100, 700)),
+      x: Math.floor(Phaser.Math.Between(200, 800)),
+      y: Math.floor(Phaser.Math.Between(200, 600)),
     };
     return position;
   }
@@ -153,16 +188,16 @@ export default class Emeowgency extends Phaser.Scene {
   //spawns the shadow at a random location on the screen
   spawnShadow() {
     const position = this.getRandomPosition();
-    this.shadow = this.physics.add
-      .sprite(position.x, position.y, "8BEyang")
-      .setDepth(-8);
+    this.shadow = this.physics.add.sprite(position.x, position.y, "8B4_yang");
+
     this.shadow.alpha = 0.5;
   }
 
   spawnBlanket() {
     this.blanket = this.physics.add
-      .image(480, 360, "8BEBlanket")
-      .setScale(0.4)
+      .sprite(480, 360, "8B4_blanketSheet")
+      .setScale(0.65)
+
       .setDepth(-10);
     this.physics.add.overlap(this.blanket, this.shadow, () => {
       this.catSafe = true;
@@ -171,20 +206,32 @@ export default class Emeowgency extends Phaser.Scene {
 
   //spawns the cat above the Shadow based on how long shadow takes to get big
   spawnCat() {
-    this.cat = this.physics.add
-      .sprite(this.shadow.x, this.shadow.y - 83 * 4, "8BEyang")
-      .setDepth(-7);
+    this.cat = this.add
+      .sprite(this.shadow.x, this.shadow.y - 83 * 4, "8B4_yangSafe")
+      .setScale(1.9);
+
   }
 
   //scales the shadow up to 1 , also determines the end of the game
   scaleShadow() {
-    if (this.shadowScale <= 1) {
-      this.shadowTimer++;
-      this.shadowScale += 0.2 / this.shadowTimer;
-      this.shadow.setScale(this.shadowScale);
-    }
-    if (this.shadowTimer === 83) {
-      this.shadowTimer = 0;
+    if (this.shadow) {
+      if (this.shadowScale <= 2) {
+        this.shadowTimer++;
+        this.shadowScale += 0.4 / this.shadowTimer;
+        this.shadow.setScale(this.shadowScale);
+      }
+      if (this.shadowTimer === 83) {
+        if (
+          Phaser.Geom.Rectangle.Overlaps(this.shadow.body, this.blanket.body)
+        ) {
+          this.blanket.anims.play("8B4_cushion", true);
+          this.youWin();
+          this.cat.setScale(0.5);
+          this.cat.anims.play("8B4_safe");
+          this.shadowTimer = 0;
+          return;
+        }
+
 
       if (this.catSafe === true) {
         this.safeScaleToggle = true;
@@ -199,17 +246,13 @@ export default class Emeowgency extends Phaser.Scene {
   }
 
   playanimations() {
-    if (this.catSafe === true) {
-      this.cat.anims.play("8BEsafe", true);
-      return;
-    }
-    if (this.catFall === true) {
-      this.cat.anims.play("8BEfall", true);
-      return;
-    }
-    if (this.catFail === true) {
-      this.cat.anims.play("8BEfail", true);
-      return;
+    if (this.catFall) this.cat.anims.play("8B4_fall", true);
+    if (this.catFail && !this.fallen) {
+      this.cat.anims.play("8B4_fail_1", true).once("animationcomplete", () => {
+        this.cat.anims.play("8B4_fail_2");
+      });
+      this.fallen = true;
+
     }
   }
 
@@ -233,7 +276,8 @@ export default class Emeowgency extends Phaser.Scene {
   playSafe() {
     if (this.safeScaleToggle === true) {
       if (this.createImage === false) {
-        this.safe = this.add.image(540, 360, "8BEsafe").setDepth(100);
+        this.safe = this.add.image(540, 360, "8B4_safe").setDepth(100);
+
         this.createImage = true;
       }
       if (this.safeScale <= 1) {
@@ -254,7 +298,8 @@ export default class Emeowgency extends Phaser.Scene {
   playFail() {
     if (this.failScaleToggle === true) {
       if (this.createImage === false) {
-        this.fail = this.add.image(540, 360, "8BEfail").setDepth(100);
+        this.fail = this.add.image(540, 360, "8B4_fail").setDepth(100);
+
         this.createImage = true;
       }
       if (this.failScale <= 1) {
@@ -271,48 +316,87 @@ export default class Emeowgency extends Phaser.Scene {
 
   createAnimations() {
     this.anims.create({
-      key: "8BEshadow",
-      frames: [
-        {
-          key: "8BEyang",
-          frame: 0,
-        },
-      ],
+      key: "8B4_shadow",
+      frames: [{ key: "8B4_yang", frame: 0 }],
+
       frameRate: 1,
       repeat: -1,
     });
     this.anims.create({
-      key: "8BEsafe",
+      key: "8B4_safe",
       frames: [
-        {
-          key: "8BEyang",
-          frame: 3,
-        },
+        { key: "8B4_yangSafe", frame: 1 },
+        { key: "8B4_yangSafe", frame: 2 },
+        { key: "8B4_yangSafe", frame: 3 },
+        { key: "8B4_yangSafe", frame: 4 },
+        { key: "8B4_yangSafe", frame: 5 },
+        { key: "8B4_yangSafe", frame: 6 },
+        { key: "8B4_yangSafe", frame: 7 },
+        { key: "8B4_yangSafe", frame: 8 },
+        { key: "8B4_yangSafe", frame: 9 },
+        { key: "8B4_yangSafe", frame: 10 },
       ],
+      frameRate: 15,
+      repeat: 0,
+    });
+    this.anims.create({
+      key: "8B4_fail_1",
+      frames: [
+        { key: "8B4_yangFail", frame: 0 },
+        { key: "8B4_yangFail", frame: 2 },
+        { key: "8B4_yangFail", frame: 3 },
+      ],
+      frameRate: 15,
+      repeat: 0,
+    });
+    this.anims.create({
+      key: "8B4_fail_2",
+      frames: [
+        { key: "8B4_yangFail", frame: 3 },
+        { key: "8B4_yangFail", frame: 4 },
+        { key: "8B4_yangFail", frame: 5 },
+      ],
+      frameRate: 15,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "8B4_fall",
+      frames: [{ key: "8B4_yang", frame: 1 }],
+
       frameRate: 1,
       repeat: -1,
     });
     this.anims.create({
-      key: "8BEfail",
+      key: "8B4_cushion",
       frames: [
-        {
-          key: "8BEyang",
-          frame: 2,
-        },
-      ],
-      frameRate: 1,
-      repeat: -1,
-    });
-    this.anims.create({
-      key: "8BEfall",
-      frames: [
-        {
-          key: "8BEyang",
-          frame: 1,
-        },
+        { key: "8B4_blanketSheet", frame: 0 },
+        { key: "8B4_blanketSheet", frame: 1 },
+        { key: "8B4_blanketSheet", frame: 2 },
+        { key: "8B4_blanketSheet", frame: 3 },
+        { key: "8B4_blanketSheet", frame: 4 },
+        { key: "8B4_blanketSheet", frame: 5 },
+
       ],
       frameRate: 1,
       repeat: -1,
     });
   }
+  youWin() {
+    this.safeScaleToggle = true;
+    this.catFall = false;
+    this.catSafe = true;
+    this.victory = true;
+    this.gOtimerToggle = true;
+  }
+  youLose() {
+    this.catFail = true;
+    this.catFall = false;
+    this.failScaleToggle = true;
+    this.gOtimerToggle = true;
+  }
+  gameOverTimer() {
+    if (this.gOtimerToggle === true) this.gOtimer++;
+    if (this.gOtimer === 80) this.gameOver = true;
+  }
+
 }
