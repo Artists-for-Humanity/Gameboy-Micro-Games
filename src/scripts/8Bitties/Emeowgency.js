@@ -45,31 +45,31 @@ export default class Emeowgency extends Phaser.Scene {
 
   preload() {
     this.load.image(
-      "catch",
+      "8BEcatch",
       new URL("../8Bitties/assets/Emeowgency/Catch_Text.png", import.meta.url)
         .href
     );
     this.load.image(
-      "fail",
+      "8BEfail",
       new URL("../8Bitties/assets/Emeowgency/fail_text.png", import.meta.url)
         .href
     );
     this.load.image(
-      "safe",
+      "8BEsafe",
       new URL("../8Bitties/assets/Emeowgency/safe_text.png", import.meta.url)
         .href
     );
     this.load.image(
-      "Blanket",
+      "8BEBlanket",
       new URL("../8Bitties/assets/Emeowgency/blanket.png", import.meta.url).href
     );
     this.load.image(
-      "grass",
+      "8BEgrass",
       new URL("../8Bitties/assets/Emeowgency/grass_bg.png", import.meta.url)
         .href
     );
     this.load.spritesheet(
-      "yang",
+      "8BEyang",
       new URL(
         "../8Bitties/assets/Emeowgency/yangSpriteSheet.png",
         import.meta.url
@@ -82,8 +82,8 @@ export default class Emeowgency extends Phaser.Scene {
   }
 
   create() {
-    this.grass = this.add.image(540, 360, "grass").setDepth(-10);
-    this.catch = this.add.image(540, 360, "catch");
+    this.grass = this.add.image(540, 360, "8BEgrass").setDepth(-10);
+    this.catch = this.add.image(540, 360, "8BEcatch");
     this.timer = 1;
     this.catch.setScale(0);
     this.createAnimations();
@@ -154,14 +154,14 @@ export default class Emeowgency extends Phaser.Scene {
   spawnShadow() {
     const position = this.getRandomPosition();
     this.shadow = this.physics.add
-      .sprite(position.x, position.y, "yang")
+      .sprite(position.x, position.y, "8BEyang")
       .setDepth(-8);
     this.shadow.alpha = 0.5;
   }
 
   spawnBlanket() {
     this.blanket = this.physics.add
-      .image(480, 360, "Blanket")
+      .image(480, 360, "8BEBlanket")
       .setScale(0.4)
       .setDepth(-10);
     this.physics.add.overlap(this.blanket, this.shadow, () => {
@@ -172,7 +172,7 @@ export default class Emeowgency extends Phaser.Scene {
   //spawns the cat above the Shadow based on how long shadow takes to get big
   spawnCat() {
     this.cat = this.physics.add
-      .sprite(this.shadow.x, this.shadow.y - 83 * 4, "yang")
+      .sprite(this.shadow.x, this.shadow.y - 83 * 4, "8BEyang")
       .setDepth(-7);
   }
 
@@ -200,15 +200,15 @@ export default class Emeowgency extends Phaser.Scene {
 
   playanimations() {
     if (this.catSafe === true) {
-      this.cat.anims.play("safe", true);
+      this.cat.anims.play("8BEsafe", true);
       return;
     }
     if (this.catFall === true) {
-      this.cat.anims.play("fall", true);
+      this.cat.anims.play("8BEfall", true);
       return;
     }
     if (this.catFail === true) {
-      this.cat.anims.play("fail", true);
+      this.cat.anims.play("8BEfail", true);
       return;
     }
   }
@@ -233,7 +233,7 @@ export default class Emeowgency extends Phaser.Scene {
   playSafe() {
     if (this.safeScaleToggle === true) {
       if (this.createImage === false) {
-        this.safe = this.add.image(540, 360, "safe").setDepth(100);
+        this.safe = this.add.image(540, 360, "8BEsafe").setDepth(100);
         this.createImage = true;
       }
       if (this.safeScale <= 1) {
@@ -254,7 +254,7 @@ export default class Emeowgency extends Phaser.Scene {
   playFail() {
     if (this.failScaleToggle === true) {
       if (this.createImage === false) {
-        this.fail = this.add.image(540, 360, "fail").setDepth(100);
+        this.fail = this.add.image(540, 360, "8BEfail").setDepth(100);
         this.createImage = true;
       }
       if (this.failScale <= 1) {
@@ -271,10 +271,10 @@ export default class Emeowgency extends Phaser.Scene {
 
   createAnimations() {
     this.anims.create({
-      key: "shadow",
+      key: "8BEshadow",
       frames: [
         {
-          key: "yang",
+          key: "8BEyang",
           frame: 0,
         },
       ],
@@ -282,10 +282,10 @@ export default class Emeowgency extends Phaser.Scene {
       repeat: -1,
     });
     this.anims.create({
-      key: "safe",
+      key: "8BEsafe",
       frames: [
         {
-          key: "yang",
+          key: "8BEyang",
           frame: 3,
         },
       ],
@@ -293,10 +293,10 @@ export default class Emeowgency extends Phaser.Scene {
       repeat: -1,
     });
     this.anims.create({
-      key: "fail",
+      key: "8BEfail",
       frames: [
         {
-          key: "yang",
+          key: "8BEyang",
           frame: 2,
         },
       ],
@@ -304,10 +304,10 @@ export default class Emeowgency extends Phaser.Scene {
       repeat: -1,
     });
     this.anims.create({
-      key: "fall",
+      key: "8BEfall",
       frames: [
         {
-          key: "yang",
+          key: "8BEyang",
           frame: 1,
         },
       ],

@@ -83,7 +83,6 @@ export default class CutScreen extends Phaser.Scene {
 
         eventsCenter.on('game-end', (param) => {
             this.closeDoor(param);
-            // this.scene.remove(this.game.scene.scenes[0]);
 
 
             this.time.delayedCall(504, () => this.scene.remove(this.game.scene.scenes[0]))
@@ -91,7 +90,6 @@ export default class CutScreen extends Phaser.Scene {
 
     }
     update() {
-        // this.globalState.test();
 
         if (!this.closed) {
             this.close_timer++
@@ -128,7 +126,6 @@ export default class CutScreen extends Phaser.Scene {
         }
         else {
             this.close_timer = 0
-            // console.log("timer reset")
             this.open = false
             this.closed = true
         }
@@ -329,22 +326,12 @@ export default class CutScreen extends Phaser.Scene {
     nextGame() {
 
         this.currentScene = this.game.scene.scenes[1]
-        // console.log(this.game.scene.scenes);
-        console.log(this.game.scene.scenes[1])
-
-        // if (this.roundNumber === 0) this.currentScene = this.game.scene.scenes[1]
-        // else {
-        //     this.currentScene = this.game.scene.scenes[this.roundNumber + 1]
-        // }
-
-        // do{
-        //     this.currentScene = this.game.scene.scenes[this.roundNumber + 1]
-        // } while(this.playedGames.includes(this.currentScene) && !this.finishedGames)
+        // console.log(this.game.scene.scenes[1])
 
         setTimeout(() => {
             this.scene.run(this.currentScene)
             this.scene.sendToBack(this.currentScene);
-            console.log(this.game.scene.scenes);
+            // console.log(this.game.scene.scenes);
             this.roundNumber++
             this.open = true
         }, 2000)
