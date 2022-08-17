@@ -25,18 +25,18 @@ export default class BetweenSpace extends Phaser.Scene {
       frameWidth: 68,
       frameHeight: 64
     });
-    this.load.spritesheet("rocket", new URL("./assets/rocket sheet fire.png",
+    this.load.spritesheet("rocket", new URL("./assets/rocketsheetfire.png",
       import.meta.url).href, {
       frameWidth: 64,
       frameHeight: 64
     });
-    this.load.spritesheet("star", new URL("./assets/wormhole sprite sheet.png",
+    this.load.spritesheet("star", new URL("./assets/wormholespritesheet.png",
       import.meta.url).href, {
       frameWidth: 38,
       frameHeight: 38
     });
 
-    this.load.image('win', new URL("./assets/you win_.png",
+    this.load.image('win', new URL("./assets/youwin.png",
       import.meta.url).href);
     this.load.image('lose', new URL("./assets/losetext.png",
       import.meta.url).href);
@@ -97,7 +97,7 @@ export default class BetweenSpace extends Phaser.Scene {
 
 
       this.player.anims.play('run', true);
-      this.goal.anims.play('spin',true)
+      this.goal.anims.play('spin', true)
 
     }
 
@@ -162,49 +162,49 @@ export default class BetweenSpace extends Phaser.Scene {
     this.anims.create({
       key: 'walk',
       frames: [{
-          key: 'asteroid',
-          frame: 0
-        },
-        {
-          key: 'asteroid',
-          frame: 1
-        },
-        {
-          key: 'asteroid',
-          frame: 2
-        },
-        {
-          key: 'asteroid',
-          frame: 4
-        },
-        {
-          key: 'asteroid',
-          frame: 5
-        },
-        {
-          key: 'asteroid',
-          frame: 6
-        },
-        {
-          key: 'asteroid',
-          frame: 8
-        },
-        {
-          key: 'asteroid',
-          frame: 9
-        },
-        {
-          key: 'asteroid',
-          frame: 10
-        },
-        {
-          key: 'asteroid',
-          frame: 12
-        },
-        {
-          key: 'asteroid',
-          frame: 13
-        },
+        key: 'asteroid',
+        frame: 0
+      },
+      {
+        key: 'asteroid',
+        frame: 1
+      },
+      {
+        key: 'asteroid',
+        frame: 2
+      },
+      {
+        key: 'asteroid',
+        frame: 4
+      },
+      {
+        key: 'asteroid',
+        frame: 5
+      },
+      {
+        key: 'asteroid',
+        frame: 6
+      },
+      {
+        key: 'asteroid',
+        frame: 8
+      },
+      {
+        key: 'asteroid',
+        frame: 9
+      },
+      {
+        key: 'asteroid',
+        frame: 10
+      },
+      {
+        key: 'asteroid',
+        frame: 12
+      },
+      {
+        key: 'asteroid',
+        frame: 13
+      },
 
       ],
       frameRate: 30,
@@ -214,21 +214,21 @@ export default class BetweenSpace extends Phaser.Scene {
     this.anims.create({
       key: 'run',
       frames: [{
-          key: 'rocket',
-          frame: 0
-        },
-        {
-          key: 'rocket',
-          frame: 1
-        },
-        {
-          key: 'rocket',
-          frame: 2
-        },
-        {
-          key: 'rocket',
-          frame: 3
-        },
+        key: 'rocket',
+        frame: 0
+      },
+      {
+        key: 'rocket',
+        frame: 1
+      },
+      {
+        key: 'rocket',
+        frame: 2
+      },
+      {
+        key: 'rocket',
+        frame: 3
+      },
 
 
       ],
@@ -239,21 +239,21 @@ export default class BetweenSpace extends Phaser.Scene {
     this.anims.create({
       key: 'spin',
       frames: [{
-          key: 'star',
-          frame: 0
-        },
-        {
-          key: 'star',
-          frame: 1
-        },
-        {
-          key: 'star',
-          frame: 2
-        },
-        {
-          key: 'star',
-          frame: 3
-        },
+        key: 'star',
+        frame: 0
+      },
+      {
+        key: 'star',
+        frame: 1
+      },
+      {
+        key: 'star',
+        frame: 2
+      },
+      {
+        key: 'star',
+        frame: 3
+      },
 
 
       ],
