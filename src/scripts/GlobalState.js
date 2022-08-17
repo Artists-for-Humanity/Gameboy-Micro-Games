@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import eventsCenter from './EventsCenter'
 
 class GlobalState extends Phaser.Plugins.BasePlugin {
 
@@ -107,6 +108,17 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
     this.myText.setText(myText);
     const width = this.myText.displayWidth / 2;
     this.myText.setX(540 - width).setY(170);
+  }
+
+
+  sendMessage(victory){
+      eventsCenter.emit('game-end', victory)
+      console.log('emission sent')
+  }
+
+  timerMessage(message){
+    eventsCenter.emit(message)
+    console.log('emission sent')
   }
 }
 

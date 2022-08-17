@@ -14,55 +14,46 @@ export default class BetweenSpace extends Phaser.Scene {
   }
 
   preload() {
-    this.load.spritesheet(
-      this.load.image(
-        "TIBSbackground",
-        new URL("./assets/spaceBKG.png", import.meta.url).href
-      )
-    );
 
-    this.load.spritesheet(
-      "TIBSasteroid",
-      new URL("./assets/asteroidspritesheet.png", import.meta.url).href,
-      {
-        frameWidth: 68,
-        frameHeight: 64,
-      }
-    );
-    this.load.spritesheet(
-      "TIBSrocket",
-      new URL("./assets/rocket sheet fire.png", import.meta.url).href,
-      {
-        frameWidth: 64,
-        frameHeight: 64,
-      }
-    );
-    this.load.spritesheet(
-      "TIBSstar",
-      new URL("./assets/wormhole sprite sheet.png", import.meta.url).href,
-      {
-        frameWidth: 38,
-        frameHeight: 38,
-      }
-    );
+    this.load.spritesheet(this.load.image('TI_3background', new URL("./assets/spaceBKG.png",
+      import.meta.url).href));
+    this.load.image('TI_3win', new URL("./assets/youwin.png",
+      import.meta.url).href);
+    this.load.image('TI_3lose', new URL("./assets/losetext.png",
+      import.meta.url).href);
 
-    this.load.image(
-      "TIBSwin",
-      new URL("./assets/you win_.png", import.meta.url).href
-    );
-    this.load.image(
-      "TIBSlose",
-      new URL("./assets/losetext.png", import.meta.url).href
-    );
+    this.load.spritesheet("TI_3asteroid", new URL("./assets/asteroidspritesheet.png",
+      import.meta.url).href, {
+      frameWidth: 68,
+      frameHeight: 64
+    });
+    this.load.spritesheet("TI_3rocket", new URL("./assets/rocketsheetfire.png",
+      import.meta.url).href, {
+      frameWidth: 64,
+      frameHeight: 64
+    });
+    this.load.spritesheet("TI_3star", new URL("./assets/wormholespritesheet.png",
+      import.meta.url).href, {
+      frameWidth: 38,
+      frameHeight: 38
+    });
+
+
+
+
   }
 
   create() {
     this.gameWidth = this.game.config.width;
     this.gameHeight = this.game.config.height;
-    this.add.image(this.gameWidth / 2, this.gameHeight / 2, "TIBSbackground");
-    this.player = this.physics.add.sprite(100, 360, "TIBSrocket");
+    this.add.image(this.gameWidth / 2, this.gameHeight / 2, "TI_3background");
+    this.player = this.physics.add.sprite(100, 360, "TI_3rocket")
     this.player.setCollideWorldBounds();
-    this.goal = this.physics.add.sprite(1000, 360, "TIBSstar");
+    this.goal = this.physics.add.sprite(1000, 360, 'TI_3star');
+
+
+    this.asteroidg1 = this.createAsteroids(200, 32, 30 + (this.randomNum), 300)
+    this.asteroidg2 = this.createAsteroids(300, 688, -30 + (this.randomNum), -300)
 
     this.asteroidg1 = this.createAsteroids(200, 32, 30 + this.randomNum, 300);
     this.asteroidg2 = this.createAsteroids(
@@ -98,12 +89,12 @@ export default class BetweenSpace extends Phaser.Scene {
 
     this.createAnimations();
 
-    this.loseText = this.add.image(168, 224, "TIBSlose");
+    this.loseText = this.add.image(168, 224, 'TI_3lose')
     this.loseText.setScrollFactor(0);
     this.loseText.setOrigin(0, 0);
     this.loseText.setVisible(false);
 
-    this.winText = this.add.image(220, 224, "TIBSwin");
+    this.winText = this.add.image(220, 224, 'TI_3win');
     this.winText.setOrigin(0, 0);
     this.winText.setScrollFactor(0);
     this.winText.setVisible(false);
@@ -126,10 +117,17 @@ export default class BetweenSpace extends Phaser.Scene {
 
       this.asteroidMovements(this.asteroidg1);
       this.asteroidMovements(this.asteroidg2);
+      console.log('reachme 00')
 
-      this.player.anims.play("TIBSrun", true);
-      this.goal.anims.play("TIBSspin", true);
+
+      this.player.anims.play('TI_3run', true);
+      console.log('reachme 01')
+
+      this.goal.anims.play('TI_3spin', true)
+      console.log('reachme 02')
+
     }
+
     if (this.gameOver && !this.sent) {
       eventsCenter.emit("game-end", this.victory);
       console.log("emission sent");
@@ -138,7 +136,7 @@ export default class BetweenSpace extends Phaser.Scene {
   }
 
   loseState() {
-    // this.physics.pause();
+    this.physics.pause();
     this.lose = true;
     this.loseText.setVisible(true);
     this.gameOver = true;
@@ -146,7 +144,8 @@ export default class BetweenSpace extends Phaser.Scene {
 
   createAsteroids(xPos, yPos, step, veloc) {
     const ret = this.physics.add.group({
-      key: "TIBSasteroid",
+
+      key: 'TI_3asteroid',
       repeat: 3,
       setXY: {
         x: xPos,
@@ -185,25 +184,26 @@ export default class BetweenSpace extends Phaser.Scene {
         child.body.setVelocityY(300);
       }
     });
-    Phaser.Actions.Call(groupRet.getChildren(), (child) => {
-      child.anims.play("TIBSwalk", true);
+    Phaser.Actions.Call(groupRet.getChildren(), child => {
+      child.anims.play('TI_3walk', true);
+
     });
   }
   createAnimations() {
     this.anims.create({
-      key: "TIBSwalk",
+      key: "TI_3walk",
       frames: [
-        { key: "TIBSasteroid", frame: 0 },
-        { key: "TIBSasteroid", frame: 1 },
-        { key: "TIBSasteroid", frame: 2 },
-        { key: "TIBSasteroid", frame: 4 },
-        { key: "TIBSasteroid", frame: 5 },
-        { key: "TIBSasteroid", frame: 6 },
-        { key: "TIBSasteroid", frame: 8 },
-        { key: "TIBSasteroid", frame: 9 },
-        { key: "TIBSasteroid", frame: 10 },
-        { key: "TIBSasteroid", frame: 12 },
-        { key: "TIBSasteroid", frame: 13 },
+        { key: "TI_3asteroid", frame: 0 },
+        { key: "TI_3asteroid", frame: 1 },
+        { key: "TI_3asteroid", frame: 2 },
+        { key: "TI_3asteroid", frame: 4 },
+        { key: "TI_3asteroid", frame: 5 },
+        { key: "TI_3asteroid", frame: 6 },
+        { key: "TI_3asteroid", frame: 8 },
+        { key: "TI_3asteroid", frame: 9 },
+        { key: "TI_3asteroid", frame: 10 },
+        { key: "TI_3asteroid", frame: 12 },
+        { key: "TI_3asteroid", frame: 13 },
       ],
       frameRate: 30,
       repeat: -1,
@@ -212,10 +212,10 @@ export default class BetweenSpace extends Phaser.Scene {
     this.anims.create({
       key: "TIBSrun",
       frames: [
-        { key: "TIBSrocket", frame: 0 },
-        { key: "TIBSrocket", frame: 1 },
-        { key: "TIBSrocket", frame: 2 },
-        { key: "TIBSrocket", frame: 3 },
+        { key: "TI_3rocket", frame: 0 },
+        { key: "TI_3rocket", frame: 1 },
+        { key: "TI_3rocket", frame: 2 },
+        { key: "TI_3rocket", frame: 3 },
       ],
       frameRate: 7,
       repeat: -1,
@@ -224,10 +224,11 @@ export default class BetweenSpace extends Phaser.Scene {
     this.anims.create({
       key: "TIBSspin",
       frames: [
-        { key: "TIBSstar", frame: 0 },
-        { key: "TIBSstar", frame: 1 },
-        { key: "TIBSstar", frame: 2 },
-        { key: "TIBSstar", frame: 3 },
+        { key: "TI_3star", frame: 0 },
+        { key: "TI_3star", frame: 1 },
+        { key: "TI_3star", frame: 2 },
+        { key: "TI_3star", frame: 3 },
+
       ],
       frameRate: 7,
       repeat: -1,
