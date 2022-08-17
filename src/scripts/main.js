@@ -8,7 +8,6 @@ import TrashSort from "./DebugginDaOpps/TrashSort";
 import Cannon from "./DebugginDaOpps/Cannon";
 import Highest2Lowest from "./TeamInflation/Highest2Lowest";
 import FrogJump from "./TeamInflation/FrogJump";
-import CircleGame from "./TeamInflation/CircleGame";
 import BetweenSpace from "./TeamInflation/BetweenSpace";
 import ColorPasscode from "./MicroGamers/ColorPasscode";
 import HideFromCat from "./MicroGamers/HideFromCat";
@@ -20,14 +19,16 @@ import SockToss from "./Team Notateam/socktoss";
 import CutScreen from "./Team Notateam/CutScreen";
 import MainMenu from "./MainMenu";
 import Challenge from "./DebugginDaOpps/Challenge";
+import BetweenSpace from "./TeamInflation/BetweenSpace";
+import CircleJump from "./TeamInflation/CircleJump";
 
 // Set configuration for phaser game instance
 const config = {
   type: Phaser.AUTO,
   width: 1080,
   height: 720,
-  transparent: true,
-  // backgroundColor: '#4488aa',
+  transparent: false,
+  backgroundColor: "#4488aa",
 
   // Add physics, arcade, scene, and audio
   physics: {
@@ -42,7 +43,7 @@ const config = {
 
 
   scene: [
-    CutScreen, SockToss, CarPump, Emeowgency, BetweenSpace, CircleGame, FrogJump, Highest2Lowest, TugOWar, FlySwat, DrinkPour, Cannon, TrashSort, ColorPasscode, HideFromCat, HitTheButton, ColorLab
+    CutScreen, SockToss, CarPump, Emeowgency, BetweenSpace, CircleJump, FrogJump, Highest2Lowest, TugOWar, FlySwat, DrinkPour, Cannon, TrashSort, ColorPasscode, HideFromCat, HitTheButton, ColorLab
   ],
   audio: {
     disableWebAudio: true,
