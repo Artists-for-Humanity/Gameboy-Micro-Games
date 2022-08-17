@@ -41,6 +41,7 @@ export default class TugOWar extends Phaser.Scene {
     this.load.image(
       "8B6_ropePile",
       new URL("../8Bitties/assets/TugOWar/tow_pile.png", import.meta.url).href
+
     );
     this.load.image(
       "8B6_background",
@@ -54,6 +55,7 @@ export default class TugOWar extends Phaser.Scene {
       "8B6_rope",
       new URL("../8Bitties/assets/TugOWar/tow_rope_crop.png", import.meta.url)
         .href
+
     );
     this.load.image(
       "8B6_safe",
@@ -74,12 +76,14 @@ export default class TugOWar extends Phaser.Scene {
     this.load.spritesheet(
       "8B6_player",
       new URL("../8Bitties/assets/TugOWar/tow_player.png", import.meta.url)
+
         .href,
       {
         frameWidth: 149.5,
         frameHeight: 128,
       }
     );
+
     this.load.spritesheet(
       "8B6_mud",
       new URL("../8Bitties/assets/TugOWar/mudidlesprite.png", import.meta.url)
@@ -100,6 +104,7 @@ export default class TugOWar extends Phaser.Scene {
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
     this.rope = this.add.image(510, 580, "8B6_rope").setDepth(1);
+
     this.meter = this.add.image(75, 360, "8B6_meter");
     this.dash = this.add.image(90, 360, "8B6_dash");
     this.graphics = this.make.graphics();
@@ -120,6 +125,7 @@ export default class TugOWar extends Phaser.Scene {
     this.npcRopePile = this.add.image(780, 560, "8B6_ropePile").setScale(0.4);
     this.npcRopePile.flipX = true;
     this.npcRopePile.visible = false;
+
   }
   update() {
     this.endgameCheck();
@@ -159,6 +165,7 @@ export default class TugOWar extends Phaser.Scene {
       }
     }
   }
+
   playerPull() {
     if ((this.gameOver === false) & this.gameStarted) {
       if (this.dash.y > 140) {
@@ -297,3 +304,4 @@ export default class TugOWar extends Phaser.Scene {
     }
   }
 }
+

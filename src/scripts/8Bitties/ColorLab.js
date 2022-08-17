@@ -1,6 +1,7 @@
 import WebFontFile from "../../scripts/WebFontFile";
 import eventsCenter from '../EventsCenter';
 
+
 export default class ColorLab extends Phaser.Scene {
   constructor() {
     super({
@@ -10,6 +11,7 @@ export default class ColorLab extends Phaser.Scene {
     });
     this.victory = false;
     this.gameOver = false;
+    this.sent = false;
 
     this.timer;
     this.catchScale = 0;
@@ -58,11 +60,13 @@ export default class ColorLab extends Phaser.Scene {
     );
     this.load.image(
       "8B2_background",
+
       new URL("../8Bitties/assets/colorlab/sciencelabbg.png", import.meta.url)
         .href
     );
     this.load.image(
       "8B2_arrow",
+
       new URL("../8Bitties/assets/colorlab/arrow.png", import.meta.url).href
     );
     this.load.image(
@@ -83,6 +87,7 @@ export default class ColorLab extends Phaser.Scene {
 
   create() {
     this.background = this.add.image(540, 360, "8B2_background");
+
     this.createSprites();
 
     // this.redVial.body.setAllowGravity(false);
@@ -136,6 +141,7 @@ export default class ColorLab extends Phaser.Scene {
       this.sent = true;
     };
     console.log(this.victory);
+
     this.playAnims();
     if (this.lose === true) {
       if (this.fail) {
@@ -154,6 +160,7 @@ export default class ColorLab extends Phaser.Scene {
           this.safeScale += 0.2 / this.safeTimer;
           this.safe.setScale(this.safeScale);
           this.gameOver = true;
+          this.victory = true;
         }
       }
     }
@@ -184,6 +191,12 @@ export default class ColorLab extends Phaser.Scene {
     var liftHeight = 613;
     var dropHeight = 680;
     this.vialSelection(liftHeight, dropHeight);
+
+    if (this.gameOver && !this.sent) {
+      eventsCenter.emit('game-end', this.victory)
+      console.log('emission sent')
+      this.sent = true
+    }
   }
 
   vialSelection(liftHeight, dropHeight) {
@@ -303,6 +316,7 @@ export default class ColorLab extends Phaser.Scene {
       .setOrigin(1);
     this.arrow = this.physics.add
       .sprite(653, 430, "8B2_arrow")
+
       .setScale(0.5)
       .setOrigin(1);
   }
