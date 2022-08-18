@@ -497,27 +497,59 @@ export default class CutScreen extends Phaser.Scene {
 
     setCurrentScene(){
         this.currentScene = listOfGames[this.roundNumber]
+        let s
         switch(this.currentScene){
 
             case "Lowest":
+                s = 'pick the lowest!'
                 break;
             case "FrogJump":
+                s = 'jump!'
+                break;
             case "DrinkPour":
+                s = 'pour!'
+                break;
             case "FlySwat":
-            case "Emeowgency";
-            case 'MarcyMunch';
-            case 'SockToss';
-            case "ColorLab";
-            case "Cannon";
-            case "CarPump";
-            case "TrashSort";
-            case "ColorPasscode";
-            case "HideFromCat";
-            case "HitTheButton";
-            case "CircleJump";
-            case "BetweenSpace";
-            case 'GameOver';
-
+                s = 'swat!'
+                break;
+            case "Emeowgency":
+                s = 'catch!'
+                break;
+            case 'MarcyMunch':
+                s = 'munch!'
+                break;
+            case 'SockToss':
+                s = 'toss!'
+                break;
+            case "ColorLab":
+                s = 'mix!'
+                break;
+            case "Cannon":
+                s = 'add!'
+                break;
+            case "CarPump":
+                s = 'pump!'
+                break;
+            case "TrashSort":
+                s = 'sort!'
+                break;
+            case "ColorPasscode":
+                s = 'memorize!'
+                break;
+            case "HideFromCat":
+                s = 'cheese it!'
+                break;
+            case "HitTheButton":
+                s = 'slap it!'
+                break;
+            case "CircleJump":
+                s = 'avoid!'
+                break;
+            case "BetweenSpace":
+                s = 'dodge'
+                break;
+            default:
+                break;
         }
     }
 }
