@@ -79,7 +79,6 @@ export default class SockToss extends Phaser.Scene {
         this.load.image('meter_mask', new URL('assets/meter_mask.png', import.meta.url).href)
         this.load.image('meter_frame', new URL('assets/meter_frame.png', import.meta.url).href)
         this.load.image('sock', new URL('assets/sock.png', import.meta.url).href)
-        this.load.image('toss', new URL('assets/toss.png', import.meta.url).href)
         this.load.image('sock_win', new URL('assets/win.png', import.meta.url).href)
         this.load.image('sock_lose', new URL('assets/lose.png', import.meta.url).href)
     }
@@ -104,8 +103,8 @@ export default class SockToss extends Phaser.Scene {
         this.hand.body.setAllowGravity(false)
         this.sock.body.setAllowGravity(false)
         // Add win and lose text
-        this.toss = this.add.image(1080 / 2, 720 / 2, 'toss')
-        this.toss.setVisible(true)
+        //this.toss = this.add.image(1080 / 2, 720 / 2, 'toss')
+        //this.toss.setVisible(true)
         this.win = this.add.image(1080 / 2, 720 / 2, 'sock_win')
         this.win.setVisible(false)
         this.lose = this.add.image(1080 / 2, 720 / 2, 'sock_lose')
@@ -135,7 +134,7 @@ export default class SockToss extends Phaser.Scene {
         this.meterX = 0
         this.timer = 0
         this.timer2 = 0
-        this.toss.scale = 0
+        //this.toss.scale = 0
 
         eventsCenter.on('start_game', () => { if (!this.gameOver) { this.started = true; eventsCenter.emit('start_timer') } })
 
@@ -166,8 +165,9 @@ export default class SockToss extends Phaser.Scene {
             }
             // Run when spacebar is pressed
             else {   // Runs dropping code only once
-                if (this.dropped == false) {
+                if (!this.dropped) {
                     this.dropcon(this)
+                    eventsCenter.emit('stop_timer')
                 }
                 // Spins hand for throw
                 this.handrot()
@@ -192,21 +192,21 @@ export default class SockToss extends Phaser.Scene {
         this.mmask.clear();
         this.mmask.fillRect(127 * SCALE_MULTIPLIER, 142 * SCALE_MULTIPLIER, (this.meterX + 1) * SCALE_MULTIPLIER, 14 * SCALE_MULTIPLIER);
     }
-    tosstext() {
-        // grow "TOSS" until it reaches max scale
-        if (this.toss.scale < 4) {
-            this.toss.scale += 0.1;
-        }
-        // once "TOSS" is maxed, we pause for 50 milliseconds before starting the game
-        else {
-            this.timer2++
-            // make sure 50 ms have elapsed, then set started to true
-            if (this.timer2 > 50) {
-                this.toss.setVisible(false)
-                this.started = true
-            }
-        }
-    }
+    // tosstext() {
+    //     // grow "TOSS" until it reaches max scale
+    //     if (this.toss.scale < 4) {
+    //         this.toss.scale += 0.1;
+    //     }
+    //     // once "TOSS" is maxed, we pause for 50 milliseconds before starting the game
+    //     else {
+    //         this.timer2++
+    //         // make sure 50 ms have elapsed, then set started to true
+    //         if (this.timer2 > 50) {
+    //             this.toss.setVisible(false)
+    //             this.started = true
+    //         }
+    //     }
+    // }
     throwncon() {
         //framerate check
         if (this.timer == 1) {
@@ -303,9 +303,6 @@ export default class SockToss extends Phaser.Scene {
     endcon() {
         this.player.angle = 0
         this.hand.angle = 0
-        if (!this.timerStopped) {
-            eventsCenter.emit('timer_stop')
-        }
         if (this.victory) {
             this.wincon()
         } else {
