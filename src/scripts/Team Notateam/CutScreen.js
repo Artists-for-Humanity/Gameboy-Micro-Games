@@ -104,6 +104,15 @@ export default class CutScreen extends Phaser.Scene {
         this.load.image('swat!', new URL('../textPrompts/swatText.png', import.meta.url).href)
         this.load.image('swat!', new URL('../textPrompts/swatText.png', import.meta.url).href)
         this.load.image('munch!', new URL('../textPrompts/munch.png', import.meta.url).href)
+        this.load.image('jump!', new URL('../textPrompts/Jump.png', import.meta.url).href)
+        this.load.image('pick the lowest!', new URL('../textPrompts/lowest.png', import.meta.url).href)
+        this.load.image('cheese it!', new URL('../textPrompts/cheeseit.png', import.meta.url).href)
+        this.load.image('memorize!', new URL('../textPrompts/memorize.png', import.meta.url).href)
+        this.load.image('slap it!', new URL('../textPrompts/slapit.png', import.meta.url).href)
+        this.load.image('mix!', new URL('../textPrompts/mix.png', import.meta.url).href)
+        this.load.image('pump!', new URL('../textPrompts/pump.png', import.meta.url).href)
+        this.load.image('dodge!', new URL('../textPrompts/dodge.png', import.meta.url).href)
+        this.load.image('avoid!', new URL('../textPrompts/avoid.png', import.meta.url).href)
     }
 
     create() {
@@ -232,8 +241,6 @@ export default class CutScreen extends Phaser.Scene {
             this.l_life.children.iterate((child) => {
                 child.x -= this.close_timer;
             });
-
-
         }
     }
     r_close() {
@@ -557,7 +564,7 @@ export default class CutScreen extends Phaser.Scene {
                 s = 'avoid!'
                 break;
             case "BetweenSpace":
-                s = 'dodge'
+                s = 'dodge!'
                 break;
             default:
                 break;
