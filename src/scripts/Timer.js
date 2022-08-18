@@ -39,7 +39,7 @@ export default class Timer extends Phaser.Scene {
 
         eventsCenter.on('reset_timer', () => {this.timeLeft = TIME; this.timerSprite.setFrame(TIME+1)})
         eventsCenter.on('start_timer', () => {this.started = true; this.timeUp = false; this.sent = false; this.victory = false})
-        eventsCenter.on('start_win_timer', () => {this.started = true; this.timeUp = false; this.sent = false; this.victory = true})
+        //eventsCenter.on('start_win_timer', () => {this.started = true; this.timeUp = false; this.sent = false; this.victory = true})
         eventsCenter.on('stop_timer', () => {this.started = false; this.sent = true})
         
     }

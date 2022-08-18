@@ -1,4 +1,5 @@
 // Add imports for phaser library, scenes, and plugins
+// Window.location.reload();
 import Phaser from "phaser";
 import GlobalState from "./GlobalState";
 import Emeowgency from "./8Bitties/Emeowgency";
@@ -42,7 +43,6 @@ const config = {
   },
 
   scene: [
-
     MainMenu,
     CutScreen,
     Timer,
@@ -81,3 +81,4 @@ const config = {
 
 // Initialize game instance
 new Phaser.Game(config);
+

@@ -135,9 +135,8 @@ export default class ColorLab extends Phaser.Scene {
 
   update() {
     if (this.gameOver && !this.sent) {
+      eventsCenter.emit('stop_timer')
       eventsCenter.emit("game-end", this.victory);
-      console.log("victory = " + this.victory);
-      console.log("emission sent");
       this.sent = true;
     };
     console.log(this.victory);
