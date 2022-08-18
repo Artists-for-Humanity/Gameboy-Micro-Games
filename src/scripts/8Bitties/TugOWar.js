@@ -129,14 +129,14 @@ export default class TugOWar extends Phaser.Scene {
 
     this.gameStart();
 
-    eventsCenter.on('start_game', () => {this.started = true; this.globalState.timerMessage('start_timer');})
+    eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer'); })
 
   }
   update() {
 
     this.endgameCheck();
 
-    if(this.started){
+    if (this.started) {
       this.ropePile();
       //this.scalePull();
       this.startDashMovement();
@@ -146,7 +146,7 @@ export default class TugOWar extends Phaser.Scene {
       eventsCenter.emit("game-end", this.victory);
       this.sent = true;
     }
-    
+
   }
   scalePull() {
     if (this.pullScale <= 1) {
@@ -178,13 +178,13 @@ export default class TugOWar extends Phaser.Scene {
     if ((this.gameOver === false) & this.gameStarted) {
       if (this.dash.y > 140) {
         if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
-          this.dash.y -= 48/1.25;
-          this.rope.x -= 40/1.25;
+          this.dash.y -= 48 / 1.25;
+          this.rope.x -= 40 / 1.25;
           if (this.player.x >= 270) {
-            this.player.x -= 40/1.25;
+            this.player.x -= 40 / 1.25;
           }
           if (this.rope.x <= 510) {
-            this.npc.x -= 40/1.25;
+            this.npc.x -= 40 / 1.25;
           }
         }
       }
@@ -271,7 +271,7 @@ export default class TugOWar extends Phaser.Scene {
       this.LoseTimer += 1;
       this.loseScale += 0.2 / this.LoseTimer;
       this.youlose.setScale(this.loseScale);
-      
+
     }
     else
       this.gameOver = true;
@@ -285,7 +285,7 @@ export default class TugOWar extends Phaser.Scene {
       this.winTimer += 1;
       this.winScale += 0.2 / this.winTimer;
       this.youwin.setScale(this.winScale);
-      
+
     }
     else
       this.gameOver = true;

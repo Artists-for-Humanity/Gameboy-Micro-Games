@@ -1,7 +1,7 @@
 // Add imports for phaser library, scenes, and plugins
-// Window.location.reload();
 import Phaser from "phaser";
 import GlobalState from "./GlobalState";
+import GameOver from "./GameOver";
 import Emeowgency from "./8Bitties/Emeowgency";
 import ColorLab from "./8Bitties/ColorLab";
 import CarPump from "./DebugginDaOpps/CarPump";
@@ -62,7 +62,8 @@ const config = {
     ColorPasscode,
     HideFromCat,
     HitTheButton,
-    ColorLab
+    ColorLab,
+    GameOver
   ],
   audio: {
     disableWebAudio: true,

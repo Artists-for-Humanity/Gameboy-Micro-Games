@@ -5,7 +5,7 @@ const Y = 720
 const L_END = X / 4
 const R_END = 3 * L_END
 const L_START = -L_END
-const R_START = 5*L_END
+const R_START = 5 * L_END
 
 const listOfGames = [
     "TugOWar",
@@ -14,15 +14,19 @@ const listOfGames = [
     "Emeowgency",
     'MarcyMunch',
     'SockToss',
+    "Cannon",
     "ColorLab",
-    "MicroGame11",
-    "Highest2Lowest",
-    "FrogJump",
-    "CircleGame",
-    "BewteenSpace",
+    "CarPump",
+    "TrashSort",
     "ColorPasscode",
     "HideFromCat",
     "HitTheButton",
+    'GameOver',
+    "Lowest",
+    "FrogJump",
+    "CircleJump",
+    "BewteenSpace",
+    "ColorPasscode",
     "DrinkPour"];
 
 export default class CutScreen extends Phaser.Scene {
@@ -45,7 +49,7 @@ export default class CutScreen extends Phaser.Scene {
         this.playedGames = []
 
         this.currentScene = "MainMenu"
-        this.roundNumber = 0 
+        this.roundNumber = 0
 
 
         this.close_timer = 0
@@ -306,11 +310,11 @@ export default class CutScreen extends Phaser.Scene {
         if (score >= 100)
             this.huns.setFrame(h + 1)
     }
-    
-    closecon(){
+
+    closecon() {
         console.log("Round ", this.roundNumber)
-        
-        if(!this.lost){
+
+        if (!this.lost) {
 
             this.faceplate.anims.play('win1').once('animationcomplete', () => {
                 this.faceplate.anims.play('win2')
@@ -331,16 +335,16 @@ export default class CutScreen extends Phaser.Scene {
             this.reduce_life()
         }
         this.globalState.timerMessage('reset_timer')
-        if(this.roundNumber > 0 ){
+        if (this.roundNumber > 0) {
             this.endGame()
         }
-        else{
-            if(this.scene.isActive('MainMenu'))
-            this.scene.remove('MainMenu')
+        else {
+            if (this.scene.isActive('MainMenu'))
+                this.scene.remove('MainMenu')
         }
         this.nextGame()
     }
-    nextGame(){
+    nextGame() {
         // do{
         //     this.currentScene = this.game.scene.scenes[this.roundNumber + 1]
         // } while(this.playedGames.includes(this.currentScene) && !this.finishedGames)
@@ -349,17 +353,20 @@ export default class CutScreen extends Phaser.Scene {
         console.log(this.currentScene)
         this.scene.sendToBack('Timer')
         this.scene.sendToBack(this.currentScene)
-        this.scene.run('Timer')
-        this.scene.run(this.currentScene) 
-        console.log(this.currentScene +" should be running...")
+        if (this.currentScene !== 'GameOver')
+            this.scene.run('Timer')
+        else
+            this.scene.remove('Timer')
+        this.scene.run(this.currentScene)
+        console.log(this.currentScene + " should be running...")
         this.roundNumber++
-        setTimeout(()=>{
+        setTimeout(() => {
             //add code to play text prompt for next game
 
             this.open = true
         }, 2000)
-    } 
-    endGame(){
+    }
+    endGame() {
         console.log(this.currentScene)
         this.scene.remove(this.currentScene)
     }
