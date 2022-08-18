@@ -16,6 +16,8 @@ export default class CircleJump extends Phaser.Scene {
     this.gameOver = false;
     this.sent = false;
 
+    this.bandaid = false
+
   }
 
   preload() {
@@ -89,7 +91,7 @@ export default class CircleJump extends Phaser.Scene {
     this.createAnimation();
 
     eventsCenter.on('start_game', () => { this.started = true; eventsCenter.emit('start_timer'); this.startGame(); })
-    eventsCenter.on('end_circle', () => { this.gameOver = true})
+    eventsCenter.on('end_circle', () => { this.bandaid = true})
 
   }
 
@@ -213,7 +215,7 @@ export default class CircleJump extends Phaser.Scene {
   }
 
   startGame() {
-    if (!this.gameOver)
+    if (!this.bandaid)
       this.physics.resume();
   }
 
