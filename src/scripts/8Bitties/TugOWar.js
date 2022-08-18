@@ -9,8 +9,6 @@ export default class TugOWar extends Phaser.Scene {
     });
     // Game Object Decla
     this.gamestart = false;
-    this.pullTimer = 0;
-    this.pullScale = 0;
     this.pull;
     this.mud;
     this.progressBar;
@@ -19,7 +17,6 @@ export default class TugOWar extends Phaser.Scene {
     this.npc;
     this.rope;
     this.meter;
-    this.xScale = 1;
     this.dash;
     this.gameStarted = false;
     this.youlose;
@@ -36,27 +33,21 @@ export default class TugOWar extends Phaser.Scene {
     this.slip = false;
     this.playerRopePile;
     this.npcRopePile;
-    this.started
+    this.started;
   }
   preload() {
     this.load.image(
       "8B6_ropePile",
       new URL("../8Bitties/assets/TugOWar/tow_pile.png", import.meta.url).href
-
     );
     this.load.image(
       "8B6_background",
       new URL("../8Bitties/assets/TugOWar/tugOwarBG.png", import.meta.url).href
     );
     this.load.image(
-      "8B6_pull",
-      new URL("../8Bitties/assets/TugOWar/pulltext.png", import.meta.url).href
-    );
-    this.load.image(
       "8B6_rope",
       new URL("../8Bitties/assets/TugOWar/tow_rope_crop.png", import.meta.url)
         .href
-
     );
     this.load.image(
       "8B6_safe",
@@ -77,7 +68,6 @@ export default class TugOWar extends Phaser.Scene {
     this.load.spritesheet(
       "8B6_player",
       new URL("../8Bitties/assets/TugOWar/tow_player.png", import.meta.url)
-
         .href,
       {
         frameWidth: 149.5,
@@ -98,7 +88,6 @@ export default class TugOWar extends Phaser.Scene {
 
   create() {
     this.createAnimations();
-    //this.pull = this.add.image(540, 360, "8B6_pull").setDepth(1);
     this.grass = this.add.image(540, 360, "8B6_background").setDepth(-10);
     this.mud = this.add.sprite(540, 620, "8B6_mud").setDepth(-9);
     this.spacebar = this.input.keyboard.addKey(
@@ -129,34 +118,22 @@ export default class TugOWar extends Phaser.Scene {
 
     this.gameStart();
 
-    eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer'); })
-
+    eventsCenter.on("start_game", () => {
+      this.started = true;
+      this.globalState.timerMessage("start_timer");
+    });
   }
   update() {
-
     this.endgameCheck();
 
     if (this.started) {
       this.ropePile();
-      //this.scalePull();
       this.startDashMovement();
       this.playerPull();
     }
     if (this.gameOver && !this.sent) {
       eventsCenter.emit("game-end", this.victory);
       this.sent = true;
-    }
-
-  }
-  scalePull() {
-    if (this.pullScale <= 1) {
-      this.pullTimer += 1;
-      this.pullScale += 0.25 / this.pullTimer;
-      this.pull.setScale(this.pullScale);
-    } else if (this.pullTimer === 31) {
-      this.pull.destroy();
-      this.gameStart();
-      this.pullTimer = 0;
     }
   }
   startDashMovement() {
@@ -251,14 +228,14 @@ export default class TugOWar extends Phaser.Scene {
   winOrLose() {
     if (this.rope.x > 680) {
       this.lose = true;
-      this.started = false
-      eventsCenter.emit('stop_timer')
+      this.started = false;
+      eventsCenter.emit("stop_timer");
       console.log("8B6_lose");
     }
     if (this.rope.x <= 325) {
       this.victory = true;
-      this.started = false
-      eventsCenter.emit('stop_timer')
+      this.started = false;
+      eventsCenter.emit("stop_timer");
       console.log("8B6_win");
     }
   }
@@ -271,10 +248,7 @@ export default class TugOWar extends Phaser.Scene {
       this.LoseTimer += 1;
       this.loseScale += 0.2 / this.LoseTimer;
       this.youlose.setScale(this.loseScale);
-
-    }
-    else
-      this.gameOver = true;
+    } else this.gameOver = true;
   }
   youWin() {
     if (this.imageCreated === false) {
@@ -285,10 +259,7 @@ export default class TugOWar extends Phaser.Scene {
       this.winTimer += 1;
       this.winScale += 0.2 / this.winTimer;
       this.youwin.setScale(this.winScale);
-
-    }
-    else
-      this.gameOver = true;
+    } else this.gameOver = true;
   }
   endgameCheck() {
     this.winOrLose();
@@ -320,4 +291,3 @@ export default class TugOWar extends Phaser.Scene {
     }
   }
 }
-

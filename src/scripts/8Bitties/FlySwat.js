@@ -24,8 +24,8 @@ export default class FlySwat extends Phaser.Scene {
     this.dead = false;
     this.victory = false;
     this.sent = false;
-    this.started = false
-    this.gameStartRan = false
+    this.started = false;
+    this.gameStartRan = false;
   }
   preload() {
     this.load.image(
@@ -37,10 +37,7 @@ export default class FlySwat extends Phaser.Scene {
       new URL("../8Bitties/assets/FlySwat/imageholder.png", import.meta.url)
         .href
     );
-    this.load.image(
-      "8B5_swat",
-      new URL("../8Bitties/assets/FlySwat/swatText.png", import.meta.url).href
-    );
+
     this.load.image(
       "8B5_kitchen",
       new URL("../8Bitties/assets/FlySwat/kitchenbg.png", import.meta.url).href
@@ -76,24 +73,24 @@ export default class FlySwat extends Phaser.Scene {
   create() {
     this.makeAnimations();
     this.kitchen = this.add.image(540, 360, "8B5_kitchen").setDepth(-4);
-    //this.swat = this.add.image(540, 360, "8B5_swat");
     this.createKeys();
-    eventsCenter.on('start_game', () => {this.started = true; this.globalState.timerMessage('start_timer')})
-    this.gameStart()
-
+    eventsCenter.on("start_game", () => {
+      this.started = true;
+      this.globalState.timerMessage("start_timer");
+    });
+    this.gameStart();
   }
   update() {
     if (!this.dead) this.moveFly();
-    if(this.started){
+    if (this.started) {
       //this.playSwatText();
-      
+
       this.moveSwatter();
       this.swing();
       if (this.gameOver && !this.sent) {
-        eventsCenter.emit('stop_timer')
+        eventsCenter.emit("stop_timer");
         eventsCenter.emit("game-end", this.victory);
         this.sent = true;
-
       }
     }
     //this.animateDeadFly();
@@ -108,15 +105,13 @@ export default class FlySwat extends Phaser.Scene {
     this.gamestart = true;
   }
   playSwatText() {
-    if(!this.gameStartRan){
+    if (!this.gameStartRan) {
       //this.swat.destroy();
       this.gameStart();
-      this.gameStartRan = true
+      this.gameStartRan = true;
     }
-    
   }
   killFly() {
-
     this.fly.anims.play("8B5_crash");
     this.dead = true;
   }
@@ -209,9 +204,9 @@ export default class FlySwat extends Phaser.Scene {
         ) {
           this.killFly();
           this.victory = true;
-          setTimeout(()=>{
+          setTimeout(() => {
             this.gameOver = true;
-          }, 1500)
+          }, 1500);
         }
       }
     }
