@@ -20,6 +20,7 @@ export default class ColorPasscode extends Phaser.Scene {
         this.lossText;
         this.winText;
         this.started = false;
+        this.started2 = false;
         this.gameOver = false;
         this.victory = false;
         this.sent = false;
@@ -36,7 +37,6 @@ export default class ColorPasscode extends Phaser.Scene {
         this.guessNum = 0;
 
         this.interactive = false;
-
         this.Left;
         this.Right;
         this.Down;
@@ -116,37 +116,43 @@ export default class ColorPasscode extends Phaser.Scene {
         for (var i = 0; i < 4; i++) {
             this.pattern.push(this.getRandomInt(4));
         }
-        console.log(this.pattern);
+        // console.log(this.pattern);
+
+        eventsCenter.on('start_game', () => { this.started2 = true; eventsCenter.emit('stop_timer') })
+
     }
 
     update(time, delta) {
-        if (this.door1.alpha < 1) {
+        if (this.started2) {
 
-            //door fades in after 600ms
-            this.time.delayedCall(600, () => {
-                this.door1.alpha += 0.008;
-            }, [], this);
-        }
+            if (this.door1.alpha < 1) {
 
-        if (!this.started && this.door1.alpha === 1) {
-            this.time.delayedCall(600, () => {
-                this.startGame();
-            }, [], this);
-            this.started = true;
-        }
+                //door fades in after 600ms
+                this.time.delayedCall(600, () => {
+                    this.door1.alpha += 0.008;
+                }, [], this);
+            }
 
-        if (this.goText.alpha > 0) {
-            this.time.delayedCall(400, () => { this.goText.alpha -= 0.08; })
-        }
+            if (!this.started && this.door1.alpha === 1) {
+                this.time.delayedCall(600, () => {
+                    this.startGame();
+                }, [], this);
+                this.started = true;
+            }
 
-        if (this.interactive && !this.gameOver) {
-            this.userInput();
-        }
+            if (this.goText.alpha > 0) {
+                this.time.delayedCall(400, () => { this.goText.alpha -= 0.08; })
+            }
 
-        if (this.gameOver && !this.sent) {
-            eventsCenter.emit('game-end', this.victory)
-            console.log('emission sent')
-            this.sent = true
+            if (this.interactive && !this.gameOver) {
+                this.userInput();
+            }
+
+            if (this.gameOver && !this.sent) {
+                this.globalState.timerMessage('stop_timer')
+                this.globalState.sendMessage(this.victory)
+                this.sent = true
+            }
         }
     }
 
@@ -217,7 +223,7 @@ export default class ColorPasscode extends Phaser.Scene {
         this.time.delayedCall(this.pattern.length * 500 + 2000, () => {
             this.goText.alpha = 1;
             this.interactive = true
-            // console.log('start interactive');
+            this.globalState.timerMessage('start_timer');
             this.hideGuessBlocks();
             for (var i = 0; i < this.guessBlocks.length; i++) {
                 this.guessBlocks[i].setTexture('');

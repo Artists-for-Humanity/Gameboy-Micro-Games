@@ -20,6 +20,7 @@ export default class Cannon extends Phaser.Scene {
     this.victory = false;
     this.sent = false;
     this.tries = 0;
+    this.started = false;
   }
 
   preload() {
@@ -191,6 +192,16 @@ export default class Cannon extends Phaser.Scene {
 
     this.timedEvent = this.time.delayedCall(1000, this.onEvent, [], this);
 
+
+
+    this.createAnims();
+
+    eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer') })
+
+  }
+
+  createAnims() {
+
     this.anims.create({
       key: "DO1_fire",
       frames: [
@@ -265,10 +276,14 @@ export default class Cannon extends Phaser.Scene {
       ],
       frameRate: 24,
     });
+
   }
 
   update(time, delta) {
-    if (!this.gameOver) {
+    if (this.started) {
+      console.log(this.started)
+
+      // if (!this.gameOver) {
       if (this.totalBarrels === 0 && this.tries <= 2) {
         this.gameOver = true;
         this.gameWon();
@@ -342,11 +357,12 @@ export default class Cannon extends Phaser.Scene {
         this.cannonSelect -= 1;
         this.time.delayedCall(100, this.animateCannonBall, [], this);
       }
-    }
-    if (this.gameOver && !this.sent) {
-      eventsCenter.emit('game-end', this.victory)
-      console.log('emission sent')
-      this.sent = true
+      // }
+      if (this.gameOver && !this.sent) {
+        this.globalState.timerMessage('stop_timer')
+        this.globalState.sendMessage(this.victory)
+        this.sent = true
+      }
     }
   }
 
@@ -389,7 +405,7 @@ export default class Cannon extends Phaser.Scene {
     this.cannonBallGrp.getChildren()[this.cannonSelect].y -= 20;
     this.selectedValue =
       this.cannonBallMap[
-        this.cannonBallGrp.getChildren()[this.cannonSelect].texture.key
+      this.cannonBallGrp.getChildren()[this.cannonSelect].texture.key
       ];
   }
 
@@ -453,9 +469,9 @@ export default class Cannon extends Phaser.Scene {
       if (this.barrelRowMap[i] === 2) {
         this.barrelGrp.create(
           xposition +
-            this.barrel.displayWidth * (i - 4) +
-            this.barrel.displayWidth / 2 +
-            (i - 4) * 10,
+          this.barrel.displayWidth * (i - 4) +
+          this.barrel.displayWidth / 2 +
+          (i - 4) * 10,
           yposition - this.barrel.displayHeight,
           "DO1_barrel"
         );
@@ -470,9 +486,9 @@ export default class Cannon extends Phaser.Scene {
       if (this.barrelRowMap[i] === 4) {
         this.barrelGrp.create(
           xposition +
-            this.barrel.displayWidth * (i - 8) +
-            this.barrel.displayWidth / 2 +
-            10,
+          this.barrel.displayWidth * (i - 8) +
+          this.barrel.displayWidth / 2 +
+          10,
           yposition - this.barrel.displayHeight * 3,
           "DO1_barrel"
         );

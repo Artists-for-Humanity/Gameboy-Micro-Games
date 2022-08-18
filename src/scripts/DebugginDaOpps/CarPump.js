@@ -14,6 +14,7 @@ export default class CarPump extends Phaser.Scene {
     this.gameOver = false;
     this.victory = false;
     this.sent = false;
+    this.started = false;
     this.lever;
     this.carpumpTimer = 0;
     this.car25;
@@ -108,24 +109,21 @@ export default class CarPump extends Phaser.Scene {
     this.gameOverScreen.visible = false;
     this.timedEvent = this.time.delayedCall(1000, this.onEvent, [], this);
     this.createAnimations();
+    eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer') })
+
   }
 
   update() {
-    this.upAndDown();
-    this.pumpToWin();
-    if (this.gameStarted === true) {
-      this.endgameTimer++;
-      if (this.endgameTimer === 290) {
-        this.gameStarted = false;
-        this.gameOver = true;
-        this.gameOverScreen.visible = true;
+    if (this.started) {
+      this.upAndDown();
+      this.pumpToWin();
+
+      if (this.gameOver && !this.sent) {
+        this.globalState.timerMessage('stop_timer')
+        this.globalState.sendMessage(this.victory)
+        this.sent = true;
       }
-    }
-    if (this.gameOver && !this.sent) {
-      eventsCenter.emit("game-end", this.victory);
-      console.log("victory = " + this.victory);
-      console.log("emission sent");
-      this.sent = true;
+
     }
   }
 

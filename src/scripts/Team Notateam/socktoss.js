@@ -2,8 +2,8 @@ import Phaser from 'phaser';
 import eventsCenter from '../EventsCenter'
 
 const SCALE_MULTIPLIER = 4.5
-const METER_WIDTH= 108
-const WIN_VALUE = 80 
+const METER_WIDTH = 108
+const WIN_VALUE = 80
 
 export default class SockToss extends Phaser.Scene {
     // Game Class Constructor
@@ -14,8 +14,8 @@ export default class SockToss extends Phaser.Scene {
             key: 'SockToss',
             physics: {
                 default: 'arcade',
-                arcade: { 
-                  gravity: { y: 4500 }
+                arcade: {
+                    gravity: { y: 4500 }
                 }
             }
         });
@@ -94,27 +94,27 @@ export default class SockToss extends Phaser.Scene {
         this.basket_f.setScale(SCALE_MULTIPLIER)
         // Add hand and sock sprites
         this.player = this.add.container(918, 368)
-        this.hand = this.physics.add.sprite(0,0, 'hand_open')
+        this.hand = this.physics.add.sprite(0, 0, 'hand_open')
         this.hand.setScale(SCALE_MULTIPLIER)
-        this.sock = this.physics.add.sprite(-2,-6, 'sock')
+        this.sock = this.physics.add.sprite(-2, -6, 'sock')
         this.sock.setScale(SCALE_MULTIPLIER)
         this.player.add(this.hand)
         this.player.add(this.sock)
         this.hand.body.setAllowGravity(false)
         this.sock.body.setAllowGravity(false)
         // Add win and lose text
-        this.toss = this.add.image(1080/2, 720/2, 'toss')
+        this.toss = this.add.image(1080 / 2, 720 / 2, 'toss')
         this.toss.setVisible(true)
-        this.win = this.add.image(1080/2, 720/2, 'sock_win')
+        this.win = this.add.image(1080 / 2, 720 / 2, 'sock_win')
         this.win.setVisible(false)
-        this.lose = this.add.image(1080/2, 720/2, 'sock_lose')
+        this.lose = this.add.image(1080 / 2, 720 / 2, 'sock_lose')
         this.lose.setVisible(false)
         // Add meter and frame
         this.meter = this.add.image(125 * SCALE_MULTIPLIER, 140 * SCALE_MULTIPLIER, 'meter')
-        this.meter.setOrigin(0,0)
+        this.meter.setOrigin(0, 0)
         this.meter.setScale(SCALE_MULTIPLIER)
         this.meterF = this.add.image(125 * SCALE_MULTIPLIER, 140 * SCALE_MULTIPLIER, 'meter_frame')
-        this.meterF.setOrigin(0,0)
+        this.meterF.setOrigin(0, 0)
         this.meterF.setScale(SCALE_MULTIPLIER)
         // Add meter mask
         this.mmask = this.make.graphics()
@@ -136,80 +136,79 @@ export default class SockToss extends Phaser.Scene {
         this.timer2 = 0
         this.toss.scale = 0
 
-        eventsCenter.on('start_game', () => {this.started = true; this.globalState.timerMessage('start_timer')})
+        eventsCenter.on('start_game', () => { if (!this.gameOver) { this.started = true; eventsCenter.emit('start_timer') } })
 
         this.anims.create({
             key: 'throw',
-            frames: [{key: 'hand_closed'}]
+            frames: [{ key: 'hand_closed' }]
         })
         this.anims.create({
             key: 'win',
-            frames: [{key: 'hand_win'}]
+            frames: [{ key: 'hand_win' }]
         })
         this.anims.create({
             key: 'lose',
-            frames: [{key: 'hand_lose'}]
-        })      
+            frames: [{ key: 'hand_lose' }]
+        })
     }
     update() {
         // this nested if-statement plays the intro "TOSS" text
         // Started will be set to true at the end
-        if(this.started){
+        if (this.started) {
             this.timer++;
-            if(this.cursors.space.isDown){
+            if (this.cursors.space.isDown) {
                 this.thrown = true;
             }
             // Game runtime code
-            if(!this.thrown){
+            if (!this.thrown) {
                 this.throwncon()
             }
             // Run when spacebar is pressed
-            else
-            {   // Runs dropping code only once
-                if(this.dropped == false){
+            else {   // Runs dropping code only once
+                if (this.dropped == false) {
                     this.dropcon(this)
                 }
                 // Spins hand for throw
                 this.handrot()
                 // When sock lands
-                if(this.sock.y >= this.floorval ){
+                if (this.sock.y >= this.floorval) {
                     // Runs stopping code only once
-                    if(!this.stopped){
+                    if (!this.stopped) {
                         this.sockstop()
                     }
                     this.endcon()
-                    if(this.gameOver && !this.sent){
+                    if (this.gameOver && !this.sent) {
                         this.globalState.timerMessage('stop_timer')
                         this.globalState.sendMessage(this.victory)
                         this.sent = true
                     }
                 }
             }
-            
+
         }
     }
-    maskdraw(){
+    maskdraw() {
         this.mmask.clear();
-        this.mmask.fillRect(127 * SCALE_MULTIPLIER, 142 * SCALE_MULTIPLIER, (this.meterX+1) * SCALE_MULTIPLIER, 14 * SCALE_MULTIPLIER);
+        this.mmask.fillRect(127 * SCALE_MULTIPLIER, 142 * SCALE_MULTIPLIER, (this.meterX + 1) * SCALE_MULTIPLIER, 14 * SCALE_MULTIPLIER);
     }
-    tosstext(){
+    tosstext() {
         // grow "TOSS" until it reaches max scale
-        if (this.toss.scale < 4){
+        if (this.toss.scale < 4) {
             this.toss.scale += 0.1;
         }
         // once "TOSS" is maxed, we pause for 50 milliseconds before starting the game
-        else{
+        else {
             this.timer2++
             // make sure 50 ms have elapsed, then set started to true
-            if(this.timer2 > 50){
+            if (this.timer2 > 50) {
                 this.toss.setVisible(false)
                 this.started = true
             }
         }
     }
-    throwncon(){
+    throwncon() {
         //framerate check
-        if(this.timer == 1){
+        if (this.timer == 1) {
             //reset timer
             this.timer = 0;
             // check to see which way meter should move
@@ -221,127 +220,127 @@ export default class SockToss extends Phaser.Scene {
         }
     }
     // QOL function for oscilating between two values
-    dircheck(dec, inc){
-        if(dec){
+    dircheck(dec, inc) {
+        if (dec) {
             this.decreasing = true;
         }
-        if(inc){
+        if (inc) {
             this.decreasing = false;
         }
     }
-    metercheck(){
+    metercheck() {
         this.dircheck(this.meterX >= METER_WIDTH, this.meterX <= 0)
     }
-    playermove(){
+    playermove() {
         // move the meter in that direction
-        if(this.decreasing){
+        if (this.decreasing) {
             this.deccon()
         }
-        else{
+        else {
             this.inccon()
         }
         // move hand
-        this.player.y = ((METER_WIDTH - this.meterX) * 0.3 + 50)* SCALE_MULTIPLIER
+        this.player.y = ((METER_WIDTH - this.meterX) * 0.3 + 50) * SCALE_MULTIPLIER
     }
-    deccon(){
-        this.player.x += (this.meterX/METER_WIDTH) * SCALE_MULTIPLIER;
+    deccon() {
+        this.player.x += (this.meterX / METER_WIDTH) * SCALE_MULTIPLIER;
         this.meterX -= 2;
-        this.player.angle += 30/54
+        this.player.angle += 30 / 54
     }
-    inccon(){
+    inccon() {
         this.meterX += 2;
-        this.player.x -= (this.meterX/METER_WIDTH) * SCALE_MULTIPLIER;
-        this.player.angle -= 30/54
+        this.player.x -= (this.meterX / METER_WIDTH) * SCALE_MULTIPLIER;
+        this.player.angle -= 30 / 54
     }
-    handrot(){
-        if(this.hand.angle > -90 ){
-            this.hand.angle -= (15/Math.sqrt(2))
+    handrot() {
+        if (this.hand.angle > -90) {
+            this.hand.angle -= (15 / Math.sqrt(2))
         }
     }
-    dropcon(){
+    dropcon() {
         this.timer = 0
 
         this.hand.anims.play('throw')
         this.player.remove(this.sock)
-        this.sock.x = this.player.x -(2*SCALE_MULTIPLIER)
-        this.sock.y = this.player.y - (6*SCALE_MULTIPLIER)
+        this.sock.x = this.player.x - (2 * SCALE_MULTIPLIER)
+        this.sock.y = this.player.y - (6 * SCALE_MULTIPLIER)
         this.sock.angle = this.player.angle
         this.sock.body.setAllowGravity(true)
 
-        if(this.meterX >= WIN_VALUE){
+        if (this.meterX >= WIN_VALUE) {
 
-            this.xrange =  (-1 * (60  + 10 * ((this.meterX-80)/28))) * SCALE_MULTIPLIER
+            this.xrange = (-1 * (60 + 10 * ((this.meterX - 80) / 28))) * SCALE_MULTIPLIER
             this.yrange = -755 * SCALE_MULTIPLIER
-            this.basket_f = this.physics.add.sprite(13 * SCALE_MULTIPLIER, 21 * SCALE_MULTIPLIER, 'basket_front'); 
+            this.basket_f = this.physics.add.sprite(13 * SCALE_MULTIPLIER, 21 * SCALE_MULTIPLIER, 'basket_front');
             this.basket_f.setOrigin(0, 0);
             this.basket_f.setScale(SCALE_MULTIPLIER)
             this.basket_f.body.setAllowGravity(false)
 
-            this.floorval = 720 /2
+            this.floorval = 720 / 2
             this.victory = true;
         }
-        else{
-            this.xrange = (-70 * this.meterX/(METER_WIDTH)) * SCALE_MULTIPLIER
-            this.yrange = (-755 * this.meterX/(METER_WIDTH-28)) * SCALE_MULTIPLIER
+        else {
+            this.xrange = (-70 * this.meterX / (METER_WIDTH)) * SCALE_MULTIPLIER
+            this.yrange = (-755 * this.meterX / (METER_WIDTH - 28)) * SCALE_MULTIPLIER
 
             this.floorval = 720 * .75
             this.victory = false;
         }
 
         this.sock.setVelocityX(this.xrange)
-        this.sock.setVelocityY(this.yrange) 
+        this.sock.setVelocityY(this.yrange)
         this.meter.setDepth(1)
         this.meterF.setDepth(1)
         this.dropped = true
     }
-    sockstop(){
+    sockstop() {
         this.stopped = true
         this.timer = 0
-        this.sock.setVelocity(0,0)
+        this.sock.setVelocity(0, 0)
         this.sock.body.setAllowGravity(false)
     }
-    endcon(){
+    endcon() {
         this.player.angle = 0
         this.hand.angle = 0
-        if(this.victory){
+        if (this.victory) {
             this.wincon()
-        } else{
+        } else {
             this.losecon()
         }
         this.gameOver = true
     }
-    wincon(){
+    wincon() {
         this.hand.anims.play('win')
         this.win.setDepth(2)
         this.win.setVisible(true)
         this.player.x = 200 * SCALE_MULTIPLIER
         this.player.y = 26 * SCALE_MULTIPLIER
-        if (this.win.scale < 4){
-            this.win.scale += 1/4
+        if (this.win.scale < 4) {
+            this.win.scale += 1 / 4
         }
         this.dircheck(this.player.scale >= 1.2, this.player.scale <= 1)
-        if(this.decreasing){
+        if (this.decreasing) {
             this.player.scale -= 0.01
         }
-        else{
+        else {
             this.player.scale += 0.01
         }
         // close doors
     }
-    losecon(){
+    losecon() {
         this.hand.anims.play('lose')
         this.lose.setDepth(2)
         this.lose.setVisible(true)
         this.player.x = 200 * SCALE_MULTIPLIER
         this.player.y = 60 * SCALE_MULTIPLIER
-        if (this.lose.scale < 4){
-            this.lose.scale += 1/4 
+        if (this.lose.scale < 4) {
+            this.lose.scale += 1 / 4
         }
         this.dircheck(this.player.scale >= 1, this.player.scale <= 0.8)
-        if(this.decreasing){
+        if (this.decreasing) {
             this.player.scale -= 0.005
         }
-        else{
+        else {
             this.player.scale += 0.005
         }
     }
