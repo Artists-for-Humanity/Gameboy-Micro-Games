@@ -8,7 +8,8 @@ const L_START = -L_END
 const R_START = 5 * L_END
 
 const listOfGames = [
-    "TugOWar",
+    "Lowest",
+    "FrogJump",
     "DrinkPour",
     "FlySwat",
     "Emeowgency",
@@ -20,13 +21,17 @@ const listOfGames = [
     "TrashSort",
     "ColorPasscode",
     "HideFromCat",
-    "HitTheButton",
-    'GameOver',
     "Lowest",
+    "HitTheButton",
     "FrogJump",
     "CircleJump",
+<<<<<<< Updated upstream
     "BewteenSpace",
 ];
+=======
+    "BetweenSpace",
+    'GameOver'];
+>>>>>>> Stashed changes
 
 export default class CutScreen extends Phaser.Scene {
     // Game Class Constructor
@@ -139,9 +144,10 @@ export default class CutScreen extends Phaser.Scene {
         }
         else {
             this.close_timer = 0
+            this.faceplate.anims.stop()
+            this.faceplate.setFrame(0)
             this.open = false
-            this.globalState.timerMessage('start_game')
-            console.log("start timer")
+            eventsCenter.emit('start_game')
             this.closed = true
         }
     }
@@ -333,7 +339,8 @@ export default class CutScreen extends Phaser.Scene {
             this.life_total--
             this.reduce_life()
         }
-        this.globalState.timerMessage('reset_timer')
+        eventsCenter.emit('stop_timer')
+        eventsCenter.emit('reset_timer')
         if (this.roundNumber > 0) {
             this.endGame()
         }
@@ -348,7 +355,7 @@ export default class CutScreen extends Phaser.Scene {
         //     this.currentScene = this.game.scene.scenes[this.roundNumber + 1]
         // } while(this.playedGames.includes(this.currentScene) && !this.finishedGames)
         //this.currentScene = "SockToss"
-        this.currentScene = listOfGames[this.roundNumber]
+        this.life_total > 1 ? this.currentScene = listOfGames[this.roundNumber] : this.currentScene = 'GameOver'
         console.log(this.currentScene)
         this.scene.sendToBack('Timer')
         this.scene.sendToBack(this.currentScene)

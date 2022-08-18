@@ -32,10 +32,8 @@ export default class FrogJump extends Phaser.Scene {
         this.randomNum = Math.floor(Math.random() * 3);
         this.victory = false;
         this.gameOver = false;
-
-        this.gameOver = false;
-        this.victory = false;
         this.sent = false;
+        this.started = false
 
     }
     preload() {
@@ -105,10 +103,6 @@ export default class FrogJump extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
         this.grounds = this.physics.add.staticGroup();
         // this.grounds.create(1080, 820, 'ground').setScale(5).refreshBody();
-
-
-
-
         this.createAnimation();
 
         this.physics.add.collider(this.playerSprite, this.platforms, this.offGroundMethod, null, this);
@@ -119,12 +113,50 @@ export default class FrogJump extends Phaser.Scene {
         this.cam.setBounds(0, -500, 1080, 1220);
         this.cameras.main.startFollow(this.playerSprite);
 
-        this.delayedEvent = this.time.delayedCall(this.delayTime, this.loseState, [], this);
-        this.physics.pause();
-        this.JumpImg = this.add.image(505, 360, 'Jump').setScale(1.3);
-        this.startGameDelay = this.time.delayedCall(2000, this.startGame, null, this);
-    }
+        eventsCenter.on('start_game', () => {this.started = true; eventsCenter.emit('start_timer');})
 
+        //this.delayedEvent = this.time.delayedCall(this.delayTime, this.loseState, [], this);
+        //this.physics.pause();
+        //this.JumpImg = this.add.image(505, 360, 'Jump').setScale(1.3);
+        //this.startGameDelay = this.time.delayedCall(2000, this.startGame, null, this);
+    }
+    update() {
+        if(this.started){
+            this.platforms.getChildren().forEach((platform) => {
+                platform.anims.play('idleLeaf', true);
+            });
+
+            this.fly.anims.play('flying', true);
+
+            if (this.playerSprite.x >= 1064) this.playerSprite.x = 1064;
+            if (this.playerSprite.x <= 16) this.playerSprite.x = 16;
+
+            if (this.cursors.left.isDown) {
+                this.walk(true)
+            } else if (this.cursors.right.isDown) {
+                this.walk(false)
+            }
+            else {
+                this.playerSprite.setVelocityX(0);
+                if (this.playerSprite.body.touching.down) {
+                    this.playerSprite.anims.play('turn');
+                }
+            }
+            this.fall()
+
+            if (this.cursors.up.isDown && this.playerSprite.body.touching.down) {
+                this.playerSprite.anims.play('jump')
+                this.playerSprite.setVelocityY(-600*1.2);
+            }
+            this.background.tilePositionY = this.cameras.main.scrollY * 0.3;
+
+            if (this.gameOver && !this.sent) {
+                eventsCenter.emit('stop_timer')
+                eventsCenter.emit('game-end', this.victory)
+                this.sent = true
+            }
+        }
+    }
     generatePlatform(level) {
         this.platforms = this.physics.add.staticGroup();
         if (level === 0) {
@@ -167,46 +199,10 @@ export default class FrogJump extends Phaser.Scene {
         }
     }
 
-    update() {
-        this.platforms.getChildren().forEach((platform) => {
-            platform.anims.play('idleLeaf', true);
-        });
-
-        this.fly.anims.play('flying', true);
-
-        if (this.playerSprite.x >= 1064) this.playerSprite.x = 1064;
-        if (this.playerSprite.x <= 16) this.playerSprite.x = 16;
-
-        if (this.cursors.left.isDown) {
-            this.walk(true)
-        } else if (this.cursors.right.isDown) {
-            this.walk(false)
-        }
-        else {
-            this.playerSprite.setVelocityX(0);
-            if (this.playerSprite.body.touching.down) {
-                this.playerSprite.anims.play('turn');
-            }
-        }
-        this.fall()
-
-        if (this.cursors.up.isDown && this.playerSprite.body.touching.down) {
-            this.playerSprite.anims.play('jump')
-            this.playerSprite.setVelocityY(-600);
-        }
-        this.background.tilePositionY = this.cameras.main.scrollY * 0.3;
-
-        if (this.gameOver && !this.sent) {
-            eventsCenter.emit('game-end', this.victory)
-            console.log('emission sent')
-            this.sent = true
-        }
-    }
-
     destroyFly(playerSprite, fly) {
         // fly.destroy();
         this.fly.setVisible(false)
-        this.winText.setVisible(true);
+        //this.winText.setVisible(true);
         this.winState = true;
         this.victory = true;
         this.gameOver = true;
@@ -325,7 +321,7 @@ export default class FrogJump extends Phaser.Scene {
 
 
     walk(left_down) {
-        let v = 160
+        let v = 160*1.2
 
         if (left_down) {
             v *= -1

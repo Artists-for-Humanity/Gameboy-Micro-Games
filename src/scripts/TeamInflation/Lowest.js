@@ -2,12 +2,12 @@ const X = 1080
 const Y = 720
 import eventsCenter from '../EventsCenter'
 
-export default class MicroGame31 extends Phaser.Scene {
+export default class Lowest extends Phaser.Scene {
     constructor() {
         super({
             active: false,
             visible: false,
-            key: 'Highest2Lowest',
+            key: 'Lowest',
         });
         // pointer graphic object
         this.pointer
@@ -38,6 +38,7 @@ export default class MicroGame31 extends Phaser.Scene {
         this.gameOver = false;
         this.victory = false;
         this.sent = false;
+        this.started = false
     }
     preload() {
         this.load.image("TI_1background", new URL("./assets/Lowest/NGbackground.png",
@@ -126,51 +127,48 @@ export default class MicroGame31 extends Phaser.Scene {
         this.winText.setScrollFactor(0);
         this.winText.setVisible(false);
 
+        eventsCenter.on('start_game', () => { eventsCenter.emit('start_timer'); this.started = true})
+
     }
     update() {
-        if (!this.gameOver) {
-            // each if-statement passes the direction pressed to movePointer()
-            if (Phaser.Input.Keyboard.JustDown(this.left)) {
-                this.movePointer("l")
-            }
-            if (Phaser.Input.Keyboard.JustDown(this.right)) {
-                this.movePointer("r")
-            }
-            if (Phaser.Input.Keyboard.JustDown(this.up)) {
-                this.movePointer("u")
-            }
-            if (Phaser.Input.Keyboard.JustDown(this.down)) {
-                this.movePointer("d")
-            }
-
-            // ON SELECTING CHOICE
-            if (Phaser.Input.Keyboard.JustDown(this.space)) {
-                this.box[this.selected].anims.stop()
-                // IF CORRECT CHOICE MADE
-                if (this.evaluated[this.selected] === this.correct) {
-                    this.victory = true
+    
+        if(this.started){
+            if (!this.gameOver) {
+                // each if-statement passes the direction pressed to movePointer()
+                if (Phaser.Input.Keyboard.JustDown(this.left)) {
+                    this.movePointer("l")
                 }
-                if (this.victory) {
-                    this.winText.setVisible(true);
-                    this.victory = true;
-                    console.log("good job'n such")
-                } else {
-                    console.log("Less good job")
-                    this.loseText.setVisible(true);
-
+                if (Phaser.Input.Keyboard.JustDown(this.right)) {
+                    this.movePointer("r")
                 }
-                // END GAME
-                this.gameOver = true
+                if (Phaser.Input.Keyboard.JustDown(this.up)) {
+                    this.movePointer("u")
+                }
+                if (Phaser.Input.Keyboard.JustDown(this.down)) {
+                    this.movePointer("d")
+                }  
+                // ON SELECTING CHOICE
+                if (Phaser.Input.Keyboard.JustDown(this.space)) {
+                    this.box[this.selected].anims.stop()
+                    // IF CORRECT CHOICE MADE
+                    if (this.evaluated[this.selected] === this.correct) {
+                        this.victory = true
+                        this.winText.setVisible(true);
+                    } else {
+                        console.log("Less good job")
+                        this.loseText.setVisible(true);
+                    }
+                    // END GAME
+                    this.gameOver = true
+                }
+            } else if (!this.sent) {
+                eventsCenter.emit('stop_timer')
+                eventsCenter.emit('game-end', this.victory)
+                console.log("OH SHIT OOPS")
+                this.sent = true
             }
-        } else {
-            // do stuff at end of game, victory or lose
-            if (this.victory) { } else { }
-        }
-        if (this.gameOver && !this.sent) {
-            eventsCenter.emit('game-end', this.victory)
-            console.log('emission sent')
-            this.sent = true
-        }
+        }  
+        
     }
     // START HELPER FUNCTIONS
     // takes a number between 0 and 999 and returns an array with each digit separated
@@ -361,7 +359,7 @@ export default class MicroGame31 extends Phaser.Scene {
         }
         // set pointer to newly selected position, then play box animation for new selection
         this.pointer.setPosition(this.box[this.selected].x, (this.box[this.selected].y + 80))
-        this.box[this.selected].anims.play('box')
+        this.box[this.selected].anims.play('TI_1box')
     }
 
 }

@@ -189,7 +189,7 @@ export default class DrinkPour extends Phaser.Scene {
     eventsCenter.emit('stop_timer')
     setTimeout(()=>{
       this.gameOver = true;
-    }, 2000)
+    }, 1500)
   }
 
   //creates animations for the pitcher and spilled over cup

@@ -116,6 +116,7 @@ export default class FlySwat extends Phaser.Scene {
     
   }
   killFly() {
+
     this.fly.anims.play("8B5_crash");
     this.dead = true;
   }
@@ -188,7 +189,7 @@ export default class FlySwat extends Phaser.Scene {
     });
   }
   swing() {
-    if (this.swatter && this.gameOver === false) {
+    if (this.swatter && !this.gameOver) {
       if (this.swung === true) {
         this.swingCD -= 10;
       }
@@ -208,7 +209,9 @@ export default class FlySwat extends Phaser.Scene {
         ) {
           this.killFly();
           this.victory = true;
-          this.gameOver = true;
+          setTimeout(()=>{
+            this.gameOver = true;
+          }, 1500)
         }
       }
     }
