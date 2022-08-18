@@ -303,7 +303,7 @@ export default class SockToss extends Phaser.Scene {
     endcon() {
         this.player.angle = 0
         this.hand.angle = 0
-        if(!this.timerStopped){
+        if (!this.timerStopped) {
             eventsCenter.emit('timer_stop')
         }
         if (this.victory) {
@@ -320,9 +320,9 @@ export default class SockToss extends Phaser.Scene {
         this.player.y = 26 * SCALE_MULTIPLIER
         if (this.win.scale < 4) {
             this.win.scale += 1 / 4
-        } 
+        }
         else
-            setTimeout(()=>{
+            setTimeout(() => {
                 this.gameOver = true;
             }, 1500)
         this.dircheck(this.player.scale >= 1.2, this.player.scale <= 1)
@@ -344,7 +344,7 @@ export default class SockToss extends Phaser.Scene {
             this.lose.scale += 1 / 4
         }
         else
-            setTimeout(()=>{
+            setTimeout(() => {
                 this.gameOver = true;
             }, 1500)
         this.dircheck(this.player.scale >= 1, this.player.scale <= 0.8)

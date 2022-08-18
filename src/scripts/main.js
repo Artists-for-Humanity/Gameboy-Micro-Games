@@ -38,7 +38,7 @@ const config = {
       gravity: {
         y: 0,
       },
-      debug: true,
+      debug: false,
     },
   },
 
@@ -52,7 +52,7 @@ const config = {
     Emeowgency,
     BetweenSpace,
     CircleJump,
-    Lowest, 
+    Lowest,
     FrogJump,
     TugOWar,
     FlySwat,

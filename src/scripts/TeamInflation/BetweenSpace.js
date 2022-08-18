@@ -17,8 +17,8 @@ export default class BetweenSpace extends Phaser.Scene {
 
   preload() {
 
-    this.load.spritesheet(this.load.image('TI_3background', new URL("./assets/spaceBKG.png",
-      import.meta.url).href));
+    this.load.image('TI_3background', new URL("./assets/spaceBKG.png",
+      import.meta.url).href);
     this.load.image('TI_3win', new URL("./assets/youwin.png",
       import.meta.url).href);
     this.load.image('TI_3lose', new URL("./assets/losetext.png",

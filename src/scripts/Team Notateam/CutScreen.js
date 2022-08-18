@@ -21,17 +21,10 @@ const listOfGames = [
     "TrashSort",
     "ColorPasscode",
     "HideFromCat",
-    "Lowest",
     "HitTheButton",
-    "FrogJump",
     "CircleJump",
-<<<<<<< Updated upstream
-    "BewteenSpace",
-];
-=======
     "BetweenSpace",
     'GameOver'];
->>>>>>> Stashed changes
 
 export default class CutScreen extends Phaser.Scene {
     // Game Class Constructor
