@@ -8,6 +8,7 @@ const L_START = -L_END
 const R_START = 5 * L_END
 
 const listOfGames = [
+    "CircleJump",
     'MarcyMunch',
     'SockToss',
     "Lowest",
@@ -22,7 +23,6 @@ const listOfGames = [
     "ColorPasscode",
     "HideFromCat",
     "HitTheButton",
-    "CircleJump",
     "BetweenSpace",
     'TugOWar',
     'GameOver'];
@@ -330,6 +330,10 @@ export default class CutScreen extends Phaser.Scene {
 
     closecon() {
         console.log("Round ", this.roundNumber)
+
+        if(this.currentScene === 'CircleJump'){
+            eventsCenter.emit('end_circle')
+        }
 
         if (!this.lost) {
 
