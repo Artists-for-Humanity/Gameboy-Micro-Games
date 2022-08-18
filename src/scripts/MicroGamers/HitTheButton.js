@@ -36,6 +36,7 @@ export default class HitTheButton extends Phaser.Scene {
         this.keySPACE;
         this.keyPressAvailable = true;
         this.delayedCallCheck = false;
+
     }
 
     preload() {
@@ -89,7 +90,7 @@ export default class HitTheButton extends Phaser.Scene {
 
         this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-        eventsCenter.on('start_game', () => { this.started = true; eventsCenter.emit('stop_timer') })
+        eventsCenter.on('start_game', () => { this.started = true; })
 
     }
 
@@ -296,8 +297,6 @@ export default class HitTheButton extends Phaser.Scene {
 
     endGame() {
         this.gameActive = false;
-        // this.anims.pauseAll();
-        // this.time.removeAllEvents();
         if (this.myScore === 1) {
             this.endText.setStyle({
                 fill: '#00ff00'

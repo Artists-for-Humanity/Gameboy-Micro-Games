@@ -7,7 +7,7 @@ import ColorLab from "./8Bitties/ColorLab";
 import CarPump from "./DebugginDaOpps/CarPump";
 import TrashSort from "./DebugginDaOpps/TrashSort";
 import Cannon from "./DebugginDaOpps/Cannon";
-import Highest2Lowest from "./TeamInflation/Highest2Lowest";
+import Lowest from "./TeamInflation/Lowest";
 import FrogJump from "./TeamInflation/FrogJump";
 import BetweenSpace from "./TeamInflation/BetweenSpace";
 import ColorPasscode from "./MicroGamers/ColorPasscode";
@@ -52,8 +52,8 @@ const config = {
     Emeowgency,
     BetweenSpace,
     CircleJump,
+    Lowest, 
     FrogJump,
-    Highest2Lowest,
     TugOWar,
     FlySwat,
     DrinkPour,
