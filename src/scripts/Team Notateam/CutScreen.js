@@ -73,12 +73,13 @@ export default class CutScreen extends Phaser.Scene {
         this.l_life
         this.r_life
 
+        this.textPrompt
+
     }
 
     preload() {
         this.load.spritesheet(
             'gba', new URL('assets/gba.png', import.meta.url).href,
-
             { frameWidth: 252, frameHeight: 162 })
         this.load.spritesheet(
             'loss', new URL('assets/loss_cat.png', import.meta.url).href,
@@ -348,7 +349,7 @@ export default class CutScreen extends Phaser.Scene {
         //     this.currentScene = this.game.scene.scenes[this.roundNumber + 1]
         // } while(this.playedGames.includes(this.currentScene) && !this.finishedGames)
         //this.currentScene = "SockToss"
-        this.life_total > 1 ? this.currentScene = listOfGames[this.roundNumber] : this.currentScene = 'GameOver'
+        this.life_total > 1 ?  this.setCurrentScene() : this.currentScene = 'GameOver'
         console.log(this.currentScene)
         this.scene.sendToBack('Timer')
         this.scene.sendToBack(this.currentScene)
@@ -359,10 +360,14 @@ export default class CutScreen extends Phaser.Scene {
         this.scene.run(this.currentScene)
         console.log(this.currentScene + " should be running...")
         this.roundNumber++
+        //Initial timeout for win/lose anim
         setTimeout(() => {
-            //add code to play text prompt for next game
-
-            this.open = true
+            // Display text based on 
+                setTimeout(() => {
+                    //add code to play text prompt for next game
+        
+                    this.open = true
+                }, 2000)
         }, 2000)
     }
     endGame() {
@@ -488,5 +493,31 @@ export default class CutScreen extends Phaser.Scene {
         console.log('emission received')
         //this.faceplate.anims.stop()
         this.closed = false;
+    }
+
+    setCurrentScene(){
+        this.currentScene = listOfGames[this.roundNumber]
+        switch(this.currentScene){
+
+            case "Lowest":
+                break;
+            case "FrogJump":
+            case "DrinkPour":
+            case "FlySwat":
+            case "Emeowgency";
+            case 'MarcyMunch';
+            case 'SockToss';
+            case "ColorLab";
+            case "Cannon";
+            case "CarPump";
+            case "TrashSort";
+            case "ColorPasscode";
+            case "HideFromCat";
+            case "HitTheButton";
+            case "CircleJump";
+            case "BetweenSpace";
+            case 'GameOver';
+
+        }
     }
 }
