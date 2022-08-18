@@ -113,6 +113,7 @@ export default class CutScreen extends Phaser.Scene {
         this.load.image('pump!', new URL('../textPrompts/pump.png', import.meta.url).href)
         this.load.image('dodge!', new URL('../textPrompts/dodge.png', import.meta.url).href)
         this.load.image('avoid!', new URL('../textPrompts/avoid.png', import.meta.url).href)
+        this.load.image('add!', new URL('../textPrompts/add.png', import.meta.url).href)
     }
 
     create() {
