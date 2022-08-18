@@ -18,6 +18,8 @@ export default class Timer extends Phaser.Scene {
         this.timerSprite
         this.frame
 
+        this.victory = false
+
         this.started = false;
 
     }
@@ -35,8 +37,9 @@ export default class Timer extends Phaser.Scene {
         this.frame = this.add.image(1080/16+6, 720-90,'t_frame')
         this.timerSprite = this.physics.add.sprite(1080/16+6, 720-90,'num_sheet', this.timeLeft+1)
 
-        eventsCenter.on('reset_timer', () => {this.timeLeft = TIME; this.timerSprite.setFrame(TIME+1 )})
-        eventsCenter.on('start_timer', () => {this.started = true; this.timeUp = false; this.sent = false})
+        eventsCenter.on('reset_timer', () => {this.timeLeft = TIME; this.timerSprite.setFrame(TIME+1)})
+        eventsCenter.on('start_timer', () => {this.started = true; this.timeUp = false; this.sent = false; this.victory = false})
+        eventsCenter.on('start_win_timer', () => {this.started = true; this.timeUp = false; this.sent = false; this.victory = true})
         eventsCenter.on('stop_timer', () => {this.started = false; this.sent = true})
         
     }
@@ -48,8 +51,8 @@ export default class Timer extends Phaser.Scene {
                 this.updateAnimation()
             } else{
                 if(!this.sent){
-                    this.globalState.timerMessage('stop_timer')
-                    this.globalState.sendMessage(false)
+                    this.started = false
+                    this.globalState.sendMessage(this.victory)
                     this.sent = true
                 }
             }

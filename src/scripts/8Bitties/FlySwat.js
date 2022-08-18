@@ -24,6 +24,8 @@ export default class FlySwat extends Phaser.Scene {
     this.dead = false;
     this.victory = false;
     this.sent = false;
+    this.started = false
+    this.gameStartRan = false
   }
   preload() {
     this.load.image(
@@ -74,20 +76,25 @@ export default class FlySwat extends Phaser.Scene {
   create() {
     this.makeAnimations();
     this.kitchen = this.add.image(540, 360, "8B5_kitchen").setDepth(-4);
-    this.swat = this.add.image(540, 360, "8B5_swat");
+    //this.swat = this.add.image(540, 360, "8B5_swat");
     this.createKeys();
+    eventsCenter.on('start_game', () => {this.started = true; this.globalState.timerMessage('start_timer')})
+    this.gameStart()
+
   }
   update() {
-    this.playSwatText();
     if (!this.dead) this.moveFly();
-    this.moveSwatter();
-    this.swing();
-    if (this.gameOver && !this.sent) {
-      eventsCenter.emit("game-end", this.victory);
-      console.log("victory = " + this.victory);
-      console.log("emission sent");
-      this.sent = true;
+    if(this.started){
+      //this.playSwatText();
+      
+      this.moveSwatter();
+      this.swing();
+      if (this.gameOver && !this.sent) {
+        eventsCenter.emit('stop_timer')
+        eventsCenter.emit("game-end", this.victory);
+        this.sent = true;
 
+      }
     }
     //this.animateDeadFly();
   }
@@ -101,16 +108,12 @@ export default class FlySwat extends Phaser.Scene {
     this.gamestart = true;
   }
   playSwatText() {
-    if (this.swatTextScale < 1) {
-      this.swatTextTimer++;
-      this.swatTextScale += 0.238 / this.swatTextTimer;
-      this.swat.setScale(this.swatTextScale);
-    }
-    if (this.swatTextTimer === 38) {
-      this.swatTextTimer = 0;
-      this.swat.destroy();
+    if(!this.gameStartRan){
+      //this.swat.destroy();
       this.gameStart();
+      this.gameStartRan = true
     }
+    
   }
   killFly() {
     this.fly.anims.play("8B5_crash");

@@ -45,7 +45,7 @@ export default class MainMenu extends Phaser.Scene {
             "FlySwat",
             "DrinkPour"];
 
-        this.load.image('bg1', new URL('gameAssets/bgframe.png', import.meta.url).href);
+        this.load.image('bg1', new URL('globalAssets/title_screen.png', import.meta.url).href);
         this.load.spritesheet('play', new URL('gameAssets/play_btn.png', import.meta.url).href,
             { frameWidth: 239, frameHeight: 117 })
         this.load.spritesheet('score', new URL('gameAssets/score_btn.png', import.meta.url).href,
@@ -55,8 +55,8 @@ export default class MainMenu extends Phaser.Scene {
 
   create() {
         this.add.image(X/2, Y/2, "bg1");
-        this.btns.push(this.physics.add.sprite(X/4, Y*.80, 'play'))
-        this.btns.push(this.physics.add.sprite(3*X/4, Y*.80, 'score'))
+        this.btns.push(this.physics.add.sprite(X/8, Y*.90, 'play'))
+        this.btns.push(this.physics.add.sprite(7*X/8, Y*.90, 'score'))
 
         this.fingerIcon = this.add.image(this.btns[0].x, this.btns[0].y - 117, 'finger').setRotation(Math.PI/2)
 

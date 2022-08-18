@@ -36,6 +36,7 @@ export default class TugOWar extends Phaser.Scene {
     this.slip = false;
     this.playerRopePile;
     this.npcRopePile;
+    this.started
   }
   preload() {
     this.load.image(
@@ -97,7 +98,7 @@ export default class TugOWar extends Phaser.Scene {
 
   create() {
     this.createAnimations();
-    this.pull = this.add.image(540, 360, "8B6_pull").setDepth(1);
+    //this.pull = this.add.image(540, 360, "8B6_pull").setDepth(1);
     this.grass = this.add.image(540, 360, "8B6_background").setDepth(-10);
     this.mud = this.add.sprite(540, 620, "8B6_mud").setDepth(-9);
     this.spacebar = this.input.keyboard.addKey(
@@ -126,19 +127,26 @@ export default class TugOWar extends Phaser.Scene {
     this.npcRopePile.flipX = true;
     this.npcRopePile.visible = false;
 
+    this.gameStart();
+
+    eventsCenter.on('start_game', () => {this.started = true; this.globalState.timerMessage('start_timer');})
+
   }
   update() {
+
     this.endgameCheck();
-    this.ropePile();
-    this.scalePull();
-    this.startDashMovement();
-    this.playerPull();
+
+    if(this.started){
+      this.ropePile();
+      //this.scalePull();
+      this.startDashMovement();
+      this.playerPull();
+    }
     if (this.gameOver && !this.sent) {
       eventsCenter.emit("game-end", this.victory);
-      console.log("victory = " + this.victory);
-      console.log("emission sent");
       this.sent = true;
     }
+    
   }
   scalePull() {
     if (this.pullScale <= 1) {
@@ -170,13 +178,13 @@ export default class TugOWar extends Phaser.Scene {
     if ((this.gameOver === false) & this.gameStarted) {
       if (this.dash.y > 140) {
         if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
-          this.dash.y -= 48;
-          this.rope.x -= 40;
+          this.dash.y -= 48/1.25;
+          this.rope.x -= 40/1.25;
           if (this.player.x >= 270) {
-            this.player.x -= 40;
+            this.player.x -= 40/1.25;
           }
           if (this.rope.x <= 510) {
-            this.npc.x -= 40;
+            this.npc.x -= 40/1.25;
           }
         }
       }
@@ -243,10 +251,14 @@ export default class TugOWar extends Phaser.Scene {
   winOrLose() {
     if (this.rope.x > 680) {
       this.lose = true;
+      this.started = false
+      eventsCenter.emit('stop_timer')
       console.log("8B6_lose");
     }
     if (this.rope.x <= 325) {
       this.victory = true;
+      this.started = false
+      eventsCenter.emit('stop_timer')
       console.log("8B6_win");
     }
   }
@@ -259,8 +271,10 @@ export default class TugOWar extends Phaser.Scene {
       this.LoseTimer += 1;
       this.loseScale += 0.2 / this.LoseTimer;
       this.youlose.setScale(this.loseScale);
-      this.gameOver = true;
+      
     }
+    else
+      this.gameOver = true;
   }
   youWin() {
     if (this.imageCreated === false) {
@@ -271,8 +285,10 @@ export default class TugOWar extends Phaser.Scene {
       this.winTimer += 1;
       this.winScale += 0.2 / this.winTimer;
       this.youwin.setScale(this.winScale);
-      this.gameOver = true;
+      
     }
+    else
+      this.gameOver = true;
   }
   endgameCheck() {
     this.winOrLose();

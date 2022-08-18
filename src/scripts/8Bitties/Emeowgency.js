@@ -13,7 +13,7 @@ export default class Emeowgency extends Phaser.Scene {
     this.gamestart = false;
 
     // Game Object Declaration
-    this.timer;
+    this.timer = 43
     this.catchScale = 0;
     this.catch;
     this.grass;
@@ -39,6 +39,7 @@ export default class Emeowgency extends Phaser.Scene {
     this.sent = false;
     this.gOtimer = 0;
     this.fallen = false;
+    this.started = false
 
   }
 
@@ -117,8 +118,6 @@ export default class Emeowgency extends Phaser.Scene {
   create() {
     this.grass = this.add.image(540, 360, "8B4_grass").setDepth(-10);
     this.catch = this.add.image(540, 360, "8B4_catch");
-
-    this.timer = 1;
     this.catch.setScale(0);
     this.createAnimations();
     this.up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -127,30 +126,39 @@ export default class Emeowgency extends Phaser.Scene {
     this.right = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.RIGHT
     );
+    this.spawnBlanket();
+    
+    eventsCenter.on('start_game', () => {this.started = true; this.globalState.timerMessage('start_timer'); this.gameStart();
+  })
+
   }
 
   update() {
-    this.gameOverTimer();
-    // this.playSafe();
-    // this.playFail();
-    this.scaleCatch();
-
-    if (this.shadow) {
-      this.scaleShadow();
-    }
-    if (this.cat) {
-      this.playanimations();
-      if (this.cat.y !== this.shadow.y) {
-        this.cat.y += 4;
+    if(this.started){
+      this.catch.setVisible(false)
+      this.gameOverTimer();
+      this.playSafe();
+      this.playFail();
+      this.scaleCatch();
+  
+      if (this.shadow) {
+        this.scaleShadow();
       }
-    }
-    this.moveBlanket();
-
-    if (this.gameOver && !this.sent) {
-      eventsCenter.emit("game-end", this.victory);
-      console.log("victory = " + this.victory);
-      console.log("emission sent");
-      this.sent = true;
+      if (this.cat) {
+        this.playanimations();
+        if (this.cat.y !== this.shadow.y) {
+          this.cat.y += 4;
+        }
+      if(this.catFall)
+        this.moveBlanket();
+      }
+  
+      if (this.gameOver && !this.sent) {
+        eventsCenter.emit('stop_timer')
+        eventsCenter.emit("game-end", this.victory);
+        this.sent = true;
+  
+      }
 
     }
   }
@@ -158,12 +166,12 @@ export default class Emeowgency extends Phaser.Scene {
   //Catch!, the image in the beggining
   scaleCatch() {
     if (this.catchScale <= 1) {
-      this.timer++;
+      
       this.catchScale += 0.3 / this.timer;
       this.catch.setScale(this.catchScale);
     } else if (this.timer === 43) {
       this.catch.destroy();
-      this.gameStart();
+      
       this.timer = 0;
       this.catfalling = true;
     }
@@ -171,9 +179,11 @@ export default class Emeowgency extends Phaser.Scene {
 
   //starts the game after Catch! finnishes popping up
   gameStart() {
-    this.spawnShadow();
-    this.spawnCat();
-    this.spawnBlanket();
+    if(!this.gameOver){
+      this.spawnShadow();
+      this.spawnCat();
+    }
+    
   }
 
   //makes a random x and y coordiante
@@ -199,9 +209,7 @@ export default class Emeowgency extends Phaser.Scene {
       .setScale(0.65)
 
       .setDepth(-10);
-    this.physics.add.overlap(this.blanket, this.shadow, () => {
-      this.catSafe = true;
-    });
+
   }
 
   //spawns the cat above the Shadow based on how long shadow takes to get big
@@ -234,14 +242,13 @@ export default class Emeowgency extends Phaser.Scene {
 
 
         if (this.catSafe === true) {
-          this.safeScaleToggle = true;
-          this.catFall = false;
+          this.safeScaleToggle = true;   
         }
         if (this.catSafe === false) {
           this.catFail = true;
-          this.catFall = false;
           this.failScaleToggle = true;
         }
+        this.catFall = false;
       }
     }
   }
@@ -278,7 +285,6 @@ export default class Emeowgency extends Phaser.Scene {
     if (this.safeScaleToggle === true) {
       if (this.createImage === false) {
         this.safe = this.add.image(540, 360, "8B4_safe").setDepth(100);
-
         this.createImage = true;
       }
       if (this.safeScale <= 1) {
@@ -286,10 +292,9 @@ export default class Emeowgency extends Phaser.Scene {
         this.safeScale += 0.2 / this.safeTimer;
         this.safe.setScale(this.safeScale);
       }
-      if (this.safeTimer === 83) {
-        this.safeTimer = 0;
-      }
-      this.gameOver = true
+      else
+        this.gameOver = true
+
       this.victory = true;
 
     }
@@ -300,7 +305,6 @@ export default class Emeowgency extends Phaser.Scene {
     if (this.failScaleToggle === true) {
       if (this.createImage === false) {
         this.fail = this.add.image(540, 360, "8B4_fail").setDepth(100);
-
         this.createImage = true;
       }
       if (this.failScale <= 1) {
@@ -308,10 +312,8 @@ export default class Emeowgency extends Phaser.Scene {
         this.failScale += 0.2 / this.failTimer;
         this.fail.setScale(this.failScale);
       }
-      if (this.failTimer === 83) {
-        this.failTimer = 0;
-      }
-      this.gameOver = true
+      else
+        this.gameOver = true
     }
   }
 
@@ -378,8 +380,8 @@ export default class Emeowgency extends Phaser.Scene {
         { key: "8B4_blanketSheet", frame: 5 },
 
       ],
-      frameRate: 1,
-      repeat: -1,
+      frameRate: 12,
+      repeat: 0,
     });
   }
   youWin() {

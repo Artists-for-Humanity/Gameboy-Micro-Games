@@ -1,11 +1,12 @@
 import Phaser from "phaser";
 import eventsCenter from "../EventsCenter";
+
 export default class Chew extends Phaser.Scene {
   constructor() {
     super({
       active: false,
       visible: false,
-      key: "Chew",
+      key: "MarcyMunch",
     });
     this.victory = false;
     this.gameOver = false;
@@ -14,6 +15,7 @@ export default class Chew extends Phaser.Scene {
     this.chewInt = 0;
     this.marcy;
     this.frameNum = 0;
+    this.started = false;
   }
   preload() {
     this.load.spritesheet(
@@ -73,16 +75,18 @@ export default class Chew extends Phaser.Scene {
     this.marcy = this.add.sprite(340, 420, "8B1_marcy", this.frameNum);
     this.drumStick = this.add.sprite(750, 300, "8B1_meat", 0);
     this.tail.anims.play("wag", true);
+
+    eventsCenter.on('start_game', () => {this.started = true; this.globalState.timerMessage('start_timer')})
   }
   update() {
-    //this.meatStick();
-    if (this.biteCount < 6) this.chewing();
-    console.log(this.biteCount);
-    if (this.gameOver && !this.sent) {
-      eventsCenter.emit("game-end", this.victory);
-      console.log("victory = " + this.victory);
-      console.log("emission sent");
-      this.sent = true;
+    if(this.started){
+      if (this.biteCount < 6) 
+        this.chewing();
+      if(this.gameOver && !this.sent){
+        this.globalState.timerMessage('stop_timer')
+        this.globalState.sendMessage(this.victory)
+        this.sent = true
+      }
     }
   }
   makeAnims() {

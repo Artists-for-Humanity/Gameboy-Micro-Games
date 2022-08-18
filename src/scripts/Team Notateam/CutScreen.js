@@ -8,8 +8,12 @@ const L_START = -L_END
 const R_START = 5*L_END
 
 const listOfGames = [
-    'SockToss',
+    "TugOWar",
+    "DrinkPour",
+    "FlySwat",
     "Emeowgency",
+    'MarcyMunch',
+    'SockToss',
     "ColorLab",
     "MicroGame11",
     "Highest2Lowest",
@@ -19,8 +23,6 @@ const listOfGames = [
     "ColorPasscode",
     "HideFromCat",
     "HitTheButton",
-    "TugOWar",
-    "FlySwat",
     "DrinkPour"];
 
 export default class CutScreen extends Phaser.Scene {
@@ -352,6 +354,8 @@ export default class CutScreen extends Phaser.Scene {
         console.log(this.currentScene +" should be running...")
         this.roundNumber++
         setTimeout(()=>{
+            //add code to play text prompt for next game
+
             this.open = true
         }, 2000)
     } 

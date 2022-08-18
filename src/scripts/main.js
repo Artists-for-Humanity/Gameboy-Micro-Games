@@ -19,6 +19,7 @@ import SockToss from "./Team Notateam/SockToss";
 import CutScreen from "./Team Notateam/CutScreen";
 import MainMenu from "./MainMenu";
 import Timer from "./Timer";
+import MarcyMunch from "./8Bitties/MarcyMunch";
 import Challenge from "./DebugginDaOpps/Challenge";
 import CircleJump from "./TeamInflation/CircleJump";
 
@@ -46,6 +47,7 @@ const config = {
     MainMenu,
     CutScreen,
     Timer,
+    MarcyMunch,
     SockToss, 
     CarPump, 
     Emeowgency, 
