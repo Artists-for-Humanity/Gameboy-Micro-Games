@@ -8,13 +8,13 @@ const L_START = -L_END
 const R_START = 5 * L_END
 
 const listOfGames = [
+    'MarcyMunch',
     'SockToss',
     "Lowest",
     "FrogJump",
     "DrinkPour",
     "FlySwat",
     "Emeowgency",
-    'MarcyMunch',
     "ColorLab",
     "Cannon",
     "CarPump",
@@ -103,6 +103,7 @@ export default class CutScreen extends Phaser.Scene {
         this.load.image('sort!', new URL('../textPrompts/sort.png', import.meta.url).href)
         this.load.image('swat!', new URL('../textPrompts/swatText.png', import.meta.url).href)
         this.load.image('swat!', new URL('../textPrompts/swatText.png', import.meta.url).href)
+        this.load.image('munch!', new URL('../textPrompts/munch.png', import.meta.url).href)
     }
 
     create() {
@@ -512,6 +513,9 @@ export default class CutScreen extends Phaser.Scene {
                 break;
             case "FrogJump":
                 s = 'jump!'
+                break;
+            case "TugOWar":
+                s = 'pull!'
                 break;
             case "DrinkPour":
                 s = 'pour!'
