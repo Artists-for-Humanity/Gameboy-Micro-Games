@@ -36,6 +36,7 @@ export default class HideFromCat extends Phaser.Scene {
         this.gameOver = false;
         this.victory = false;
         this.sent = false;
+        this.started = false;
 
         this.startText;
         this.deadText;
@@ -116,37 +117,44 @@ export default class HideFromCat extends Phaser.Scene {
             this.touched = true;
             this.cheese.y = 620;
         });
+
+        eventsCenter.on('start_game', () => { this.started = true; eventsCenter.emit('stop_timer') })
+
     }
 
     update(time, delta) {
-        if (!this.textDisplayed) {
-            this.textDisplayed = true;
-            this.displayStartText();
+        if (this.started) {
 
-            //delete text and start game after 2 seconds
-            this.time.delayedCall(2000, () => {
-                this.startText.visible = 0;
-                this.gamestarted = true;
-            }, [], this);
-        }
-        if (!this.gameOver && this.gamestarted) {
-            this.startSweeping();
-            this.updatePlayer();
-            if (this.touched) {
-                this.arrowTimer += delta;
-                if (this.mouse.flipX) this.cheese.x = this.mouse.x + 10;
-                if (!this.mouse.flipX) this.cheese.x = this.mouse.x - 10;
-                if (this.mouse.x <= 360) this.win();
-                if (this.arrowTimer >= 300) {
-                    this.flashArrows(300);
-                    this.time.delayedCall(300, () => { this.arrowTimer = 0; }, [], this);
+            if (!this.textDisplayed) {
+                this.textDisplayed = true;
+                this.displayStartText();
+
+                //delete text and start game after 2 seconds
+                this.time.delayedCall(2000, () => {
+                    this.startText.visible = 0;
+                    this.gamestarted = true;
+                    this.globalState.timerMessage('start_timer')
+                }, [], this);
+            }
+            if (!this.gameOver && this.gamestarted) {
+                this.startSweeping();
+                this.updatePlayer();
+                if (this.touched) {
+                    this.arrowTimer += delta;
+                    if (this.mouse.flipX) this.cheese.x = this.mouse.x + 10;
+                    if (!this.mouse.flipX) this.cheese.x = this.mouse.x - 10;
+                    if (this.mouse.x <= 360) this.win();
+                    if (this.arrowTimer >= 300) {
+                        this.flashArrows(300);
+                        this.time.delayedCall(300, () => { this.arrowTimer = 0; }, [], this);
+                    }
                 }
             }
-        }
-        if(this.gameOver && !this.sent){
-            eventsCenter.emit('game-end', this.victory)
-            console.log('emission sent')
-            this.sent = true
+            if (this.gameOver && !this.sent) {
+                eventsCenter.emit('stop_timer');
+                eventsCenter.emit("game-end", this.victory);
+                this.sent = true
+            }
         }
     }
 

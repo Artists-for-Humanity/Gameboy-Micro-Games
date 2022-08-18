@@ -20,7 +20,6 @@ import CutScreen from "./Team Notateam/CutScreen";
 import MainMenu from "./MainMenu";
 import Timer from "./Timer";
 import MarcyMunch from "./8Bitties/MarcyMunch";
-import Challenge from "./DebugginDaOpps/Challenge";
 import CircleJump from "./TeamInflation/CircleJump";
 
 // Set configuration for phaser game instance
@@ -48,21 +47,21 @@ const config = {
     CutScreen,
     Timer,
     MarcyMunch,
-    SockToss, 
-    CarPump, 
-    Emeowgency, 
-    BetweenSpace, 
-    CircleJump, 
-    FrogJump, 
-    Highest2Lowest, 
-    TugOWar, 
-    FlySwat, 
-    DrinkPour, 
-    Cannon, 
-    TrashSort, 
-    ColorPasscode, 
-    HideFromCat, 
-    HitTheButton, 
+    SockToss,
+    CarPump,
+    Emeowgency,
+    BetweenSpace,
+    CircleJump,
+    FrogJump,
+    Highest2Lowest,
+    TugOWar,
+    FlySwat,
+    DrinkPour,
+    Cannon,
+    TrashSort,
+    ColorPasscode,
+    HideFromCat,
+    HitTheButton,
     ColorLab
   ],
   audio: {

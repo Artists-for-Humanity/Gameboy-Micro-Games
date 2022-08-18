@@ -151,8 +151,8 @@ export default class TrashSort extends Phaser.Scene {
     }
 
     if (this.gameOver && !this.sent) {
-      this.globalState.timerMessage('stop_timer')
-      this.globalState.sendMessage(this.victory)
+      eventsCenter.emit('stop_timer');
+      eventsCenter.emit("game-end", this.victory);
       this.sent = true
 
     }

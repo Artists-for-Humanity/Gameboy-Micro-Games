@@ -15,6 +15,7 @@ export default class HitTheButton extends Phaser.Scene {
         this.gameOver = false;
         this.victory = false;
         this.sent = false;
+        this.started = false;
         this.table;
         this.button;
         this.myName;
@@ -87,79 +88,86 @@ export default class HitTheButton extends Phaser.Scene {
         // this.cpuScoreTracker = this.physics.add.sprite(1080, 48, 'scoreTracker').setDisplayOrigin(321, -8).setScale(0.38);
 
         this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
+        eventsCenter.on('start_game', () => { this.started = true; eventsCenter.emit('stop_timer') })
+
     }
 
     update(time, delta) {
-        if (!this.startCheck) {
-            this.startCheck = true;
-            this.button.anims.play('red');
-            this.time.delayedCall(2500, () => {
-                this.myText.visible = false;
-                this.gameActive = true;
-                this.myHand.anims.play('idle', true);
-                this.cpuHand.anims.play('idle', true);
-            }, [], this);
-        }
-        if (this.gameActive) {
+        if (this.started) {
 
-            //delayedCallCheck used to prevent multiple rounds starting at once
-            if (!this.roundActive && !this.delayedCallCheck) {
-                this.time.delayedCall(1000, () => {
-                    this.startRound();
-                    console.log('round start');
+            if (!this.startCheck) {
+                this.startCheck = true;
+                this.button.anims.play('red');
+                this.time.delayedCall(2500, () => {
+                    this.myText.visible = false;
+                    this.gameActive = true;
+                    this.globalState.timerMessage('start_timer')
+                    this.myHand.anims.play('idle', true);
+                    this.cpuHand.anims.play('idle', true);
                 }, [], this);
-                this.delayedCallCheck = true;
             }
-            if (this.roundActive) {
-                if (Phaser.Input.Keyboard.JustDown(this.keySPACE) && this.keyPressAvailable) {
-                    this.keyPressAvailable = false;
-                    this.myHand.anims.play('slap');
-                    this.myHand.on('animationcomplete', () => { 
-                        this.time.delayedCall(250, () => {
-                            this.myHand.anims.play('idle');
-                            this.keyPressAvailable = true;
+            if (this.gameActive) {
 
-                            //checks if button is green
-                            if (this.button.anims.currentFrame.textureFrame === 1) {
-                                this.myScore++;
-                                this.endGame();
-                                // this.roundWon();
-                            } else {
+                //delayedCallCheck used to prevent multiple rounds starting at once
+                if (!this.roundActive && !this.delayedCallCheck) {
+                    this.time.delayedCall(1000, () => {
+                        this.startRound();
+                        console.log('round start');
+                    }, [], this);
+                    this.delayedCallCheck = true;
+                }
+                if (this.roundActive) {
+                    if (Phaser.Input.Keyboard.JustDown(this.keySPACE) && this.keyPressAvailable) {
+                        this.keyPressAvailable = false;
+                        this.myHand.anims.play('slap');
+                        this.myHand.on('animationcomplete', () => {
+                            this.time.delayedCall(250, () => {
+                                this.myHand.anims.play('idle');
+                                this.keyPressAvailable = true;
+
+                                //checks if button is green
+                                if (this.button.anims.currentFrame.textureFrame === 1) {
+                                    this.myScore++;
+                                    this.endGame();
+                                    // this.roundWon();
+                                } else {
+                                    this.cpuScore++;
+                                    this.endGame();
+                                    // this.roundLoss();
+                                }
+                            }, [], this);
+                        });
+                    }
+
+                    if (this.button.anims.currentFrame.textureFrame === 1) {
+                        this.cpuTimer += delta;
+                    }
+
+                    if (this.cpuTimer >= 350 && this.keyPressAvailable) {
+                        this.cpuHand.anims.play('slap');
+                        this.keyPressAvailable = false;
+                        this.cpuHand.on('animationcomplete', () => {
+                            this.time.delayedCall(250, () => {
+                                this.cpuHand.anims.play('idle');
                                 this.cpuScore++;
+                                this.reset();
                                 this.endGame();
-                            // this.roundLoss();
-                            }
-                        }, [], this);
-                    });   
+                            }, [], this);
+                        });
+                        // this.roundLoss();
+                    }
                 }
-
-                if (this.button.anims.currentFrame.textureFrame === 1) {
-                    this.cpuTimer += delta;
-                }
-
-                if (this.cpuTimer >= 350 && this.keyPressAvailable) {
-                    this.cpuHand.anims.play('slap');
-                    this.keyPressAvailable = false;
-                    this.cpuHand.on('animationcomplete', () => { 
-                        this.time.delayedCall(250, () => {
-                            this.cpuHand.anims.play('idle');
-                            this.cpuScore++;
-                            this.reset();
-                            this.endGame();
-                        }, [], this);
-                    });
-                    // this.roundLoss();
-                }
+                // if (this.myScore === 3 || this.cpuScore === 3) {
+                //     this.gameActive = false;
+                //     this.time.delayedCall(700, () => { this.endGame(); }, [], this);         
+                // }
             }
-            // if (this.myScore === 3 || this.cpuScore === 3) {
-            //     this.gameActive = false;
-            //     this.time.delayedCall(700, () => { this.endGame(); }, [], this);         
-            // }
-        }
-        if(this.gameOver && !this.sent){
-            eventsCenter.emit('game-end', this.victory)
-            console.log('emission sent')
-            this.sent = true
+            if (this.gameOver && !this.sent) {
+                eventsCenter.emit('stop_timer');
+                eventsCenter.emit("game-end", this.victory);
+                this.sent = true
+            }
         }
     }
 
@@ -253,11 +261,11 @@ export default class HitTheButton extends Phaser.Scene {
         this.roundActive = true;
 
         //turn button green
-        this.goGreen = this.time.delayedCall(this.getIntBetween(2000, 5000), () => { 
+        this.goGreen = this.time.delayedCall(this.getIntBetween(2000, 5000), () => {
             this.button.anims.play('green');
         }, [], this);
     }
-    
+
     reset() {
         // this.time.delayedCall(500, () => {
         //     this.button.anims.play('red');
@@ -303,7 +311,7 @@ export default class HitTheButton extends Phaser.Scene {
             this.endText.setText('YOU LOST!')
         }
     }
-    
+
     //helper function
     getIntBetween(lower, upper) {
         return Math.floor(Math.random() * (upper - lower) + lower);
