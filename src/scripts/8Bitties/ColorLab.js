@@ -191,11 +191,6 @@ export default class ColorLab extends Phaser.Scene {
     var dropHeight = 680;
     this.vialSelection(liftHeight, dropHeight);
 
-    if (this.gameOver && !this.sent) {
-      eventsCenter.emit('game-end', this.victory)
-      console.log('emission sent')
-      this.sent = true
-    }
   }
 
   vialSelection(liftHeight, dropHeight) {

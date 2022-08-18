@@ -26,8 +26,7 @@ const listOfGames = [
     "FrogJump",
     "CircleJump",
     "BewteenSpace",
-    "ColorPasscode",
-    "DrinkPour"];
+];
 
 export default class CutScreen extends Phaser.Scene {
     // Game Class Constructor
