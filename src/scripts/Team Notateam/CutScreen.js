@@ -12,6 +12,7 @@ const listOfGames = [
     "FrogJump",
     "DrinkPour",
     "FlySwat",
+    "Factory",
     "Emeowgency",
     'MarcyMunch',
     'SockToss',
@@ -24,7 +25,8 @@ const listOfGames = [
     "HitTheButton",
     "CircleJump",
     "BetweenSpace",
-    'GameOver'];
+    'GameOver'
+];
 
 export default class CutScreen extends Phaser.Scene {
     // Game Class Constructor
@@ -36,7 +38,9 @@ export default class CutScreen extends Phaser.Scene {
             physics: {
                 default: 'arcade',
                 arcade: {
-                    gravity: { y: 0 }
+                    gravity: {
+                        y: 0
+                    }
                 }
             }
         });
@@ -77,22 +81,39 @@ export default class CutScreen extends Phaser.Scene {
 
     preload() {
         this.load.spritesheet(
-            'gba', new URL('assets/gba.png', import.meta.url).href,
+            'gba', new URL('assets/gba.png',
+                import.meta.url).href,
 
-            { frameWidth: 252, frameHeight: 162 })
+            {
+                frameWidth: 252,
+                frameHeight: 162
+            })
         this.load.spritesheet(
-            'loss', new URL('assets/loss_cat.png', import.meta.url).href,
-            { frameWidth: 419, frameHeight: 162 })
+            'loss', new URL('assets/loss_cat.png',
+                import.meta.url).href, {
+                frameWidth: 419,
+                frameHeight: 162
+            })
         this.load.spritesheet(
-            'win', new URL('assets/win_cat.png', import.meta.url).href,
-            { frameWidth: 419, frameHeight: 162 })
+            'win', new URL('assets/win_cat.png',
+                import.meta.url).href, {
+                frameWidth: 419,
+                frameHeight: 162
+            })
         this.load.spritesheet(
-            'numbers', new URL('../globalAssets/numsheet.png', import.meta.url).href,
-            { frameWidth: 77, frameHeight: 122 })
-        this.load.image('gba_socket', new URL('assets/gba_socket.png', import.meta.url).href)
-        this.load.image('num_plate', new URL('assets/num_plate.png', import.meta.url).href)
-        this.load.image('l_door', new URL('assets/l_door.png', import.meta.url).href)
-        this.load.image('r_door', new URL('assets/r_door.png', import.meta.url).href)
+            'numbers', new URL('../globalAssets/numsheet.png',
+                import.meta.url).href, {
+                frameWidth: 77,
+                frameHeight: 122
+            })
+        this.load.image('gba_socket', new URL('assets/gba_socket.png',
+            import.meta.url).href)
+        this.load.image('num_plate', new URL('assets/num_plate.png',
+            import.meta.url).href)
+        this.load.image('l_door', new URL('assets/l_door.png',
+            import.meta.url).href)
+        this.load.image('r_door', new URL('assets/r_door.png',
+            import.meta.url).href)
     }
 
     create() {
@@ -109,8 +130,7 @@ export default class CutScreen extends Phaser.Scene {
         if (!this.closed) {
             this.close_timer++
             this.close_doors()
-        }
-        else if (this.open) {
+        } else if (this.open) {
             this.close_timer++
             this.open_doors()
         }
@@ -122,8 +142,7 @@ export default class CutScreen extends Phaser.Scene {
         if (this.l_door.x < L_END) {
             this.l_close()
             this.r_close()
-        }
-        else {
+        } else {
             this.close_timer = 0
             this.closecon()
             this.closed = true
@@ -134,8 +153,7 @@ export default class CutScreen extends Phaser.Scene {
 
             this.l_open()
             this.r_open()
-        }
-        else {
+        } else {
             this.close_timer = 0
             this.faceplate.anims.stop()
             this.faceplate.setFrame(0)
@@ -164,8 +182,7 @@ export default class CutScreen extends Phaser.Scene {
             this.l_life.children.iterate((child) => {
                 child.x = L_END
             });
-        }
-        else {
+        } else {
             // Move Door
             this.l_door.x += this.close_timer
 
@@ -204,8 +221,7 @@ export default class CutScreen extends Phaser.Scene {
                 child.x = L_START;
             });
 
-        }
-        else {
+        } else {
             // Move Door
             this.l_door.x -= this.close_timer
 
@@ -241,8 +257,7 @@ export default class CutScreen extends Phaser.Scene {
                 child.x = R_END;
             });
 
-        }
-        else {
+        } else {
             // Move Door
             this.r_door.x -= this.close_timer
             this.faceplate.x -= this.close_timer
@@ -269,8 +284,7 @@ export default class CutScreen extends Phaser.Scene {
             this.r_life.children.iterate((child) => {
                 child.x = R_START
             });
-        }
-        else {
+        } else {
             // Move Door
             this.r_door.x += this.close_timer
             this.faceplate.x += this.close_timer
@@ -286,9 +300,16 @@ export default class CutScreen extends Phaser.Scene {
     }
     reduce_life() {
         switch (this.life_total) {
-            case 1: case 2: this.r_disable(this.life_total); break;
-            case 3: case 4: this.l_disable(this.life_total); break;
-            default: return;
+            case 1:
+            case 2:
+                this.r_disable(this.life_total);
+                break;
+            case 3:
+            case 4:
+                this.l_disable(this.life_total);
+                break;
+            default:
+                return;
         }
     }
     l_disable(index) {
@@ -323,8 +344,7 @@ export default class CutScreen extends Phaser.Scene {
             setTimeout(() => {
                 this.setScore(this.score)
             }, 200)
-        }
-        else {
+        } else {
             this.faceplate.anims.play('lose1').once('animationcomplete', () => {
                 this.faceplate.anims.play('lose2')
             })
@@ -336,8 +356,7 @@ export default class CutScreen extends Phaser.Scene {
         eventsCenter.emit('reset_timer')
         if (this.roundNumber > 0) {
             this.endGame()
-        }
-        else {
+        } else {
             if (this.scene.isActive('MainMenu'))
                 this.scene.remove('MainMenu')
         }
@@ -388,22 +407,38 @@ export default class CutScreen extends Phaser.Scene {
         this.l_sockets = this.physics.add.group({
             key: 'gba_socket',
             repeat: 1,
-            setXY: { x: L_START, y: 5 * Y / 6 - 185, stepY: 185 }
+            setXY: {
+                x: L_START,
+                y: 5 * Y / 6 - 185,
+                stepY: 185
+            }
         })
         this.l_life = this.physics.add.group({
             key: 'gba_socket',
             repeat: 1,
-            setXY: { x: L_START, y: 5 * Y / 6 - 185, stepY: 185 }
+            setXY: {
+                x: L_START,
+                y: 5 * Y / 6 - 185,
+                stepY: 185
+            }
         })
         this.r_sockets = this.physics.add.group({
             key: 'gba_socket',
             repeat: 1,
-            setXY: { x: R_START, y: 5 * Y / 6 - 185, stepY: 185 }
+            setXY: {
+                x: R_START,
+                y: 5 * Y / 6 - 185,
+                stepY: 185
+            }
         })
         this.r_life = this.physics.add.group({
             key: 'gba_socket',
             repeat: 1,
-            setXY: { x: R_START, y: 5 * Y / 6 - 185, stepY: 185 }
+            setXY: {
+                x: R_START,
+                y: 5 * Y / 6 - 185,
+                stepY: 185
+            }
         })
         this.l_sockets.setDepth(1)
         this.r_sockets.setDepth(1)
@@ -419,42 +454,82 @@ export default class CutScreen extends Phaser.Scene {
     buildAnimations() {
         this.anims.create({
             key: 'life',
-            frames: [
-                { key: 'gba', frame: 0 },
-                { key: 'gba', frame: 0 },
-                { key: 'gba', frame: 1 },
-                { key: 'gba', frame: 2 },
-                { key: 'gba', frame: 2 },
-                { key: 'gba', frame: 1 }
+            frames: [{
+                    key: 'gba',
+                    frame: 0
+                },
+                {
+                    key: 'gba',
+                    frame: 0
+                },
+                {
+                    key: 'gba',
+                    frame: 1
+                },
+                {
+                    key: 'gba',
+                    frame: 2
+                },
+                {
+                    key: 'gba',
+                    frame: 2
+                },
+                {
+                    key: 'gba',
+                    frame: 1
+                }
             ],
             frameRate: 6,
             repeat: -1
         })
         this.anims.create({
             key: 'blink',
-            frames: [
-                { key: 'gba', frame: 0 },
-                { key: 'gba_socket' }
+            frames: [{
+                    key: 'gba',
+                    frame: 0
+                },
+                {
+                    key: 'gba_socket'
+                }
             ],
             frameRate: 6,
             repeat: 2
         })
         this.anims.create({
             key: 'lose1',
-            frames: [
-                { key: 'loss', frame: 0 },
-                { key: 'loss', frame: 1 },
-                { key: 'loss', frame: 2 },
-                { key: 'loss', frame: 3 }
+            frames: [{
+                    key: 'loss',
+                    frame: 0
+                },
+                {
+                    key: 'loss',
+                    frame: 1
+                },
+                {
+                    key: 'loss',
+                    frame: 2
+                },
+                {
+                    key: 'loss',
+                    frame: 3
+                }
             ],
             frameRate: 6
         })
         this.anims.create({
             key: 'lose2',
-            frames: [
-                { key: 'loss', frame: 3 },
-                { key: 'loss', frame: 4 },
-                { key: 'loss', frame: 5 }
+            frames: [{
+                    key: 'loss',
+                    frame: 3
+                },
+                {
+                    key: 'loss',
+                    frame: 4
+                },
+                {
+                    key: 'loss',
+                    frame: 5
+                }
             ],
             frameRate: 6,
             repeat: -1,
@@ -462,20 +537,39 @@ export default class CutScreen extends Phaser.Scene {
         })
         this.anims.create({
             key: 'win1',
-            frames: [
-                { key: 'win', frame: 0 },
-                { key: 'win', frame: 1 },
-                { key: 'win', frame: 2 },
-                { key: 'win', frame: 3 }
+            frames: [{
+                    key: 'win',
+                    frame: 0
+                },
+                {
+                    key: 'win',
+                    frame: 1
+                },
+                {
+                    key: 'win',
+                    frame: 2
+                },
+                {
+                    key: 'win',
+                    frame: 3
+                }
             ],
             frameRate: 6
         })
         this.anims.create({
             key: 'win2',
-            frames: [
-                { key: 'win', frame: 3 },
-                { key: 'win', frame: 4 },
-                { key: 'win', frame: 5 }
+            frames: [{
+                    key: 'win',
+                    frame: 3
+                },
+                {
+                    key: 'win',
+                    frame: 4
+                },
+                {
+                    key: 'win',
+                    frame: 5
+                }
             ],
             frameRate: 6,
             repeat: -1,
