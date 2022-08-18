@@ -10,6 +10,8 @@ export default class BetweenSpace extends Phaser.Scene {
     this.lose = false;
     this.gameOver = false;
     this.victory = false;
+    this.sent = false;
+    this.started = false;
     this.randomNum = Math.floor(Math.random() * 71);
   }
 
@@ -98,39 +100,46 @@ export default class BetweenSpace extends Phaser.Scene {
     this.winText.setOrigin(0, 0);
     this.winText.setScrollFactor(0);
     this.winText.setVisible(false);
+
+    eventsCenter.on('start_game', () => { this.started = true; eventsCenter.emit('start_timer') })
+
   }
 
   update() {
-    if (this.lose === false) {
-      if (this.cursors.up.isDown) {
-        this.player.y -= 5;
-      }
-      if (this.cursors.down.isDown) {
-        this.player.y += 5;
-      }
-      if (this.cursors.left.isDown) {
-        this.player.x -= 5;
-      }
-      if (this.cursors.right.isDown) {
-        this.player.x += 5;
+    if (this.started) {
+
+      if (this.lose === false) {
+        if (this.cursors.up.isDown) {
+          this.player.y -= 5;
+        }
+        if (this.cursors.down.isDown) {
+          this.player.y += 5;
+        }
+        if (this.cursors.left.isDown) {
+          this.player.x -= 5;
+        }
+        if (this.cursors.right.isDown) {
+          this.player.x += 5;
+        }
+
+        this.asteroidMovements(this.asteroidg1);
+        this.asteroidMovements(this.asteroidg2);
+        console.log('reachme 00')
+
+
+        this.player.anims.play('TI_3run', true);
+        console.log('reachme 01')
+
+        this.goal.anims.play('TI_3spin', true)
+        console.log('reachme 02')
+
       }
 
-      this.asteroidMovements(this.asteroidg1);
-      this.asteroidMovements(this.asteroidg2);
-      console.log('reachme 00')
-
-
-      this.player.anims.play('TI_3run', true);
-      console.log('reachme 01')
-
-      this.goal.anims.play('TI_3spin', true)
-      console.log('reachme 02')
 
     }
-
     if (this.gameOver && !this.sent) {
+      eventsCenter.emit('stop_timer');
       eventsCenter.emit("game-end", this.victory);
-      console.log("emission sent");
       this.sent = true;
     }
   }

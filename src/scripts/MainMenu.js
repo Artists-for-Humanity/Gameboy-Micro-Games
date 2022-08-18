@@ -36,7 +36,7 @@ export default class MainMenu extends Phaser.Scene {
             "MicroGame11",
             "Highest2Lowest",
             "FrogJump",
-            "CircleGame",
+            "CircleJump",
             "BewteenSpace",
             "ColorPasscode",
             "HideFromCat",
@@ -53,12 +53,12 @@ export default class MainMenu extends Phaser.Scene {
         this.load.image('finger', new URL('gameAssets/finger.png', import.meta.url).href);
     }
 
-  create() {
-        this.add.image(X/2, Y/2, "bg1");
-        this.btns.push(this.physics.add.sprite(X/8, Y*.90, 'play'))
-        this.btns.push(this.physics.add.sprite(7*X/8, Y*.90, 'score'))
+    create() {
+        this.add.image(X / 2, Y / 2, "bg1");
+        this.btns.push(this.physics.add.sprite(X / 8, Y * .90, 'play'))
+        this.btns.push(this.physics.add.sprite(7 * X / 8, Y * .90, 'score'))
 
-        this.fingerIcon = this.add.image(this.btns[0].x, this.btns[0].y - 117, 'finger').setRotation(Math.PI/2)
+        this.fingerIcon = this.add.image(this.btns[0].x, this.btns[0].y - 117, 'finger').setRotation(Math.PI / 2)
 
         this.left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
         this.right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
@@ -73,42 +73,43 @@ export default class MainMenu extends Phaser.Scene {
         this.verticalWobble(this.fingerIcon, .5, 4)
     }
 
-    buttonPresses(){
-        if (Phaser.Input.Keyboard.JustDown(this.left)){
+    buttonPresses() {
+        if (Phaser.Input.Keyboard.JustDown(this.left)) {
             this.updateSelection("left")
-        } 
-        if(Phaser.Input.Keyboard.JustDown(this.right)){
+        }
+        if (Phaser.Input.Keyboard.JustDown(this.right)) {
             this.updateSelection("right")
-        } 
-        if(Phaser.Input.Keyboard.JustDown(this.action)){
+        }
+        if (Phaser.Input.Keyboard.JustDown(this.action)) {
             this.buttonEvents()
         }
     }
 
-    verticalWobble(obj, amount, speed){
-        this.wobbleTimer+=speed
-        if(this.wobbleTimer % 100 === 0){
-            this.wobbleDir = !this.wobbleDir}
+    verticalWobble(obj, amount, speed) {
+        this.wobbleTimer += speed
+        if (this.wobbleTimer % 100 === 0) {
+            this.wobbleDir = !this.wobbleDir
+        }
         this.wobbleDir ? obj.y += amount : obj.y -= amount
     }
 
-    updateSelection(input){
+    updateSelection(input) {
 
         this.btns[this.fingerPos].anims.stop().setFrame(0)
 
-        if(input === "left"){
-            this.fingerPos === 0 ? this.fingerPos = this.btns.length-1 : this.fingerPos--
+        if (input === "left") {
+            this.fingerPos === 0 ? this.fingerPos = this.btns.length - 1 : this.fingerPos--
         }
-        if(input === "right"){
-            this.fingerPos === this.btns.length-1 ? this.fingerPos = 0 : this.fingerPos++
+        if (input === "right") {
+            this.fingerPos === this.btns.length - 1 ? this.fingerPos = 0 : this.fingerPos++
         }
-        
+
         this.fingerIcon.x = this.btns[this.fingerPos].x
         this.btns[this.fingerPos].anims.play(this.animations[this.fingerPos])
     }
 
-    buttonEvents(){
-        switch(this.fingerPos){
+    buttonEvents() {
+        switch (this.fingerPos) {
             case 0: // Play
                 this.playGame()
                 break;
@@ -118,32 +119,32 @@ export default class MainMenu extends Phaser.Scene {
         }
     }
 
-    playGame(){
-        if(!this.sent){
+    playGame() {
+        if (!this.sent) {
             this.scene.run("CutScreen")
             //this.globalState.sendMessage(true)
             this.sent = true
         }
     }
 
-    animationBuilder(){
+    animationBuilder() {
         this.animations.push(
             this.anims.create({
                 key: 'play_btn',
-                frames:"play",
+                frames: "play",
                 frameRate: 12,
                 repeat: -1,
                 yoyo: true
-            }) 
+            })
         )
         this.animations.push(
             this.anims.create({
                 key: 'score_btn',
-                frames:"score",
+                frames: "score",
                 frameRate: 12,
                 repeat: -1,
                 yoyo: true
-            }) 
+            })
         )
     }
 }

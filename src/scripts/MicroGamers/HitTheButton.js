@@ -95,7 +95,6 @@ export default class HitTheButton extends Phaser.Scene {
 
     update(time, delta) {
         if (this.started) {
-
             if (!this.startCheck) {
                 this.startCheck = true;
                 this.button.anims.play('red');
@@ -163,11 +162,12 @@ export default class HitTheButton extends Phaser.Scene {
                 //     this.time.delayedCall(700, () => { this.endGame(); }, [], this);         
                 // }
             }
-            if (this.gameOver && !this.sent) {
-                eventsCenter.emit('stop_timer');
-                eventsCenter.emit("game-end", this.victory);
-                this.sent = true
-            }
+
+        }
+        if (this.gameOver && !this.sent) {
+            eventsCenter.emit('stop_timer');
+            eventsCenter.emit("game-end", this.victory);
+            this.sent = true
         }
     }
 
@@ -270,34 +270,34 @@ export default class HitTheButton extends Phaser.Scene {
         // this.time.delayedCall(500, () => {
         //     this.button.anims.play('red');
         // }, [], this);
+
         this.roundActive = false;
         this.delayedCallCheck = false;
         this.cpuTimer = 0;
         this.round++;
     }
 
-    roundWon() {
-        this.myScore++;
-        if (this.myScore === 1) this.myScoreTracker.anims.play('oneWin');
-        if (this.myScore === 2) this.myScoreTracker.anims.play('twoWins');
-        if (this.myScore === 3) this.myScoreTracker.anims.play('threeWins');
-        this.reset();
-    }
+    // roundWon() {
+    //     this.myScore++;
+    //     if (this.myScore === 1) this.myScoreTracker.anims.play('oneWin');
+    //     if (this.myScore === 2) this.myScoreTracker.anims.play('twoWins');
+    //     if (this.myScore === 3) this.myScoreTracker.anims.play('threeWins');
+    //     this.reset();
+    // }
 
-    roundLoss() {
-        this.time.removeEvent(this.goGreen);
-        this.cpuScore++;
-        if (this.cpuScore === 1) this.cpuScoreTracker.anims.play('oneWin');
-        if (this.cpuScore === 2) this.cpuScoreTracker.anims.play('twoWins');
-        if (this.cpuScore === 3) this.cpuScoreTracker.anims.play('threeWins');
-        this.reset();
-    }
+    // roundLoss() {
+    //     this.time.removeEvent(this.goGreen);
+    //     this.cpuScore++;
+    //     if (this.cpuScore === 1) this.cpuScoreTracker.anims.play('oneWin');
+    //     if (this.cpuScore === 2) this.cpuScoreTracker.anims.play('twoWins');
+    //     if (this.cpuScore === 3) this.cpuScoreTracker.anims.play('threeWins');
+    //     this.reset();
+    // }
 
     endGame() {
         this.gameActive = false;
-        this.gameOver = true;
-        this.anims.pauseAll();
-        this.time.removeAllEvents();
+        // this.anims.pauseAll();
+        // this.time.removeAllEvents();
         if (this.myScore === 1) {
             this.endText.setStyle({
                 fill: '#00ff00'
@@ -310,6 +310,9 @@ export default class HitTheButton extends Phaser.Scene {
             });
             this.endText.setText('YOU LOST!')
         }
+        this.gameOver = true;
+        this.started = false;
+
     }
 
     //helper function
