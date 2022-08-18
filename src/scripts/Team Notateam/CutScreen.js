@@ -368,6 +368,7 @@ export default class CutScreen extends Phaser.Scene {
         // } while(this.playedGames.includes(this.currentScene) && !this.finishedGames)
         //this.currentScene = "SockToss"
         this.life_total > 1 ?  this.setCurrentScene() : this.currentScene = 'GameOver'
+
         console.log(this.currentScene)
         this.scene.sendToBack('Timer')
         this.scene.sendToBack(this.currentScene)
@@ -380,11 +381,12 @@ export default class CutScreen extends Phaser.Scene {
         this.roundNumber++
         //Initial timeout for win/lose anim
         setTimeout(() => {
-            this.textPrompt.setVisible(true)
-                setTimeout(() => {
-                    this.textPrompt.setVisible(false)        
-                    this.open = true
-                }, 2000)
+            if(this.currentScene !== 'GameOver')
+                this.textPrompt.setVisible(true)
+            setTimeout(() => {
+                this.textPrompt.setVisible(false)        
+                this.open = true
+            }, 2000)
         }, 2000)
     }
     endGame() {
