@@ -230,13 +230,11 @@ export default class TugOWar extends Phaser.Scene {
       this.lose = true;
       this.started = false;
       eventsCenter.emit("stop_timer");
-      console.log("8B6_lose");
     }
     if (this.rope.x <= 325) {
       this.victory = true;
       this.started = false;
       eventsCenter.emit("stop_timer");
-      console.log("8B6_win");
     }
   }
   youLose() {

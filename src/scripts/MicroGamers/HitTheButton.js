@@ -113,7 +113,6 @@ export default class HitTheButton extends Phaser.Scene {
                 if (!this.roundActive && !this.delayedCallCheck) {
                     this.time.delayedCall(1000, () => {
                         this.startRound();
-                        console.log('round start');
                     }, [], this);
                     this.delayedCallCheck = true;
                 }

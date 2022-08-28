@@ -87,7 +87,6 @@ export default class FrogJump extends Phaser.Scene {
         this.playerSprite.setCollideWorldBounds(false);
         this.playerSprite.body.setGravityY(700);
 
-        console.log(this.playerSprite);
 
 
         this.loseText = this.add.image(240, 290, 'TIFJlose')
@@ -169,7 +168,6 @@ export default class FrogJump extends Phaser.Scene {
             this.delayTime = 10000;
         }
         else if (level === 1) {
-            console.log('reach me 01')
             this.platforms.create(680, 450, 'platform').setScale(0.2).refreshBody();
             this.platforms.create(535, 250, 'platform').setScale(0.2).refreshBody();
             this.platforms.create(250, 150, "platform").setScale(0.2).refreshBody();
@@ -183,7 +181,6 @@ export default class FrogJump extends Phaser.Scene {
             this.delayTime = 13000;
         }
         else {
-            console.log('reach me 02')
 
             this.platforms.create(40, 450, 'platform').setScale(0.2).refreshBody();
             this.platforms.create(800, 430, 'platform').setScale(0.2).refreshBody();

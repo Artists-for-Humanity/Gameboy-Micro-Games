@@ -132,8 +132,6 @@ export default class DrinkPour extends Phaser.Scene {
       eventsCenter.emit("game-end", this.victory);
       this.sent = true;
     }
-    console.log(this.gameOver);
-    //this.playPour();
     if (this.cursors.space.isDown && this.stopped === false) {
       if (this.fill_value > 0 && this.gameStart) {
         this.fill_value -= 9;
@@ -172,7 +170,6 @@ export default class DrinkPour extends Phaser.Scene {
     }
     if (this.gameOver && !this.sent) {
       eventsCenter.emit("game-end", this.victory);
-      console.log("emission sent");
       this.sent = true;
     }
   }

@@ -329,7 +329,6 @@ export default class CutScreen extends Phaser.Scene {
     }
 
     closecon() {
-        console.log("Round ", this.roundNumber)
 
         if(this.currentScene === 'CircleJump'){
             eventsCenter.emit('end_circle')
@@ -367,13 +366,9 @@ export default class CutScreen extends Phaser.Scene {
         this.nextGame()
     }
     nextGame() {
-        // do{
-        //     this.currentScene = this.game.scene.scenes[this.roundNumber + 1]
-        // } while(this.playedGames.includes(this.currentScene) && !this.finishedGames)
-        //this.currentScene = "SockToss"
+
         this.life_total > 1 ?  this.setCurrentScene() : this.currentScene = 'GameOver'
 
-        console.log(this.currentScene)
         this.scene.sendToBack('Timer')
         this.scene.sendToBack(this.currentScene)
         if (this.currentScene !== 'GameOver')
@@ -381,7 +376,6 @@ export default class CutScreen extends Phaser.Scene {
         else
             this.scene.remove('Timer')
         this.scene.run(this.currentScene)
-        console.log(this.currentScene + " should be running...")
         this.roundNumber++
         //Initial timeout for win/lose anim
         setTimeout(() => {
@@ -394,7 +388,6 @@ export default class CutScreen extends Phaser.Scene {
         }, 2000)
     }
     endGame() {
-        console.log(this.currentScene)
         this.scene.remove(this.currentScene)
     }
     buildObjects() {
@@ -513,8 +506,6 @@ export default class CutScreen extends Phaser.Scene {
 
     closeDoor(victory) {
         this.lost = !victory;
-        console.log('emission received')
-        //this.faceplate.anims.stop()
         this.closed = false;
     }
 

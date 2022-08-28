@@ -122,7 +122,6 @@ export default class Lowest extends Phaser.Scene {
 
     // DETERMINE CORRECT OPTIONS
     this.correct = Math.min(...this.evaluated);
-    console.log("TI_1correct:" + this.correct);
 
     // POPULATE GRAPHICS
     this.fillBox(0, X * 0.25, Y * 0.2);
@@ -180,7 +179,6 @@ export default class Lowest extends Phaser.Scene {
             this.victory = true;
             this.winText.setVisible(true);
           } else {
-            console.log("Less good job");
             this.loseText.setVisible(true);
           }
           // END GAME
@@ -189,7 +187,6 @@ export default class Lowest extends Phaser.Scene {
       } else if (!this.sent) {
         eventsCenter.emit("stop_timer");
         eventsCenter.emit("game-end", this.victory);
-        console.log("OH SHIT OOPS");
         this.sent = true;
       }
     }
@@ -203,17 +200,6 @@ export default class Lowest extends Phaser.Scene {
     let ten = Math.floor((val - hun * 100) / 10);
     // represents the number in the ones place
     let one = val % 10;
-
-    console.log(
-      "Hundreds: " +
-        hun +
-        "\nTens: " +
-        ten +
-        "\nOnes: " +
-        one +
-        "\nTotal: " +
-        val
-    );
 
     return [hun, ten, one];
   }
@@ -313,63 +299,21 @@ export default class Lowest extends Phaser.Scene {
     switch (opcode) {
       case 1: // subtraction
         this.evaluated[index] = this.num1[index] - this.num2[index];
-        console.log(
-          this.num1[index] +
-            " - " +
-            this.num2[index] +
-            " = " +
-            this.evaluated[index] +
-            ", OPCODE: " +
-            this.opcode[index]
-        );
         break;
       case 2: // division
         this.evaluated[index] = this.num1[index] / this.num2[index];
-        console.log(
-          this.num1[index] +
-            " / " +
-            this.num2[index] +
-            " = " +
-            this.evaluated[index] +
-            ", OPCODE: " +
-            this.opcode[index]
-        );
+
         break;
       case 3: // addition
         this.evaluated[index] = this.num1[index] + this.num2[index];
-        console.log(
-          this.num1[index] +
-            " + " +
-            this.num2[index] +
-            " = " +
-            this.evaluated[index] +
-            ", OPCODE: " +
-            this.opcode[index]
-        );
+
         break;
       case 4: // multiplication
         this.evaluated[index] = this.num1[index] * this.num2[index];
-        console.log(
-          this.num1[index] +
-            " * " +
-            this.num2[index] +
-            " = " +
-            this.evaluated[index] +
-            ", OPCODE: " +
-            this.opcode[index]
-        );
+
         break;
       default: // default is addition
         this.evaluated[index] = this.num1[index] + this.num2[index];
-        console.log(
-          this.num1[index] +
-            " + " +
-            this.num2[index] +
-            " = " +
-            this.evaluated[index] +
-            ", OPCODE: " +
-            this.opcode[index]
-        );
         break;
     }
   }

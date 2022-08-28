@@ -11,22 +11,11 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
     this.cutScreen;
   }
 
-  test() {
-
-    // this.cutScreen = this.scene.get('CutScreen');
-    // this.cutScreen.testing();
-
-  }
-
   randomGame() {
-    // this.pluginManager.game.scene.start(this.game.scene.scenes[Phaser.Math.Between(0, this.game.scene.scenes.length)])
-    //this.pluginManager.game.scene.start(this.game.scene.scenes[this.game.scene.scenes.length - 1]);
-    console.log(this.game.scene.scenes[this.game.scene.scenes.length - 1]);
     this.pluginManager.game.scene.start();
   }
 
   preload(game) {
-    // console.log(game);
     game.load.image('mask', new URL('./globalAssets/mask.png',
       import.meta.url).href);
     game.load.image('bomb', new URL('./globalAssets/bomb.png',
@@ -37,7 +26,6 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
 
   createBombTimer(bombPosX, bombPosY, sec, game) {
     this.fuseImg = game.add.sprite(bombPosX, bombPosY, 'fuse');
-    // console.log('hello', this.fuseImg);
 
     this.fuseImg.setScale(0.25, 0.25);
     this.bombImg = game.add.sprite(this.fuseImg.x, this.fuseImg.y, 'bomb');
@@ -110,15 +98,12 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
     this.myText.setX(540 - width).setY(170);
   }
 
-
   sendMessage(victory) {
     eventsCenter.emit('game-end', victory)
-    console.log('emission sent')
   }
 
   timerMessage(message) {
     eventsCenter.emit(message)
-    console.log('emission sent')
   }
 
 }

@@ -30,14 +30,9 @@ export default class CircleJump extends Phaser.Scene {
     this.load.spritesheet("TI_4diamonds", new URL("./assets/CircleJump/diamond.png", import.meta.url).href,
       { frameWidth: 16, frameHeight: 16 });
 
-    console.log('rechme 00')
   }
 
   create() {
-    console.log('rechme 01')
-
-
-
     this.graphics = this.add.graphics({
       lineStyle: {
         width: 4,

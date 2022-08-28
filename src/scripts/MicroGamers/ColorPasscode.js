@@ -116,8 +116,6 @@ export default class ColorPasscode extends Phaser.Scene {
         for (var i = 0; i < 4; i++) {
             this.pattern.push(this.getRandomInt(4));
         }
-        // console.log(this.pattern);
-
         eventsCenter.on('start_game', () => { this.started2 = true; eventsCenter.emit('stop_timer') })
 
     }

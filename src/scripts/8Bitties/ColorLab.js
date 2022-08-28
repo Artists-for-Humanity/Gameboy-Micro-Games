@@ -139,7 +139,6 @@ export default class ColorLab extends Phaser.Scene {
       eventsCenter.emit("game-end", this.victory);
       this.sent = true;
     };
-    console.log(this.victory);
 
     this.playAnims();
     if (this.lose === true) {
@@ -722,23 +721,19 @@ export default class ColorLab extends Phaser.Scene {
   checkWin() {
     if (this.tryOne) {
       if (this.beakerColor === "8B2_red" && this.finalColor === "Mix Green") {
-        // console.log('You lost!');
         this.youLose();
         this.playFail();
       }
       if (this.beakerColor === "8B2_blue" && this.finalColor === "Mix Orange") {
-        // console.log('You lost!');
         this.youLose();
         this.playFail();
       }
       if (this.beakerColor === "8B2_yellow" && this.finalColor === "Mix Purple") {
-        // console.log('You lost!');
         this.youLose();
         this.playFail();
       }
     }
     if (this.tryTwo && this.beakerColor !== this.finalColor) {
-      // console.log('You lost!');
       this.youLose();
       this.playFail();
     }
@@ -760,7 +755,6 @@ export default class ColorLab extends Phaser.Scene {
   }
 
   youWin() {
-    // console.log("you win")
     this.arrow.setVisible(false);
     this.space = false;
     this.left = false;
@@ -781,7 +775,6 @@ export default class ColorLab extends Phaser.Scene {
     if (this.createImage === false) {
       this.safe = this.add.image(540, 360, "8B2_safe").setDepth(100);
       this.createImage = true;
-      // console.log('created')
     }
   }
 

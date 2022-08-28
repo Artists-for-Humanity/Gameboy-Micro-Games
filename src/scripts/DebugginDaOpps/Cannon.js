@@ -281,9 +281,7 @@ export default class Cannon extends Phaser.Scene {
 
   update(time, delta) {
     if (this.started) {
-      console.log(this.started)
 
-      // if (!this.gameOver) {
       if (this.totalBarrels === 0 && this.tries <= 2) {
         this.gameOver = true;
         this.gameWon();
