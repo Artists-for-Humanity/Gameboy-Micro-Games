@@ -101,8 +101,11 @@ export default class CarPump extends Phaser.Scene {
       "DO2_gameOverScreen"
     );
     this.tempBg = this.add.image(1080 / 2, 720 / 2, "DO2_startScreen");
+
     this.up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
     this.down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+
+
     this.car50.visible = false;
     this.car75.visible = false;
     this.car100.visible = false;
@@ -113,87 +116,7 @@ export default class CarPump extends Phaser.Scene {
 
   }
 
-  update() {
-    if (this.started) {
-      this.upAndDown();
-      this.pumpToWin();
 
-      if (this.gameOver && !this.sent) {
-        eventsCenter.emit('stop_timer');
-        eventsCenter.emit("game-end", this.victory);
-        this.sent = true;
-      }
-
-    }
-  }
-
-  onEvent() {
-    this.tempBg.visible = false;
-    this.gameStarted = true;
-  }
-  infalte1() {
-    if (this.car1 === false) {
-      this.car25.anims.play("DO2_car_inflate25%");
-      this.car1 = true;
-    }
-  }
-  inflate2() {
-    if (this.car2 === false) {
-      this.car50.anims.play("DO2_car_inflate50%");
-      this.car2 = true;
-      this.car25.visible = false;
-      this.car50.visible = true;
-    }
-  }
-  inflate3() {
-    if (this.car3 === false) {
-      this.car50.visible = false;
-      this.car75.visible = true;
-      this.car75.anims.play("DO2_car_inflate75%");
-      this.car3 = true;
-    }
-  }
-  inflate4() {
-    if (this.car4 === false) {
-      this.car75.visible = false;
-      this.car100.anims.play("DO2_car_inflate100%");
-      this.car4 = true;
-      this.car100.visible = true;
-      this.victory = true;
-      this.gameStarted = false;
-      this.gameOver = true;
-      this.gameStarted = false;
-      this.endText = this.add.text(300, 360, "You Won!");
-      this.endText.setStyle({
-        fontSize: "100px",
-        fill: "#000000",
-        align: "center",
-      });
-    }
-  }
-  upAndDown() {
-    if (Phaser.Input.Keyboard.JustDown(this.up)) {
-      this.upArrow.visible = true;
-      this.downArrow.visible = false;
-      this.lever.anims.play("DO2_lever_up");
-    }
-    if (Phaser.Input.Keyboard.JustDown(this.down)) {
-      this.upArrow.visible = false;
-      this.downArrow.visible = true;
-      this.lever.anims.play("DO2_lever_down");
-      this.downInt += 1;
-    }
-  }
-  pumpToWin() {
-    if (this.downInt === 5) {
-      this.downInt = 0;
-      this.inflateInt += 1;
-    }
-    if (this.inflateInt === 1) this.infalte1();
-    if (this.inflateInt === 2) this.inflate2();
-    if (this.inflateInt === 3) this.inflate3();
-    if (this.inflateInt === 4) this.inflate4();
-  }
   createAnimations() {
     this.anims.create({
       key: "DO2_lever_up",
@@ -279,4 +202,80 @@ export default class CarPump extends Phaser.Scene {
       frameRate: 24,
     });
   }
+
+  update(time, delta) {
+    if (this.gameState) {
+      this.clickTimer += delta;
+      this.timerCountdown(time);
+      if (this.clickTimer > 100) this.clickAvailable = true;
+      if (Phaser.Input.Keyboard.JustDown(this.up) && this.downWasPressed) {
+        this.downWasPressed = false;
+        this.upWasPressed = true;
+        this.lever.anims.play("DO2_lever_up", true);
+        this.downArrow.setVisible(true);
+        this.upArrow.setVisible(false);
+      } else if (
+        Phaser.Input.Keyboard.JustDown(this.down) &&
+        this.upWasPressed &&
+        this.clickAvailable
+      ) {
+        this.downWasPressed = true;
+        this.upWasPressed = false;
+        this.time.delayedCall(100, this.updatePump, [], this);
+        this.clickAvailable = false;
+        this.clickTimer = 0;
+      }
+    }
+  }
+
+  timerCountdown(time) {
+    if (time / 1000 > 10 && this.playerPumps < this.pumpToWin) {
+      this.gameState = false;
+      this.gameOver = true;
+      this.gameOverScreen.visible = true;
+    }
+
+    if (time / 1000 > 10 && this.playerPumps >= this.pumpToWin) {
+      this.gameState = false;
+      this.gameOver = true;
+      this.victory = true;
+      this.endText = this.add.text(300, 360, "You Won!");
+      this.endText.setStyle({
+        fontSize: "100px",
+        fill: "#000000",
+        align: "center",
+      });
+    }
+  }
+
+  updatePump() {
+    this.playerPumps += 1;
+
+    this.lever.anims.play("DO2_lever_down", true);
+    this.downArrow.setVisible(false);
+    this.upArrow.setVisible(true);
+    if (this.playerPumps === 5) {
+      this.car25.visible = true;
+      this.car25.anims.play("DO2_car_inflate25%", true);
+    }
+    if (this.playerPumps === 10) {
+      this.car50.visible = true;
+      this.car50.anims.play("DO2_car_inflate50%", true);
+      this.car25.visible = false;
+    }
+    if (this.playerPumps === 15) {
+      this.car75.visible = true;
+      this.car75.anims.play("DO2_car_inflate75%", true);
+      this.car50.visible = false;
+    }
+    if (this.playerPumps === 20) {
+      this.car100.visible = true;
+      this.car100.anims.play("DO2_car_inflate100%", true);
+      this.car75.visible = false;
+    }
+  }
+  onEvent() {
+    this.tempBg.visible = false;
+  }
+
 }

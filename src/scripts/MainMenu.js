@@ -4,6 +4,14 @@ const X = 1080
 const Y = 720
 
 export default class MainMenu extends Phaser.Scene {
+  // Game  Class Constructor
+  constructor() {
+    super({
+      active: false,
+      visible: false,
+      key: "MainMenu",
+    });
+  }
 
     // Game  Class Constructor
     constructor() {

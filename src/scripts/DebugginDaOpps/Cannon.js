@@ -30,7 +30,6 @@ export default class Cannon extends Phaser.Scene {
     );
     this.load.image(
       "DO1_gameOverScreen",
-
       new URL("./assets2/game-over.png", import.meta.url).href
     );
     this.load.image(
@@ -177,13 +176,11 @@ export default class Cannon extends Phaser.Scene {
       this.game.config.width / 2,
       this.game.config.height / 2,
       "DO1_gameOverScreen"
-
     );
     this.tempScreen = this.add.image(
       this.game.config.width / 2,
       this.game.config.height / 2,
       "DO1_startScreen"
-
     );
 
     this.gameOverScreen.visible = false;
@@ -405,7 +402,7 @@ export default class Cannon extends Phaser.Scene {
     this.cannonBallGrp.getChildren()[this.cannonSelect].y -= 20;
     this.selectedValue =
       this.cannonBallMap[
-      this.cannonBallGrp.getChildren()[this.cannonSelect].texture.key
+        this.cannonBallGrp.getChildren()[this.cannonSelect].texture.key
       ];
   }
 
@@ -469,9 +466,9 @@ export default class Cannon extends Phaser.Scene {
       if (this.barrelRowMap[i] === 2) {
         this.barrelGrp.create(
           xposition +
-          this.barrel.displayWidth * (i - 4) +
-          this.barrel.displayWidth / 2 +
-          (i - 4) * 10,
+            this.barrel.displayWidth * (i - 4) +
+            this.barrel.displayWidth / 2 +
+            (i - 4) * 10,
           yposition - this.barrel.displayHeight,
           "DO1_barrel"
         );
@@ -486,9 +483,9 @@ export default class Cannon extends Phaser.Scene {
       if (this.barrelRowMap[i] === 4) {
         this.barrelGrp.create(
           xposition +
-          this.barrel.displayWidth * (i - 8) +
-          this.barrel.displayWidth / 2 +
-          10,
+            this.barrel.displayWidth * (i - 8) +
+            this.barrel.displayWidth / 2 +
+            10,
           yposition - this.barrel.displayHeight * 3,
           "DO1_barrel"
         );
