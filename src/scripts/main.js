@@ -1,33 +1,36 @@
 // Add imports for phaser library, scenes, and plugins
 import Phaser from "phaser";
 import GlobalState from "./GlobalState";
+import GameOver from "./GameOver";
 import Emeowgency from "./8Bitties/Emeowgency";
 import ColorLab from "./8Bitties/ColorLab";
 import CarPump from "./DebugginDaOpps/CarPump";
 import TrashSort from "./DebugginDaOpps/TrashSort";
 import Cannon from "./DebugginDaOpps/Cannon";
-import Highest2Lowest from "./TeamInflation/Highest2Lowest";
+import Lowest from "./TeamInflation/Lowest";
 import FrogJump from "./TeamInflation/FrogJump";
-import CircleGame from "./TeamInflation/CircleGame";
-import BewteenSpace from "./TeamInflation/BetweenSpace";
+import BetweenSpace from "./TeamInflation/BetweenSpace";
 import ColorPasscode from "./MicroGamers/ColorPasscode";
 import HideFromCat from "./MicroGamers/HideFromCat";
 import HitTheButton from "./MicroGamers/HitTheButton";
 import TugOWar from "./8Bitties/TugOWar";
 import FlySwat from "./8Bitties/FlySwat";
 import DrinkPour from "./8Bitties/DrinkPour";
-import SockToss from "./Team Notateam/socktoss";
+import SockToss from "./Team Notateam/SockToss";
 import CutScreen from "./Team Notateam/CutScreen";
 import MainMenu from "./MainMenu";
-import Challenge from "./DebugginDaOpps/Challenge";
+
+import Timer from "./Timer";
+import MarcyMunch from "./8Bitties/MarcyMunch";
+import CircleJump from "./TeamInflation/CircleJump";
 
 // Set configuration for phaser game instance
 const config = {
   type: Phaser.AUTO,
   width: 1080,
   height: 720,
-  transparent: true,
-  // backgroundColor: '#4488aa',
+  transparent: false,
+  backgroundColor: "#4488aa",
 
   // Add physics, arcade, scene, and audio
   physics: {
@@ -42,24 +45,27 @@ const config = {
 
   scene: [
     MainMenu,
+    CutScreen,
+    Timer,
+    MarcyMunch,
+    SockToss,
+    CarPump,
     Emeowgency,
-    ColorLab,
-    Highest2Lowest,
+    BetweenSpace,
+    CircleJump,
+    Lowest,
     FrogJump,
-    CircleGame,
-    BewteenSpace,
-    ColorPasscode,
-    HideFromCat,
-    HitTheButton,
     TugOWar,
     FlySwat,
     DrinkPour,
-    CarPump,
-    TrashSort,
     Cannon,
-    Challenge,
+    TrashSort,
+    ColorPasscode,
+    HideFromCat,
+    HitTheButton,
+    ColorLab,
+    GameOver
   ],
-
   audio: {
     disableWebAudio: true,
   },
@@ -77,3 +83,4 @@ const config = {
 
 // Initialize game instance
 new Phaser.Game(config);
+

@@ -1,3 +1,4 @@
+import eventsCenter from '../EventsCenter'
 export default class HideFromCat extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
@@ -8,9 +9,8 @@ export default class HideFromCat extends Phaser.Scene {
         });
 
         // Game Object Declarations
-        this.background;
         this.table;
-        this.cat;
+        this.background;
         this.cheese;
         this.cup;
         this.eyebeams;
@@ -32,8 +32,11 @@ export default class HideFromCat extends Phaser.Scene {
         this.sweeping = false;
         this.touched = false;
         this.textDisplayed = false;
-        this.gameover = false;
         this.gamestarted = false;
+        this.gameOver = false;
+        this.victory = false;
+        this.sent = false;
+        this.started = false;
 
         this.startText;
         this.deadText;
@@ -41,11 +44,9 @@ export default class HideFromCat extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('background', new URL('assets/HideFromCat/background.png',
-            import.meta.url).href);
         this.load.image('table', new URL('assets/HideFromCat/table.png',
             import.meta.url).href);
-        this.load.image('cat', new URL('assets/HideFromCat/cat.png',
+        this.load.image('22background', new URL('assets/HideFromCat/22background.png',
             import.meta.url).href);
         this.load.image('eyes', new URL('assets/HideFromCat/eyes.png',
             import.meta.url).href);
@@ -79,8 +80,7 @@ export default class HideFromCat extends Phaser.Scene {
 
     create() {
         this.createAnims();
-        this.background = this.add.image(540, 360, 'background');
-        this.cat = this.add.image(540, 360, 'cat');
+        this.background = this.add.image(540, 360, '22background');
         this.eyes = this.add.image(540, 360, 'eyes');
         this.table = this.add.image(540, 360, 'table');
         this.cup = this.add.image(500, 370, 'cup');
@@ -117,31 +117,43 @@ export default class HideFromCat extends Phaser.Scene {
             this.touched = true;
             this.cheese.y = 620;
         });
+
+        eventsCenter.on('start_game', () => { this.started = true; eventsCenter.emit('stop_timer') })
+
     }
 
     update(time, delta) {
-        if (!this.textDisplayed) {
-            this.textDisplayed = true;
-            this.displayStartText();
+        if (this.started) {
 
-            //delete text and start game after 3 seconds
-            this.time.delayedCall(3000, () => {
-                this.startText.visible = 0;
-                this.gamestarted = true;
-            }, [], this);
-        }
-        if (!this.gameover && this.gamestarted) {
-            this.startSweeping();
-            this.updatePlayer();
-            if (this.touched) {
-                this.arrowTimer += delta;
-                if (this.mouse.flipX) this.cheese.x = this.mouse.x + 10;
-                if (!this.mouse.flipX) this.cheese.x = this.mouse.x - 10;
-                if (this.mouse.x <= 360) this.win();
-                if (this.arrowTimer >= 300) {
-                    this.flashArrows(300);
-                    this.time.delayedCall(300, () => { this.arrowTimer = 0; }, [], this);
+            if (!this.textDisplayed) {
+                this.textDisplayed = true;
+                this.displayStartText();
+
+                //delete text and start game after 2 seconds
+                this.time.delayedCall(2000, () => {
+                    this.startText.visible = 0;
+                    this.gamestarted = true;
+                    this.globalState.timerMessage('start_timer')
+                }, [], this);
+            }
+            if (!this.gameOver && this.gamestarted) {
+                this.startSweeping();
+                this.updatePlayer();
+                if (this.touched) {
+                    this.arrowTimer += delta;
+                    if (this.mouse.flipX) this.cheese.x = this.mouse.x + 10;
+                    if (!this.mouse.flipX) this.cheese.x = this.mouse.x - 10;
+                    if (this.mouse.x <= 360) this.win();
+                    if (this.arrowTimer >= 300) {
+                        this.flashArrows(300);
+                        this.time.delayedCall(300, () => { this.arrowTimer = 0; }, [], this);
+                    }
                 }
+            }
+            if (this.gameOver && !this.sent) {
+                eventsCenter.emit('stop_timer');
+                eventsCenter.emit("game-end", this.victory);
+                this.sent = true
             }
         }
     }
@@ -184,7 +196,7 @@ export default class HideFromCat extends Phaser.Scene {
         });
 
         this.anims.create({
-            key: 'idle',
+            key: 'idleMouse',
             frames: [{ key: 'mouse', frame: 0 }],
             frameRate: 10
         });
@@ -202,15 +214,12 @@ export default class HideFromCat extends Phaser.Scene {
         this.startText = this.add.text(540, 160, '')
         this.startText.setStyle({
             fontSize: '72px',
-            fill: '#00ffff',
+            fill: '#000000',
             align: 'center',
-            stroke: '#808080',
-            strokeThickness: 8
+            stroke: '#ffffff',
+            strokeThickness: 12
         });
-        this.startText.setText([
-            "Steal the ",
-            "cheese without",
-            "getting spotted!"]);
+        this.startText.setText("Steal the cheese!");
         this.startText.setOrigin(0.5)
         this.startText.depth = 20;
         this.startText.visible = 1;
@@ -296,7 +305,7 @@ export default class HideFromCat extends Phaser.Scene {
             this.mouse.anims.play('run', true);
             this.mouse.x -= 8;
         }
-        else this.mouse.anims.play('idle');
+        else this.mouse.anims.play('idleMouse');
     }
 
     //ms = flash duration
@@ -305,11 +314,21 @@ export default class HideFromCat extends Phaser.Scene {
         this.time.delayedCall(ms, () => { this.arrows.forEach((param) => { param.visible = false }); }, [], this);
     }
 
+    //gameOver conditional used to prevent win/loss functions from running multiple times (possible cause of lag)
     lose() {
-        if (!this.gameover) {
+        if (!this.gameOver) {
             this.time.removeAllEvents();
             this.displayDeadText();
-            this.gameover = true;
+            this.gameOver = true;
+        }
+    }
+
+    win() {
+        if (!this.gameOver) {
+            this.time.removeAllEvents();
+            this.displayWinText();
+            this.gameOver = true;
+            this.victory = true;
         }
     }
 
@@ -327,14 +346,6 @@ export default class HideFromCat extends Phaser.Scene {
                 "spotted!"]);
         this.deadText.setOrigin(0.5);
         this.deadText.depth = 20;
-    }
-
-    win() {
-        if (!this.gameover) {
-            this.time.removeAllEvents();
-            this.displayWinText();
-            this.gameover = true;
-        }
     }
 
     displayWinText() {

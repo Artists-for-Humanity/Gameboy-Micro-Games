@@ -1,3 +1,6 @@
+import eventsCenter from '../EventsCenter'
+
+
 export default class Cannon extends Phaser.Scene {
   // Game Class Constructor
   constructor() {
@@ -15,7 +18,9 @@ export default class Cannon extends Phaser.Scene {
     this.inputNum = 1;
     this.gameOver = false;
     this.victory = false;
+    this.sent = false;
     this.tries = 0;
+    this.started = false;
   }
 
   preload() {
@@ -184,6 +189,16 @@ export default class Cannon extends Phaser.Scene {
 
     this.timedEvent = this.time.delayedCall(1000, this.onEvent, [], this);
 
+
+
+    this.createAnims();
+
+    eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer') })
+
+  }
+
+  createAnims() {
+
     this.anims.create({
       key: "DO1_fire",
       frames: [
@@ -258,10 +273,14 @@ export default class Cannon extends Phaser.Scene {
       ],
       frameRate: 24,
     });
+
   }
 
   update(time, delta) {
-    if (!this.gameOver) {
+    if (this.started) {
+      console.log(this.started)
+
+      // if (!this.gameOver) {
       if (this.totalBarrels === 0 && this.tries <= 2) {
         this.gameOver = true;
         this.gameWon();
@@ -334,6 +353,12 @@ export default class Cannon extends Phaser.Scene {
       ) {
         this.cannonSelect -= 1;
         this.time.delayedCall(100, this.animateCannonBall, [], this);
+      }
+      // }
+      if (this.gameOver && !this.sent) {
+        eventsCenter.emit('stop_timer');
+        eventsCenter.emit("game-end", this.victory);
+        this.sent = true
       }
     }
   }

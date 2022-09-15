@@ -1,3 +1,5 @@
+import eventsCenter from '../EventsCenter'
+
 export default class HitTheButton extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
@@ -8,35 +10,39 @@ export default class HitTheButton extends Phaser.Scene {
         });
 
         // Game Object Declarations
-        this.gameStarted = false;
+        this.startCheck = false;
         this.gameActive = false;
-        this.roundActive = false;
+        this.gameOver = false;
+        this.victory = false;
+        this.sent = false;
+        this.started = false;
         this.table;
         this.button;
         this.myName;
         this.cpuName;
         this.myHand;
         this.cpuHand;
-        this.myScoreTracker;
-        this.cpuScoreTracker;
+        // this.myScoreTracker;
+        // this.cpuScoreTracker;
         this.myScore = 0;
         this.cpuScore = 0;
         this.round = 1;
         this.cpuTimer = 0;
 
-        this.permaText;
+        // this.permaText;
         this.myText;
         this.endText;
 
         this.keySPACE;
         this.keyPressAvailable = true;
         this.delayedCallCheck = false;
+
     }
 
     preload() {
-        this.load.image('background', new URL('assets/HitTheButton/background.png',
+        this.load.image('23background', new URL('assets/HitTheButton/23background.png',
             import.meta.url).href);
-        this.load.image('table', new URL('assets/HitTheButton/table.png',
+        this.load.image('23table', new URL('assets/HitTheButton/23table.png',
             import.meta.url).href);
         this.load.image('player', new URL('assets/HitTheButton/player.png',
             import.meta.url).href);
@@ -71,85 +77,98 @@ export default class HitTheButton extends Phaser.Scene {
     create() {
         this.createAnims();
         this.setText();
-        this.background = this.add.image(540, 360, 'background');
-        this.table = this.add.image(540, 360, 'table');
+        this.background = this.add.image(540, 360, '23background');
+        this.table = this.add.image(540, 360, '23table');
         this.button = this.physics.add.sprite(540, 360, 'button');
         this.myName = this.physics.add.image(0, 0, 'player').setDisplayOrigin(-5, -5).setScale(0.5);
         this.cpuName = this.physics.add.image(1080, 0, 'cpu').setDisplayOrigin(216, -9).setScale(0.5);
         this.myHand = this.physics.add.sprite(540, 360, 'hand');
         this.cpuHand = this.physics.add.sprite(540, 360, 'hand');
         this.cpuHand.flipX = true;
-        this.myScoreTracker = this.physics.add.sprite(0, 48, 'scoreTracker').setDisplayOrigin(-16, -12).setScale(0.38);
-        this.cpuScoreTracker = this.physics.add.sprite(1080, 48, 'scoreTracker').setDisplayOrigin(321, -8).setScale(0.38);
+        // this.myScoreTracker = this.physics.add.sprite(0, 48, 'scoreTracker').setDisplayOrigin(-16, -12).setScale(0.38);
+        // this.cpuScoreTracker = this.physics.add.sprite(1080, 48, 'scoreTracker').setDisplayOrigin(321, -8).setScale(0.38);
 
         this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-        // let btt = this.add.text(0, 0, 'Best time!', {
-        //     fontSize: '32px',
-        //     fill: '#FF0000'
-        // }).setOrigin(0.5);
-    
-        // let container = this.add.container(540, 0, [btt]);
-    
-        // this.physics.world.enableBody(container);
-    
-        // container.body.setVelocity(0, 200);
-        // container.body.setBounce(0, 0.5);
-        // container.body.setCollideWorldBounds(true);
+        eventsCenter.on('start_game', () => { this.started = true; })
+
     }
 
     update(time, delta) {
-        if (!this.gameStarted) {
-            this.gameStarted = true;
-            this.button.anims.play('red');
-            this.time.delayedCall(4500, () => {
-                this.myText.visible = false;
-                this.gameActive = true;
-                this.myHand.anims.play('idle', true);
-                this.cpuHand.anims.play('idle', true);
-            }, [], this);
-        }
-        if (this.gameActive) {
-            if (!this.roundActive && !this.delayedCallCheck) {
-                this.time.delayedCall(1000, () => {
-                    this.startRound();
-                    console.log('round start');
+        if (this.started) {
+            if (!this.startCheck) {
+                this.startCheck = true;
+                this.button.anims.play('red');
+                this.time.delayedCall(2500, () => {
+                    this.myText.visible = false;
+                    this.gameActive = true;
+                    this.globalState.timerMessage('start_timer')
+                    this.myHand.anims.play('idle', true);
+                    this.cpuHand.anims.play('idle', true);
                 }, [], this);
-                this.delayedCallCheck = true;
             }
-            if (this.roundActive) {
-                if (Phaser.Input.Keyboard.JustDown(this.keySPACE) && this.keyPressAvailable) {
-                    this.keyPressAvailable = false;
-                    this.myHand.anims.play('slap');
-                    this.myHand.on('animationcomplete', () => { 
-                        this.time.delayedCall(250, () => {
-                            this.myHand.anims.play('idle');
-                            this.keyPressAvailable = true;
-                        }, [], this);
-                    });
+            if (this.gameActive) {
 
-                    //checks if button is green
+                //delayedCallCheck used to prevent multiple rounds starting at once
+                if (!this.roundActive && !this.delayedCallCheck) {
+                    this.time.delayedCall(1000, () => {
+                        this.startRound();
+                        console.log('round start');
+                    }, [], this);
+                    this.delayedCallCheck = true;
+                }
+                if (this.roundActive) {
+                    if (Phaser.Input.Keyboard.JustDown(this.keySPACE) && this.keyPressAvailable) {
+                        this.keyPressAvailable = false;
+                        this.myHand.anims.play('slap');
+                        this.myHand.on('animationcomplete', () => {
+                            this.time.delayedCall(250, () => {
+                                this.myHand.anims.play('idle');
+                                this.keyPressAvailable = true;
+
+                                //checks if button is green
+                                if (this.button.anims.currentFrame.textureFrame === 1) {
+                                    this.myScore++;
+                                    this.endGame();
+                                    // this.roundWon();
+                                } else {
+                                    this.cpuScore++;
+                                    this.endGame();
+                                    // this.roundLoss();
+                                }
+                            }, [], this);
+                        });
+                    }
+
                     if (this.button.anims.currentFrame.textureFrame === 1) {
-                        this.roundWon();
-                    } else {
-                        this.roundLoss();
+                        this.cpuTimer += delta;
+                    }
+
+                    if (this.cpuTimer >= 350 && this.keyPressAvailable) {
+                        this.cpuHand.anims.play('slap');
+                        this.keyPressAvailable = false;
+                        this.cpuHand.on('animationcomplete', () => {
+                            this.time.delayedCall(250, () => {
+                                this.cpuHand.anims.play('idle');
+                                this.cpuScore++;
+                                this.reset();
+                                this.endGame();
+                            }, [], this);
+                        });
+                        // this.roundLoss();
                     }
                 }
-                if (this.button.anims.currentFrame.textureFrame === 1) {
-                    this.cpuTimer += delta;
-                }
-                if (this.cpuTimer >= 350) {
-                    this.cpuHand.anims.play('slap');
-                    this.cpuHand.on('animationcomplete', () => { 
-                        this.time.delayedCall(250, () => { this.cpuHand.anims.play('idle') }, [], this);
-                    });
-                    this.roundLoss();
-                }
+                // if (this.myScore === 3 || this.cpuScore === 3) {
+                //     this.gameActive = false;
+                //     this.time.delayedCall(700, () => { this.endGame(); }, [], this);         
+                // }
             }
-            if (this.myScore === 3 || this.cpuScore === 3) {
-                this.gameActive = false;
-                this.time.delayedCall(700, () => { this.endGame(); }, [], this);         
-            }
+
+        }
+        if (this.gameOver && !this.sent) {
+            eventsCenter.emit('stop_timer');
+            eventsCenter.emit("game-end", this.victory);
+            this.sent = true
         }
     }
 
@@ -165,22 +184,17 @@ export default class HitTheButton extends Phaser.Scene {
             frameRate: 10
         });
         this.anims.create({
-            key: '0',
-            frames: [{ key: 'scoreTracker', frame: 0 }],
-            frameRate: 10
-        });
-        this.anims.create({
-            key: '1',
+            key: 'oneWin',
             frames: [{ key: 'scoreTracker', frame: 1 }],
             frameRate: 10
         });
         this.anims.create({
-            key: '2',
+            key: 'twoWins',
             frames: [{ key: 'scoreTracker', frame: 2 }],
             frameRate: 10
         });
         this.anims.create({
-            key: '3',
+            key: 'threeWins',
             frames: [{ key: 'scoreTracker', frame: 3 }],
             frameRate: 10
         });
@@ -208,31 +222,28 @@ export default class HitTheButton extends Phaser.Scene {
     }
 
     setText() {
-        this.permaText = this.add.text(540, 40, '');
-        this.permaText.setStyle({
-            fontSize: '36px',
-            fill: '#00ffff',
-            align: 'center',
-            stroke: '#808080',
-            strokeThickness: 8
-        });
-        this.permaText.setText([
-            "First to 3 wins!"]);
-        this.permaText.setOrigin(0.5);
-        this.permaText.depth = 20;
+        // this.permaText = this.add.text(540, 40, '');
+        // this.permaText.setStyle({
+        //     fontSize: '36px',
+        //     fill: '#00ffff',
+        //     align: 'center',
+        //     stroke: '#808080',
+        //     strokeThickness: 8
+        // });
+        // this.permaText.setText([
+        //     "First to 3 wins!"]);
+        // this.permaText.setOrigin(0.5);
+        // this.permaText.depth = 20;
 
-        this.myText = this.add.text(540, 360, '');
+        this.myText = this.add.text(540, 260, '');
         this.myText.setStyle({
             fontSize: '54px',
-            fill: '#00ffff',
+            fill: '#000000',
             align: 'center',
-            stroke: '#808080',
-            strokeThickness: 8
+            stroke: '#ffffff',
+            strokeThickness: 12
         });
-        this.myText.setText([
-            "When the button turns",
-            "green, hit 'SPACE' before",
-            "your opponent does!"]);
+        this.myText.setText("Hit when green!");
         this.myText.setOrigin(0.5);
         this.myText.depth = 20;
 
@@ -251,54 +262,58 @@ export default class HitTheButton extends Phaser.Scene {
         this.roundActive = true;
 
         //turn button green
-        this.time.delayedCall(this.getIntBetween(2000, 5000), () => { 
+        this.goGreen = this.time.delayedCall(this.getIntBetween(2000, 5000), () => {
             this.button.anims.play('green');
         }, [], this);
     }
-    
+
     reset() {
-        this.time.delayedCall(500, () => {
-            this.button.anims.play('red');
-        }, [], this);
+        // this.time.delayedCall(500, () => {
+        //     this.button.anims.play('red');
+        // }, [], this);
+
         this.roundActive = false;
         this.delayedCallCheck = false;
         this.cpuTimer = 0;
         this.round++;
     }
 
-    roundWon() {
-        console.log('YOU WON');
-        this.myScore++;
-        if (this.myScore === 1) this.myScoreTracker.anims.play('1');
-        if (this.myScore === 2) this.myScoreTracker.anims.play('2');
-        if (this.myScore === 3) this.myScoreTracker.anims.play('3');
-        this.reset();
-    }
+    // roundWon() {
+    //     this.myScore++;
+    //     if (this.myScore === 1) this.myScoreTracker.anims.play('oneWin');
+    //     if (this.myScore === 2) this.myScoreTracker.anims.play('twoWins');
+    //     if (this.myScore === 3) this.myScoreTracker.anims.play('threeWins');
+    //     this.reset();
+    // }
 
-    roundLoss() {
-        console.log('YOU LOSE');
-        this.cpuScore++;
-        if (this.cpuScore === 1) this.cpuScoreTracker.anims.play('1');
-        if (this.cpuScore === 2) this.cpuScoreTracker.anims.play('2');
-        if (this.cpuScore === 3) this.cpuScoreTracker.anims.play('3');
-        this.reset();
-    }
+    // roundLoss() {
+    //     this.time.removeEvent(this.goGreen);
+    //     this.cpuScore++;
+    //     if (this.cpuScore === 1) this.cpuScoreTracker.anims.play('oneWin');
+    //     if (this.cpuScore === 2) this.cpuScoreTracker.anims.play('twoWins');
+    //     if (this.cpuScore === 3) this.cpuScoreTracker.anims.play('threeWins');
+    //     this.reset();
+    // }
 
     endGame() {
         this.gameActive = false;
-        if (this.myScore === 3) {
+        if (this.myScore === 1) {
             this.endText.setStyle({
                 fill: '#00ff00'
             });
             this.endText.setText('YOU WON!');
+            this.victory = true;
         } else {
             this.endText.setStyle({
                 fill: '#ff0000'
             });
             this.endText.setText('YOU LOST!')
         }
+        this.gameOver = true;
+        this.started = false;
+
     }
-    
+
     //helper function
     getIntBetween(lower, upper) {
         return Math.floor(Math.random() * (upper - lower) + lower);

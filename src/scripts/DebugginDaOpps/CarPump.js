@@ -1,3 +1,5 @@
+import eventsCenter from "../EventsCenter";
+
 export default class CarPump extends Phaser.Scene {
   // Game Class Constructor
   constructor() {
@@ -8,22 +10,25 @@ export default class CarPump extends Phaser.Scene {
     });
 
     // Game Object Declarations
-    this.gameState = true;
+    this.gameStarted = false;
     this.gameOver = false;
     this.victory = false;
-    this.startScreen;
-    this.timedEvent;
+    this.sent = false;
+    this.started = false;
     this.lever;
+    this.carpumpTimer = 0;
     this.car25;
     this.car50;
     this.car75;
     this.car100;
-    this.pumpToWin = 20;
     this.playerPumps = 0;
-    this.clickAvailable = true;
-    this.clickTimer = 0;
-    this.downWasPressed = false;
-    this.upWasPressed = true;
+    this.downInt = 0;
+    this.car1 = false;
+    this.car2 = false;
+    this.car3 = false;
+    this.car4 = false;
+    this.inflateInt = 0;
+    this.endgameTimer = 0;
   }
 
   preload() {
@@ -100,21 +105,17 @@ export default class CarPump extends Phaser.Scene {
     this.up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
     this.down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
 
+
     this.car50.visible = false;
     this.car75.visible = false;
     this.car100.visible = false;
     this.gameOverScreen.visible = false;
-
-    this.cursors = this.input.keyboard.createCursorKeys();
-
     this.timedEvent = this.time.delayedCall(1000, this.onEvent, [], this);
-
     this.createAnimations();
-    // console.log(this.load);
+    eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer') })
 
-    this.globalState.initCountDown(this);
-    // this.globalState.test();
   }
+
 
   createAnimations() {
     this.anims.create({
@@ -273,8 +274,8 @@ export default class CarPump extends Phaser.Scene {
       this.car75.visible = false;
     }
   }
-
   onEvent() {
     this.tempBg.visible = false;
   }
+
 }
