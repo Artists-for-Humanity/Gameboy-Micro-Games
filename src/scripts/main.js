@@ -37,9 +37,9 @@ const config = {
       debug: false,
     },
   },
-  scene: [CircleJump],
+  scene: [BewteenSpace, CircleJump],
   audio: {
-    disableWebAudio: true,
+    disableWebAudio: false,
   },
   plugins: {
     global: [
