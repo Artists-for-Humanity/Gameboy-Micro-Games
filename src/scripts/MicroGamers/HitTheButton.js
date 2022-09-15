@@ -99,7 +99,7 @@ export default class HitTheButton extends Phaser.Scene {
             if (!this.startCheck) {
                 this.startCheck = true;
                 this.button.anims.play('red');
-                this.time.delayedCall(2500, () => {
+                this.time.delayedCall(1000, () => {
                     this.myText.visible = false;
                     this.gameActive = true;
                     this.globalState.timerMessage('start_timer')
@@ -262,7 +262,7 @@ export default class HitTheButton extends Phaser.Scene {
         this.roundActive = true;
 
         //turn button green
-        this.goGreen = this.time.delayedCall(this.getIntBetween(2000, 5000), () => {
+        this.goGreen = this.time.delayedCall(this.getIntBetween(1200, 3500), () => {
             this.button.anims.play('green');
         }, [], this);
     }
