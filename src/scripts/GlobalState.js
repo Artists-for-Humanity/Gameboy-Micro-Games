@@ -5,7 +5,8 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
 
   constructor(pluginManager) {
     super(pluginManager);
-
+    this.score = 0;
+    this.val = 0;
     this.initialTime = 10;
     this.timedEvent;
     this.cutScreen;
@@ -119,6 +120,10 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
   timerMessage(message) {
     eventsCenter.emit(message)
     console.log('emission sent')
+  }
+  resetScore(){
+    this.val = 0;
+
   }
 
 }
