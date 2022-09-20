@@ -138,7 +138,6 @@ export default class CutScreen extends Phaser.Scene {
     }
 
     close_doors() {
-
         // If left door is not yet in closed position
         if (this.l_door.x < L_END) {
             this.l_close()
@@ -152,7 +151,6 @@ export default class CutScreen extends Phaser.Scene {
     }
     open_doors() {
         if (this.l_door.x > L_START) {
-
             this.l_open()
             this.r_open()
         }
@@ -330,7 +328,6 @@ export default class CutScreen extends Phaser.Scene {
 
     closecon() {
         console.log("Round ", this.roundNumber)
-
         if(this.currentScene === 'CircleJump'){
             eventsCenter.emit('end_circle')
         }
@@ -355,8 +352,10 @@ export default class CutScreen extends Phaser.Scene {
             this.life_total--
             this.reduce_life()
         }
+
         eventsCenter.emit('stop_timer')
         eventsCenter.emit('reset_timer')
+        
         if (this.roundNumber > 0) {
             this.endGame()
         }

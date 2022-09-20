@@ -134,22 +134,10 @@ export default class SockToss extends Phaser.Scene {
         this.meterX = 0
         this.timer = 0
         this.timer2 = 0
-        //this.toss.scale = 0
+        
+        buildAnimations()
 
         eventsCenter.on('start_game', () => { if (!this.gameOver) { this.started = true; eventsCenter.emit('start_timer') } })
-
-        this.anims.create({
-            key: 'throw',
-            frames: [{ key: 'hand_closed' }]
-        })
-        this.anims.create({
-            key: 'win',
-            frames: [{ key: 'hand_win' }]
-        })
-        this.anims.create({
-            key: 'lose',
-            frames: [{ key: 'hand_lose' }]
-        })
     }
     update() {
         // this nested if-statement plays the intro "TOSS" text
@@ -185,28 +173,12 @@ export default class SockToss extends Phaser.Scene {
                     }
                 }
             }
-
         }
     }
     maskdraw() {
         this.mmask.clear();
         this.mmask.fillRect(127 * SCALE_MULTIPLIER, 142 * SCALE_MULTIPLIER, (this.meterX + 1) * SCALE_MULTIPLIER, 14 * SCALE_MULTIPLIER);
     }
-    // tosstext() {
-    //     // grow "TOSS" until it reaches max scale
-    //     if (this.toss.scale < 4) {
-    //         this.toss.scale += 0.1;
-    //     }
-    //     // once "TOSS" is maxed, we pause for 50 milliseconds before starting the game
-    //     else {
-    //         this.timer2++
-    //         // make sure 50 ms have elapsed, then set started to true
-    //         if (this.timer2 > 50) {
-    //             this.toss.setVisible(false)
-    //             this.started = true
-    //         }
-    //     }
-    // }
     throwncon() {
         //framerate check
         if (this.timer == 1) {
@@ -351,5 +323,19 @@ export default class SockToss extends Phaser.Scene {
         else {
             this.player.scale += 0.005
         }
+    }
+    buildAnimations(){
+        this.anims.create({
+            key: 'throw',
+            frames: [{ key: 'hand_closed' }]
+        })
+        this.anims.create({
+            key: 'win',
+            frames: [{ key: 'hand_win' }]
+        })
+        this.anims.create({
+            key: 'lose',
+            frames: [{ key: 'hand_lose' }]
+        })
     }
 }
