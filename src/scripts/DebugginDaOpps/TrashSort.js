@@ -1,5 +1,5 @@
-import eventsCenter from '../EventsCenter'
-
+import eventsCenter from "../EventsCenter";
+import phaserJuice from "../phaser3-juice-plugin/dist/phaserJuice.min.js";
 
 export default class TrashSort extends Phaser.Scene {
   // Game Class Constructor
@@ -21,16 +21,12 @@ export default class TrashSort extends Phaser.Scene {
     this.gameOver = false;
     this.sent = false;
     this.started = false;
+    this.juice;
   }
 
   preload() {
     this.load.image(
-      "DO3_startScreen",
-      new URL("./assets1/sort-screen.png", import.meta.url).href
-    );
-    this.load.image(
       "DO3_background",
-
       new URL("./assets1/game-background.png", import.meta.url).href
     );
     this.load.image(
@@ -58,8 +54,8 @@ export default class TrashSort extends Phaser.Scene {
       new URL("./assets1/plastic-bag-pixel.png", import.meta.url).href
     );
     this.load.image(
-      "DO3_plastic__can_holder",
-      new URL("./assets1/plastic-can-holder.png", import.meta.url).href
+      "DO3_soda_can",
+      new URL("./assets1/soda-can.png", import.meta.url).href
     );
   }
 
@@ -68,7 +64,6 @@ export default class TrashSort extends Phaser.Scene {
       this.game.config.width / 2,
       this.game.config.height / 2,
       "DO3_background"
-
     );
     this.recycleBin = this.physics.add
       .image(760, 540, "DO3_recycle_bin")
@@ -80,7 +75,7 @@ export default class TrashSort extends Phaser.Scene {
     this.trashBinMap = {
       DO3_chicken_leg: "DO3_trash_bin",
       DO3_plastic_bag: "DO3_recycle_bin",
-      DO3_plastic__can_holder: "DO3_recycle_bin",
+      DO3_soda_can: "DO3_recycle_bin",
       DO3_pizza: "DO3_trash_bin",
     };
 
@@ -90,26 +85,22 @@ export default class TrashSort extends Phaser.Scene {
       "DO3_gameOverScreen"
     );
 
-    this.tempBg = this.add.image(
-      this.game.config.width / 2,
-      this.game.config.height / 2,
-      "DO3_startScreen"
-
-    );
-
     this.gameOverScreen.visible = false;
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
     this.timedEvent = this.time.delayedCall(1000, this.onEvent, [], this);
 
-    eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer') })
+    eventsCenter.on("start_game", () => {
+      this.started = true;
+      this.globalState.timerMessage("start_timer");
+    });
 
+    this.juice = new phaserJuice(this);
   }
 
   update() {
     if (this.started) {
-
       if (this.playerScore === this.triesToWin) {
         this.currTrashItem.visible = false;
         this.victory = true;
@@ -123,7 +114,6 @@ export default class TrashSort extends Phaser.Scene {
       }
 
       if (this.currTrashItem === undefined) {
-
         this.currTrashItem = this.physics.add
           .image(
             this.game.config.width / 2,
@@ -133,7 +123,6 @@ export default class TrashSort extends Phaser.Scene {
           .setScale(0.12, 0.12);
         this.addTrashCollider(this.recycleBin);
         this.addTrashCollider(this.trashBin);
-
       }
 
       if (this.currTrashItem.y >= 720 + this.currTrashItem.displayWidth / 2) {
@@ -141,20 +130,14 @@ export default class TrashSort extends Phaser.Scene {
 
         this.gameOverScreen.visible = true;
         this.currTrashItem.visible = false;
-
       }
       this.time.delayedCall(10, this.dropTrash, [], this);
-
-
-
-
     }
 
     if (this.gameOver && !this.sent) {
-      eventsCenter.emit('stop_timer');
+      eventsCenter.emit("stop_timer");
       eventsCenter.emit("game-end", this.victory);
-      this.sent = true
-
+      this.sent = true;
     }
   }
 
@@ -164,10 +147,6 @@ export default class TrashSort extends Phaser.Scene {
       this.gameOver = true;
       this.gameOverScreen.visible = true;
     }
-  }
-
-  onEvent() {
-    this.tempBg.visible = false;
   }
 
   // Get the current trash item on screen and drop its y coordinate down.
@@ -209,6 +188,7 @@ export default class TrashSort extends Phaser.Scene {
       } else {
         this.playerScore += 1;
         a.destroy();
+        this.juice.shake(trashBinType);
         this.spawnTrash();
       }
     });
