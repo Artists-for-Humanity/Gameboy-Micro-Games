@@ -8,11 +8,11 @@ const L_START = -L_END
 const R_START = 5 * L_END
 
 const listOfGames = [
+    "Factory",
     "Lowest",
     "FrogJump",
     "DrinkPour",
     "FlySwat",
-    "Factory",
     "Emeowgency",
     'MarcyMunch',
     'SockToss',
@@ -91,21 +91,21 @@ export default class CutScreen extends Phaser.Scene {
         this.load.spritesheet(
             'loss', new URL('assets/loss_cat.png',
                 import.meta.url).href, {
-                frameWidth: 419,
-                frameHeight: 162
-            })
+            frameWidth: 419,
+            frameHeight: 162
+        })
         this.load.spritesheet(
             'win', new URL('assets/win_cat.png',
                 import.meta.url).href, {
-                frameWidth: 419,
-                frameHeight: 162
-            })
+            frameWidth: 419,
+            frameHeight: 162
+        })
         this.load.spritesheet(
             'numbers', new URL('../globalAssets/numsheet.png',
                 import.meta.url).href, {
-                frameWidth: 77,
-                frameHeight: 122
-            })
+            frameWidth: 77,
+            frameHeight: 122
+        })
         this.load.image('gba_socket', new URL('assets/gba_socket.png',
             import.meta.url).href)
         this.load.image('num_plate', new URL('assets/num_plate.png',
@@ -455,29 +455,29 @@ export default class CutScreen extends Phaser.Scene {
         this.anims.create({
             key: 'life',
             frames: [{
-                    key: 'gba',
-                    frame: 0
-                },
-                {
-                    key: 'gba',
-                    frame: 0
-                },
-                {
-                    key: 'gba',
-                    frame: 1
-                },
-                {
-                    key: 'gba',
-                    frame: 2
-                },
-                {
-                    key: 'gba',
-                    frame: 2
-                },
-                {
-                    key: 'gba',
-                    frame: 1
-                }
+                key: 'gba',
+                frame: 0
+            },
+            {
+                key: 'gba',
+                frame: 0
+            },
+            {
+                key: 'gba',
+                frame: 1
+            },
+            {
+                key: 'gba',
+                frame: 2
+            },
+            {
+                key: 'gba',
+                frame: 2
+            },
+            {
+                key: 'gba',
+                frame: 1
+            }
             ],
             frameRate: 6,
             repeat: -1
@@ -485,12 +485,12 @@ export default class CutScreen extends Phaser.Scene {
         this.anims.create({
             key: 'blink',
             frames: [{
-                    key: 'gba',
-                    frame: 0
-                },
-                {
-                    key: 'gba_socket'
-                }
+                key: 'gba',
+                frame: 0
+            },
+            {
+                key: 'gba_socket'
+            }
             ],
             frameRate: 6,
             repeat: 2
@@ -498,38 +498,38 @@ export default class CutScreen extends Phaser.Scene {
         this.anims.create({
             key: 'lose1',
             frames: [{
-                    key: 'loss',
-                    frame: 0
-                },
-                {
-                    key: 'loss',
-                    frame: 1
-                },
-                {
-                    key: 'loss',
-                    frame: 2
-                },
-                {
-                    key: 'loss',
-                    frame: 3
-                }
+                key: 'loss',
+                frame: 0
+            },
+            {
+                key: 'loss',
+                frame: 1
+            },
+            {
+                key: 'loss',
+                frame: 2
+            },
+            {
+                key: 'loss',
+                frame: 3
+            }
             ],
             frameRate: 6
         })
         this.anims.create({
             key: 'lose2',
             frames: [{
-                    key: 'loss',
-                    frame: 3
-                },
-                {
-                    key: 'loss',
-                    frame: 4
-                },
-                {
-                    key: 'loss',
-                    frame: 5
-                }
+                key: 'loss',
+                frame: 3
+            },
+            {
+                key: 'loss',
+                frame: 4
+            },
+            {
+                key: 'loss',
+                frame: 5
+            }
             ],
             frameRate: 6,
             repeat: -1,
@@ -538,38 +538,38 @@ export default class CutScreen extends Phaser.Scene {
         this.anims.create({
             key: 'win1',
             frames: [{
-                    key: 'win',
-                    frame: 0
-                },
-                {
-                    key: 'win',
-                    frame: 1
-                },
-                {
-                    key: 'win',
-                    frame: 2
-                },
-                {
-                    key: 'win',
-                    frame: 3
-                }
+                key: 'win',
+                frame: 0
+            },
+            {
+                key: 'win',
+                frame: 1
+            },
+            {
+                key: 'win',
+                frame: 2
+            },
+            {
+                key: 'win',
+                frame: 3
+            }
             ],
             frameRate: 6
         })
         this.anims.create({
             key: 'win2',
             frames: [{
-                    key: 'win',
-                    frame: 3
-                },
-                {
-                    key: 'win',
-                    frame: 4
-                },
-                {
-                    key: 'win',
-                    frame: 5
-                }
+                key: 'win',
+                frame: 3
+            },
+            {
+                key: 'win',
+                frame: 4
+            },
+            {
+                key: 'win',
+                frame: 5
+            }
             ],
             frameRate: 6,
             repeat: -1,
