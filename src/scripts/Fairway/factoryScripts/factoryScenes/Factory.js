@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import eventsCenter from "../../../EventsCenter";
-import ButtonPressHandlers from '../ButtonPressHandlers';
+import ButtonPressHandlers from '../../../ButtonPressHandlers';
 export default class Factory extends Phaser.Scene {
     constructor() {
         super({

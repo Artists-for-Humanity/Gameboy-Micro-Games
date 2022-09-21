@@ -1,4 +1,5 @@
 import eventsCenter from '../EventsCenter'
+import ButtonPressHandlers from '../ButtonPressHandlers';
 export default class ColorPasscode extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
@@ -41,6 +42,9 @@ export default class ColorPasscode extends Phaser.Scene {
         this.Right;
         this.Down;
         this.Up;
+        this.buttonHandlers = new ButtonPressHandlers();
+        this.gamePad = null
+
     }
 
     preload() {
@@ -79,12 +83,14 @@ export default class ColorPasscode extends Phaser.Scene {
     }
 
     create() {
+        // this.startGamePad();
         this.drawUI();
         this.setText();
-        this.Left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-        this.Right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-        this.Down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
-        this.Up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        // this.Left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        // this.Right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        // this.Down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        // this.Up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        
 
         this.lightRed = this.add.sprite(408, 334, 'lightRed');
         this.lightYellow = this.add.sprite(678, 334, 'lightYellow');
@@ -119,7 +125,7 @@ export default class ColorPasscode extends Phaser.Scene {
         // console.log(this.pattern);
 
         eventsCenter.on('start_game', () => { this.started2 = true; eventsCenter.emit('stop_timer') })
-
+        console.log('start')
     }
 
     update(time, delta) {
@@ -145,6 +151,10 @@ export default class ColorPasscode extends Phaser.Scene {
             }
 
             if (this.interactive && !this.gameOver) {
+                this.buttonHandlers.update();
+                if (!this.gamePad) {
+                    this.startGamePad();
+                }
                 this.userInput();
             }
 
@@ -153,7 +163,23 @@ export default class ColorPasscode extends Phaser.Scene {
                 eventsCenter.emit("game-end", this.victory);
                 this.sent = true
             }
+
         }
+    }
+
+    startGamePad() {
+        if (this.input.gamepad.total) {
+            this.gamePad = this.input.gamepad.pad1;
+            this.initGamePad();
+            console.log(this.gamePad);
+        }
+    }
+
+    initGamePad() {
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.userInput(3));
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.userInput(1));
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 1, () => this.userInput(2));
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === -1, () => this.userInput(0));
     }
 
     drawUI() {
@@ -297,20 +323,20 @@ export default class ColorPasscode extends Phaser.Scene {
     }
 
     //200ms flash duration
-    userInput() {
-        if (Phaser.Input.Keyboard.JustDown(this.Up)) {
+    userInput(x) {
+        if (x === 0) {
             this.flash(0, 200);
             this.guesses.push(0);
             this.guess();
-        } else if (Phaser.Input.Keyboard.JustDown(this.Right)) {
+        } else if (x === 1) {
             this.flash(1, 200);
             this.guesses.push(1);
             this.guess();
-        } else if (Phaser.Input.Keyboard.JustDown(this.Down)) {
+        } else if (x === 2) {
             this.flash(2, 200);
             this.guesses.push(2);
             this.guess();
-        } else if (Phaser.Input.Keyboard.JustDown(this.Left)) {
+        } else if (x === 3) {
             this.flash(3, 200);
             this.guesses.push(3);
             this.guess();

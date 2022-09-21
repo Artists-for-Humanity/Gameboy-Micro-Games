@@ -1,4 +1,5 @@
 import eventsCenter from '../EventsCenter'
+import ButtonPressHandlers from '../ButtonPressHandlers';
 
 export default class HitTheButton extends Phaser.Scene {
     // Game Class Constructor
@@ -36,7 +37,8 @@ export default class HitTheButton extends Phaser.Scene {
         this.keySPACE;
         this.keyPressAvailable = true;
         this.delayedCallCheck = false;
-
+        this.buttonHandlers = new ButtonPressHandlers();
+        this.gamePad = null
     }
 
     preload() {
@@ -108,7 +110,12 @@ export default class HitTheButton extends Phaser.Scene {
                 }, [], this);
             }
             if (this.gameActive) {
-
+                
+                this.buttonHandlers.update();
+                if (!this.gamePad) {
+                    this.startGamePad();
+                }
+                
                 //delayedCallCheck used to prevent multiple rounds starting at once
                 if (!this.roundActive && !this.delayedCallCheck) {
                     this.time.delayedCall(1000, () => {
@@ -118,26 +125,12 @@ export default class HitTheButton extends Phaser.Scene {
                     this.delayedCallCheck = true;
                 }
                 if (this.roundActive) {
+                    this.buttonHandlers.update();
+                    if (!this.gamePad) {
+                        this.startGamePad();
+                    }
                     if (Phaser.Input.Keyboard.JustDown(this.keySPACE) && this.keyPressAvailable) {
-                        this.keyPressAvailable = false;
-                        this.myHand.anims.play('slap');
-                        this.myHand.on('animationcomplete', () => {
-                            this.time.delayedCall(250, () => {
-                                this.myHand.anims.play('idle');
-                                this.keyPressAvailable = true;
-
-                                //checks if button is green
-                                if (this.button.anims.currentFrame.textureFrame === 1) {
-                                    this.myScore++;
-                                    this.endGame();
-                                    // this.roundWon();
-                                } else {
-                                    this.cpuScore++;
-                                    this.endGame();
-                                    // this.roundLoss();
-                                }
-                            }, [], this);
-                        });
+                        this.schlap();
                     }
 
                     if (this.button.anims.currentFrame.textureFrame === 1) {
@@ -169,6 +162,18 @@ export default class HitTheButton extends Phaser.Scene {
             eventsCenter.emit('stop_timer');
             eventsCenter.emit("game-end", this.victory);
             this.sent = true
+        }
+    }
+
+    initGamePad() {
+        this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { if (this.keyPressAvailable) this.schlap(); });
+    }
+
+    startGamePad() {
+        if (this.input.gamepad.total) {
+            this.gamePad = this.input.gamepad.pad1;
+            this.initGamePad();
+            console.log(this.gamePad);
         }
     }
 
@@ -265,6 +270,28 @@ export default class HitTheButton extends Phaser.Scene {
         this.goGreen = this.time.delayedCall(this.getIntBetween(2000, 5000), () => {
             this.button.anims.play('green');
         }, [], this);
+    }
+
+    schlap() {
+        this.keyPressAvailable = false;
+            this.myHand.anims.play('slap');
+            this.myHand.on('animationcomplete', () => {
+                this.time.delayedCall(250, () => {
+                    this.myHand.anims.play('idle');
+                    this.keyPressAvailable = true;
+
+                    //checks if button is green
+                    if (this.button.anims.currentFrame.textureFrame === 1) {
+                        this.myScore++;
+                        this.endGame();
+                        // this.roundWon();
+                    } else {
+                        this.cpuScore++;
+                        this.endGame();
+                        // this.roundLoss();
+                    }
+                }, [], this);
+            });
     }
 
     reset() {

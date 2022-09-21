@@ -8,24 +8,9 @@ const L_START = -L_END
 const R_START = 5 * L_END
 
 const listOfGames = [
-    "Factory",
-    "Lowest",
-    "FrogJump",
-    "DrinkPour",
-    "FlySwat",
-    "Emeowgency",
-    'MarcyMunch',
-    'SockToss',
-    "ColorLab",
-    "Cannon",
-    "CarPump",
-    "TrashSort",
-    "ColorPasscode",
-    "HideFromCat",
     "HitTheButton",
-    "CircleJump",
-    "BetweenSpace",
-    'GameOver'
+    "Factory",
+    "ColorPasscode"
 ];
 
 export default class CutScreen extends Phaser.Scene {
