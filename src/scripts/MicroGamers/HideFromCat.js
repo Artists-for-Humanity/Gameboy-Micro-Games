@@ -144,6 +144,7 @@ export default class HideFromCat extends Phaser.Scene {
                 this.buttonHandlers.update();
                 if (!this.gamePad) {
                     this.startGamePad();
+                    
                 }
                 this.startSweeping();
                 this.updatePlayer();
@@ -163,6 +164,8 @@ export default class HideFromCat extends Phaser.Scene {
                 eventsCenter.emit("game-end", this.victory);
                 this.sent = true
             }
+           
+            
         }
     }
 
@@ -170,13 +173,13 @@ export default class HideFromCat extends Phaser.Scene {
         if (this.input.gamepad.total) {
             this.gamePad = this.input.gamepad.pad1;
             this.initGamePad();
-            console.log(this.gamePad);
         }
     }
 
     initGamePad() {
         this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.updatePlayer(0));
         this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.updatePlayer(1));
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 0, () => this.updatePlayer(2));
 
     }
 
@@ -228,7 +231,8 @@ export default class HideFromCat extends Phaser.Scene {
                 { key: 'mouse', frame: 0 },
                 { key: 'mouse', frame: 1 },
                 { key: 'mouse', frame: 2 },],
-            frameRate: 12
+            frameRate: 12,
+            repeat: -1
         });
     }
 
@@ -319,15 +323,19 @@ export default class HideFromCat extends Phaser.Scene {
     updatePlayer(x) {
         if (this.Right.isDown || x === 1) {
             this.mouse.flipX = true;
-            this.mouse.anims.play('run', true);
-            this.mouse.x += 8;
+            this.mouse.anims.play('run');
+            this.mouse.setVelocityX(500);
         }
-        else if (this.Left.isDown || x === -1) {
+        else if (this.Left.isDown || x === 0) {
             this.mouse.flipX = false;
-            this.mouse.anims.play('run', true);
-            this.mouse.x -= 8;
+            this.mouse.anims.play('run');
+            this.mouse.setVelocityX(-500);
         }
-        else this.mouse.anims.play('idleMouse');
+        else if(x === 2) {
+            this.mouse.anims.play('idleMouse');
+            this.mouse.setVelocityX(0);
+            
+        }
     }
 
     //ms = flash duration
@@ -342,6 +350,7 @@ export default class HideFromCat extends Phaser.Scene {
             this.time.removeAllEvents();
             this.displayDeadText();
             this.gameOver = true;
+            this.mouse.setVelocityX(0);
         }
     }
 
@@ -351,6 +360,8 @@ export default class HideFromCat extends Phaser.Scene {
             this.displayWinText();
             this.gameOver = true;
             this.victory = true;
+            this.mouse.setVelocityX(0);
+
         }
     }
 
