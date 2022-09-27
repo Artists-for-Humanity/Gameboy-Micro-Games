@@ -1,4 +1,6 @@
 import eventsCenter from '../EventsCenter'
+import ButtonPressHandlers from '../ButtonPressHandlers';
+
 export default class HideFromCat extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
@@ -27,6 +29,8 @@ export default class HideFromCat extends Phaser.Scene {
 
         this.Left;
         this.Right;
+        this.buttonHandlers = new ButtonPressHandlers();
+        this.gamePad = null
 
         this.side = 0;
         this.sweeping = false;
@@ -137,6 +141,10 @@ export default class HideFromCat extends Phaser.Scene {
                 }, [], this);
             }
             if (!this.gameOver && this.gamestarted) {
+                this.buttonHandlers.update();
+                if (!this.gamePad) {
+                    this.startGamePad();
+                }
                 this.startSweeping();
                 this.updatePlayer();
                 if (this.touched) {
@@ -156,6 +164,20 @@ export default class HideFromCat extends Phaser.Scene {
                 this.sent = true
             }
         }
+    }
+
+    startGamePad() {
+        if (this.input.gamepad.total) {
+            this.gamePad = this.input.gamepad.pad1;
+            this.initGamePad();
+            console.log(this.gamePad);
+        }
+    }
+
+    initGamePad() {
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.updatePlayer(0));
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.updatePlayer(1));
+
     }
 
     createAnims() {
@@ -294,13 +316,13 @@ export default class HideFromCat extends Phaser.Scene {
         }
     }
 
-    updatePlayer() {
-        if (this.Right.isDown) {
+    updatePlayer(x) {
+        if (this.Right.isDown || x === 1) {
             this.mouse.flipX = true;
             this.mouse.anims.play('run', true);
             this.mouse.x += 8;
         }
-        else if (this.Left.isDown) {
+        else if (this.Left.isDown || x === -1) {
             this.mouse.flipX = false;
             this.mouse.anims.play('run', true);
             this.mouse.x -= 8;
