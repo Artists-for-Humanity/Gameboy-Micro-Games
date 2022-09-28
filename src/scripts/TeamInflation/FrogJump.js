@@ -1,4 +1,5 @@
 import eventsCenter from '../EventsCenter'
+import ButtonPressHandlers from '../ButtonPressHandlers';
 
 export default class FrogJump extends Phaser.Scene {
 
@@ -26,14 +27,17 @@ export default class FrogJump extends Phaser.Scene {
         this.JumpImg;
         this.startGameDelay;
         this.platforms;
-        this.ground
+        this.ground;
         this.fly;
         this.delayTime;
         this.randomNum = Math.floor(Math.random() * 3);
         this.victory = false;
         this.gameOver = false;
         this.sent = false;
-        this.started = false
+        this.started = false;
+        this.buttonHandlers = new ButtonPressHandlers();
+        this.gamePad = null;
+        // this.gamestarted = false;
 
     }
     preload() {
@@ -70,7 +74,7 @@ export default class FrogJump extends Phaser.Scene {
 
     }
     create() {
-
+        // this.gamestarted = true;
         this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, "sky");
         this.background.setOrigin(0, 0);
         this.background.setScrollFactor(0);
@@ -113,7 +117,10 @@ export default class FrogJump extends Phaser.Scene {
         this.cam.setBounds(0, -500, 1080, 1220);
         this.cameras.main.startFollow(this.playerSprite);
 
-        eventsCenter.on('start_game', () => {this.started = true; eventsCenter.emit('start_timer');})
+        eventsCenter.on('start_game', () => {
+            this.started = true;
+            eventsCenter.emit('start_timer');
+        })
 
         //this.delayedEvent = this.time.delayedCall(this.delayTime, this.loseState, [], this);
         //this.physics.pause();
@@ -121,33 +128,28 @@ export default class FrogJump extends Phaser.Scene {
         //this.startGameDelay = this.time.delayedCall(2000, this.startGame, null, this);
     }
     update() {
-        if(this.started){
+        if (this.started) {
             this.platforms.getChildren().forEach((platform) => {
                 platform.anims.play('idleLeaf', true);
             });
+
 
             this.fly.anims.play('flying', true);
 
             if (this.playerSprite.x >= 1064) this.playerSprite.x = 1064;
             if (this.playerSprite.x <= 16) this.playerSprite.x = 16;
+            
+            this.buttonHandlers.update();
+            if (!this.gamePad ) {
+                this.startGamePad();
+            }
 
-            if (this.cursors.left.isDown) {
-                this.walk(true)
-            } else if (this.cursors.right.isDown) {
-                this.walk(false)
-            }
-            else {
-                this.playerSprite.setVelocityX(0);
-                if (this.playerSprite.body.touching.down) {
-                    this.playerSprite.anims.play('turn');
-                }
-            }
+
             this.fall()
+            this.buttonHandlers.update();
 
-            if (this.cursors.up.isDown && this.playerSprite.body.touching.down) {
-                this.playerSprite.anims.play('jump')
-                this.playerSprite.setVelocityY(-600*1.2);
-            }
+
+
             this.background.tilePositionY = this.cameras.main.scrollY * 0.3;
 
             if (this.gameOver && !this.sent) {
@@ -155,7 +157,45 @@ export default class FrogJump extends Phaser.Scene {
                 eventsCenter.emit('game-end', this.victory)
                 this.sent = true
             }
+            this.updatePlayer();
         }
+    }
+
+    startGamePad() {
+        if (this.input.gamepad.total) {
+            this.gamePad = this.input.gamepad.pad1;
+            this.initGamePad();
+        }
+    }
+
+    initGamePad() {
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.updatePlayer(0));
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => {
+            this.updatePlayer(1);
+        });
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 0, () => this.updatePlayer(2));
+        // this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 1, () => this.updatePlayer(3));
+        this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.updatePlayer(3)});
+
+    }
+
+    updatePlayer(x) {
+        if (x === 0) {
+            this.walk(true)
+        } else if (x === 1) {
+            this.walk(false)
+        } else if (x === 2) {
+            this.playerSprite.setVelocityX(0);
+            if (this.playerSprite.body.touching.down) {
+                this.playerSprite.anims.play('turn');
+            }
+        }
+        if (x === 3 && this.playerSprite.body.touching.down) {
+            this.playerSprite.anims.play('jump')
+            this.playerSprite.setVelocityY(-600 * 1.2);
+        }
+       
+
     }
     generatePlatform(level) {
         this.platforms = this.physics.add.staticGroup();
@@ -167,8 +207,7 @@ export default class FrogJump extends Phaser.Scene {
             this.platforms.create(500, 150, "platform").setScale(0.2).refreshBody();
             this.fly = this.physics.add.sprite(150, -5, 'fly').setScale(0.2, 0.2);
             this.delayTime = 10000;
-        }
-        else if (level === 1) {
+        } else if (level === 1) {
             console.log('reach me 01')
             this.platforms.create(680, 450, 'platform').setScale(0.2).refreshBody();
             this.platforms.create(535, 250, 'platform').setScale(0.2).refreshBody();
@@ -181,8 +220,7 @@ export default class FrogJump extends Phaser.Scene {
             this.platforms.create(850, 75, 'platform').setScale(0.2).refreshBody();
             this.fly = this.physics.add.sprite(900, 40, 'fly').setScale(0.2, 0.2);
             this.delayTime = 13000;
-        }
-        else {
+        } else {
             console.log('reach me 02')
 
             this.platforms.create(40, 450, 'platform').setScale(0.2).refreshBody();
@@ -241,23 +279,48 @@ export default class FrogJump extends Phaser.Scene {
 
         this.anims.create({
             key: 'flying',
-            frames: [
-                { key: 'fly', frame: 0 },
-                { key: 'fly', frame: 1 },
-                { key: 'fly', frame: 2 },
-                { key: 'fly', frame: 3 },
-                { key: 'fly', frame: 4 },
-                { key: 'fly', frame: 5 }
+            frames: [{
+                    key: 'fly',
+                    frame: 0
+                },
+                {
+                    key: 'fly',
+                    frame: 1
+                },
+                {
+                    key: 'fly',
+                    frame: 2
+                },
+                {
+                    key: 'fly',
+                    frame: 3
+                },
+                {
+                    key: 'fly',
+                    frame: 4
+                },
+                {
+                    key: 'fly',
+                    frame: 5
+                }
             ],
             frameRate: 3,
             repeat: -1
         });
         this.anims.create({
             key: 'idleLeaf',
-            frames: [
-                { key: 'platform', frame: 0 },
-                { key: 'platform', frame: 1 },
-                { key: 'platform', frame: 2 }
+            frames: [{
+                    key: 'platform',
+                    frame: 0
+                },
+                {
+                    key: 'platform',
+                    frame: 1
+                },
+                {
+                    key: 'platform',
+                    frame: 2
+                }
             ],
             frameRate: 3,
             repeat: -1
@@ -265,18 +328,27 @@ export default class FrogJump extends Phaser.Scene {
 
         this.anims.create({
             key: 'turn',
-            frames: [
-                { key: 'frogs', frame: 3 }
-            ],
+            frames: [{
+                key: 'frogs',
+                frame: 3
+            }],
             frameRate: -1,
         });
 
         this.anims.create({
             key: 'walk',
-            frames: [
-                { key: 'frogs', frame: 0 },
-                { key: 'frogs', frame: 1 },
-                { key: 'frogs', frame: 2 }
+            frames: [{
+                    key: 'frogs',
+                    frame: 0
+                },
+                {
+                    key: 'frogs',
+                    frame: 1
+                },
+                {
+                    key: 'frogs',
+                    frame: 2
+                }
             ],
             frameRate: 12,
             repeat: -1
@@ -284,17 +356,20 @@ export default class FrogJump extends Phaser.Scene {
 
         this.anims.create({
             key: 'fall',
-            frames: [
-                { key: 'jump1' }
-            ],
+            frames: [{
+                key: 'jump1'
+            }],
             repeat: -1
         });
 
         this.anims.create({
             key: 'jump',
-            frames: [
-                { key: 'jump1' },
-                { key: 'jump2' }
+            frames: [{
+                    key: 'jump1'
+                },
+                {
+                    key: 'jump2'
+                }
             ],
             frameRate: 12,
             repeat: 0
@@ -321,7 +396,7 @@ export default class FrogJump extends Phaser.Scene {
 
 
     walk(left_down) {
-        let v = 160*1.2
+        let v = 160 * 1.2
 
         if (left_down) {
             v *= -1
