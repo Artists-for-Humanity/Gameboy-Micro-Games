@@ -117,10 +117,11 @@ export default class HideFromCat extends Phaser.Scene {
         });
 
         //collision detection between mouse and cheese
-        this.physics.add.collider(this.mouse, this.cheese, () => {
+        this.physics.add.overlap(this.mouse, this.cheese, () => {
             this.touched = true;
             this.cheese.y = 620;
         });
+
 
         eventsCenter.on('start_game', () => { this.started = true; eventsCenter.emit('stop_timer') })
 
@@ -144,12 +145,13 @@ export default class HideFromCat extends Phaser.Scene {
                 this.buttonHandlers.update();
                 if (!this.gamePad) {
                     this.startGamePad();
-                    
                 }
+                console.log(this.mouse.body.velocity)
                 this.startSweeping();
                 this.updatePlayer();
                 if (this.touched) {
                     this.arrowTimer += delta;
+                    console.log(this.cheese.x)
                     if (this.mouse.flipX) this.cheese.x = this.mouse.x + 10;
                     if (!this.mouse.flipX) this.cheese.x = this.mouse.x - 10;
                     if (this.mouse.x <= 360) this.win();
@@ -351,6 +353,8 @@ export default class HideFromCat extends Phaser.Scene {
             this.displayDeadText();
             this.gameOver = true;
             this.mouse.setVelocityX(0);
+            this.physics.pause();
+            this.anims.pauseAll();
         }
     }
 
@@ -360,8 +364,8 @@ export default class HideFromCat extends Phaser.Scene {
             this.displayWinText();
             this.gameOver = true;
             this.victory = true;
-            this.mouse.setVelocityX(0);
-
+            this.physics.pause();
+            this.anims.pauseAll();
         }
     }
 
