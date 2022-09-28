@@ -22,7 +22,7 @@ import MainMenu from "./MainMenu";
 import Timer from "./Timer";
 import MarcyMunch from "./8Bitties/MarcyMunch";
 import CircleJump from "./TeamInflation/CircleJump";
-
+import HiScoreScene from "./Hi-Score";
 // Set configuration for phaser game instance
 const config = {
   type: Phaser.AUTO,
@@ -44,6 +44,7 @@ const config = {
 
   scene: [
     MainMenu,
+    HiScoreScene,
     CutScreen,
     Timer,
     MarcyMunch,

@@ -1,5 +1,5 @@
 import eventsCenter from "./EventsCenter";
-
+import HiScoreScene from "./Hi-Score";
 const X = 1080;
 const Y = 720;
 
@@ -132,9 +132,11 @@ export default class MainMenu extends Phaser.Scene {
   buttonEvents() {
     switch (this.fingerPos) {
       case 0: // Play
-        this.playGame();
+        // this.playGame();
+        this.scene.start('GameOver');
         break;
       case 1: // Scores
+      this.scene.start('HiScoreScene');
       default:
         break;
     }

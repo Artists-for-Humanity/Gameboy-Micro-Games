@@ -125,7 +125,16 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
     this.val = 0;
 
   }
-
-}
+  alphabet(x, y){
+      this.g  = this.add.sprite(x ,y , 'alphaSheet').setFrame(6);
+      this.a  = this.add.sprite(x ,y , 'alphaSheet').setFrame(0);
+      this.m  = this.add.sprite(x ,y , 'alphaSheet').setFrame(12);
+      this.e  = this.add.sprite(x ,y , 'alphaSheet').setFrame(4);
+      this.o = this.add.sprite(x,y, 'alphaSheet').setFrame(14);
+      this.v = this.add.sprite(x,y, 'alphaSheet').setFrame(21);
+      this.e = this.add.sprite(x,y, 'alphaSheet').setFrame(4);
+      this.r = this.add.sprite(x,y, 'alphaSheet').setFrame(17);
+    }
+  }
 
 export default GlobalState;

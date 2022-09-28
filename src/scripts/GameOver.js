@@ -52,42 +52,39 @@ export default class GameOver extends Phaser.Scene {
       "go_bg",
       new URL("globalAssets/go_screen.png", import.meta.url).href
     );
+    this.load.spritesheet(
+      "alphaSheet",
+      new URL("../scripts/Team Notateam/assets/alphaSheet.png", import.meta.url)
+        .href
+    ,
+      {
+        frameHeight: 236 ,
+        frameWidth: 209,
+      });
   }
 
   create() {
     this.arrowButtons = this.input.keyboard.createCursorKeys();
-    this.add.image(X / 2, Y / 2, "go_bg");
+    // this.add.image(X / 2, Y / 2, "go_bg");
+    this.gameOverText();
+
     this.up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
     this.down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
     this.action = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
-    this.textObj2 = this.add.text(
-      this.game.config.width - 760,
-      this.game.config.height - 400,
-      "ENTER YOUR INITIALS",
-      {
-        fontSize: "32px",
-        fontStyle: "bold",
-        align: "center",
-      }
-    );
-    this.HighScoreText = this.add.text(
-      this.game.config.width - 590,
-      this.game.config.height - 325,
-      this.letters[this.active_letter],
-      {
-        fontSize: "32px",
-        fontStyle: "bold",
-        align: "center",
-      }
-    );
+    this.textObj2 = this.add.text(480, 400, "ENTER YOUR INITIALS", {
+      fontSize: "32px",
+      fontStyle: "bold",
+      align: "center",
+    });
+    this.HighScoreText = this.add.sprite(660, 470, "alphaSheet").setScale(.3);
     // this.buttonHandlers.addKey(this.arrowButtons.down, () => this.onDownInput());
     // this.buttonHandlers.addKey(this.arrowButtons.up, () => this.onUpInput());
     // this.buttonHandlers.addKey(this.confirmKey, () => this.onConfirmInput());
   }
 
-  update()  {
+  update() {
     if (Phaser.Input.Keyboard.JustDown(this.up)) {
       this.onUpInput();
     }
@@ -113,11 +110,11 @@ export default class GameOver extends Phaser.Scene {
   }
 
   updateText() {
-    const initials = this.initials.join("") + this.letters[this.active_letter];
+    // const initials = this.initials.join("") + this.letters[this.active_letter];
     if (this.HighScoreText) {
-      this.HighScoreText.setText(`${initials}`);
+      this.HighScoreText.setFrame(this.active_letter);
     }
-  }
+  } 
 
   onUpInput() {
     if (this.active_letter < this.letters.length - 1) {
@@ -136,4 +133,8 @@ export default class GameOver extends Phaser.Scene {
   onConfirmInput() {
     this.initials.push(this.letters[this.active_letter]);
   }
+  gameOverText(){
+    //tba//
+  }
+
 }
