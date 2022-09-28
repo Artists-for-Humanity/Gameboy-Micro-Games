@@ -50,8 +50,8 @@ export default class TrashSort extends Phaser.Scene {
       new URL("./assets1/pizza-pixel.png", import.meta.url).href
     );
     this.load.image(
-      "DO3_plastic_bag",
-      new URL("./assets1/plastic-bag-pixel.png", import.meta.url).href
+      "DO3_can",
+      new URL("./assets1/can.png", import.meta.url).href
     );
     this.load.image(
       "DO3_soda_can",
@@ -74,7 +74,7 @@ export default class TrashSort extends Phaser.Scene {
 
     this.trashBinMap = {
       DO3_chicken_leg: "DO3_trash_bin",
-      DO3_plastic_bag: "DO3_recycle_bin",
+      DO3_can: "DO3_recycle_bin",
       DO3_soda_can: "DO3_recycle_bin",
       DO3_pizza: "DO3_trash_bin",
     };
