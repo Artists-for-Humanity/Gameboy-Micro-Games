@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import eventsCenter from '../EventsCenter'
+import ButtonPressHandlers from '../ButtonPressHandlers';
 
 const SCALE_MULTIPLIER = 4.5
 const METER_WIDTH = 108
@@ -64,6 +65,9 @@ export default class SockToss extends Phaser.Scene {
         this.gameOver = false
         this.sent = false
         this.timerStopped = false
+
+        this.buttonHandlers = new ButtonPressHandlers();
+        this.gamePad = null
     }
 
     preload() {
@@ -156,10 +160,15 @@ export default class SockToss extends Phaser.Scene {
         // this nested if-statement plays the intro "TOSS" text
         // Started will be set to true at the end
         if (this.started) {
+
+            this.buttonHandlers.update();
+            if (!this.gamePad) this.startGamePad();
+
             this.timer++;
-            if (this.cursors.space.isDown) {
-                this.thrown = true;
-            }
+
+            // if (this.cursors.space.isDown) {
+            //     this.thrown = true;
+            // }
             // Game runtime code
             if (!this.thrown) {
                 this.throwncon()
@@ -188,6 +197,20 @@ export default class SockToss extends Phaser.Scene {
 
         }
     }
+
+    startGamePad() {
+        if (this.input.gamepad.total) {
+            this.gamePad = this.input.gamepad.pad1;
+            this.initGamePad();
+            console.log(this.gamePad);
+        }
+    }
+
+    initGamePad() {
+	    this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.thrown = true});
+    }
+
+    
     maskdraw() {
         this.mmask.clear();
         this.mmask.fillRect(127 * SCALE_MULTIPLIER, 142 * SCALE_MULTIPLIER, (this.meterX + 1) * SCALE_MULTIPLIER, 14 * SCALE_MULTIPLIER);
