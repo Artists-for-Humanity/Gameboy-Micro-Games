@@ -146,12 +146,10 @@ export default class HideFromCat extends Phaser.Scene {
                 if (!this.gamePad) {
                     this.startGamePad();
                 }
-                console.log(this.mouse.body.velocity)
                 this.startSweeping();
                 this.updatePlayer();
                 if (this.touched) {
                     this.arrowTimer += delta;
-                    console.log(this.cheese.x)
                     if (this.mouse.flipX) this.cheese.x = this.mouse.x + 10;
                     if (!this.mouse.flipX) this.cheese.x = this.mouse.x - 10;
                     if (this.mouse.x <= 360) this.win();

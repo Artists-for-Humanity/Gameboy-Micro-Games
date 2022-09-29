@@ -1,4 +1,5 @@
 import eventsCenter from '../EventsCenter';
+import ButtonPressHandlers from '../ButtonPressHandlers';
 
 export default class CircleJump extends Phaser.Scene {
   // Game Class Constructor
@@ -15,6 +16,8 @@ export default class CircleJump extends Phaser.Scene {
     this.victory = false;
     this.gameOver = false;
     this.sent = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null
 
   }
 
@@ -27,15 +30,9 @@ export default class CircleJump extends Phaser.Scene {
       { frameWidth: 19, frameHeight: 19 });
     this.load.spritesheet("TI_4diamonds", new URL("./assets/CircleJump/diamond.png", import.meta.url).href,
       { frameWidth: 16, frameHeight: 16 });
-
-    console.log('rechme 00')
   }
 
   create() {
-    console.log('rechme 01')
-
-
-
     this.graphics = this.add.graphics({
       lineStyle: {
         width: 4,
@@ -93,21 +90,17 @@ export default class CircleJump extends Phaser.Scene {
   }
 
   update() {
-
     if (this.started) {
-
-
       this.hole.anims.play('TI_4spin', true);
 
       this.groupB.getChildren().forEach((child) => {
         child.body.setCircle(6, 5, 5);
         child.anims.play('TI_4pulse', true);
-
       });
+
       this.groupS.getChildren().forEach((child) => {
         child.body.setCircle(6, 5, 5);
         child.anims.play('TI_4pulse', true);
-
       });
 
       Phaser.Actions.RotateAroundDistance(this.groupS.getChildren(), this.points, 0.02, 200)
@@ -116,11 +109,14 @@ export default class CircleJump extends Phaser.Scene {
       if (this.cursors.up.isDown) {
         this.player.setVelocityY(-200);
       }
+
+      this.buttonHandlers.update();
+      if (!this.gamePad) {
+          this.startGamePad();
+      }
+
       Phaser.Actions.Call(this.groupB.getChildren(), child => {
       });
-
-
-
     }
 
     if (this.gameOver && !this.sent) {
@@ -128,8 +124,21 @@ export default class CircleJump extends Phaser.Scene {
       eventsCenter.emit("game-end", this.victory);
       this.sent = true
     }
+  }
+   startGamePad() {
+        if (this.input.gamepad.total) {
+            this.gamePad = this.input.gamepad.pad1;
+            this.initGamePad();
+            console.log(this.gamePad);
+        }
+    }
 
+  initGamePad() {
+    this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.updatePlayer()});
+  }
 
+  updatePlayer() {
+    this.player.setVelocityY(-200);
   }
 
   makeCircle(texture, radius, points, pointGroup) {
