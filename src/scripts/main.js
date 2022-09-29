@@ -1,5 +1,6 @@
 // Add imports for phaser library, scenes, and plugins
 import Phaser from "phaser";
+import phaserJuice from "./phaser3-juice-plugin/dist/phaserJuice.min.js";
 import GlobalState from "./GlobalState";
 import GameOver from "./GameOver";
 import Emeowgency from "./8Bitties/Emeowgency";
@@ -25,6 +26,8 @@ import MarcyMunch from "./8Bitties/MarcyMunch";
 import CircleJump from "./TeamInflation/CircleJump";
 
 // Set configuration for phaser game instance
+const juice = new phaserJuice(this);
+
 const config = {
   type: Phaser.AUTO,
   width: 1080,
@@ -64,7 +67,7 @@ const config = {
     HideFromCat,
     HitTheButton,
     ColorLab,
-    GameOver
+    GameOver,
   ],
   audio: {
     disableWebAudio: true,
@@ -83,4 +86,3 @@ const config = {
 
 // Initialize game instance
 new Phaser.Game(config);
-

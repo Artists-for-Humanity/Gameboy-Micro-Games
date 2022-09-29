@@ -30,11 +30,9 @@ export default class CircleJump extends Phaser.Scene {
     this.load.spritesheet("TI_4diamonds", new URL("./assets/CircleJump/diamond.png", import.meta.url).href,
       { frameWidth: 16, frameHeight: 16 });
 
-    console.log('rechme 00')
   }
 
   create() {
-    console.log('rechme 01')
 
 
 
@@ -91,7 +89,7 @@ export default class CircleJump extends Phaser.Scene {
     this.createAnimation();
 
     eventsCenter.on('start_game', () => { this.started = true; eventsCenter.emit('start_timer'); this.startGame(); })
-    eventsCenter.on('end_circle', () => { this.bandaid = true})
+    eventsCenter.on('end_circle', () => { this.bandaid = true })
 
   }
 

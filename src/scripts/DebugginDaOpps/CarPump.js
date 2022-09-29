@@ -12,30 +12,26 @@ export default class CarPump extends Phaser.Scene {
     // Game Object Declarations
     this.gameStarted = false;
     this.gameOver = false;
+    this.gameState = true;
     this.victory = false;
     this.sent = false;
     this.started = false;
     this.lever;
-    this.carpumpTimer = 0;
     this.car25;
     this.car50;
     this.car75;
     this.car100;
+    this.carpumpTimer = 0;
     this.playerPumps = 0;
     this.downInt = 0;
-    this.car1 = false;
-    this.car2 = false;
-    this.car3 = false;
-    this.car4 = false;
     this.inflateInt = 0;
     this.endgameTimer = 0;
+    this.downWasPressed = true;
+    this.upWasPressed = true;
+    this.pumpToWin = 20;
   }
 
   preload() {
-    this.load.image(
-      "DO2_startScreen",
-      new URL("./assets/startScreen.png", import.meta.url).href
-    );
     this.load.image(
       "DO2_pumpgame_bg",
       new URL("./assets/pumpgame_background.png", import.meta.url).href
@@ -56,6 +52,10 @@ export default class CarPump extends Phaser.Scene {
     this.load.image(
       "DO2_arrow_down",
       new URL("./assets/arrow_down.png", import.meta.url).href
+    );
+    this.load.image(
+      "DO2_car",
+      new URL("./assets/car.png", import.meta.url).href
     );
     this.load.spritesheet(
       "DO2_car25",
@@ -84,6 +84,7 @@ export default class CarPump extends Phaser.Scene {
   create() {
     this.add.image(1080 / 2, 720 / 2, "DO2_pumpgame_bg");
     this.lever = this.physics.add.sprite(955, 480, "DO2_lever");
+    this.car = this.add.image(540, 350, "DO2_car");
     this.car25 = this.physics.add.sprite(540, 350, "DO2_car25");
     this.car50 = this.physics.add.sprite(540, 350, "DO2_car50");
     this.car75 = this.physics.add.sprite(540, 350, "DO2_car75");
@@ -100,22 +101,21 @@ export default class CarPump extends Phaser.Scene {
       this.game.config.height / 2,
       "DO2_gameOverScreen"
     );
-    this.tempBg = this.add.image(1080 / 2, 720 / 2, "DO2_startScreen");
 
     this.up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
     this.down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
 
-
+    this.car25.visible = false;
     this.car50.visible = false;
     this.car75.visible = false;
     this.car100.visible = false;
     this.gameOverScreen.visible = false;
-    this.timedEvent = this.time.delayedCall(1000, this.onEvent, [], this);
     this.createAnimations();
-    eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer') })
-
+    eventsCenter.on("start_game", () => {
+      this.started = true;
+      this.globalState.timerMessage("start_timer");
+    });
   }
-
 
   createAnimations() {
     this.anims.create({
@@ -207,7 +207,6 @@ export default class CarPump extends Phaser.Scene {
     if (this.gameState) {
       this.clickTimer += delta;
       this.timerCountdown(time);
-      if (this.clickTimer > 100) this.clickAvailable = true;
       if (Phaser.Input.Keyboard.JustDown(this.up) && this.downWasPressed) {
         this.downWasPressed = false;
         this.upWasPressed = true;
@@ -216,29 +215,32 @@ export default class CarPump extends Phaser.Scene {
         this.upArrow.setVisible(false);
       } else if (
         Phaser.Input.Keyboard.JustDown(this.down) &&
-        this.upWasPressed &&
-        this.clickAvailable
+        this.upWasPressed
       ) {
         this.downWasPressed = true;
         this.upWasPressed = false;
         this.time.delayedCall(100, this.updatePump, [], this);
-        this.clickAvailable = false;
         this.clickTimer = 0;
+      }
+      if (this.gameOver && !this.sent) {
+        eventsCenter.emit("stop_timer");
+        eventsCenter.emit("game-end", this.victory);
+        this.sent = true;
       }
     }
   }
 
   timerCountdown(time) {
-    if (time / 1000 > 10 && this.playerPumps < this.pumpToWin) {
+    if (time / 1000 > 15 && this.playerPumps < this.pumpToWin) {
       this.gameState = false;
       this.gameOver = true;
       this.gameOverScreen.visible = true;
     }
 
-    if (time / 1000 > 10 && this.playerPumps >= this.pumpToWin) {
+    if (this.playerPumps >= this.pumpToWin) {
+      this.victory = true;
       this.gameState = false;
       this.gameOver = true;
-      this.victory = true;
       this.endText = this.add.text(300, 360, "You Won!");
       this.endText.setStyle({
         fontSize: "100px",
@@ -257,6 +259,7 @@ export default class CarPump extends Phaser.Scene {
     if (this.playerPumps === 5) {
       this.car25.visible = true;
       this.car25.anims.play("DO2_car_inflate25%", true);
+      this.car.visible = false;
     }
     if (this.playerPumps === 10) {
       this.car50.visible = true;
@@ -274,8 +277,4 @@ export default class CarPump extends Phaser.Scene {
       this.car75.visible = false;
     }
   }
-  onEvent() {
-    this.tempBg.visible = false;
-  }
-
 }
