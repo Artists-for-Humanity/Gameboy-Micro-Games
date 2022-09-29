@@ -1,4 +1,5 @@
 import eventsCenter from "../EventsCenter";
+import ButtonPressHandlers from '../ButtonPressHandlers';
 
 export default class BetweenSpace extends Phaser.Scene {
   constructor() {
@@ -13,6 +14,9 @@ export default class BetweenSpace extends Phaser.Scene {
     this.sent = false;
     this.started = false;
     this.randomNum = Math.floor(Math.random() * 71);
+
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null
   }
 
   preload() {
@@ -107,20 +111,11 @@ export default class BetweenSpace extends Phaser.Scene {
 
   update() {
     if (this.started) {
-
+        
       if (this.lose === false) {
-        if (this.cursors.up.isDown) {
-          this.player.y -= 5;
-        }
-        if (this.cursors.down.isDown) {
-          this.player.y += 5;
-        }
-        if (this.cursors.left.isDown) {
-          this.player.x -= 5;
-        }
-        if (this.cursors.right.isDown) {
-          this.player.x += 5;
-        }
+
+        this.buttonHandlers.update();
+        if (!this.gamePad) this.startGamePad();
 
         this.asteroidMovements(this.asteroidg1);
         this.asteroidMovements(this.asteroidg2);
@@ -141,6 +136,45 @@ export default class BetweenSpace extends Phaser.Scene {
       eventsCenter.emit('stop_timer');
       eventsCenter.emit("game-end", this.victory);
       this.sent = true;
+    }
+  }
+
+  startGamePad() {
+    if (this.input.gamepad.total) {
+        this.gamePad = this.input.gamepad.pad1;
+        this.initGamePad();
+        console.log(this.gamePad);
+    }
+  }
+
+  initGamePad() {
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.userInput(1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.userInput(-1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 1, () => this.userInput(-2));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === -1, () => this.userInput(2));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 0, () => this.userInput(3));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 0, () => this.userInput(4));
+
+  }
+
+  userInput(x) {
+    if (x === 2) {
+      this.player.setVelocityY(-350);
+    }
+    if (x === -2) {
+      this.player.setVelocityY(350);
+    }
+    if (x === 1) {
+      this.player.setVelocityX(-350)
+    }
+    if (x === -1) {
+      this.player.setVelocityX(350)
+    }
+    if (x === 3) {
+      this.player.setVelocityX(0)
+    }
+    if (x === 4) {
+      this.player.setVelocityY(0)
     }
   }
 
