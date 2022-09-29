@@ -1,5 +1,5 @@
 import eventsCenter from "../EventsCenter";
-
+import ButtonPressHandlers from '../ButtonPressHandlers';
 export default class CarPump extends Phaser.Scene {
   // Game Class Constructor
   constructor() {
@@ -29,6 +29,8 @@ export default class CarPump extends Phaser.Scene {
     this.car4 = false;
     this.inflateInt = 0;
     this.endgameTimer = 0;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null
   }
 
   preload() {
@@ -115,7 +117,9 @@ export default class CarPump extends Phaser.Scene {
 
   update() {
     if (this.started) {
-      this.upAndDown();
+      this.buttonHandlers.update();
+      if (!this.gamePad) this.startGamePad();
+      // this.upAndDown();
       this.pumpToWin();
 
       if (this.gameOver && !this.sent) {
@@ -125,6 +129,18 @@ export default class CarPump extends Phaser.Scene {
       }
 
     }
+  }
+  startGamePad() {
+    if (this.input.gamepad.total) {
+        this.gamePad = this.input.gamepad.pad1;
+        this.initGamePad();
+        console.log(this.gamePad);
+    }
+  }
+
+  initGamePad() {
+      this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 1, () => this.upAndDown(0));
+      this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === -1, () => this.upAndDown(1));
   }
 
   onEvent() {
@@ -171,13 +187,13 @@ export default class CarPump extends Phaser.Scene {
       });
     }
   }
-  upAndDown() {
-    if (Phaser.Input.Keyboard.JustDown(this.up)) {
+  upAndDown(x) {
+    if (x === 0 || Phaser.Input.Keyboard.JustDown(this.up)) {
       this.upArrow.visible = true;
       this.downArrow.visible = false;
       this.lever.anims.play("DO2_lever_up");
     }
-    if (Phaser.Input.Keyboard.JustDown(this.down)) {
+    if (x === 1 || Phaser.Input.Keyboard.JustDown(this.down)) {
       this.upArrow.visible = false;
       this.downArrow.visible = true;
       this.lever.anims.play("DO2_lever_down");
