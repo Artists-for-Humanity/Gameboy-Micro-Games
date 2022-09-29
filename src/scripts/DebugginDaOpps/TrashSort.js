@@ -1,4 +1,6 @@
 import eventsCenter from '../EventsCenter'
+import ButtonPressHandlers from '../ButtonPressHandlers';
+
 
 
 export default class TrashSort extends Phaser.Scene {
@@ -21,6 +23,8 @@ export default class TrashSort extends Phaser.Scene {
     this.gameOver = false;
     this.sent = false;
     this.started = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null
   }
 
   preload() {
@@ -109,6 +113,8 @@ export default class TrashSort extends Phaser.Scene {
 
   update() {
     if (this.started) {
+      this.buttonHandlers.update();
+      if (!this.gamePad) this.startGamePad();
 
       if (this.playerScore === this.triesToWin) {
         this.currTrashItem.visible = false;
@@ -157,6 +163,22 @@ export default class TrashSort extends Phaser.Scene {
 
     }
   }
+  startGamePad() {
+    if (this.input.gamepad.total) {
+        this.gamePad = this.input.gamepad.pad1;
+        this.initGamePad();
+        console.log(this.gamePad);
+    }
+}
+
+  initGamePad() {
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.moveTrash(-1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.moveTrash(1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 0, () => this.moveTrash(0));
+
+
+
+}
 
   timerCountdown(time) {
     if (time / 1000 > 10) {
@@ -175,7 +197,7 @@ export default class TrashSort extends Phaser.Scene {
     this.addTrashCollider(this.recycleBin);
     this.addTrashCollider(this.trashBin);
     this.currTrashItem.y += 5;
-    this.moveTrash();
+    // this.moveTrash();
   }
 
   // Spawn new trash onto the screen, replace the trash image of the currentTrashItem, and reset the y coordinate.
@@ -189,12 +211,17 @@ export default class TrashSort extends Phaser.Scene {
       .setScale(0.12, 0.12);
   }
 
-  moveTrash() {
-    if (this.cursors.left.isDown) {
-      this.currTrashItem.x -= 3;
-    }
-    if (this.cursors.right.isDown) {
-      this.currTrashItem.x += 3;
+  moveTrash(x) {
+    if (!this.gameOver){
+      if (x === -1) {
+        this.currTrashItem.setVelocityX(-300);
+      }
+      if (x === 1) {
+        this.currTrashItem.setVelocityX(300);
+      }
+      if(x === 0) {
+        this.currTrashItem.setVelocityX(0)
+      }
     }
   }
 
