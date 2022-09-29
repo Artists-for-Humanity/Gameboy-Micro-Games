@@ -125,7 +125,7 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
 
   timerMessage(message) {
     eventsCenter.emit(message);
-    console.log("emission sent");
+    // console.log("emission sent");
   }
 }
 
