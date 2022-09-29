@@ -1,4 +1,6 @@
 import eventsCenter from "../EventsCenter";
+import ButtonPressHandlers from '../ButtonPressHandlers';
+
 export default class TugOWar extends Phaser.Scene {
   // Game Class Constructor
   constructor() {
@@ -37,6 +39,8 @@ export default class TugOWar extends Phaser.Scene {
     this.playerRopePile;
     this.npcRopePile;
     this.started
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null
   }
   preload() {
     this.load.image(
@@ -137,10 +141,12 @@ export default class TugOWar extends Phaser.Scene {
     this.endgameCheck();
 
     if (this.started) {
+      this.buttonHandlers.update();
+      if (!this.gamePad) this.startGamePad(); 
       this.ropePile();
       //this.scalePull();
       this.startDashMovement();
-      this.playerPull();
+      // this.playerPull();
     }
     if (this.gameOver && !this.sent) {
       eventsCenter.emit("game-end", this.victory);
@@ -148,6 +154,19 @@ export default class TugOWar extends Phaser.Scene {
     }
 
   }
+
+  startGamePad() {
+      if (this.input.gamepad.total) {
+          this.gamePad = this.input.gamepad.pad1;
+          this.initGamePad();
+          console.log(this.gamePad);
+      }
+  }
+
+  initGamePad() {
+    this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.playerPull()});
+  }
+
   scalePull() {
     if (this.pullScale <= 1) {
       this.pullTimer += 1;
@@ -177,7 +196,7 @@ export default class TugOWar extends Phaser.Scene {
   playerPull() {
     if ((this.gameOver === false) & this.gameStarted) {
       if (this.dash.y > 140) {
-        if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
+        // if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
           this.dash.y -= 48 / 1.25;
           this.rope.x -= 40 / 1.25;
           if (this.player.x >= 270) {
@@ -187,7 +206,7 @@ export default class TugOWar extends Phaser.Scene {
             this.npc.x -= 40 / 1.25;
           }
         }
-      }
+      // }
     }
   }
   gameStart() {

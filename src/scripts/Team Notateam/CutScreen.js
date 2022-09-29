@@ -8,6 +8,7 @@ const L_START = -L_END
 const R_START = 5 * L_END
 
 const listOfGames = [
+    "TugOWar",
     "CarPump",
     "SockToss",
     "MarcyMunch",
