@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import eventsCenter from "../EventsCenter";
+import ButtonPressHandlers from '../ButtonPressHandlers';
 
 
 export default class Emeowgency extends Phaser.Scene {
@@ -40,7 +41,8 @@ export default class Emeowgency extends Phaser.Scene {
     this.gOtimer = 0;
     this.fallen = false;
     this.started = false
-
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null
   }
 
   preload() {
@@ -135,6 +137,8 @@ export default class Emeowgency extends Phaser.Scene {
 
   update() {
     if(this.started){
+      this.buttonHandlers.update();
+      if (!this.gamePad) this.startGamePad();
       this.catch.setVisible(false)
       this.gameOverTimer();
       this.playSafe();
@@ -162,6 +166,24 @@ export default class Emeowgency extends Phaser.Scene {
 
     }
   }
+
+   startGamePad() {
+      if (this.input.gamepad.total) {
+          this.gamePad = this.input.gamepad.pad1;
+          this.initGamePad();
+          console.log(this.gamePad);
+      }
+    }
+
+    initGamePad() {
+      this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.moveBlanket(-1));
+      this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.moveBlanket(1));
+      this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 1, () => this.moveBlanket(-2));
+      this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === -1, () => this.moveBlanket(2));
+      this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 0, () => this.moveBlanket(0));
+      this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 0, () => this.moveBlanket(3));
+    }
+
 
   //Catch!, the image in the beggining
   scaleCatch() {
@@ -265,19 +287,21 @@ export default class Emeowgency extends Phaser.Scene {
   }
 
   //moves the blanket with arrow keys
-  moveBlanket() {
-    if (this.up.isDown) {
-      this.blanket.y -= 5;
+  moveBlanket(x) {
+    if (x === 2) {
+      this.blanket.setVelocityY(-350);
     }
-    if (this.down.isDown) {
-      this.blanket.y += 5;
+    if (x === -2) {
+      this.blanket.setVelocityY(350);
     }
-    if (this.left.isDown) {
-      this.blanket.x -= 5;
+    if (x === -1) {
+      this.blanket.setVelocityX(-350);
     }
-    if (this.right.isDown) {
-      this.blanket.x += 5;
-    }
+    if (x === 1) {
+      this.blanket.setVelocityX(350);
+    } 
+    if (x === 0) this.blanket.setVelocityX(0);
+    if (x === 3) this.blanket.setVelocityY(0);
   }
 
   //creates the image for safe! on cene and scales it up gradually
@@ -390,6 +414,7 @@ export default class Emeowgency extends Phaser.Scene {
     this.catSafe = true;
     this.victory = true;
     this.gOtimerToggle = true;
+    this.physics.pause();
   }
   youLose() {
     this.catFail = true;

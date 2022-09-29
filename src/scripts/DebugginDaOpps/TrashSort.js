@@ -227,7 +227,7 @@ export default class TrashSort extends Phaser.Scene {
 
   addTrashCollider(trashBinType) {
     const destination = this.trashBinMap[this.currTrashItem.texture.key];
-    this.physics.add.collider(this.currTrashItem, trashBinType, (a, b) => {
+    this.physics.add.overlap(this.currTrashItem, trashBinType, (a, b) => {
       if (destination !== trashBinType.texture.key) {
         this.gameOver = true;
         this.gameOverScreen.visible = true;
