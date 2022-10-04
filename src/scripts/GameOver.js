@@ -65,9 +65,7 @@ export default class GameOver extends Phaser.Scene {
 
   create() {
     this.arrowButtons = this.input.keyboard.createCursorKeys();
-    // this.add.image(X / 2, Y / 2, "go_bg");
-    this.gameOverText();
-
+    this.add.image(X / 2, Y / 2, "go_bg");
     this.up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
     this.down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
     this.action = this.input.keyboard.addKey(
@@ -98,7 +96,7 @@ export default class GameOver extends Phaser.Scene {
     }
 
     if (this.initials.length === 3) {
-      gameDataBase.setScore(this.initials.join(""), this.globalState.score);
+      gameDataBase.setScore(this.initials.join(''), this.globalState.score);
       this.globalState.resetScore();
       this.initials = [];
       location.reload();
@@ -131,10 +129,7 @@ export default class GameOver extends Phaser.Scene {
     }
   }
   onConfirmInput() {
-    this.initials.push(this.letters[this.active_letter]);
-  }
-  gameOverText(){
-    //tba//
+    this.initials.push(this.active_letter);
   }
 
 }
