@@ -120,24 +120,27 @@ export default class FlySwat extends Phaser.Scene {
     this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 0, () => this.moveSwatter(4));
     this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 0, () => this.moveSwatter(3));
     
-    this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.swat()});
+    this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => {this.swat()});
 
   }
 
   swat() {
-    this.swatter.anims.play("8B5_down", true);
-    this.swung = true;
-    if (
-      Phaser.Geom.Intersects.CircleToRectangle(
-        this.fly.body,
-        this.swatter.body
-      )
-    ) {
-      this.killFly();
-      this.victory = true;
-      setTimeout(()=>{
-        this.gameOver = true;
-      }, 1500)
+    if (!this.swung) {
+      this.swatter.anims.play("8B5_down", true);
+      this.swung = true;
+      if (
+        Phaser.Geom.Intersects.CircleToRectangle(
+          this.fly.body,
+          this.swatter.body
+        )
+      ) {
+        this.killFly();
+        this.victory = true;
+        setTimeout(()=>{
+          this.gameOver = true;
+        }, 1500)
+      }
+      this.time.delayedCall(500, () => {this.swung = false})
     }
   }
 
@@ -238,7 +241,9 @@ export default class FlySwat extends Phaser.Scene {
       }
       if (this.swingCD <= 0) {
         this.swatter.anims.play("8B5_up", true);
-        this.swung = false;
+        this.swatter.on('animationcomplete', () => {
+          this.swung = false;
+        });
         this.swingCD = 100;
       }
     }
@@ -255,7 +260,7 @@ export default class FlySwat extends Phaser.Scene {
     this.down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
   }
   moveSwatter(x) {
-    if (this.swung === false && this.swatter) {
+    if (this.swatter) {
       if (x === 2) {
         this.swatter.setVelocityY(-400)
       }

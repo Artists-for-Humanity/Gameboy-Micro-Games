@@ -1,6 +1,7 @@
 const X = 1080
 const Y = 720
 import eventsCenter from '../EventsCenter'
+import ButtonPressHandlers from '../ButtonPressHandlers';
 
 export default class Lowest extends Phaser.Scene {
     constructor() {
@@ -39,6 +40,8 @@ export default class Lowest extends Phaser.Scene {
         this.victory = false;
         this.sent = false;
         this.started = false
+        this.buttonHandlers = new ButtonPressHandlers();
+        this.gamePad = null
     }
     preload() {
         this.load.image("TI_1background", new URL("./assets/Lowest/NGbackground.png",
@@ -134,33 +137,35 @@ export default class Lowest extends Phaser.Scene {
     
         if(this.started){
             if (!this.gameOver) {
+                this.buttonHandlers.update();
+                if (!this.gamePad) this.startGamePad();
                 // each if-statement passes the direction pressed to movePointer()
-                if (Phaser.Input.Keyboard.JustDown(this.left)) {
-                    this.movePointer("l")
-                }
-                if (Phaser.Input.Keyboard.JustDown(this.right)) {
-                    this.movePointer("r")
-                }
-                if (Phaser.Input.Keyboard.JustDown(this.up)) {
-                    this.movePointer("u")
-                }
-                if (Phaser.Input.Keyboard.JustDown(this.down)) {
-                    this.movePointer("d")
-                }  
+                // if (Phaser.Input.Keyboard.JustDown(this.left)) {
+                //     this.movePointer("l")
+                // }
+                // if (Phaser.Input.Keyboard.JustDown(this.right)) {
+                //     this.movePointer("r")
+                // }
+                // if (Phaser.Input.Keyboard.JustDown(this.up)) {
+                //     this.movePointer("u")
+                // }
+                // if (Phaser.Input.Keyboard.JustDown(this.down)) {
+                //     this.movePointer("d")
+                // }  
                 // ON SELECTING CHOICE
-                if (Phaser.Input.Keyboard.JustDown(this.space)) {
-                    this.box[this.selected].anims.stop()
-                    // IF CORRECT CHOICE MADE
-                    if (this.evaluated[this.selected] === this.correct) {
-                        this.victory = true
-                        this.winText.setVisible(true);
-                    } else {
-                        console.log("Less good job")
-                        this.loseText.setVisible(true);
-                    }
-                    // END GAME
-                    this.gameOver = true
-                }
+                // if (Phaser.Input.Keyboard.JustDown(this.space)) {
+                //     this.box[this.selected].anims.stop()
+                //     // IF CORRECT CHOICE MADE
+                //     if (this.evaluated[this.selected] === this.correct) {
+                //         this.victory = true
+                //         this.winText.setVisible(true);
+                //     } else {
+                //         console.log("Less good job")
+                //         this.loseText.setVisible(true);
+                //     }
+                //     // END GAME
+                //     this.gameOver = true
+                // }
             } else if (!this.sent) {
                 eventsCenter.emit('stop_timer')
                 eventsCenter.emit('game-end', this.victory)
@@ -169,6 +174,22 @@ export default class Lowest extends Phaser.Scene {
             }
         }  
         
+    }
+
+    startGamePad() {
+        if (this.input.gamepad.total) {
+            this.gamePad = this.input.gamepad.pad1;
+            this.initGamePad();
+            console.log(this.gamePad);
+        }
+    }
+
+    initGamePad() {
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.userInput("l"));
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.userInput("r"));
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 1, () => this.userInput("d"));
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === -1, () => this.userInput("u"));
+        this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.userInput("select")});
     }
     // START HELPER FUNCTIONS
     // takes a number between 0 and 999 and returns an array with each digit separated
@@ -306,56 +327,70 @@ export default class Lowest extends Phaser.Scene {
         this.num2[index] = Math.round(Math.random() * 98) + 1
     }
     // used for making new selections
-    movePointer(dir) {
-        // stop current animation 
-        this.box[this.selected].anims.stop()
-        switch (this.selected) {
-            // moving from top left
-            case 0:
-                if (dir === "r") {
-                    this.selected = 1
-                } else if (dir === "d") {
-                    this.selected = 2
-                }
-                break
-            // moving from top right
-            case 1:
-                if (dir === "l") {
-                    this.selected = 0
-                } else if (dir === "d") {
-                    this.selected = 2
-                }
-                break
-            // moving from center
-            case 2:
-                if (dir === "l") {
-                    this.selected = 3
-                } else if (dir === "r") {
-                    this.selected = 1
-                } else if (dir === "u") {
-                    this.selected = 0
-                } else if (dir === "d") {
-                    this.selected = 4
-                }
-                break
-            // moving from bottom left
-            case 3:
-                if (dir === "r") {
-                    this.selected = 4
-                } else if (dir === "u") {
-                    this.selected = 2
-                }
-                break
-            // moving from bottom right
-            case 4:
-                if (dir === "l") {
-                    this.selected = 3
-                } else if (dir === "u") {
-                    this.selected = 2
-                }
-                break
-            default:
-                break
+    userInput(dir) {
+        if (dir === "select") {
+            this.box[this.selected].anims.stop()
+                    // IF CORRECT CHOICE MADE
+                    if (this.evaluated[this.selected] === this.correct) {
+                        this.victory = true
+                        this.winText.setVisible(true);
+                    } else {
+                        console.log("Less good job")
+                        this.loseText.setVisible(true);
+                    }
+                    // END GAME
+                    this.gameOver = true
+        } else {
+            // stop current animation 
+            this.box[this.selected].anims.stop()
+            switch (this.selected) {
+                // moving from top left
+                case 0:
+                    if (dir === "r") {
+                        this.selected = 1
+                    } else if (dir === "d") {
+                        this.selected = 2
+                    }
+                    break
+                // moving from top right
+                case 1:
+                    if (dir === "l") {
+                        this.selected = 0
+                    } else if (dir === "d") {
+                        this.selected = 2
+                    }
+                    break
+                // moving from center
+                case 2:
+                    if (dir === "l") {
+                        this.selected = 3
+                    } else if (dir === "r") {
+                        this.selected = 1
+                    } else if (dir === "u") {
+                        this.selected = 0
+                    } else if (dir === "d") {
+                        this.selected = 4
+                    }
+                    break
+                // moving from bottom left
+                case 3:
+                    if (dir === "r") {
+                        this.selected = 4
+                    } else if (dir === "u") {
+                        this.selected = 2
+                    }
+                    break
+                // moving from bottom right
+                case 4:
+                    if (dir === "l") {
+                        this.selected = 3
+                    } else if (dir === "u") {
+                        this.selected = 2
+                    }
+                    break
+                default:
+                    break
+            }
         }
         // set pointer to newly selected position, then play box animation for new selection
         this.pointer.setPosition(this.box[this.selected].x, (this.box[this.selected].y + 80))
