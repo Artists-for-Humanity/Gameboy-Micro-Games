@@ -16,7 +16,7 @@ export default class BetweenSpace extends Phaser.Scene {
     this.randomNum = Math.floor(Math.random() * 71);
 
     this.buttonHandlers = new ButtonPressHandlers();
-    this.gamePad = null
+    this.gamePad = null;
   }
 
   preload() {
@@ -53,13 +53,13 @@ export default class BetweenSpace extends Phaser.Scene {
     this.gameWidth = this.game.config.width;
     this.gameHeight = this.game.config.height;
     this.add.image(this.gameWidth / 2, this.gameHeight / 2, "TI_3background");
-    this.player = this.physics.add.sprite(100, 360, "TI_3rocket")
+    this.player = this.physics.add.sprite(100, 360, "TI_3rocket");
     this.player.setCollideWorldBounds();
     this.goal = this.physics.add.sprite(1000, 360, 'TI_3star');
 
 
-    this.asteroidg1 = this.createAsteroids(200, 32, 30 + (this.randomNum), 300)
-    this.asteroidg2 = this.createAsteroids(300, 688, -30 + (this.randomNum), -300)
+    this.asteroidg1 = this.createAsteroids(200, 32, 30 + (this.randomNum), 300);
+    this.asteroidg2 = this.createAsteroids(300, 688, -30 + (this.randomNum), -300);
 
     this.asteroidg1 = this.createAsteroids(200, 32, 30 + this.randomNum, 300);
     this.asteroidg2 = this.createAsteroids(
@@ -95,7 +95,7 @@ export default class BetweenSpace extends Phaser.Scene {
 
     this.createAnimations();
 
-    this.loseText = this.add.image(168, 224, 'TI_3lose')
+    this.loseText = this.add.image(168, 224, 'TI_3lose');
     this.loseText.setScrollFactor(0);
     this.loseText.setOrigin(0, 0);
     this.loseText.setVisible(false);
@@ -105,13 +105,13 @@ export default class BetweenSpace extends Phaser.Scene {
     this.winText.setScrollFactor(0);
     this.winText.setVisible(false);
 
-    eventsCenter.on('start_game', () => { this.started = true; eventsCenter.emit('start_timer') })
+    eventsCenter.on('start_game', () => { this.started = true; eventsCenter.emit('start_timer'); });
 
   }
 
   update() {
     if (this.started) {
-        
+
       if (this.lose === false) {
 
         this.buttonHandlers.update();
@@ -119,14 +119,14 @@ export default class BetweenSpace extends Phaser.Scene {
 
         this.asteroidMovements(this.asteroidg1);
         this.asteroidMovements(this.asteroidg2);
-        console.log('reachme 00')
+        console.log('reachme 00');
 
 
         this.player.anims.play('TI_3run', true);
-        console.log('reachme 01')
+        console.log('reachme 01');
 
-        this.goal.anims.play('TI_3spin', true)
-        console.log('reachme 02')
+        this.goal.anims.play('TI_3spin', true);
+        console.log('reachme 02');
 
       }
 
@@ -141,17 +141,21 @@ export default class BetweenSpace extends Phaser.Scene {
 
   startGamePad() {
     if (this.input.gamepad.total) {
-        this.gamePad = this.input.gamepad.pad1;
-        this.initGamePad();
-        console.log(this.gamePad);
+      this.gamePad = this.input.gamepad.pad1;
+      this.initGamePad();
+      console.log(this.gamePad);
     }
   }
 
   initGamePad() {
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.userInput(1));
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.userInput(-1));
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 1, () => this.userInput(-2));
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === -1, () => this.userInput(2));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x < -0.5, () => this.userInput(1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.userInput(11));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x > 0.5, () => this.userInput(-1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.userInput(-11));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y > 0.5, () => this.userInput(-2));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 1, () => this.userInput(-22));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y < -0.5, () => this.userInput(2));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === -1, () => this.userInput(22));
     this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 0, () => this.userInput(3));
     this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 0, () => this.userInput(4));
 
@@ -161,20 +165,32 @@ export default class BetweenSpace extends Phaser.Scene {
     if (x === 2) {
       this.player.setVelocityY(-350);
     }
+    if (x === 22) {
+      this.player.setVelocityY(-500);
+    }
     if (x === -2) {
       this.player.setVelocityY(350);
     }
+    if (x === -22) {
+      this.player.setVelocityY(500);
+    }
     if (x === 1) {
-      this.player.setVelocityX(-350)
+      this.player.setVelocityX(-350);
+    }
+    if (x === 11) {
+      this.player.setVelocityX(-500);
     }
     if (x === -1) {
-      this.player.setVelocityX(350)
+      this.player.setVelocityX(350);
+    }
+    if (x === -11) {
+      this.player.setVelocityX(500);
     }
     if (x === 3) {
-      this.player.setVelocityX(0)
+      this.player.setVelocityX(0);
     }
     if (x === 4) {
-      this.player.setVelocityY(0)
+      this.player.setVelocityY(0);
     }
   }
 

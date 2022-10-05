@@ -31,7 +31,6 @@ const config = {
   height: 720,
   transparent: false,
   backgroundColor: "#4488aa",
-
   // Add physics, arcade, scene, and audio
   physics: {
     default: "arcade",
@@ -78,7 +77,7 @@ const config = {
       plugin: GlobalState,
       start: false,
       mapping: "globalState",
-    }, ],
+    },],
   },
 };
 

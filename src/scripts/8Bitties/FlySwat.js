@@ -116,10 +116,14 @@ export default class FlySwat extends Phaser.Scene {
   }
 
   initGamePad() {
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.moveSwatter(-1));
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.moveSwatter(1));
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 1, () => this.moveSwatter(-2));
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === -1, () => this.moveSwatter(2));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x < -0.5, () => this.moveSwatter(-1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.moveSwatter(-11));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x > 0.5, () => this.moveSwatter(1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.moveSwatter(11));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y > 0.5, () => this.moveSwatter(-2));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 1, () => this.moveSwatter(-22));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y < -0.5, () => this.moveSwatter(2));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === -1, () => this.moveSwatter(22));
     this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 0, () => this.moveSwatter(4));
     this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 0, () => this.moveSwatter(3));
     this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.swat(); });
@@ -266,14 +270,26 @@ export default class FlySwat extends Phaser.Scene {
       if (x === 2) {
         this.swatter.setVelocityY(-400);
       }
+      if (x === 22) {
+        this.swatter.setVelocityY(-800);
+      }
       if (x === -2) {
         this.swatter.setVelocityY(400);
+      }
+      if (x === -22) {
+        this.swatter.setVelocityY(800);
       }
       if (x === -1) {
         this.swatter.setVelocityX(-400);
       }
+      if (x === -11) {
+        this.swatter.setVelocityX(-800);
+      }
       if (x === 1) {
         this.swatter.setVelocityX(400);
+      }
+      if (x === 11) {
+        this.swatter.setVelocityX(800);
       }
       if (x === 3) {
         this.swatter.setVelocityX(0);
