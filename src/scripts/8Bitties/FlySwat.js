@@ -25,10 +25,10 @@ export default class FlySwat extends Phaser.Scene {
     this.dead = false;
     this.victory = false;
     this.sent = false;
-    this.started = false
-    this.gameStartRan = false
+    this.started = false;
+    this.gameStartRan = false;
     this.buttonHandlers = new ButtonPressHandlers();
-    this.gamePad = null
+    this.gamePad = null;
   }
   preload() {
     this.load.image(
@@ -81,22 +81,22 @@ export default class FlySwat extends Phaser.Scene {
     this.kitchen = this.add.image(540, 360, "8B5_kitchen").setDepth(-4);
     //this.swat = this.add.image(540, 360, "8B5_swat");
     this.createKeys();
-    eventsCenter.on('start_game', () => {this.started = true; this.globalState.timerMessage('start_timer')})
-    this.gameStart()
+    eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer'); });
+    this.gameStart();
 
   }
   update() {
     if (!this.dead) this.moveFly();
-    if(this.started){
+    if (this.started) {
       this.buttonHandlers.update();
       if (!this.gamePad) this.startGamePad();
 
       //this.playSwatText();
-      
+
       this.moveSwatter();
       this.swing();
       if (this.gameOver && !this.sent) {
-        eventsCenter.emit('stop_timer')
+        eventsCenter.emit('stop_timer');
         eventsCenter.emit("game-end", this.victory);
         this.sent = true;
 
@@ -104,11 +104,12 @@ export default class FlySwat extends Phaser.Scene {
     }
     //this.animateDeadFly();
   }
+
   startGamePad() {
     if (this.input.gamepad.total) {
-        this.gamePad = this.input.gamepad.pad1;
-        this.initGamePad();
-        console.log(this.gamePad);
+      this.gamePad = this.input.gamepad.pad1;
+      this.initGamePad();
+      console.log(this.gamePad);
     }
   }
 
@@ -119,8 +120,7 @@ export default class FlySwat extends Phaser.Scene {
     this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === -1, () => this.moveSwatter(2));
     this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 0, () => this.moveSwatter(4));
     this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 0, () => this.moveSwatter(3));
-    
-    this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => {this.swat()});
+    this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.swat(); });
 
   }
 
@@ -136,11 +136,11 @@ export default class FlySwat extends Phaser.Scene {
       ) {
         this.killFly();
         this.victory = true;
-        setTimeout(()=>{
+        setTimeout(() => {
           this.gameOver = true;
-        }, 1500)
+        }, 1500);
       }
-      this.time.delayedCall(500, () => {this.swung = false})
+      this.time.delayedCall(500, () => { this.swung = false; });
     }
   }
 
@@ -154,12 +154,12 @@ export default class FlySwat extends Phaser.Scene {
     this.gamestart = true;
   }
   playSwatText() {
-    if(!this.gameStartRan){
+    if (!this.gameStartRan) {
       //this.swat.destroy();
       this.gameStart();
-      this.gameStartRan = true
+      this.gameStartRan = true;
     }
-    
+
   }
   killFly() {
 
@@ -262,16 +262,16 @@ export default class FlySwat extends Phaser.Scene {
   moveSwatter(x) {
     if (this.swatter) {
       if (x === 2) {
-        this.swatter.setVelocityY(-400)
+        this.swatter.setVelocityY(-400);
       }
       if (x === -2) {
-        this.swatter.setVelocityY(400)
+        this.swatter.setVelocityY(400);
       }
       if (x === -1) {
-        this.swatter.setVelocityX(-400)
+        this.swatter.setVelocityX(-400);
       }
       if (x === 1) {
-        this.swatter.setVelocityX(400)
+        this.swatter.setVelocityX(400);
       }
       if (x === 3) {
         this.swatter.setVelocityX(0);

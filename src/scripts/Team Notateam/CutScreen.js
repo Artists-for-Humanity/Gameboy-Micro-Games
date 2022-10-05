@@ -1,18 +1,18 @@
-import Phaser from 'phaser'
-import eventsCenter from '../EventsCenter'
-const X = 1080
-const Y = 720
-const L_END = X / 4
-const R_END = 3 * L_END
-const L_START = -L_END
-const R_START = 5 * L_END
+import Phaser from 'phaser';
+import eventsCenter from '../EventsCenter';
+const X = 1080;
+const Y = 720;
+const L_END = X / 4;
+const R_END = 3 * L_END;
+const L_START = -L_END;
+const R_START = 5 * L_END;
 
 const listOfGames = [
-    "FlySwat",
+    "DrinkPour",
     "Lowest",
+    "FlySwat",
     "BetweenSpace",
     "Emeowgency",
-    "DrinkPour",
     "TrashSort",
     "TugOWar",
     "CarPump",
@@ -43,37 +43,37 @@ export default class CutScreen extends Phaser.Scene {
             }
         });
 
-        this.finishedGames = false
+        this.finishedGames = false;
 
-        this.playedGames = []
+        this.playedGames = [];
 
-        this.currentScene = "MainMenu"
-        this.roundNumber = 0
+        this.currentScene = "MainMenu";
+        this.roundNumber = 0;
 
 
-        this.close_timer = 0
-        this.life_total = 5
-        this.closed = false
-        this.open = false
+        this.close_timer = 0;
+        this.life_total = 5;
+        this.closed = false;
+        this.open = false;
 
-        this.lost = false
-        this.score = -1
+        this.lost = false;
+        this.score = -1;
 
-        this.space
+        this.space;
 
-        this.l_door
-        this.r_door
+        this.l_door;
+        this.r_door;
 
-        this.faceplate
-        this.numplate
-        this.ones
-        this.tens
-        this.huns
+        this.faceplate;
+        this.numplate;
+        this.ones;
+        this.tens;
+        this.huns;
 
-        this.l_sockets
-        this.r_sockets
-        this.l_life
-        this.r_life
+        this.l_sockets;
+        this.r_sockets;
+        this.l_life;
+        this.r_life;
 
     }
 
@@ -85,52 +85,52 @@ export default class CutScreen extends Phaser.Scene {
             {
                 frameWidth: 252,
                 frameHeight: 162
-            })
+            });
         this.load.spritesheet(
             'loss', new URL('assets/loss_cat.png',
                 import.meta.url).href, {
             frameWidth: 419,
             frameHeight: 162
-        })
+        });
         this.load.spritesheet(
             'win', new URL('assets/win_cat.png',
                 import.meta.url).href, {
             frameWidth: 419,
             frameHeight: 162
-        })
+        });
         this.load.spritesheet(
             'numbers', new URL('../globalAssets/numsheet.png',
                 import.meta.url).href, {
             frameWidth: 77,
             frameHeight: 122
-        })
+        });
         this.load.image('gba_socket', new URL('assets/gba_socket.png',
-            import.meta.url).href)
+            import.meta.url).href);
         this.load.image('num_plate', new URL('assets/num_plate.png',
-            import.meta.url).href)
+            import.meta.url).href);
         this.load.image('l_door', new URL('assets/l_door.png',
-            import.meta.url).href)
+            import.meta.url).href);
         this.load.image('r_door', new URL('assets/r_door.png',
-            import.meta.url).href)
+            import.meta.url).href);
     }
 
     create() {
-        this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP)
+        this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
 
-        this.buildAnimations()
-        this.buildObjects()
-        this.setScore(this.score)
+        this.buildAnimations();
+        this.buildObjects();
+        this.setScore(this.score);
 
-        eventsCenter.on('game-end', this.closeDoor, this)
+        eventsCenter.on('game-end', this.closeDoor, this);
     }
     update() {
 
         if (!this.closed) {
-            this.close_timer++
-            this.close_doors()
+            this.close_timer++;
+            this.close_doors();
         } else if (this.open) {
-            this.close_timer++
-            this.open_doors()
+            this.close_timer++;
+            this.open_doors();
         }
     }
 
@@ -138,26 +138,26 @@ export default class CutScreen extends Phaser.Scene {
 
         // If left door is not yet in closed position
         if (this.l_door.x < L_END) {
-            this.l_close()
-            this.r_close()
+            this.l_close();
+            this.r_close();
         } else {
-            this.close_timer = 0
-            this.closecon()
-            this.closed = true
+            this.close_timer = 0;
+            this.closecon();
+            this.closed = true;
         }
     }
     open_doors() {
         if (this.l_door.x > L_START) {
 
-            this.l_open()
-            this.r_open()
+            this.l_open();
+            this.r_open();
         } else {
-            this.close_timer = 0
-            this.faceplate.anims.stop()
-            this.faceplate.setFrame(0)
-            this.open = false
-            eventsCenter.emit('start_game')
-            this.closed = true
+            this.close_timer = 0;
+            this.faceplate.anims.stop();
+            this.faceplate.setFrame(0);
+            this.open = false;
+            eventsCenter.emit('start_game');
+            this.closed = true;
         }
     }
     l_close() {
@@ -166,28 +166,28 @@ export default class CutScreen extends Phaser.Scene {
         if (this.l_door.x + this.close_timer >= L_END) {
 
             // Move Door
-            this.l_door.x = L_END
+            this.l_door.x = L_END;
 
-            this.numplate.x = L_END
-            this.ones.x = L_END + 82
-            this.tens.x = L_END
-            this.huns.x = L_END - 82
+            this.numplate.x = L_END;
+            this.ones.x = L_END + 82;
+            this.tens.x = L_END;
+            this.huns.x = L_END - 82;
 
             //Move Life Objects
             this.l_sockets.children.iterate((child) => {
-                child.x = L_END
+                child.x = L_END;
             });
             this.l_life.children.iterate((child) => {
-                child.x = L_END
+                child.x = L_END;
             });
         } else {
             // Move Door
-            this.l_door.x += this.close_timer
+            this.l_door.x += this.close_timer;
 
-            this.numplate.x += this.close_timer
-            this.ones.x += this.close_timer
-            this.tens.x += this.close_timer
-            this.huns.x += this.close_timer
+            this.numplate.x += this.close_timer;
+            this.ones.x += this.close_timer;
+            this.tens.x += this.close_timer;
+            this.huns.x += this.close_timer;
 
             // Move Life Objects
             this.l_sockets.children.iterate((child) => {
@@ -204,12 +204,12 @@ export default class CutScreen extends Phaser.Scene {
         if (this.l_door.x - this.close_timer <= L_START) {
 
             // Move Door
-            this.l_door.x = L_START
+            this.l_door.x = L_START;
 
-            this.numplate.x = L_START
-            this.ones.x = L_START + 82
-            this.tens.x = L_START
-            this.huns.x = L_START - 82
+            this.numplate.x = L_START;
+            this.ones.x = L_START + 82;
+            this.tens.x = L_START;
+            this.huns.x = L_START - 82;
 
             // Move Life Objects
             this.l_sockets.children.iterate((child) => {
@@ -221,12 +221,12 @@ export default class CutScreen extends Phaser.Scene {
 
         } else {
             // Move Door
-            this.l_door.x -= this.close_timer
+            this.l_door.x -= this.close_timer;
 
-            this.numplate.x -= this.close_timer
-            this.ones.x -= this.close_timer
-            this.tens.x -= this.close_timer
-            this.huns.x -= this.close_timer
+            this.numplate.x -= this.close_timer;
+            this.ones.x -= this.close_timer;
+            this.tens.x -= this.close_timer;
+            this.huns.x -= this.close_timer;
 
             // Move Life Objects
             this.l_sockets.children.iterate((child) => {
@@ -245,8 +245,8 @@ export default class CutScreen extends Phaser.Scene {
         if (this.r_door.x - this.close_timer <= R_END) {
 
             // Move Door
-            this.r_door.x = R_END
-            this.faceplate.x = R_END
+            this.r_door.x = R_END;
+            this.faceplate.x = R_END;
             // Move Life Objects
             this.r_sockets.children.iterate((child) => {
                 child.x = R_END;
@@ -257,8 +257,8 @@ export default class CutScreen extends Phaser.Scene {
 
         } else {
             // Move Door
-            this.r_door.x -= this.close_timer
-            this.faceplate.x -= this.close_timer
+            this.r_door.x -= this.close_timer;
+            this.faceplate.x -= this.close_timer;
             // Move Life Objects
             this.r_sockets.children.iterate((child) => {
                 child.x -= this.close_timer;
@@ -273,19 +273,19 @@ export default class CutScreen extends Phaser.Scene {
         if (this.r_door.x + this.close_timer >= R_START) {
 
             // Move Door
-            this.r_door.x = R_START
-            this.faceplate.x = R_START
+            this.r_door.x = R_START;
+            this.faceplate.x = R_START;
             //Move Life Objects
             this.r_sockets.children.iterate((child) => {
-                child.x = R_START
+                child.x = R_START;
             });
             this.r_life.children.iterate((child) => {
-                child.x = R_START
+                child.x = R_START;
             });
         } else {
             // Move Door
-            this.r_door.x += this.close_timer
-            this.faceplate.x += this.close_timer
+            this.r_door.x += this.close_timer;
+            this.faceplate.x += this.close_timer;
 
             // Move Life Objects
             this.r_sockets.children.iterate((child) => {
@@ -311,95 +311,95 @@ export default class CutScreen extends Phaser.Scene {
         }
     }
     l_disable(index) {
-        this.l_life.getChildren()[4 - index].anims.play('blink')
+        this.l_life.getChildren()[4 - index].anims.play('blink');
     }
     r_disable(index) {
-        this.r_life.getChildren()[2 - index].anims.play('blink')
+        this.r_life.getChildren()[2 - index].anims.play('blink');
     }
     setScore(score) {
-        let o = score % 10
-        let h = Math.floor(score / 100)
-        let t = Math.floor((score - (h * 100)) / 10)
+        let o = score % 10;
+        let h = Math.floor(score / 100);
+        let t = Math.floor((score - (h * 100)) / 10);
 
-        this.ones.setFrame(o + 1)
+        this.ones.setFrame(o + 1);
         if (score >= 10)
-            this.tens.setFrame(t + 1)
+            this.tens.setFrame(t + 1);
         if (score >= 100)
-            this.huns.setFrame(h + 1)
+            this.huns.setFrame(h + 1);
     }
 
     closecon() {
-        console.log("Round ", this.roundNumber)
+        console.log("Round ", this.roundNumber);
 
         if (!this.lost) {
 
             this.faceplate.anims.play('win1').once('animationcomplete', () => {
-                this.faceplate.anims.play('win2')
-            })
+                this.faceplate.anims.play('win2');
+            });
 
-            this.score++
+            this.score++;
 
             setTimeout(() => {
-                this.setScore(this.score)
-            }, 200)
+                this.setScore(this.score);
+            }, 200);
         } else {
             this.faceplate.anims.play('lose1').once('animationcomplete', () => {
-                this.faceplate.anims.play('lose2')
-            })
+                this.faceplate.anims.play('lose2');
+            });
 
-            this.life_total--
-            this.reduce_life()
+            this.life_total--;
+            this.reduce_life();
         }
-        eventsCenter.emit('stop_timer')
-        eventsCenter.emit('reset_timer')
+        eventsCenter.emit('stop_timer');
+        eventsCenter.emit('reset_timer');
         if (this.roundNumber > 0) {
-            this.endGame()
+            this.endGame();
         } else {
             if (this.scene.isActive('MainMenu'))
-                this.scene.remove('MainMenu')
+                this.scene.remove('MainMenu');
         }
-        this.nextGame()
+        this.nextGame();
     }
     nextGame() {
         // do{
         //     this.currentScene = this.game.scene.scenes[this.roundNumber + 1]
         // } while(this.playedGames.includes(this.currentScene) && !this.finishedGames)
         //this.currentScene = "SockToss"
-        this.life_total > 1 ? this.currentScene = listOfGames[this.roundNumber] : this.currentScene = 'GameOver'
-        console.log(this.currentScene)
-        this.scene.sendToBack('Timer')
-        this.scene.sendToBack(this.currentScene)
+        this.life_total > 1 ? this.currentScene = listOfGames[this.roundNumber] : this.currentScene = 'GameOver';
+        console.log(this.currentScene);
+        this.scene.sendToBack('Timer');
+        this.scene.sendToBack(this.currentScene);
         if (this.currentScene !== 'GameOver')
-            this.scene.run('Timer')
+            this.scene.run('Timer');
         else
-            this.scene.remove('Timer')
-        this.scene.run(this.currentScene)
-        console.log(this.currentScene + " should be running...")
-        this.roundNumber++
+            this.scene.remove('Timer');
+        this.scene.run(this.currentScene);
+        console.log(this.currentScene + " should be running...");
+        this.roundNumber++;
         setTimeout(() => {
             //add code to play text prompt for next game
 
-            this.open = true
-        }, 2000)
+            this.open = true;
+        }, 2000);
     }
     endGame() {
-        console.log(this.currentScene)
-        this.scene.remove(this.currentScene)
+        console.log(this.currentScene);
+        this.scene.remove(this.currentScene);
     }
     buildObjects() {
         // Build Doors
-        this.l_door = this.add.image(L_START, Y / 2, 'l_door')
-        this.r_door = this.add.image(R_START, Y / 2, 'r_door')
-        this.buildFaceplates()
-        this.buildLifeSockets()
+        this.l_door = this.add.image(L_START, Y / 2, 'l_door');
+        this.r_door = this.add.image(R_START, Y / 2, 'r_door');
+        this.buildFaceplates();
+        this.buildLifeSockets();
     }
     buildFaceplates() {
-        this.faceplate = this.physics.add.sprite(R_START, Y / 4, 'loss')
-        this.numplate = this.physics.add.sprite(L_START, Y / 4, 'num_plate')
-        this.numplate.setScale(2 / 3, 1)
-        this.ones = this.physics.add.sprite(L_START + 82, Y / 4, 'numbers')
-        this.tens = this.physics.add.sprite(L_START, Y / 4, 'numbers')
-        this.huns = this.physics.add.sprite(L_START - 82, Y / 4, 'numbers')
+        this.faceplate = this.physics.add.sprite(R_START, Y / 4, 'loss');
+        this.numplate = this.physics.add.sprite(L_START, Y / 4, 'num_plate');
+        this.numplate.setScale(2 / 3, 1);
+        this.ones = this.physics.add.sprite(L_START + 82, Y / 4, 'numbers');
+        this.tens = this.physics.add.sprite(L_START, Y / 4, 'numbers');
+        this.huns = this.physics.add.sprite(L_START - 82, Y / 4, 'numbers');
     }
     buildLifeSockets() {
         this.l_sockets = this.physics.add.group({
@@ -410,7 +410,7 @@ export default class CutScreen extends Phaser.Scene {
                 y: 5 * Y / 6 - 185,
                 stepY: 185
             }
-        })
+        });
         this.l_life = this.physics.add.group({
             key: 'gba_socket',
             repeat: 1,
@@ -419,7 +419,7 @@ export default class CutScreen extends Phaser.Scene {
                 y: 5 * Y / 6 - 185,
                 stepY: 185
             }
-        })
+        });
         this.r_sockets = this.physics.add.group({
             key: 'gba_socket',
             repeat: 1,
@@ -428,7 +428,7 @@ export default class CutScreen extends Phaser.Scene {
                 y: 5 * Y / 6 - 185,
                 stepY: 185
             }
-        })
+        });
         this.r_life = this.physics.add.group({
             key: 'gba_socket',
             repeat: 1,
@@ -437,16 +437,16 @@ export default class CutScreen extends Phaser.Scene {
                 y: 5 * Y / 6 - 185,
                 stepY: 185
             }
-        })
-        this.l_sockets.setDepth(1)
-        this.r_sockets.setDepth(1)
-        this.l_life.setDepth(1)
-        this.r_life.setDepth(1)
+        });
+        this.l_sockets.setDepth(1);
+        this.r_sockets.setDepth(1);
+        this.l_life.setDepth(1);
+        this.r_life.setDepth(1);
         this.l_life.children.iterate((child) => {
-            child.anims.play('life')
+            child.anims.play('life');
         });
         this.r_life.children.iterate((child) => {
-            child.anims.play('life')
+            child.anims.play('life');
         });
     }
     buildAnimations() {
@@ -479,7 +479,7 @@ export default class CutScreen extends Phaser.Scene {
             ],
             frameRate: 6,
             repeat: -1
-        })
+        });
         this.anims.create({
             key: 'blink',
             frames: [{
@@ -492,7 +492,7 @@ export default class CutScreen extends Phaser.Scene {
             ],
             frameRate: 6,
             repeat: 2
-        })
+        });
         this.anims.create({
             key: 'lose1',
             frames: [{
@@ -513,7 +513,7 @@ export default class CutScreen extends Phaser.Scene {
             }
             ],
             frameRate: 6
-        })
+        });
         this.anims.create({
             key: 'lose2',
             frames: [{
@@ -532,7 +532,7 @@ export default class CutScreen extends Phaser.Scene {
             frameRate: 6,
             repeat: -1,
             yoyo: true
-        })
+        });
         this.anims.create({
             key: 'win1',
             frames: [{
@@ -553,7 +553,7 @@ export default class CutScreen extends Phaser.Scene {
             }
             ],
             frameRate: 6
-        })
+        });
         this.anims.create({
             key: 'win2',
             frames: [{
@@ -572,12 +572,12 @@ export default class CutScreen extends Phaser.Scene {
             frameRate: 6,
             repeat: -1,
             yoyo: true
-        })
+        });
     }
 
     closeDoor(victory) {
         this.lost = !victory;
-        console.log('emission received')
+        console.log('emission received');
         //this.faceplate.anims.stop()
         this.closed = false;
     }
