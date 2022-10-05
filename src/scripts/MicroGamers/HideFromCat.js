@@ -134,8 +134,8 @@ export default class HideFromCat extends Phaser.Scene {
                 this.textDisplayed = true;
                 this.displayStartText();
 
-                //delete text and start game after 2 seconds
-                this.time.delayedCall(2000, () => {
+                //delete text and start game after 1.2 seconds
+                this.time.delayedCall(1200, () => {
                     this.startText.visible = 0;
                     this.gamestarted = true;
                     this.globalState.timerMessage('start_timer')
