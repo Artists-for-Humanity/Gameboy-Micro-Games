@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 import eventsCenter from '../EventsCenter';
+import ButtonPressHandlers from '../ButtonPressHandlers';
+
 
 const X = 440;
 const Y = 360;
@@ -30,6 +32,9 @@ export default class DrinkPour extends Phaser.Scene {
     this.gameOver = false;
     this.victory = false;
     this.sent = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
+    this.press = false;
   }
   preload() {
     this.load.image(
@@ -118,8 +123,8 @@ export default class DrinkPour extends Phaser.Scene {
 
     //pour popup booleans
     this.timer = 1;
-    //this.pour = this.add.image(540, Y, "8B3_pour");
-    //this.pour.setScale(0);
+    // this.pour = this.add.image(540, Y, "8B3_pour");
+    // this.pour.setScale(0);
 
     //lemonade jug
     this.pitcher = this.add.sprite(200, 460, "8B3_pitcher");
@@ -127,7 +132,7 @@ export default class DrinkPour extends Phaser.Scene {
     this.pitcher.setScale(0.8);
     this.pitcher.setDepth(0);
 
-    eventsCenter.on('start_game', () => {this.started = true; this.globalState.timerMessage('start_timer'); this.gameStart = true})
+    eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer'); this.gameStart = true; });
   }
 
   update() {
@@ -135,26 +140,30 @@ export default class DrinkPour extends Phaser.Scene {
       eventsCenter.emit("game-end", this.victory);
       this.sent = true;
     };
-    console.log(this.gameOver);
-    //this.playPour();
-    if (this.cursors.space.isDown && this.stopped === false) {
+    // console.log(this.gameOver);
+
+    this.buttonHandlers.update();
+    if (!this.gamePad) this.startGamePad();
+    // this.playPour();
+    if (this.press === true && this.stopped === false) {
       if (this.fill_value > 0 && this.gameStart) {
         this.fill_value -= 9;
         this.maskdraw();
         this.unpoured = false;
         this.pourAnim();
       }
+      console.log(this.press);
     }
     if (
       this.fill_value <= 50 &&
       this.fill_value >= 1 &&
-      this.cursors.space.isUp &&
+      !this.press &&
       this.gameStart
     ) {
       this.gameState();
     }
     if (
-      this.cursors.space.isUp &&
+      this.press === false &&
       this.fill_value > 50 &&
       this.fill_value < 287 &&
       this.gameStart
@@ -162,7 +171,7 @@ export default class DrinkPour extends Phaser.Scene {
       this.gameLost = true;
       this.gameState();
     }
-    if (!this.cursors.space.isDown && !this.unpoured) {
+    if (!this.press && !this.unpoured) {
       this.stopped = true;
       this.pitcherReset();
     }
@@ -172,13 +181,51 @@ export default class DrinkPour extends Phaser.Scene {
       this.gameStart = false;
       this.gameState();
       this.spillAnim();
+      // console.log(fill_value);
     }
     if (this.gameOver && !this.sent) {
-      eventsCenter.emit('game-end', this.victory)
-      console.log('emission sent')
-      this.sent = true
+      eventsCenter.emit('game-end', this.victory);
+      console.log('emission sent');
+      this.sent = true;
     }
   }
+
+  //dectects when button is pressed
+  // pressed() {
+  //   if (this.stopped === false) {
+  //     if (this.fill_value > 0 && this.gameStart) {
+  //       this.fill_value -= 9;
+  //       this.maskdraw();
+  //       this.unpoured = false;
+  //       this.pourAnim();
+  //     }
+  //   }
+  // }
+
+  startGamePad() {
+    if (this.input.gamepad.total) {
+      this.gamePad = this.input.gamepad.pad1;
+      this.initGamePad();
+      console.log(this.gamePad);
+    }
+  }
+
+
+  initGamePad() {
+    this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.press = true; }
+    );
+    this.buttonHandlers.addPad(() => !this.gamePad.buttons[0].pressed, () => { this.press = false; }
+    );
+
+    // this.buttonHandlers.addPad(() => this.gamePad.buttons[0] === 0, () => {
+    //   this.stopped = true;
+    //   this.pitcherReset();
+    // });
+  }
+
+
+
+
 
   //checks whether you win or lose and displays it in the console
   gameState() {
@@ -186,10 +233,10 @@ export default class DrinkPour extends Phaser.Scene {
     if (!this.gameLost) {
       this.victory = true;
     }
-    eventsCenter.emit('stop_timer')
-    setTimeout(()=>{
+    eventsCenter.emit('stop_timer');
+    setTimeout(() => {
       this.gameOver = true;
-    }, 1500)
+    }, 1500);
   }
 
   //creates animations for the pitcher and spilled over cup

@@ -76,6 +76,7 @@ export default class FlySwat extends Phaser.Scene {
       }
     );
   }
+
   create() {
     this.makeAnimations();
     this.kitchen = this.add.image(540, 360, "8B5_kitchen").setDepth(-4);
@@ -85,6 +86,7 @@ export default class FlySwat extends Phaser.Scene {
     this.gameStart();
 
   }
+
   update() {
     if (!this.dead) this.moveFly();
     if (this.started) {
