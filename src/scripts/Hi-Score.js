@@ -15,13 +15,17 @@ export default class HiScoreScene extends Phaser.Scene {
     this.place = 1;
     this.letter = 0;
     this.dataSet = 0;
-    this.scores = [[240],[63],[7]];
+    this.inti = [];
+    this.scores = [240, 63, 7];
   }
   preload() {
     this.load.spritesheet(
       "numbers",
-      new URL("../scripts/globalAssets/numsheet.png", import.meta.url).href,
-      { frameWidth: 77, frameHeight: 122 }
+      new URL(
+        "../scripts/TeamInflation/assets/Lowest/numbers.png",
+        import.meta.url
+      ).href,
+      { frameWidth: 313, frameHeight: 350 }
     );
     this.load.spritesheet(
       "alphaSheet",
@@ -46,7 +50,7 @@ export default class HiScoreScene extends Phaser.Scene {
 
   createLists() {
     // console.log("i should be starting");
-    for (let n = 0; n < 3;) {
+    for (let n = 0; n < 3; ) {
       for (let l = 0; l < 3; l++) {
         // name
         this.add
@@ -54,10 +58,41 @@ export default class HiScoreScene extends Phaser.Scene {
           .setFrame(this.sampleData[this.dataSet][l])
           .setScale(0.2);
         // score
-        this.add.image(700 + 40* l, 200+60*this.dataSet, 'numsheet' )
+        // this.inti.push(this.parseNumber(this.scores[this.dataSet]));
+        this.parseNumber(this.scores[this.dataSet]);
+        this.add
+          .image(700 + 40 * l, 200 + 60 * this.dataSet, "numbers")
+          .setFrame(this.inti[l])
+          .setScale(0.15);
+        console.log(this.parseNumber(this.scores[this.dataSet])  );
       }
+      this.inti = [];
       this.dataSet++;
-        n++;
+      n++;
     }
+  }
+
+  parseNumber(val) {
+    // represents the number in the hundreds place
+    let hun = Math.floor(val / 100);
+    // represents the number in the tens place
+    let ten = Math.floor((val - hun * 100) / 10);
+    // represents the number in the ones place
+    let one = val % 10;
+
+    this.inti.push(hun);
+    this.inti.push(ten);
+    this.inti.push(one);
+    console.log(
+      "Hundreds: " +
+        hun +
+        "\nTens: " +
+        ten +
+        "\nOnes: " +
+        one +
+        "\nTotal: " +
+        val
+    );
+    // return [hun, ten, one];
   }
 }
