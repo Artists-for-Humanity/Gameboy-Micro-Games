@@ -30,7 +30,7 @@ export default class CarPump extends Phaser.Scene {
     this.inflateInt = 0;
     this.endgameTimer = 0;
     this.buttonHandlers = new ButtonPressHandlers();
-    this.gamePad = null
+    this.gamePad = null;
   }
 
   preload() {
@@ -111,7 +111,7 @@ export default class CarPump extends Phaser.Scene {
     this.gameOverScreen.visible = false;
     this.timedEvent = this.time.delayedCall(1000, this.onEvent, [], this);
     this.createAnimations();
-    eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer') })
+    eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer'); });
 
   }
 
@@ -132,15 +132,15 @@ export default class CarPump extends Phaser.Scene {
   }
   startGamePad() {
     if (this.input.gamepad.total) {
-        this.gamePad = this.input.gamepad.pad1;
-        this.initGamePad();
-        console.log(this.gamePad);
+      this.gamePad = this.input.gamepad.pad1;
+      this.initGamePad();
+      console.log(this.gamePad);
     }
   }
 
   initGamePad() {
-      this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 1, () => this.upAndDown(0));
-      this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === -1, () => this.upAndDown(1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y > 0.7, () => this.upAndDown(0));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y < -0.7, () => this.upAndDown(1));
   }
 
   onEvent() {

@@ -1,4 +1,4 @@
-import eventsCenter from '../EventsCenter'
+import eventsCenter from '../EventsCenter';
 import ButtonPressHandlers from '../ButtonPressHandlers';
 
 
@@ -24,7 +24,7 @@ export default class TrashSort extends Phaser.Scene {
     this.sent = false;
     this.started = false;
     this.buttonHandlers = new ButtonPressHandlers();
-    this.gamePad = null
+    this.gamePad = null;
   }
 
   preload() {
@@ -107,7 +107,7 @@ export default class TrashSort extends Phaser.Scene {
 
     this.timedEvent = this.time.delayedCall(1000, this.onEvent, [], this);
 
-    eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer') })
+    eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer'); });
 
   }
 
@@ -159,26 +159,26 @@ export default class TrashSort extends Phaser.Scene {
     if (this.gameOver && !this.sent) {
       eventsCenter.emit('stop_timer');
       eventsCenter.emit("game-end", this.victory);
-      this.sent = true
+      this.sent = true;
 
     }
   }
   startGamePad() {
     if (this.input.gamepad.total) {
-        this.gamePad = this.input.gamepad.pad1;
-        this.initGamePad();
-        console.log(this.gamePad);
+      this.gamePad = this.input.gamepad.pad1;
+      this.initGamePad();
+      console.log(this.gamePad);
     }
-}
+  }
 
   initGamePad() {
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.moveTrash(-1));
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.moveTrash(1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x < -0.5, () => this.moveTrash(-1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x > 0.5, () => this.moveTrash(1));
     this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 0, () => this.moveTrash(0));
 
 
 
-}
+  }
 
   timerCountdown(time) {
     if (time / 1000 > 10) {
@@ -212,15 +212,15 @@ export default class TrashSort extends Phaser.Scene {
   }
 
   moveTrash(x) {
-    if (!this.gameOver){
+    if (!this.gameOver) {
       if (x === -1) {
         this.currTrashItem.setVelocityX(-300);
       }
       if (x === 1) {
         this.currTrashItem.setVelocityX(300);
       }
-      if(x === 0) {
-        this.currTrashItem.setVelocityX(0)
+      if (x === 0) {
+        this.currTrashItem.setVelocityX(0);
       }
     }
   }

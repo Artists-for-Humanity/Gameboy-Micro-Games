@@ -1,6 +1,6 @@
-const X = 1080
-const Y = 720
-import eventsCenter from '../EventsCenter'
+const X = 1080;
+const Y = 720;
+import eventsCenter from '../EventsCenter';
 import ButtonPressHandlers from '../ButtonPressHandlers';
 
 export default class Lowest extends Phaser.Scene {
@@ -11,37 +11,37 @@ export default class Lowest extends Phaser.Scene {
             key: 'Lowest',
         });
         // pointer graphic object
-        this.pointer
+        this.pointer;
         // index of selected equation
-        this.selected = 2
+        this.selected = 2;
         // the correct value to match from evaluated[]
-        this.correct
+        this.correct;
         // an array of containers, each one will contain each equation 
         this.equations = [];
         // an array of sprites
         this.box = [];
         // an array of each equation's first operand, or just the number to be displayed
-        this.num1 = []
+        this.num1 = [];
         // tells us what operation to perform on each set of operands
-        this.opcode = []
+        this.opcode = [];
         // the second set of operands, value will be 0 if the index represents a number rather than an equation
-        this.num2 = []
+        this.num2 = [];
         // the resulting value of each equation, or a repeated number
         // should be used to compare value of each equation 
-        this.evaluated = []
+        this.evaluated = [];
         // input objects
-        this.up
-        this.down
-        this.left
-        this.right
-        this.space
+        this.up;
+        this.down;
+        this.left;
+        this.right;
+        this.space;
         // game state booleans
         this.gameOver = false;
         this.victory = false;
         this.sent = false;
-        this.started = false
+        this.started = false;
         this.buttonHandlers = new ButtonPressHandlers();
-        this.gamePad = null
+        this.gamePad = null;
     }
     preload() {
         this.load.image("TI_1background", new URL("./assets/Lowest/NGbackground.png",
@@ -73,11 +73,11 @@ export default class Lowest extends Phaser.Scene {
     create() {
 
         // SET INPUTS
-        this.up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP)
-        this.down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN)
-        this.left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
-        this.right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
-        this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
+        this.up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        this.down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        this.left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        this.right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         // CREATE GRAPHICS
         this.add.image(X / 2, Y / 2, "TI_1background");
@@ -98,26 +98,26 @@ export default class Lowest extends Phaser.Scene {
             ],
             frameRate: 3,
             repeat: -1
-        })
+        });
 
         // SET GAME VALUES
-        this.setNumbers()
+        this.setNumbers();
 
         // DETERMINE CORRECT OPTIONS
-        this.correct = Math.min(...this.evaluated)
-        console.log("TI_1correct:" + this.correct)
+        this.correct = Math.min(...this.evaluated);
+        console.log("TI_1correct:" + this.correct);
 
         // POPULATE GRAPHICS
-        this.fillBox(0, X * .25, Y * .2)
-        this.fillBox(1, X * .75, Y * .2)
-        this.fillBox(2, X * .5, Y * .5)
-        this.fillBox(3, X * .25, Y * .8)
-        this.fillBox(4, X * .75, Y * .8)
+        this.fillBox(0, X * .25, Y * .2);
+        this.fillBox(1, X * .75, Y * .2);
+        this.fillBox(2, X * .5, Y * .5);
+        this.fillBox(3, X * .25, Y * .8);
+        this.fillBox(4, X * .75, Y * .8);
 
         // SET SELECTED STARTING BOX
-        this.box[this.selected].anims.play('TI_1box')
-        this.pointer = this.add.image(this.box[this.selected].x, this.box[this.selected].y + 80, 'TI_1cursorimage')
-        this.pointer.setScale(.15)
+        this.box[this.selected].anims.play('TI_1box');
+        this.pointer = this.add.image(this.box[this.selected].x, this.box[this.selected].y + 80, 'TI_1cursorimage');
+        this.pointer.setScale(.15);
 
         // WIN & LOSE CONDITIONS
         this.loseText = this.add.image(400, 220, 'TI_1lose');
@@ -130,12 +130,12 @@ export default class Lowest extends Phaser.Scene {
         this.winText.setScrollFactor(0);
         this.winText.setVisible(false);
 
-        eventsCenter.on('start_game', () => { eventsCenter.emit('start_timer'); this.started = true})
+        eventsCenter.on('start_game', () => { eventsCenter.emit('start_timer'); this.started = true; });
 
     }
     update() {
-    
-        if(this.started){
+
+        if (this.started) {
             if (!this.gameOver) {
                 this.buttonHandlers.update();
                 if (!this.gamePad) this.startGamePad();
@@ -167,13 +167,13 @@ export default class Lowest extends Phaser.Scene {
                 //     this.gameOver = true
                 // }
             } else if (!this.sent) {
-                eventsCenter.emit('stop_timer')
-                eventsCenter.emit('game-end', this.victory)
-                console.log("OH SHIT OOPS")
-                this.sent = true
+                eventsCenter.emit('stop_timer');
+                eventsCenter.emit('game-end', this.victory);
+                console.log("OH SHIT OOPS");
+                this.sent = true;
             }
-        }  
-        
+        }
+
     }
 
     startGamePad() {
@@ -185,112 +185,112 @@ export default class Lowest extends Phaser.Scene {
     }
 
     initGamePad() {
-        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.userInput("l"));
-        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.userInput("r"));
-        this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 1, () => this.userInput("d"));
-        this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === -1, () => this.userInput("u"));
-        this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.userInput("select")});
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x < -0.7, () => this.userInput("l"));
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x > 0.7, () => this.userInput("r"));
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.y > 0.7, () => this.userInput("d"));
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.y < -0.7, () => this.userInput("u"));
+        this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.userInput("select"); });
     }
     // START HELPER FUNCTIONS
     // takes a number between 0 and 999 and returns an array with each digit separated
     parseNumber(val) {
         // represents the number in the hundreds place
-        let hun = Math.floor(val / 100)
+        let hun = Math.floor(val / 100);
         // represents the number in the tens place
-        let ten = Math.floor((val - (hun * 100)) / 10)
+        let ten = Math.floor((val - (hun * 100)) / 10);
         // represents the number in the ones place
-        let one = val % 10
+        let one = val % 10;
 
-        console.log("Hundreds: " + hun + "\nTens: " + ten + "\nOnes: " + one + "\nTotal: " + val)
+        console.log("Hundreds: " + hun + "\nTens: " + ten + "\nOnes: " + one + "\nTotal: " + val);
 
-        return [hun, ten, one]
+        return [hun, ten, one];
     }
     // creates a graphic for each equation
     fillBox(i, x, y) {
         // changes number placement within box if needed
-        let placement = 0
+        let placement = 0;
 
         // add container to store equation number images
-        this.equations[i] = this.add.container(x, y)
+        this.equations[i] = this.add.container(x, y);
         // add a sprite for box frame
-        this.box[i] = this.physics.add.sprite(x, y, 'TI_1frames')
-        this.box[i].setScale(1, 0.5)
+        this.box[i] = this.physics.add.sprite(x, y, 'TI_1frames');
+        this.box[i].setScale(1, 0.5);
 
         // if we're dealing with an equation, print the second operand and operation first
         if (this.opcode[i] !== 0) {
-            placement = -1084 / 1.75
+            placement = -1084 / 1.75;
             // add an operator
-            this.equations[i].add(this.add.image(0, 0, 'TI_1operations', (this.opcode[i]) - 1))
+            this.equations[i].add(this.add.image(0, 0, 'TI_1operations', (this.opcode[i]) - 1));
             // add a second operand
 
-            this.addNumbers(this.equations[i], this.num2[i], 1084 / 3.5, i, 2)
+            this.addNumbers(this.equations[i], this.num2[i], 1084 / 3.5, i, 2);
         }
 
         // add first operand (or single number) to equations
-        this.addNumbers(this.equations[i], this.num1[i], placement, i, 1)
+        this.addNumbers(this.equations[i], this.num1[i], placement, i, 1);
 
         // adjust equation position relative to its size within the box
         if (this.opcode[i] !== 0) {
-            let smallcheck = 0
+            let smallcheck = 0;
             if (this.num1[i] < 10) {
-                this.equations[i].x -= 30
-                smallcheck++
+                this.equations[i].x -= 30;
+                smallcheck++;
             }
             if (this.num2[i] < 10) {
-                this.equations[i].x += 30
-                smallcheck++
+                this.equations[i].x += 30;
+                smallcheck++;
             }
             switch (smallcheck) {
                 case 1:
-                    this.box[i].setScale(.8, .5)
-                    break
+                    this.box[i].setScale(.8, .5);
+                    break;
                 case 2:
-                    this.box[i].setScale(.6, .5)
-                    break
+                    this.box[i].setScale(.6, .5);
+                    break;
                 default:
-                    break
+                    break;
             }
         } else {
             if (this.num1[i] < 100 && this.num1[i] > 9) {
-                this.equations[i].x -= 30
+                this.equations[i].x -= 30;
             }
-            this.box[i].setScale(.6, .5)
+            this.box[i].setScale(.6, .5);
         }
         // containers can be rescaled conveniently
-        this.equations[i].setScale(.2)
+        this.equations[i].setScale(.2);
     }
     // Helper function that takes numbers parsed in parseNumber and adds them as images to a container
     addNumbers(equation, val, offset, index, operand) {
-        let nums = this.parseNumber(val)
-        let addset = 300
+        let nums = this.parseNumber(val);
+        let addset = 300;
         // only add first digit if number is greater than 99
         if (val > 99) {
-            equation.add(this.add.image(-300 + offset, 0, 'TI_1numbers', nums[0]))
+            equation.add(this.add.image(-300 + offset, 0, 'TI_1numbers', nums[0]));
         }
         // only add second digit if number is greater than 9
         if (val > 9) {
-            equation.add(this.add.image(0 + offset, 0, 'TI_1numbers', nums[1]))
+            equation.add(this.add.image(0 + offset, 0, 'TI_1numbers', nums[1]));
         }
         // don't offset digit if number is less than 10, AND is the second operand OR sole number
         if (val < 10 && (operand === 2 || this.opcode[index] === 0)) {
-            addset = 0
+            addset = 0;
         }
-        equation.add(this.add.image(addset + offset, 0, 'TI_1numbers', nums[2]))
+        equation.add(this.add.image(addset + offset, 0, 'TI_1numbers', nums[2]));
     }
     // sets values of num1, num2, opcode and evaluated arrays for use in equations
     setNumbers() {
         for (let i = 0; i < 5; i++) {
-            this.opcode[i] = Math.round(Math.random() * 4)
+            this.opcode[i] = Math.round(Math.random() * 4);
             // if opcode is 0, no operation is needed, just the raw number
             if (this.opcode[i] === 0) {
-                this.num1[i] = Math.round(Math.random() * 999)
-                this.num2[i] = 0
-                this.evaluated[i] = this.num1[i]
+                this.num1[i] = Math.round(Math.random() * 999);
+                this.num2[i] = 0;
+                this.evaluated[i] = this.num1[i];
             }
             // all other opcodes result in equations
             else {
-                this.rollNumbers(i)
-                this.equateNumbers(this.opcode[i], i)
+                this.rollNumbers(i);
+                this.equateNumbers(this.opcode[i], i);
             }
         }
 
@@ -299,102 +299,102 @@ export default class Lowest extends Phaser.Scene {
     equateNumbers(opcode, index) {
         switch (opcode) {
             case 1: // subtraction
-                this.evaluated[index] = this.num1[index] - this.num2[index]
-                console.log(this.num1[index] + " - " + this.num2[index] + " = " + this.evaluated[index] + ", OPCODE: " + this.opcode[index])
+                this.evaluated[index] = this.num1[index] - this.num2[index];
+                console.log(this.num1[index] + " - " + this.num2[index] + " = " + this.evaluated[index] + ", OPCODE: " + this.opcode[index]);
                 break;
             case 2: // division
-                this.evaluated[index] = this.num1[index] / this.num2[index]
-                console.log(this.num1[index] + " / " + this.num2[index] + " = " + this.evaluated[index] + ", OPCODE: " + this.opcode[index])
+                this.evaluated[index] = this.num1[index] / this.num2[index];
+                console.log(this.num1[index] + " / " + this.num2[index] + " = " + this.evaluated[index] + ", OPCODE: " + this.opcode[index]);
                 break;
             case 3: // addition
-                this.evaluated[index] = this.num1[index] + this.num2[index]
-                console.log(this.num1[index] + " + " + this.num2[index] + " = " + this.evaluated[index] + ", OPCODE: " + this.opcode[index])
+                this.evaluated[index] = this.num1[index] + this.num2[index];
+                console.log(this.num1[index] + " + " + this.num2[index] + " = " + this.evaluated[index] + ", OPCODE: " + this.opcode[index]);
                 break;
             case 4: // multiplication
-                this.evaluated[index] = this.num1[index] * this.num2[index]
-                console.log(this.num1[index] + " * " + this.num2[index] + " = " + this.evaluated[index] + ", OPCODE: " + this.opcode[index])
+                this.evaluated[index] = this.num1[index] * this.num2[index];
+                console.log(this.num1[index] + " * " + this.num2[index] + " = " + this.evaluated[index] + ", OPCODE: " + this.opcode[index]);
                 break;
             default: // default is addition
-                this.evaluated[index] = this.num1[index] + this.num2[index]
-                console.log(this.num1[index] + " + " + this.num2[index] + " = " + this.evaluated[index] + ", OPCODE: " + this.opcode[index])
+                this.evaluated[index] = this.num1[index] + this.num2[index];
+                console.log(this.num1[index] + " + " + this.num2[index] + " = " + this.evaluated[index] + ", OPCODE: " + this.opcode[index]);
                 break;
         }
     }
     // randomly generates numbers for equations
     rollNumbers(index) {
-        this.num1[index] = Math.round(Math.random() * 99)
+        this.num1[index] = Math.round(Math.random() * 99);
         // range for num2 is 1-99 to avoid division by 0
-        this.num2[index] = Math.round(Math.random() * 98) + 1
+        this.num2[index] = Math.round(Math.random() * 98) + 1;
     }
     // used for making new selections
     userInput(dir) {
         if (dir === "select") {
-            this.box[this.selected].anims.stop()
-                    // IF CORRECT CHOICE MADE
-                    if (this.evaluated[this.selected] === this.correct) {
-                        this.victory = true
-                        this.winText.setVisible(true);
-                    } else {
-                        console.log("Less good job")
-                        this.loseText.setVisible(true);
-                    }
-                    // END GAME
-                    this.gameOver = true
+            this.box[this.selected].anims.stop();
+            // IF CORRECT CHOICE MADE
+            if (this.evaluated[this.selected] === this.correct) {
+                this.victory = true;
+                this.winText.setVisible(true);
+            } else {
+                console.log("Less good job");
+                this.loseText.setVisible(true);
+            }
+            // END GAME
+            this.gameOver = true;
         } else {
             // stop current animation 
-            this.box[this.selected].anims.stop()
+            this.box[this.selected].anims.stop();
             switch (this.selected) {
                 // moving from top left
                 case 0:
                     if (dir === "r") {
-                        this.selected = 1
+                        this.selected = 1;
                     } else if (dir === "d") {
-                        this.selected = 2
+                        this.selected = 2;
                     }
-                    break
+                    break;
                 // moving from top right
                 case 1:
                     if (dir === "l") {
-                        this.selected = 0
+                        this.selected = 0;
                     } else if (dir === "d") {
-                        this.selected = 2
+                        this.selected = 2;
                     }
-                    break
+                    break;
                 // moving from center
                 case 2:
                     if (dir === "l") {
-                        this.selected = 3
+                        this.selected = 3;
                     } else if (dir === "r") {
-                        this.selected = 1
+                        this.selected = 1;
                     } else if (dir === "u") {
-                        this.selected = 0
+                        this.selected = 0;
                     } else if (dir === "d") {
-                        this.selected = 4
+                        this.selected = 4;
                     }
-                    break
+                    break;
                 // moving from bottom left
                 case 3:
                     if (dir === "r") {
-                        this.selected = 4
+                        this.selected = 4;
                     } else if (dir === "u") {
-                        this.selected = 2
+                        this.selected = 2;
                     }
-                    break
+                    break;
                 // moving from bottom right
                 case 4:
                     if (dir === "l") {
-                        this.selected = 3
+                        this.selected = 3;
                     } else if (dir === "u") {
-                        this.selected = 2
+                        this.selected = 2;
                     }
-                    break
+                    break;
                 default:
-                    break
+                    break;
             }
         }
         // set pointer to newly selected position, then play box animation for new selection
-        this.pointer.setPosition(this.box[this.selected].x, (this.box[this.selected].y + 80))
-        this.box[this.selected].anims.play('TI_1box')
+        this.pointer.setPosition(this.box[this.selected].x, (this.box[this.selected].y + 80));
+        this.box[this.selected].anims.play('TI_1box');
     }
 
 }

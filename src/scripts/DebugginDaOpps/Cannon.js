@@ -1,4 +1,4 @@
-import eventsCenter from '../EventsCenter'
+import eventsCenter from '../EventsCenter';
 import ButtonPressHandlers from '../ButtonPressHandlers';
 
 
@@ -23,7 +23,7 @@ export default class Cannon extends Phaser.Scene {
     this.tries = 0;
     this.started = false;
     this.buttonHandlers = new ButtonPressHandlers();
-    this.gamePad = null
+    this.gamePad = null;
   }
 
   preload() {
@@ -199,7 +199,7 @@ export default class Cannon extends Phaser.Scene {
 
     this.createAnims();
 
-    eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer') })
+    eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer'); });
 
   }
 
@@ -303,11 +303,11 @@ export default class Cannon extends Phaser.Scene {
           this
         );
       }
-      
+
       if (this.gameOver && !this.sent) {
         eventsCenter.emit('stop_timer');
         eventsCenter.emit("game-end", this.victory);
-        this.sent = true
+        this.sent = true;
       }
     }
   }
@@ -330,16 +330,16 @@ export default class Cannon extends Phaser.Scene {
 
   startGamePad() {
     if (this.input.gamepad.total) {
-        this.gamePad = this.input.gamepad.pad1;
-        this.initGamePad();
-        console.log(this.gamePad);
+      this.gamePad = this.input.gamepad.pad1;
+      this.initGamePad();
+      console.log(this.gamePad);
     }
   }
 
   initGamePad() {
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.userInput(-1));
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.userInput(1));
-    this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.userInput(0)});
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x < -0.5, () => this.userInput(-1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x > 0.5, () => this.userInput(1));
+    this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.userInput(0); });
   }
 
   userInput(x) {
@@ -353,7 +353,7 @@ export default class Cannon extends Phaser.Scene {
       this.cannonSelect = 3;
       this.time.delayedCall(100, this.animateCannonBall, [], this);
     }
-    if ( this.cannonSelect === 3 && x === 1) {
+    if (this.cannonSelect === 3 && x === 1) {
       this.cannonSelect = 0;
       this.time.delayedCall(100, this.animateCannonBall, [], this);
     }

@@ -1,4 +1,4 @@
-import eventsCenter from '../EventsCenter'
+import eventsCenter from '../EventsCenter';
 import ButtonPressHandlers from '../ButtonPressHandlers';
 
 export default class HideFromCat extends Phaser.Scene {
@@ -30,7 +30,7 @@ export default class HideFromCat extends Phaser.Scene {
         this.Left;
         this.Right;
         this.buttonHandlers = new ButtonPressHandlers();
-        this.gamePad = null
+        this.gamePad = null;
 
         this.side = 0;
         this.sweeping = false;
@@ -97,7 +97,7 @@ export default class HideFromCat extends Phaser.Scene {
         this.hitbox1 = this.physics.add.sprite(0, 0, 'hitbox');
         this.hitbox2 = this.physics.add.sprite(0, 0, 'hitbox');
         this.hitboxes = [this.hitbox1, this.hitbox2];
-        this.hitboxes.forEach((param) => { param.visible = 0; })
+        this.hitboxes.forEach((param) => { param.visible = 0; });
         this.mouse = this.physics.add.sprite(150, 660, 'mouse');
         this.mouse.setScale(0.4).toggleFlipX().depth = 2;
         this.mouse.setCollideWorldBounds(true);
@@ -123,7 +123,7 @@ export default class HideFromCat extends Phaser.Scene {
         });
 
 
-        eventsCenter.on('start_game', () => { this.started = true; eventsCenter.emit('stop_timer') })
+        eventsCenter.on('start_game', () => { this.started = true; eventsCenter.emit('stop_timer'); });
 
     }
 
@@ -138,7 +138,7 @@ export default class HideFromCat extends Phaser.Scene {
                 this.time.delayedCall(2000, () => {
                     this.startText.visible = 0;
                     this.gamestarted = true;
-                    this.globalState.timerMessage('start_timer')
+                    this.globalState.timerMessage('start_timer');
                 }, [], this);
             }
             if (!this.gameOver && this.gamestarted) {
@@ -162,10 +162,10 @@ export default class HideFromCat extends Phaser.Scene {
             if (this.gameOver && !this.sent) {
                 eventsCenter.emit('stop_timer');
                 eventsCenter.emit("game-end", this.victory);
-                this.sent = true
+                this.sent = true;
             }
-           
-            
+
+
         }
     }
 
@@ -177,8 +177,8 @@ export default class HideFromCat extends Phaser.Scene {
     }
 
     initGamePad() {
-        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.updatePlayer(0));
-        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.updatePlayer(1));
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x < -0.5, () => this.updatePlayer(0));
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x > 0.5, () => this.updatePlayer(1));
         this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 0, () => this.updatePlayer(2));
 
     }
@@ -237,7 +237,7 @@ export default class HideFromCat extends Phaser.Scene {
     }
 
     displayStartText() {
-        this.startText = this.add.text(540, 160, '')
+        this.startText = this.add.text(540, 160, '');
         this.startText.setStyle({
             fontSize: '72px',
             fill: '#000000',
@@ -246,7 +246,7 @@ export default class HideFromCat extends Phaser.Scene {
             strokeThickness: 12
         });
         this.startText.setText("Steal the cheese!");
-        this.startText.setOrigin(0.5)
+        this.startText.setOrigin(0.5);
         this.startText.depth = 20;
         this.startText.visible = 1;
     }
@@ -321,27 +321,27 @@ export default class HideFromCat extends Phaser.Scene {
     }
 
     updatePlayer(x) {
-        if (this.Right.isDown || x === 1) {
+        if (/*this.Right.isDown || */ x === 1) {
             this.mouse.flipX = true;
             this.mouse.anims.play('run');
             this.mouse.setVelocityX(500);
         }
-        else if (this.Left.isDown || x === 0) {
+        else if (/*this.Left.isDown || */x === 0) {
             this.mouse.flipX = false;
             this.mouse.anims.play('run');
             this.mouse.setVelocityX(-500);
         }
-        else if(x === 2) {
+        else if (x === 2) {
             this.mouse.anims.play('idleMouse');
             this.mouse.setVelocityX(0);
-            
+
         }
     }
 
     //ms = flash duration
     flashArrows(ms) {
-        this.arrows.forEach((param) => { param.visible = true });
-        this.time.delayedCall(ms, () => { this.arrows.forEach((param) => { param.visible = false }); }, [], this);
+        this.arrows.forEach((param) => { param.visible = true; });
+        this.time.delayedCall(ms, () => { this.arrows.forEach((param) => { param.visible = false; }); }, [], this);
     }
 
     //gameOver conditional used to prevent win/loss functions from running multiple times (possible cause of lag)
@@ -368,7 +368,7 @@ export default class HideFromCat extends Phaser.Scene {
     }
 
     displayDeadText() {
-        this.deadText = this.add.text(540, 360, '')
+        this.deadText = this.add.text(540, 360, '');
         this.deadText.setStyle({
             fontSize: '100px',
             fill: '#ff0000',
@@ -384,7 +384,7 @@ export default class HideFromCat extends Phaser.Scene {
     }
 
     displayWinText() {
-        this.winText = this.add.text(540, 360, '')
+        this.winText = this.add.text(540, 360, '');
         this.winText.setStyle({
             fontSize: '100px',
             fill: '#00ff00',

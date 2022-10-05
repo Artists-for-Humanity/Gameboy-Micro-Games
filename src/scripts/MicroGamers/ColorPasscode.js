@@ -1,4 +1,4 @@
-import eventsCenter from '../EventsCenter'
+import eventsCenter from '../EventsCenter';
 import ButtonPressHandlers from '../ButtonPressHandlers';
 export default class ColorPasscode extends Phaser.Scene {
     // Game Class Constructor
@@ -43,7 +43,7 @@ export default class ColorPasscode extends Phaser.Scene {
         this.Down;
         this.Up;
         this.buttonHandlers = new ButtonPressHandlers();
-        this.gamePad = null
+        this.gamePad = null;
 
     }
 
@@ -90,7 +90,7 @@ export default class ColorPasscode extends Phaser.Scene {
         // this.Right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         // this.Down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
         // this.Up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-        
+
 
         this.lightRed = this.add.sprite(408, 334, 'lightRed');
         this.lightYellow = this.add.sprite(678, 334, 'lightYellow');
@@ -124,8 +124,8 @@ export default class ColorPasscode extends Phaser.Scene {
         }
         // console.log(this.pattern);
 
-        eventsCenter.on('start_game', () => { this.started2 = true; eventsCenter.emit('stop_timer') })
-        console.log('start')
+        eventsCenter.on('start_game', () => { this.started2 = true; eventsCenter.emit('stop_timer'); });
+        console.log('start');
     }
 
     update(time, delta) {
@@ -147,7 +147,7 @@ export default class ColorPasscode extends Phaser.Scene {
             }
 
             if (this.goText.alpha > 0) {
-                this.time.delayedCall(400, () => { this.goText.alpha -= 0.08; })
+                this.time.delayedCall(400, () => { this.goText.alpha -= 0.08; });
             }
 
             if (this.interactive && !this.gameOver) {
@@ -161,7 +161,7 @@ export default class ColorPasscode extends Phaser.Scene {
             if (this.gameOver && !this.sent) {
                 eventsCenter.emit('stop_timer');
                 eventsCenter.emit("game-end", this.victory);
-                this.sent = true
+                this.sent = true;
             }
 
         }
@@ -176,10 +176,10 @@ export default class ColorPasscode extends Phaser.Scene {
     }
 
     initGamePad() {
-        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.userInput(3));
-        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.userInput(1));
-        this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 1, () => this.userInput(2));
-        this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === -1, () => this.userInput(0));
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x < -0.7, () => this.userInput(3));
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x > 0.7, () => this.userInput(1));
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.y > 0.7, () => this.userInput(2));
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.y < -0.7, () => this.userInput(0));
     }
 
     drawUI() {
@@ -201,7 +201,7 @@ export default class ColorPasscode extends Phaser.Scene {
     }
 
     setText() {
-        this.goText = this.add.text(540, 360, '')
+        this.goText = this.add.text(540, 360, '');
         this.goText.setStyle({
             fontSize: '120px',
             fill: '#000000',
@@ -226,7 +226,7 @@ export default class ColorPasscode extends Phaser.Scene {
         this.winText.visible = false;
         this.winText.depth = 20;
 
-        this.lossText = this.add.text(540, 360, 'YOU LOST!')
+        this.lossText = this.add.text(540, 360, 'YOU LOST!');
         this.lossText.setStyle({
             fontSize: '160px',
             fill: '#ff0000',
@@ -248,7 +248,7 @@ export default class ColorPasscode extends Phaser.Scene {
         //turns on interaction 4 seconds after board appear (4 * 500 + 2000 = 4000ms)
         this.time.delayedCall(this.pattern.length * 500 + 2000, () => {
             this.goText.alpha = 1;
-            this.interactive = true
+            this.interactive = true;
             this.globalState.timerMessage('start_timer');
             this.hideGuessBlocks();
             for (var i = 0; i < this.guessBlocks.length; i++) {

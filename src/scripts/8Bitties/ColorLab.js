@@ -53,7 +53,7 @@ export default class ColorLab extends Phaser.Scene {
     this.createImage = false;
 
     this.buttonHandlers = new ButtonPressHandlers();
-    this.gamePad = null
+    this.gamePad = null;
   }
   preload() {
     this.load.addFile(new WebFontFile(this.load, "Russo One"));
@@ -138,14 +138,14 @@ export default class ColorLab extends Phaser.Scene {
     this.yellowVialNotEmpty = true;
 
     eventsCenter.on('start_game', () => {
-      this.started = true; 
-      this.globalState.timerMessage('start_timer'); 
-    })
+      this.started = true;
+      this.globalState.timerMessage('start_timer');
+    });
   }
 
   update() {
     if (this.gameOver && !this.sent) {
-      eventsCenter.emit('stop_timer')
+      eventsCenter.emit('stop_timer');
       eventsCenter.emit("game-end", this.victory);
       this.sent = true;
     };
@@ -207,18 +207,18 @@ export default class ColorLab extends Phaser.Scene {
 
   startGamePad() {
     if (this.input.gamepad.total) {
-        this.gamePad = this.input.gamepad.pad1;
-        this.initGamePad();
-        console.log(this.gamePad);
+      this.gamePad = this.input.gamepad.pad1;
+      this.initGamePad();
+      console.log(this.gamePad);
     }
   }
 
   initGamePad() {
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.userInput(0));
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => {
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x < -0.5, () => this.userInput(0));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x > 0.5, () => {
       this.userInput(1);
-      console.log('POOP')
-    })
+      console.log('POOP');
+    });
     this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => this.userInput(2));
   }
 
