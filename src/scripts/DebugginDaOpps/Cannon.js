@@ -198,6 +198,7 @@ export default class Cannon extends Phaser.Scene {
 
 
     this.createAnims();
+    this.animateCannonBall();
 
     eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer'); });
 
@@ -345,25 +346,38 @@ export default class Cannon extends Phaser.Scene {
   userInput(x) {
 
     //left and right
-    if ((this.cannonSelect === 0 && x === 1) || (this.cannonSelect > 0 && this.cannonSelect < 3 && x === 1)) {
+    if ((this.cannonSelect > 0 && this.cannonSelect < 3 && x === 1)) {
       this.cannonSelect += 1;
       this.time.delayedCall(100, this.animateCannonBall, [], this);
     }
-    if (this.cannonSelect === 0 && x === -1) {
+    else if ((this.cannonSelect > 0 && this.cannonSelect < 3 && x === -1)) {
+      this.cannonSelect -= 1;
+      this.time.delayedCall(100, this.animateCannonBall, [], this);
+    }
+    else if (this.cannonSelect === 0 && x === -1) {
       this.cannonSelect = 3;
       this.time.delayedCall(100, this.animateCannonBall, [], this);
     }
+    // <<<<<<< HEAD
     if (this.cannonSelect === 3 && x === 1) {
+      // =======
+    }
+    else if (this.cannonSelect === 0 && x === 1) {
+      this.cannonSelect = 1;
+      this.time.delayedCall(100, this.animateCannonBall, [], this);
+    }
+    else if (this.cannonSelect === 3 && x === 1) {
+      // >>>>>>> 2867269b8463fa8e8c8934d7458bdabec7d3859d
       this.cannonSelect = 0;
       this.time.delayedCall(100, this.animateCannonBall, [], this);
     }
-    if ((this.cannonSelect === 3 && x === -1) || (this.cannonSelect > 0 && this.cannonSelect < 3 && x === -1)) {
-      this.cannonSelect -= 1;
+    else if (this.cannonSelect === 3 && x === -1) {
+      this.cannonSelect = 2;
       this.time.delayedCall(100, this.animateCannonBall, [], this);
     }
 
     //shoot
-    if (x === 0 && this.selectedValue != 0) {
+    else if (x === 0 && this.selectedValue != 0) {
       this.cannon.anims.play("DO1_cannon_shoot", true);
       this.fire.anims.play("DO1_fire", true).setVisible(true);
       this.totalBarrels -= this.selectedValue;
