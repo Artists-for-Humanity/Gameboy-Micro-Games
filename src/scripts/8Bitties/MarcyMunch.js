@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import ButtonPressHandlers from '../ButtonPressHandlers';
 import eventsCenter from "../EventsCenter";
 
 export default class Chew extends Phaser.Scene {
@@ -16,6 +17,8 @@ export default class Chew extends Phaser.Scene {
     this.marcy;
     this.frameNum = 0;
     this.started = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null
   }
   preload() {
     this.load.spritesheet(
@@ -80,14 +83,25 @@ export default class Chew extends Phaser.Scene {
   }
   update() {
     if(this.started){
-      if (this.biteCount < 6) 
-        this.chewing();
+      this.buttonHandlers.update();
+      if (!this.gamePad) this.startGamePad();
       if(this.gameOver && !this.sent){
         this.globalState.timerMessage('stop_timer')
         this.globalState.sendMessage(this.victory)
         this.sent = true
       }
     }
+  }
+  startGamePad() {
+      if (this.input.gamepad.total) {
+          this.gamePad = this.input.gamepad.pad1;
+          this.initGamePad();
+          console.log(this.gamePad);
+      }
+    }
+
+  initGamePad() {
+      this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => {if (this.biteCount < 6) this.chewing()});
   }
   makeAnims() {
     this.anims.create({
@@ -125,7 +139,7 @@ export default class Chew extends Phaser.Scene {
     });
   }
   chewing() {
-    if (Phaser.Input.Keyboard.JustDown(this.spacebar)) this.keyInt += 1;
+    this.keyInt += 1;
     if (this.keyInt === 1) {
       this.chewInt += 1;
       this.keyInt = 0;

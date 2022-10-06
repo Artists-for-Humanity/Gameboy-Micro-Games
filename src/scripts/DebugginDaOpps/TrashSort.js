@@ -1,5 +1,6 @@
-import eventsCenter from "../EventsCenter";
-import phaserJuice from "../phaser3-juice-plugin/dist/phaserJuice.min.js";
+import eventsCenter from '../EventsCenter';
+import ButtonPressHandlers from '../ButtonPressHandlers';
+
 
 export default class TrashSort extends Phaser.Scene {
   // Game Class Constructor
@@ -21,7 +22,8 @@ export default class TrashSort extends Phaser.Scene {
     this.gameOver = false;
     this.sent = false;
     this.started = false;
-    this.juice;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
   }
 
   preload() {
@@ -91,16 +93,16 @@ export default class TrashSort extends Phaser.Scene {
 
     this.timedEvent = this.time.delayedCall(1000, this.onEvent, [], this);
 
-    eventsCenter.on("start_game", () => {
-      this.started = true;
-      this.globalState.timerMessage("start_timer");
-    });
+    eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer'); });
 
     this.juice = new phaserJuice(this);
   }
 
   update() {
     if (this.started) {
+      this.buttonHandlers.update();
+      if (!this.gamePad) this.startGamePad();
+
       if (this.playerScore === this.triesToWin) {
         this.currTrashItem.visible = false;
         this.victory = true;
@@ -140,6 +142,22 @@ export default class TrashSort extends Phaser.Scene {
       this.sent = true;
     }
   }
+  startGamePad() {
+    if (this.input.gamepad.total) {
+      this.gamePad = this.input.gamepad.pad1;
+      this.initGamePad();
+      console.log(this.gamePad);
+    }
+  }
+
+  initGamePad() {
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x < -0.5, () => this.moveTrash(-1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x > 0.5, () => this.moveTrash(1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 0, () => this.moveTrash(0));
+
+
+
+  }
 
   timerCountdown(time) {
     if (time / 1000 > 10) {
@@ -154,7 +172,7 @@ export default class TrashSort extends Phaser.Scene {
     this.addTrashCollider(this.recycleBin);
     this.addTrashCollider(this.trashBin);
     this.currTrashItem.y += 5;
-    this.moveTrash();
+    // this.moveTrash();
   }
 
   // Spawn new trash onto the screen, replace the trash image of the currentTrashItem, and reset the y coordinate.
@@ -168,18 +186,23 @@ export default class TrashSort extends Phaser.Scene {
       .setScale(0.12, 0.12);
   }
 
-  moveTrash() {
-    if (this.cursors.left.isDown) {
-      this.currTrashItem.x -= 3;
-    }
-    if (this.cursors.right.isDown) {
-      this.currTrashItem.x += 3;
+  moveTrash(x) {
+    if (!this.gameOver) {
+      if (x === -1) {
+        this.currTrashItem.setVelocityX(-300);
+      }
+      if (x === 1) {
+        this.currTrashItem.setVelocityX(300);
+      }
+      if (x === 0) {
+        this.currTrashItem.setVelocityX(0);
+      }
     }
   }
 
   addTrashCollider(trashBinType) {
     const destination = this.trashBinMap[this.currTrashItem.texture.key];
-    this.physics.add.collider(this.currTrashItem, trashBinType, (a, b) => {
+    this.physics.add.overlap(this.currTrashItem, trashBinType, (a, b) => {
       if (destination !== trashBinType.texture.key) {
         this.gameOver = true;
         this.gameOverScreen.visible = true;

@@ -1,5 +1,5 @@
 import eventsCenter from "../EventsCenter";
-
+import ButtonPressHandlers from '../ButtonPressHandlers';
 export default class CarPump extends Phaser.Scene {
   // Game Class Constructor
   constructor() {
@@ -26,9 +26,8 @@ export default class CarPump extends Phaser.Scene {
     this.downInt = 0;
     this.inflateInt = 0;
     this.endgameTimer = 0;
-    this.downWasPressed = true;
-    this.upWasPressed = true;
-    this.pumpToWin = 20;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
   }
 
   preload() {
@@ -111,12 +110,104 @@ export default class CarPump extends Phaser.Scene {
     this.car100.visible = false;
     this.gameOverScreen.visible = false;
     this.createAnimations();
-    eventsCenter.on("start_game", () => {
-      this.started = true;
-      this.globalState.timerMessage("start_timer");
-    });
+    eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer'); });
+
   }
 
+  update() {
+    if (this.started) {
+      this.buttonHandlers.update();
+      if (!this.gamePad) this.startGamePad();
+      // this.upAndDown();
+      this.pumpToWin();
+
+      if (this.gameOver && !this.sent) {
+        eventsCenter.emit('stop_timer');
+        eventsCenter.emit("game-end", this.victory);
+        this.sent = true;
+      }
+
+    }
+  }
+  startGamePad() {
+    if (this.input.gamepad.total) {
+      this.gamePad = this.input.gamepad.pad1;
+      this.initGamePad();
+      console.log(this.gamePad);
+    }
+  }
+
+  initGamePad() {
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y > 0.7, () => this.upAndDown(0));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y < -0.7, () => this.upAndDown(1));
+  }
+  onEvent() {
+    this.tempBg.visible = false;
+    this.gameStarted = true;
+  }
+  infalte1() {
+    if (this.car1 === false) {
+      this.car25.anims.play("DO2_car_inflate25%");
+      this.car1 = true;
+    }
+  }
+  inflate2() {
+    if (this.car2 === false) {
+      this.car50.anims.play("DO2_car_inflate50%");
+      this.car2 = true;
+      this.car25.visible = false;
+      this.car50.visible = true;
+    }
+  }
+  inflate3() {
+    if (this.car3 === false) {
+      this.car50.visible = false;
+      this.car75.visible = true;
+      this.car75.anims.play("DO2_car_inflate75%");
+      this.car3 = true;
+    }
+  }
+  inflate4() {
+    if (this.car4 === false) {
+      this.car75.visible = false;
+      this.car100.anims.play("DO2_car_inflate100%");
+      this.car4 = true;
+      this.car100.visible = true;
+      this.victory = true;
+      this.gameStarted = false;
+      this.gameOver = true;
+      this.gameStarted = false;
+      this.endText = this.add.text(300, 360, "You Won!");
+      this.endText.setStyle({
+        fontSize: "100px",
+        fill: "#000000",
+        align: "center",
+      });
+    }
+  }
+  upAndDown(x) {
+    if (x === 0 || Phaser.Input.Keyboard.JustDown(this.up)) {
+      this.upArrow.visible = true;
+      this.downArrow.visible = false;
+      this.lever.anims.play("DO2_lever_up");
+    }
+    if (x === 1 || Phaser.Input.Keyboard.JustDown(this.down)) {
+      this.upArrow.visible = false;
+      this.downArrow.visible = true;
+      this.lever.anims.play("DO2_lever_down");
+      this.downInt += 1;
+    }
+  }
+  pumpToWin() {
+    if (this.downInt === 5) {
+      this.downInt = 0;
+      this.inflateInt += 1;
+    }
+    if (this.inflateInt === 1) this.infalte1();
+    if (this.inflateInt === 2) this.inflate2();
+    if (this.inflateInt === 3) this.inflate3();
+    if (this.inflateInt === 4) this.inflate4();
+  }
   createAnimations() {
     this.anims.create({
       key: "DO2_lever_up",

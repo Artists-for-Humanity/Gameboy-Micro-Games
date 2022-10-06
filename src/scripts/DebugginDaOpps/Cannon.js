@@ -1,4 +1,5 @@
-import eventsCenter from '../EventsCenter'
+import eventsCenter from '../EventsCenter';
+import ButtonPressHandlers from '../ButtonPressHandlers';
 
 
 export default class Cannon extends Phaser.Scene {
@@ -21,6 +22,8 @@ export default class Cannon extends Phaser.Scene {
     this.sent = false;
     this.tries = 0;
     this.started = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
   }
 
   preload() {
@@ -192,8 +195,9 @@ export default class Cannon extends Phaser.Scene {
 
 
     this.createAnims();
+    this.animateCannonBall();
 
-    eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer') })
+    eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer'); });
 
   }
 
@@ -278,7 +282,8 @@ export default class Cannon extends Phaser.Scene {
 
   update(time, delta) {
     if (this.started) {
-      console.log(this.started)
+      this.buttonHandlers.update();
+      if (!this.gamePad) this.startGamePad();
 
       // if (!this.gameOver) {
       if (this.totalBarrels === 0 && this.tries <= 2) {
@@ -296,69 +301,11 @@ export default class Cannon extends Phaser.Scene {
           this
         );
       }
-      if (
-        Phaser.Input.Keyboard.JustDown(this.SPACE) &&
-        this.selectedValue != 0
-      ) {
-        this.cannon.anims.play("DO1_cannon_shoot", true);
-        this.fire.anims.play("DO1_fire", true).setVisible(true);
-        this.totalBarrels -= this.selectedValue;
-        if (this.selectedValue > this.barrelGrp.getChildren().length) {
-          this.gameOver = true;
-          this.time.delayedCall(
-            2000,
-            () => {
-              this.gameOverScreen.setVisible(true);
-            },
-            [],
-            this
-          );
-        } else {
-          this.removeBarrels();
-          this.inputNum += 1;
-          this.tries += 1;
-        }
-      }
-      if (
-        (this.cannonSelect === 0 &&
-          Phaser.Input.Keyboard.JustDown(this.RIGHT)) ||
-        (this.cannonSelect > 0 &&
-          this.cannonSelect < 3 &&
-          Phaser.Input.Keyboard.JustDown(this.RIGHT))
-      ) {
-        this.cannonSelect += 1;
-        this.time.delayedCall(100, this.animateCannonBall, [], this);
-      }
-      if (
-        this.cannonSelect === 0 &&
-        Phaser.Input.Keyboard.JustDown(this.LEFT)
-      ) {
-        this.cannonSelect = 3;
-        this.time.delayedCall(100, this.animateCannonBall, [], this);
-      }
 
-      if (
-        this.cannonSelect === 3 &&
-        Phaser.Input.Keyboard.JustDown(this.RIGHT)
-      ) {
-        this.cannonSelect = 0;
-        this.time.delayedCall(100, this.animateCannonBall, [], this);
-      }
-      if (
-        (this.cannonSelect === 3 &&
-          Phaser.Input.Keyboard.JustDown(this.LEFT)) ||
-        (this.cannonSelect > 0 &&
-          this.cannonSelect < 3 &&
-          Phaser.Input.Keyboard.JustDown(this.LEFT))
-      ) {
-        this.cannonSelect -= 1;
-        this.time.delayedCall(100, this.animateCannonBall, [], this);
-      }
-      // }
       if (this.gameOver && !this.sent) {
         eventsCenter.emit('stop_timer');
         eventsCenter.emit("game-end", this.victory);
-        this.sent = true
+        this.sent = true;
       }
     }
   }
@@ -377,6 +324,77 @@ export default class Cannon extends Phaser.Scene {
         this.barrelGrp.getChildren()[i].setVisible(false);
       }
     }
+  }
+
+  startGamePad() {
+    if (this.input.gamepad.total) {
+      this.gamePad = this.input.gamepad.pad1;
+      this.initGamePad();
+      console.log(this.gamePad);
+    }
+  }
+
+  initGamePad() {
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x < -0.5, () => this.userInput(-1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x > 0.5, () => this.userInput(1));
+    this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.userInput(0); });
+  }
+
+  userInput(x) {
+
+    //left and right
+    if ((this.cannonSelect > 0 && this.cannonSelect < 3 && x === 1)) {
+      this.cannonSelect += 1;
+      this.time.delayedCall(100, this.animateCannonBall, [], this);
+    }
+    else if ((this.cannonSelect > 0 && this.cannonSelect < 3 && x === -1)) {
+      this.cannonSelect -= 1;
+      this.time.delayedCall(100, this.animateCannonBall, [], this);
+    }
+    else if (this.cannonSelect === 0 && x === -1) {
+      this.cannonSelect = 3;
+      this.time.delayedCall(100, this.animateCannonBall, [], this);
+    }
+    // <<<<<<< HEAD
+    if (this.cannonSelect === 3 && x === 1) {
+      // =======
+    }
+    else if (this.cannonSelect === 0 && x === 1) {
+      this.cannonSelect = 1;
+      this.time.delayedCall(100, this.animateCannonBall, [], this);
+    }
+    else if (this.cannonSelect === 3 && x === 1) {
+      // >>>>>>> 2867269b8463fa8e8c8934d7458bdabec7d3859d
+      this.cannonSelect = 0;
+      this.time.delayedCall(100, this.animateCannonBall, [], this);
+    }
+    else if (this.cannonSelect === 3 && x === -1) {
+      this.cannonSelect = 2;
+      this.time.delayedCall(100, this.animateCannonBall, [], this);
+    }
+
+    //shoot
+    else if (x === 0 && this.selectedValue != 0) {
+      this.cannon.anims.play("DO1_cannon_shoot", true);
+      this.fire.anims.play("DO1_fire", true).setVisible(true);
+      this.totalBarrels -= this.selectedValue;
+      if (this.selectedValue > this.barrelGrp.getChildren().length) {
+        this.gameOver = true;
+        this.time.delayedCall(
+          2000,
+          () => {
+            this.gameOverScreen.setVisible(true);
+          },
+          [],
+          this
+        );
+      } else {
+        this.removeBarrels();
+        this.inputNum += 1;
+        this.tries += 1;
+      }
+    }
+
   }
 
   gameWon() {

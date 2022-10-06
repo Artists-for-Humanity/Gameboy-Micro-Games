@@ -24,6 +24,7 @@ import MainMenu from "./MainMenu";
 import Timer from "./Timer";
 import MarcyMunch from "./8Bitties/MarcyMunch";
 import CircleJump from "./TeamInflation/CircleJump";
+import Factory from "./Fairway/factoryScripts/factoryScenes/Factory";
 
 // Set configuration for phaser game instance
 const juice = new phaserJuice(this);
@@ -34,7 +35,6 @@ const config = {
   height: 720,
   transparent: false,
   backgroundColor: "#4488aa",
-
   // Add physics, arcade, scene, and audio
   physics: {
     default: "arcade",
@@ -45,7 +45,9 @@ const config = {
       debug: false,
     },
   },
-
+  input: {
+    gamepad: true
+  },
   scene: [
     MainMenu,
     CutScreen,
@@ -57,6 +59,7 @@ const config = {
     BetweenSpace,
     CircleJump,
     Lowest,
+    Factory,
     FrogJump,
     TugOWar,
     FlySwat,
@@ -73,16 +76,15 @@ const config = {
     disableWebAudio: true,
   },
   plugins: {
-    global: [
-      {
-        key: "GlobalState",
-        plugin: GlobalState,
-        start: false,
-        mapping: "globalState",
-      },
-    ],
+    global: [{
+      key: "GlobalState",
+      plugin: GlobalState,
+      start: false,
+      mapping: "globalState",
+    },],
   },
 };
 
 // Initialize game instance
 new Phaser.Game(config);
+

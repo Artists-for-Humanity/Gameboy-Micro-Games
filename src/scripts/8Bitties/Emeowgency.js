@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import eventsCenter from "../EventsCenter";
+import ButtonPressHandlers from '../ButtonPressHandlers';
 
 
 export default class Emeowgency extends Phaser.Scene {
@@ -13,7 +14,7 @@ export default class Emeowgency extends Phaser.Scene {
     this.gamestart = false;
 
     // Game Object Declaration
-    this.timer = 43
+    this.timer = 43;
     this.catchScale = 0;
     this.catch;
     this.grass;
@@ -39,8 +40,9 @@ export default class Emeowgency extends Phaser.Scene {
     this.sent = false;
     this.gOtimer = 0;
     this.fallen = false;
-    this.started = false
-
+    this.started = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
   }
 
   preload() {
@@ -127,20 +129,23 @@ export default class Emeowgency extends Phaser.Scene {
       Phaser.Input.Keyboard.KeyCodes.RIGHT
     );
     this.spawnBlanket();
-    
-    eventsCenter.on('start_game', () => {this.started = true; this.globalState.timerMessage('start_timer'); this.gameStart();
-  })
+
+    eventsCenter.on('start_game', () => {
+      this.started = true; this.globalState.timerMessage('start_timer'); this.gameStart();
+    });
 
   }
 
   update() {
-    if(this.started){
-      this.catch.setVisible(false)
+    if (this.started) {
+      this.buttonHandlers.update();
+      if (!this.gamePad) this.startGamePad();
+      this.catch.setVisible(false);
       this.gameOverTimer();
       this.playSafe();
       this.playFail();
       this.scaleCatch();
-  
+
       if (this.shadow) {
         this.scaleShadow();
       }
@@ -149,29 +154,47 @@ export default class Emeowgency extends Phaser.Scene {
         if (this.cat.y !== this.shadow.y) {
           this.cat.y += 4;
         }
-      if(this.catFall)
-        this.moveBlanket();
+        if (this.catFall)
+          this.moveBlanket();
       }
-  
+
       if (this.gameOver && !this.sent) {
-        eventsCenter.emit('stop_timer')
+        eventsCenter.emit('stop_timer');
         eventsCenter.emit("game-end", this.victory);
         this.sent = true;
-  
+
       }
 
     }
   }
 
+  startGamePad() {
+    if (this.input.gamepad.total) {
+      this.gamePad = this.input.gamepad.pad1;
+      this.initGamePad();
+      console.log(this.gamePad);
+    }
+  }
+
+  initGamePad() {
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x < -0.5, () => this.moveBlanket(-1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x > 0.5, () => this.moveBlanket(1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y > 0.5, () => this.moveBlanket(-2));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y < -0.5, () => this.moveBlanket(2));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 0, () => this.moveBlanket(0));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 0, () => this.moveBlanket(3));
+  }
+
+
   //Catch!, the image in the beggining
   scaleCatch() {
     if (this.catchScale <= 1) {
-      
+
       this.catchScale += 0.3 / this.timer;
       this.catch.setScale(this.catchScale);
     } else if (this.timer === 43) {
       this.catch.destroy();
-      
+
       this.timer = 0;
       this.catfalling = true;
     }
@@ -179,11 +202,11 @@ export default class Emeowgency extends Phaser.Scene {
 
   //starts the game after Catch! finnishes popping up
   gameStart() {
-    if(!this.gameOver){
+    if (!this.gameOver) {
       this.spawnShadow();
       this.spawnCat();
     }
-    
+
   }
 
   //makes a random x and y coordiante
@@ -242,7 +265,7 @@ export default class Emeowgency extends Phaser.Scene {
 
 
         if (this.catSafe === true) {
-          this.safeScaleToggle = true;   
+          this.safeScaleToggle = true;
         }
         if (this.catSafe === false) {
           this.catFail = true;
@@ -265,19 +288,21 @@ export default class Emeowgency extends Phaser.Scene {
   }
 
   //moves the blanket with arrow keys
-  moveBlanket() {
-    if (this.up.isDown) {
-      this.blanket.y -= 5;
+  moveBlanket(x) {
+    if (x === 2) {
+      this.blanket.setVelocityY(-350);
     }
-    if (this.down.isDown) {
-      this.blanket.y += 5;
+    if (x === -2) {
+      this.blanket.setVelocityY(350);
     }
-    if (this.left.isDown) {
-      this.blanket.x -= 5;
+    if (x === -1) {
+      this.blanket.setVelocityX(-350);
     }
-    if (this.right.isDown) {
-      this.blanket.x += 5;
+    if (x === 1) {
+      this.blanket.setVelocityX(350);
     }
+    if (x === 0) this.blanket.setVelocityX(0);
+    if (x === 3) this.blanket.setVelocityY(0);
   }
 
   //creates the image for safe! on cene and scales it up gradually
@@ -293,7 +318,7 @@ export default class Emeowgency extends Phaser.Scene {
         this.safe.setScale(this.safeScale);
       }
       else
-        this.gameOver = true
+        this.gameOver = true;
 
       this.victory = true;
 
@@ -313,7 +338,7 @@ export default class Emeowgency extends Phaser.Scene {
         this.fail.setScale(this.failScale);
       }
       else
-        this.gameOver = true
+        this.gameOver = true;
     }
   }
 
@@ -390,6 +415,7 @@ export default class Emeowgency extends Phaser.Scene {
     this.catSafe = true;
     this.victory = true;
     this.gOtimerToggle = true;
+    this.physics.pause();
   }
   youLose() {
     this.catFail = true;

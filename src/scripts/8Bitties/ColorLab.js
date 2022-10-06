@@ -1,5 +1,6 @@
 import WebFontFile from "../../scripts/WebFontFile";
 import eventsCenter from '../EventsCenter';
+import ButtonPressHandlers from '../ButtonPressHandlers';
 
 
 export default class ColorLab extends Phaser.Scene {
@@ -12,6 +13,7 @@ export default class ColorLab extends Phaser.Scene {
     this.victory = false;
     this.gameOver = false;
     this.sent = false;
+    this.started = false;
 
     this.timer;
     this.catchScale = 0;
@@ -49,6 +51,9 @@ export default class ColorLab extends Phaser.Scene {
     this.failScale = 0;
     this.failTimer = 0;
     this.createImage = false;
+
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
   }
   preload() {
     this.load.addFile(new WebFontFile(this.load, "Russo One"));
@@ -115,7 +120,7 @@ export default class ColorLab extends Phaser.Scene {
     this.vial_placement = 0;
     this.timer = 1;
 
-    this.userInput();
+    this.createUserInput();
 
     this.spacePressed = false;
     this.vialNotEmpty = true;
@@ -131,66 +136,101 @@ export default class ColorLab extends Phaser.Scene {
     this.redVialNotEmpty = true;
     this.blueVialNotEmpty = true;
     this.yellowVialNotEmpty = true;
+
+    eventsCenter.on('start_game', () => {
+      this.started = true;
+      this.globalState.timerMessage('start_timer');
+    });
   }
 
   update() {
     if (this.gameOver && !this.sent) {
-      eventsCenter.emit('stop_timer')
+      eventsCenter.emit('stop_timer');
       eventsCenter.emit("game-end", this.victory);
       this.sent = true;
     };
     console.log(this.victory);
 
-    this.playAnims();
-    if (this.lose === true) {
-      if (this.fail) {
-        if (this.failScale <= 1) {
-          this.failTimer++;
-          this.failScale += 0.2 / this.failTimer;
-          this.fail.setScale(this.failScale);
-          this.gameOver = true;
+    if (this.started) {
+
+      this.buttonHandlers.update();
+      if (!this.gamePad) this.startGamePad();
+
+      this.playAnims();
+      if (this.lose === true) {
+        if (this.fail) {
+          if (this.failScale <= 1) {
+            this.failTimer++;
+            this.failScale += 0.2 / this.failTimer;
+            this.fail.setScale(this.failScale);
+            this.gameOver = true;
+          }
         }
       }
-    }
-    if (this.victory === true) {
-      if (this.safe) {
-        if (this.safeScale <= 1) {
-          this.safeTimer++;
-          this.safeScale += 0.2 / this.safeTimer;
-          this.safe.setScale(this.safeScale);
-          this.gameOver = true;
-          this.victory = true;
+      if (this.victory === true) {
+        if (this.safe) {
+          if (this.safeScale <= 1) {
+            this.safeTimer++;
+            this.safeScale += 0.2 / this.safeTimer;
+            this.safe.setScale(this.safeScale);
+            this.gameOver = true;
+            this.victory = true;
+          }
         }
       }
-    }
-    if (this.timer > 50) {
-      this.decreasing = true;
-    }
-    if (this.timer < 1) {
-      this.decreasing = false;
-    }
+      if (this.timer > 50) {
+        this.decreasing = true;
+      }
+      if (this.timer < 1) {
+        this.decreasing = false;
+      }
 
-    if (this.decreasing) {
-      this.timer--;
-      this.arrow.y++;
-    } else {
-      this.timer++;
-      this.arrow.y--;
-    }
+      if (this.decreasing) {
+        this.timer--;
+        this.arrow.y++;
+      } else {
+        this.timer++;
+        this.arrow.y--;
+      }
 
-    if (Phaser.Input.Keyboard.JustDown(this.left) && this.arrow_placement > 0) {
+      if (Phaser.Input.Keyboard.JustDown(this.left) && this.arrow_placement > 0) {
+        this.arrow_placement--;
+      } else if (Phaser.Input.Keyboard.JustDown(this.right) && this.arrow_placement < 2) {
+        this.arrow_placement++;
+      }
+
+      var liftHeight = 613;
+      var dropHeight = 680;
+      this.vialSelection(liftHeight, dropHeight);
+    }
+  }
+
+  startGamePad() {
+    if (this.input.gamepad.total) {
+      this.gamePad = this.input.gamepad.pad1;
+      this.initGamePad();
+      console.log(this.gamePad);
+    }
+  }
+
+  initGamePad() {
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x < -0.5, () => this.userInput(0));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x > 0.5, () => {
+      this.userInput(1);
+      console.log('POOP');
+    });
+    this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => this.userInput(2));
+  }
+
+  userInput(x) {
+    if (x === 0 && this.arrow_placement > 0) {
       this.arrow_placement--;
-    } else if (
-      Phaser.Input.Keyboard.JustDown(this.right) &&
-      this.arrow_placement < 2
-    ) {
+    } else if (x === 1 && this.arrow_placement < 2) {
       this.arrow_placement++;
+    } else if (x === 2) {
+      this.spacePressed = true;
+      this.vialPouring();
     }
-
-    var liftHeight = 613;
-    var dropHeight = 680;
-    this.vialSelection(liftHeight, dropHeight);
-
   }
 
   vialSelection(liftHeight, dropHeight) {
@@ -217,7 +257,6 @@ export default class ColorLab extends Phaser.Scene {
           ],
           this
         );
-        this.playAnims;
         this.spacePressed = false;
         return;
       case 1:
@@ -242,7 +281,6 @@ export default class ColorLab extends Phaser.Scene {
           ],
           this
         );
-        this.playAnims;
         this.spacePressed = false;
         return;
       case 2:
@@ -267,7 +305,6 @@ export default class ColorLab extends Phaser.Scene {
           ],
           this
         );
-        this.playAnims;
         this.spacePressed = false;
         return;
 
@@ -276,7 +313,7 @@ export default class ColorLab extends Phaser.Scene {
     }
   }
 
-  userInput() {
+  createUserInput() {
     this.cursors = this.input.keyboard.createCursorKeys();
     this.left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
     this.right = this.input.keyboard.addKey(
