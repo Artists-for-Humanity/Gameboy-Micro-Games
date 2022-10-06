@@ -8,6 +8,7 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
     this.initialTime = 10;
     this.timedEvent;
     this.cutScreen;
+    this.gamePad = null;
   }
 
   test() {

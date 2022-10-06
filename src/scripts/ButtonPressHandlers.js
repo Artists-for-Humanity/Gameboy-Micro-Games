@@ -9,7 +9,7 @@ class ButtonPressHandlers extends Phaser.Scene {
             key: "ButtonPressHandlers",
         });
         this.buttonHandlers = [];
-        this.gamePad = null;
+        // this.gamePad = null;
     }
 
     preload() { }
@@ -33,13 +33,11 @@ class ButtonPressHandlers extends Phaser.Scene {
             handler.update();
         });
     }
-    // startGamePad() {
-    //     console.log(this.gamead);
-    //     if (this.input.gamepad.total) {
-    //         this.gamePad = this.input.gamepad.pad1;
-    //         this.initGamePad();
-    //         console.log(this.gamePad);
-    //     }
-    // }
+    startGamePad(scene) {
+        if (scene.input.gamepad.total) {
+            scene.globalState.gamePad = scene.input.gamepad.pad1;
+            scene.initGamePad();
+        }
+    }
 }
 export default ButtonPressHandlers;

@@ -27,7 +27,7 @@ export default class FlySwat extends Phaser.Scene {
     this.sent = false;
     this.started = false;
     this.gameStartRan = false;
-    this.gamePad = null;
+    // this.gamePad = null;
     this.buttonHandlers = new ButtonPressHandlers();
     // this.startGamePad = new ButtonPressHandlers().startGamePad();
   }
@@ -88,7 +88,7 @@ export default class FlySwat extends Phaser.Scene {
     if (!this.dead) this.moveFly();
     if (this.started) {
       this.buttonHandlers.updates();
-      if (!this.gamePad) this.buttonHandlers.startGamePad();
+      if (!this.globalState.gamePad) this.buttonHandlers.startGamePad(this);
       // this.buttonHandlers.startGamePad(this.gamePad);
       //this.playSwatText();
 
@@ -105,27 +105,27 @@ export default class FlySwat extends Phaser.Scene {
   }
 
 
-  startGamePad() {
-    if (this.input.gamepad.total) {
-      this.gamePad = this.input.gamepad.pad1;
-      console.log(this.gamepad);
-      this.initGamePad();
-      console.log(this.gamePad);
-    }
-  }
+  // startGamePad() {
+  //   if (this.input.gamepad.total) {
+  //     this.gamePad = this.input.gamepad.pad1;
+  //     console.log(this.gamepad);
+  //     this.initGamePad();
+  //     console.log(this.gamePad);
+  //   }
+  // }
 
   initGamePad() {
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x < -0.5, () => this.moveSwatter(-1));
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.moveSwatter(-11));
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x > 0.5, () => this.moveSwatter(1));
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.moveSwatter(11));
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y > 0.5, () => this.moveSwatter(-2));
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 1, () => this.moveSwatter(-22));
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y < -0.5, () => this.moveSwatter(2));
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === -1, () => this.moveSwatter(22));
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 0, () => this.moveSwatter(4));
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 0, () => this.moveSwatter(3));
-    this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.swat(); });
+    this.buttonHandlers.addPad(() => this.globalState.gamePad.leftStick.x < -0.5, () => this.moveSwatter(-1));
+    this.buttonHandlers.addPad(() => this.globalState.gamePad.leftStick.x === -1, () => this.moveSwatter(-11));
+    this.buttonHandlers.addPad(() => this.globalState.gamePad.leftStick.x > 0.5, () => this.moveSwatter(1));
+    this.buttonHandlers.addPad(() => this.globalState.gamePad.leftStick.x === 1, () => this.moveSwatter(11));
+    this.buttonHandlers.addPad(() => this.globalState.gamePad.leftStick.y > 0.5, () => this.moveSwatter(-2));
+    this.buttonHandlers.addPad(() => this.globalState.gamePad.leftStick.y === 1, () => this.moveSwatter(-22));
+    this.buttonHandlers.addPad(() => this.globalState.gamePad.leftStick.y < -0.5, () => this.moveSwatter(2));
+    this.buttonHandlers.addPad(() => this.globalState.gamePad.leftStick.y === -1, () => this.moveSwatter(22));
+    this.buttonHandlers.addPad(() => this.globalState.gamePad.leftStick.y === 0, () => this.moveSwatter(4));
+    this.buttonHandlers.addPad(() => this.globalState.gamePad.leftStick.x === 0, () => this.moveSwatter(3));
+    this.buttonHandlers.addPad(() => this.globalState.gamePad.buttons[0].pressed, () => { this.swat(); });
 
   }
 
