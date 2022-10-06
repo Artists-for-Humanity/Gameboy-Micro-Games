@@ -84,6 +84,7 @@ export default class FlySwat extends Phaser.Scene {
     this.createKeys();
     eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer'); });
     this.gameStart();
+    this.swatter.body.collideWorldBounds = true;
 
   }
 

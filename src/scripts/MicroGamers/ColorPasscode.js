@@ -125,7 +125,7 @@ export default class ColorPasscode extends Phaser.Scene {
         // console.log(this.pattern);
 
         eventsCenter.on('start_game', () => { this.started2 = true; eventsCenter.emit('stop_timer'); });
-        console.log('start');
+        // console.log('start');
     }
 
     update(time, delta) {

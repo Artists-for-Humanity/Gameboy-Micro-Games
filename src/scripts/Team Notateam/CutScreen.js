@@ -8,18 +8,18 @@ const L_START = -L_END;
 const R_START = 5 * L_END;
 
 const listOfGames = [
-    "BetweenSpace",
     "FlySwat",
+    "HideFromCat",
+    "FrogJump",
     "DrinkPour",
+    "CarPump",
+    "BetweenSpace",
     "Lowest",
     "Emeowgency",
     "TrashSort",
-    "CarPump",
     "SockToss",
     "MarcyMunch",
     "CircleJump",
-    "FrogJump",
-    "HideFromCat",
     "HitTheButton",
     "Factory",
     "ColorPasscode"

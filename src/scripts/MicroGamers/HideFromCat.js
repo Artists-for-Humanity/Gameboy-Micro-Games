@@ -352,7 +352,7 @@ export default class HideFromCat extends Phaser.Scene {
             this.gameOver = true;
             this.mouse.setVelocityX(0);
             this.physics.pause();
-            this.anims.pauseAll();
+            // this.anims.pauseAll();
         }
     }
 
@@ -363,7 +363,7 @@ export default class HideFromCat extends Phaser.Scene {
             this.gameOver = true;
             this.victory = true;
             this.physics.pause();
-            this.anims.pauseAll();
+            // this.anims.pauseAll();
         }
     }
 
