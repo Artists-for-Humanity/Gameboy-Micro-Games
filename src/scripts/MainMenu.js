@@ -81,12 +81,13 @@ export default class MainMenu extends Phaser.Scene {
     this.action = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
-
     this.animationBuilder();
     this.updateSelection();
   }
 
   update() {
+    // console.log(this.globalState.name) 
+
     this.buttonPresses();
     this.verticalWobble(this.fingerIcon, 0.5, 4);
   }

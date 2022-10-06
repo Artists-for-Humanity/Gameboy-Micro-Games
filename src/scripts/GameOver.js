@@ -55,12 +55,12 @@ export default class GameOver extends Phaser.Scene {
     this.load.spritesheet(
       "alphaSheet",
       new URL("../scripts/Team Notateam/assets/alphaSheet.png", import.meta.url)
-        .href
-    ,
+        .href,
       {
-        frameHeight: 236 ,
+        frameHeight: 236,
         frameWidth: 209,
-      });
+      }
+    );
   }
 
   create() {
@@ -76,7 +76,7 @@ export default class GameOver extends Phaser.Scene {
       fontStyle: "bold",
       align: "center",
     });
-    this.HighScoreText = this.add.sprite(660, 470, "alphaSheet").setScale(.3);
+    this.HighScoreText = this.add.sprite(660, 470, "alphaSheet").setScale(0.3);
     // this.buttonHandlers.addKey(this.arrowButtons.down, () => this.onDownInput());
     // this.buttonHandlers.addKey(this.arrowButtons.up, () => this.onUpInput());
     // this.buttonHandlers.addKey(this.confirmKey, () => this.onConfirmInput());
@@ -96,10 +96,16 @@ export default class GameOver extends Phaser.Scene {
     }
 
     if (this.initials.length === 3) {
-      gameDataBase.setScore(this.initials.join(''), this.globalState.score);
-      this.globalState.resetScore();
-      this.initials = [];
-      location.reload();
+      // gameDataBase.setScore(this.initials.join(''), this.globalState.score);
+      // this.globalState.resetScore();
+      // this.initials = [];
+      this.initials.push(this.globalState.score)
+      if (this.globalState.names.length < 10) {
+        this.globalState.names.push(this.initials)
+        this.initials = [];
+        console.log(this.globalState.names, "names");
+        location.reload();
+      }
     }
     this.updateText();
     // this.buttonHandlers.update();
@@ -112,7 +118,7 @@ export default class GameOver extends Phaser.Scene {
     if (this.HighScoreText) {
       this.HighScoreText.setFrame(this.active_letter);
     }
-  } 
+  }
 
   onUpInput() {
     if (this.active_letter < this.letters.length - 1) {
@@ -131,5 +137,4 @@ export default class GameOver extends Phaser.Scene {
   onConfirmInput() {
     this.initials.push(this.active_letter);
   }
-
 }

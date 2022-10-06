@@ -7,16 +7,10 @@ export default class HiScoreScene extends Phaser.Scene {
       key: "HiScoreScene",
     });
     this.names = [];
-    this.sampleData = [
-      [19, 0, 12],
-      [1, 14, 1],
-      [12, 0, 19],
-    ];
     this.place = 1;
     this.letter = 0;
     this.dataSet = 0;
     this.inti = [];
-    this.scores = [240, 63, 7];
   }
   preload() {
     this.load.spritesheet(
@@ -50,7 +44,7 @@ export default class HiScoreScene extends Phaser.Scene {
 
   createLists() {
     // console.log("i should be starting");
-    for (let n = 0; n < 3; ) {
+    for (let n = 0; n < this.globalState.names.length - 1; ) {
       for (let l = 0; l < 3; l++) {
         // name
         this.add
@@ -59,7 +53,7 @@ export default class HiScoreScene extends Phaser.Scene {
           .setScale(0.2);
         // score
         // this.inti.push(this.parseNumber(this.scores[this.dataSet]));
-        this.parseNumber(this.scores[this.dataSet]);
+        this.parseNumber(this.globalState.scores[this.dataSet][3]);
         this.add
           .image(700 + 40 * l, 200 + 60 * this.dataSet, "numbers")
           .setFrame(this.inti[l])
