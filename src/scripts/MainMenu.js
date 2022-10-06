@@ -76,7 +76,7 @@ export default class MainMenu extends Phaser.Scene {
   update() {
     // this.buttonPresses();
     this.verticalWobble(this.fingerIcon, .5, 4);
-    this.buttonHandlers.update();
+    this.buttonHandlers.updates();
     if (!this.gamePad) this.startGamePad();
   }
 

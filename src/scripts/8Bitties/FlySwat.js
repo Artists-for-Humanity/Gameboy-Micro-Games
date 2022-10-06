@@ -27,8 +27,9 @@ export default class FlySwat extends Phaser.Scene {
     this.sent = false;
     this.started = false;
     this.gameStartRan = false;
-    this.buttonHandlers = new ButtonPressHandlers();
     this.gamePad = null;
+    this.buttonHandlers = new ButtonPressHandlers();
+    // this.startGamePad = new ButtonPressHandlers().startGamePad();
   }
   preload() {
     this.load.image(
@@ -86,9 +87,11 @@ export default class FlySwat extends Phaser.Scene {
   update() {
     if (!this.dead) this.moveFly();
     if (this.started) {
-      this.buttonHandlers.update();
-      if (!this.gamePad) this.startGamePad();
+      this.buttonHandlers.updates();
+      if (!this.gamePad) this.buttonHandlers.startGamePad();
+      // this.buttonHandlers.startGamePad(this.gamePad);
       //this.playSwatText();
+
 
       this.moveSwatter();
       this.swing();
@@ -101,9 +104,11 @@ export default class FlySwat extends Phaser.Scene {
     //this.animateDeadFly();
   }
 
+
   startGamePad() {
     if (this.input.gamepad.total) {
       this.gamePad = this.input.gamepad.pad1;
+      console.log(this.gamepad);
       this.initGamePad();
       console.log(this.gamePad);
     }
