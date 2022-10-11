@@ -15,36 +15,12 @@ export default class GameOver extends Phaser.Scene {
     this.confirmKey;
     this.arrowButtons;
     this.HighScoreText;
+    this.Initial1;
+    this.Initial2;
+    this.Initial3;
     this.initials = [];
     this.active_letter = 0;
-    this.letters = [
-      "A",
-      "B",
-      "C",
-      "D",
-      "E",
-      "F",
-      "G",
-      "H",
-      "I",
-      "J",
-      "K",
-      "L",
-      "M",
-      "N",
-      "O",
-      "P",
-      "Q",
-      "R",
-      "S",
-      "T",
-      "U",
-      "V",
-      "W",
-      "X",
-      "Y",
-      "Z",
-    ];
+    this.sprite1;
   }
 
   preload() {
@@ -76,7 +52,7 @@ export default class GameOver extends Phaser.Scene {
       fontStyle: "bold",
       align: "center",
     });
-    this.HighScoreText = this.add.sprite(660, 470, "alphaSheet").setScale(0.3);
+    this.dispName();
     // this.buttonHandlers.addKey(this.arrowButtons.down, () => this.onDownInput());
     // this.buttonHandlers.addKey(this.arrowButtons.up, () => this.onUpInput());
     // this.buttonHandlers.addKey(this.confirmKey, () => this.onConfirmInput());
@@ -104,7 +80,7 @@ export default class GameOver extends Phaser.Scene {
         this.globalState.names.push(this.initials)
         this.initials = [];
         console.log(this.globalState.names, "names");
-        location.reload();
+        // location.reload();
       }
     }
     this.updateText();
@@ -115,13 +91,24 @@ export default class GameOver extends Phaser.Scene {
 
   updateText() {
     // const initials = this.initials.join("") + this.letters[this.active_letter];
-    if (this.HighScoreText) {
-      this.HighScoreText.setFrame(this.active_letter);
+    if (this.Initial1) {
+      // var frame1;
+      this.sprite1 = this.Initial1.setFrame(this.active_letter);
+      // console.log(frame1);
+      // this.sprite1 = this.add.sprite(480, 200, "alphaSheet", frame1);
+
     }
   }
 
+  dispName() {
+    this.Initial1 = this.add.sprite(660, 470, "alphaSheet").setScale(0.3);
+    this.Initial2 = this.add.sprite(720, 470, "alphaSheet").setScale(0.3);
+    // this.Initial3 = this.add.sprite(690, 470, "alphaSheet").setScale(0.3);
+
+  }
+
   onUpInput() {
-    if (this.active_letter < this.letters.length - 1) {
+    if (this.active_letter < 25) {
       this.active_letter += 1;
     } else {
       this.active_letter = 0;
@@ -131,10 +118,17 @@ export default class GameOver extends Phaser.Scene {
     if (this.active_letter > 0) {
       this.active_letter -= 1;
     } else {
-      this.active_letter = this.letters.length - 1;
+      this.active_letter = 25;
     }
   }
   onConfirmInput() {
+    console.log(this.active_letter);
     this.initials.push(this.active_letter);
+    console.log(this.initials);
+    this.add.sprite(480, 200, "alphaSheet", this.active_letter);
+
+
   }
+
+
 }
