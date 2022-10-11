@@ -63,6 +63,7 @@ export default class MainMenu extends Phaser.Scene {
       "finger",
       new URL("gameAssets/finger.png", import.meta.url).href
     );
+    console.log(this.globalState.names)
   }
 
   create() {
