@@ -12,11 +12,19 @@ export default class MainMenu extends Phaser.Scene {
       key: "MainMenu",
     });
 
+    // an array of sprites
     this.btns = [];
+
+    // array containing selected button animations
     this.animations = [];
+
+    // Finger sprite
     this.fingerIcon;
+
+    // corresponds to selected button index (i.g. when 0, 'PLAY' is highlighted)
     this.fingerPos = 0;
 
+    // inputs
     this.left;
     this.right;
     this.action;
