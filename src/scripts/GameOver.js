@@ -27,6 +27,8 @@ export default class GameOver extends Phaser.Scene {
     this.yesNoOptions = [];
     this.prompt1 = [];
     this.confirm = [2, 14, 13, 5, 8, 17, 12];
+    this.pointerPos = 0;
+    this.promptPrinted = false;
   }
 
   preload() {
@@ -57,6 +59,11 @@ export default class GameOver extends Phaser.Scene {
     this.action = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
+    this.left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+    this.right = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.RIGHT
+    );
+
     this.textObj2 = this.add.text(480, 400, "ENTER YOUR INITIALS", {
       fontSize: "32px",
       fontStyle: "bold",
@@ -80,6 +87,9 @@ export default class GameOver extends Phaser.Scene {
     if (Phaser.Input.Keyboard.JustDown(this.down)) {
       this.onDownInput();
     }
+    if (this.pointer) {
+      this.pointerStuff();
+    }
 
     // if (this.initials.length === 3) {
     //   this.initials.push(this.globalState.score)
@@ -102,7 +112,6 @@ export default class GameOver extends Phaser.Scene {
     }
   }
 
-
   onUpInput() {
     if (this.active_letter < 25) {
       this.active_letter += 1;
@@ -123,8 +132,8 @@ export default class GameOver extends Phaser.Scene {
       this.name[this.letterPos] = this.add
         .sprite(600 + 60 * this.letterPos, 470, "alphaSheet")
         .setScale(0.3);
-    } else {
-      //filler code
+    }
+    if (this.name.length === 3) {
       this.confirmNamePrompt();
     }
   }
@@ -132,7 +141,7 @@ export default class GameOver extends Phaser.Scene {
   confirmNamePrompt() {
     for (let i = 0; i < this.confirm.length; i++) {
       this.prompt1[i] = this.add
-        .image(70 + 15 * i, 350, "alphaSheet")
+        .image(200 + 20 * i, 420, "alphaSheet")
         .setFrame(this.confirm[i])
         .setScale(0.1);
     }
@@ -140,13 +149,55 @@ export default class GameOver extends Phaser.Scene {
     for (let p = 0; p < 2; ) {
       for (let n = 0; n < this.yesNoLetters[p].length; n++) {
         this.yesNoOptions[p] = this.add
-          .image(100 + (15 * n) + 60*p, 410, "alphaSheet")
-          .setFrame(this.yesNoLetters[p][n]).setScale(.09)
-        }
+          .image(100 + 50 * n + 200 * p, 475, "alphaSheet")
+          .setFrame(this.yesNoLetters[p][n])
+          .setScale(0.3);
+      }
       p++;
     }
-
-    console.log(this.yesNoOptions)
+    if (this.promptPrinted === false) {
+      this.pointer = this.add
+        .image(150, 390, "pointer")
+        .setRotation(Math.PI / 2);
+      this.promptPrinted = true;
+    }
+    console.log(this.yesNoOptions);
+  }
+  pointerStuff() {
+    this.updatePointer();
+    if (Phaser.Input.Keyboard.JustDown(this.left)) {
+      this.pointerPos === 0
+        ? (this.pointerPos = this.yesNoOptions.length - 1)
+        : this.pointerPos--;
+    }
+    if (Phaser.Input.Keyboard.JustDown(this.right)) {
+      this.pointerPos === this.yesNoOptions.length - 1
+        ? (this.pointerPos = 0)
+        : this.pointerPos++;
+    }
+    if(Phaser.Input.Keyboard.JustDown(this.action)){
+      switch (this.pointerPos) {
+        case 0: //push data into array or something
+          location.reload()
+          break;
+        case 1: // Scores
+        this.yesNoOptions = []; 
+        this.destroyArray(this.confirm);
+        this.promptPrinted = false; 
+        default:
+          break;
+      }
+    }
+  }
+  updatePointer() {
+    this.pointer.x = 150 + 150 * this.pointerPos;
+  }
+  destroyArray(array){
+    for (let i = 0; i < array.length; i++) {
+      array[i] = []
+      // array.filter()
+      
+    }
   }
 }
 //confirm cunfion{
