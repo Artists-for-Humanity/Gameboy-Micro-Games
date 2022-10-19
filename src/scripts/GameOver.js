@@ -29,6 +29,8 @@ export default class GameOver extends Phaser.Scene {
     this.confirm = [2, 14, 13, 5, 8, 17, 12];
     this.pointerPos = 0;
     this.promptPrinted = false;
+    this.bobberTimer = 0;
+    this.bobDir = false;
   }
 
   preload() {
@@ -89,6 +91,7 @@ export default class GameOver extends Phaser.Scene {
     }
     if (this.pointer) {
       this.pointerStuff();
+      this.bouyantMotion(this.pointer, 0.8, 4);
     }
 
     // if (this.initials.length === 3) {
@@ -133,11 +136,32 @@ export default class GameOver extends Phaser.Scene {
         .sprite(600 + 60 * this.letterPos, 470, "alphaSheet")
         .setScale(0.3);
     }
-    if (this.name.length === 3) {
-      this.confirmNamePrompt();
+    
+    if (this.pointer) { 
+      switch (this.pointerPos) {
+        case 0: //push data into array or something
+          console.log("yes option");
+          // location.reload(); 
+          break;
+        case 1: // Scores
+          console.log("no");
+          this.clearArray(this.prompt1);
+          console.log(this.yesNoOptions)
+        // this.promptPrinted = false;
+        default:
+          break;
+      }
+    }
+    if (this.name.length === 3 && !this.pointer) {
+      this.confirmNamePrompt(); 
     }
   }
-
+  clearArray(array){
+    for (let i = 0; i < array.length; i++) {
+      array[i].destroy();
+    }
+    array = [];
+  }
   confirmNamePrompt() {
     for (let i = 0; i < this.confirm.length; i++) {
       this.prompt1[i] = this.add
@@ -161,7 +185,6 @@ export default class GameOver extends Phaser.Scene {
         .setRotation(Math.PI / 2);
       this.promptPrinted = true;
     }
-    console.log(this.yesNoOptions);
   }
   pointerStuff() {
     this.updatePointer();
@@ -175,37 +198,16 @@ export default class GameOver extends Phaser.Scene {
         ? (this.pointerPos = 0)
         : this.pointerPos++;
     }
-    if(Phaser.Input.Keyboard.JustDown(this.action)){
-      switch (this.pointerPos) {
-        case 0: //push data into array or something
-          location.reload()
-          break;
-        case 1: // Scores
-        this.yesNoOptions = []; 
-        this.destroyArray(this.confirm);
-        this.promptPrinted = false; 
-        default:
-          break;
-      }
-    }
   }
   updatePointer() {
     this.pointer.x = 150 + 150 * this.pointerPos;
   }
-  destroyArray(array){
-    for (let i = 0; i < array.length; i++) {
-      array[i] = []
-      // array.filter()
-      
+
+  bouyantMotion(obj, amount, speed) {
+    this.bobberTimer += speed;
+    if (this.bobberTimer % 100 === 0) {
+      this.bobDir = !this.bobDir;
     }
+    this.bobDir ? (obj.y += amount) : (obj.y -= amount);
   }
 }
-//confirm cunfion{
-// case switch
-//      number 1 = yes{
-//        push initials into names in global/databse
-//      number 2{
-//        delete
-// }
-// }
-// }
