@@ -89,7 +89,7 @@ export default class CircleJump extends Phaser.Scene {
     this.createAnimation();
 
     eventsCenter.on('start_game', () => { this.started = true; eventsCenter.emit('start_timer'); this.startGame(); });
-    eventsCenter.on('end_circle', () => { this.bandaid = true; });
+    eventsCenter.on('game-end', () => { this.bandaid = true; });
 
   }
 

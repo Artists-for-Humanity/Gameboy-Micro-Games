@@ -101,8 +101,8 @@ export default class CarPump extends Phaser.Scene {
       "DO2_gameOverScreen"
     );
 
-    this.up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-    this.down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+    // this.up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+    // this.down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
 
     this.car25.visible = false;
     this.car50.visible = false;
@@ -114,11 +114,15 @@ export default class CarPump extends Phaser.Scene {
 
   }
 
-  update() {
+  update(time, delta) {
     if (this.started) {
       this.buttonHandlers.update();
-      if (!this.gamePad) this.startGamePad();
-      // this.upAndDown();
+      if (!this.gamePad) {
+        console.log("yes");
+        this.startGamePad();
+      }
+      this.buttonHandlers.update();
+      this.upAndDown();
       this.pumpToWin();
 
       if (this.gameOver && !this.sent) {
@@ -126,7 +130,15 @@ export default class CarPump extends Phaser.Scene {
         eventsCenter.emit("game-end", this.victory);
         this.sent = true;
       }
+      console.log(this.downInt);
 
+      this.timerCountdown(time);
+
+    }
+    if (this.gameOver && !this.sent) {
+      eventsCenter.emit("stop_timer");
+      eventsCenter.emit("game-end", this.victory);
+      this.sent = true;
     }
   }
   startGamePad() {
@@ -186,20 +198,22 @@ export default class CarPump extends Phaser.Scene {
     }
   }
   upAndDown(x) {
-    if (x === 0 || Phaser.Input.Keyboard.JustDown(this.up)) {
-      this.upArrow.visible = true;
-      this.downArrow.visible = false;
-      this.lever.anims.play("DO2_lever_up");
-    }
-    if (x === 1 || Phaser.Input.Keyboard.JustDown(this.down)) {
+    if (x === 0 /*|| Phaser.Input.Keyboard.JustDown(this.up)*/) {
+
       this.upArrow.visible = false;
       this.downArrow.visible = true;
-      this.lever.anims.play("DO2_lever_down");
+      this.lever.anims.play("DO2_lever_up", true);
+    }
+    if (x === 1 /*|| Phaser.Input.Keyboard.JustDown(this.down)*/) {
+      this.upArrow.visible = true;
+      this.downArrow.visible = false;
+      this.lever.anims.play("DO2_lever_down", true);
       this.downInt += 1;
+      this.updatePump();
     }
   }
   pumpToWin() {
-    if (this.downInt === 5) {
+    if (this.downInt === 16) {
       this.downInt = 0;
       this.inflateInt += 1;
     }
@@ -294,32 +308,32 @@ export default class CarPump extends Phaser.Scene {
     });
   }
 
-  update(time, delta) {
-    if (this.gameState) {
-      this.clickTimer += delta;
-      this.timerCountdown(time);
-      if (Phaser.Input.Keyboard.JustDown(this.up) && this.downWasPressed) {
-        this.downWasPressed = false;
-        this.upWasPressed = true;
-        this.lever.anims.play("DO2_lever_up", true);
-        this.downArrow.setVisible(true);
-        this.upArrow.setVisible(false);
-      } else if (
-        Phaser.Input.Keyboard.JustDown(this.down) &&
-        this.upWasPressed
-      ) {
-        this.downWasPressed = true;
-        this.upWasPressed = false;
-        this.time.delayedCall(100, this.updatePump, [], this);
-        this.clickTimer = 0;
-      }
-      if (this.gameOver && !this.sent) {
-        eventsCenter.emit("stop_timer");
-        eventsCenter.emit("game-end", this.victory);
-        this.sent = true;
-      }
-    }
-  }
+  // update(time, delta) {
+  //   if (this.gameState) {
+  //     this.clickTimer += delta;
+  //     this.timerCountdown(time);
+  //     if (Phaser.Input.Keyboard.JustDown(this.up) && this.downWasPressed) {
+  //       this.downWasPressed = false;
+  //       this.upWasPressed = true;
+  //       this.lever.anims.play("DO2_lever_up", true);
+  //       this.downArrow.setVisible(true);
+  //       this.upArrow.setVisible(false);
+  //     } else if (
+  //       Phaser.Input.Keyboard.JustDown(this.down) &&
+  //       this.upWasPressed
+  //     ) {
+  //       this.downWasPressed = true;
+  //       this.upWasPressed = false;
+  //       this.time.delayedCall(100, this.updatePump, [], this);
+  //       this.clickTimer = 0;
+  //     }
+  //     if (this.gameOver && !this.sent) {
+  //       eventsCenter.emit("stop_timer");
+  //       eventsCenter.emit("game-end", this.victory);
+  //       this.sent = true;
+  //     }
+  //   }
+  // }
 
   timerCountdown(time) {
     if (time / 1000 > 15 && this.playerPumps < this.pumpToWin) {
@@ -328,7 +342,8 @@ export default class CarPump extends Phaser.Scene {
       this.gameOverScreen.visible = true;
     }
 
-    if (this.playerPumps >= this.pumpToWin) {
+    if (this.playerPumps > this.downInt) {
+      console.log("win");
       this.victory = true;
       this.gameState = false;
       this.gameOver = true;
@@ -343,26 +358,27 @@ export default class CarPump extends Phaser.Scene {
 
   updatePump() {
     this.playerPumps += 1;
+    console.log(this.playerPumps);
 
     this.lever.anims.play("DO2_lever_down", true);
     this.downArrow.setVisible(false);
     this.upArrow.setVisible(true);
-    if (this.playerPumps === 5) {
+    if (this.playerPumps === 4) {
       this.car25.visible = true;
       this.car25.anims.play("DO2_car_inflate25%", true);
       this.car.visible = false;
     }
-    if (this.playerPumps === 10) {
+    if (this.playerPumps === 8) {
       this.car50.visible = true;
       this.car50.anims.play("DO2_car_inflate50%", true);
       this.car25.visible = false;
     }
-    if (this.playerPumps === 15) {
+    if (this.playerPumps === 12) {
       this.car75.visible = true;
       this.car75.anims.play("DO2_car_inflate75%", true);
       this.car50.visible = false;
     }
-    if (this.playerPumps === 20) {
+    if (this.playerPumps === 16) {
       this.car100.visible = true;
       this.car100.anims.play("DO2_car_inflate100%", true);
       this.car75.visible = false;
