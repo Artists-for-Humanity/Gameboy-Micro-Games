@@ -90,8 +90,8 @@ export default class MainMenu extends Phaser.Scene {
 
 
   initGamePad() {
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x < -0.5, () => this.updateSelection(-1));
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x > 0.5, () => this.updateSelection(1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.updateSelection(-1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.updateSelection(1));
     this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.buttonEvents(); });
   }
 
