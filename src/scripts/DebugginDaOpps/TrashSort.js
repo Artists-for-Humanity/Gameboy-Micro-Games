@@ -1,6 +1,5 @@
 import eventsCenter from '../EventsCenter';
 import ButtonPressHandlers from '../ButtonPressHandlers';
-import phaserJuice from '../phaser3-juice-plugin/dist/phaserJuice.min.js';
 
 
 export default class TrashSort extends Phaser.Scene {
