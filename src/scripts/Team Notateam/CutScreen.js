@@ -9,8 +9,6 @@ const L_START = -L_END;
 const R_START = 5 * L_END;
 
 const listOfGames = [
-    "MarcyMunch",
-    "Cannon",
     "TrashSort",
     "CarPump",
     "CircleJump",
@@ -22,7 +20,9 @@ const listOfGames = [
     "Lowest",
     "Emeowgency",
     "SockToss",
+    "MarcyMunch",
     "HitTheButton",
+    "Factory",
     "ColorPasscode"
 ];
 
@@ -115,7 +115,7 @@ export default class CutScreen extends Phaser.Scene {
     }
 
     create() {
-        // this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
 
         this.buildAnimations();
         this.buildObjects();

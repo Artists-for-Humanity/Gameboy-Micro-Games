@@ -65,9 +65,9 @@ export default class MainMenu extends Phaser.Scene {
 
     this.fingerIcon = this.add.image(this.btns[0].x, this.btns[0].y - 117, 'finger').setRotation(Math.PI / 2);
 
-    // this.left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-    // this.right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-    // this.action = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    this.left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+    this.right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+    this.action = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
     this.animationBuilder();
     this.updateSelection();
@@ -93,6 +93,7 @@ export default class MainMenu extends Phaser.Scene {
     this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.updateSelection(-1));
     this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.updateSelection(1));
     this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.buttonEvents(); });
+
   }
 
 
