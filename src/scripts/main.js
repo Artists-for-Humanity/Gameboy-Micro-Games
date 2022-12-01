@@ -1,6 +1,6 @@
 // Add imports for phaser library, scenes, and plugins
 import Phaser from "phaser";
-import phaserJuice from "./phaser3-juice-plugin/dist/phaserJuice.min.js";
+import phaserJuice from "./phaserJuice.js";
 import GlobalState from "./GlobalState";
 import GameOver from "./GameOver";
 import Emeowgency from "./8Bitties/Emeowgency";

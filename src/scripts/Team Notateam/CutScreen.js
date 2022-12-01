@@ -9,6 +9,7 @@ const L_START = -L_END;
 const R_START = 5 * L_END;
 
 const listOfGames = [
+    "MarcyMunch",
     "TrashSort",
     "Cannon",
     "CarPump",
@@ -21,7 +22,6 @@ const listOfGames = [
     "Lowest",
     "Emeowgency",
     "SockToss",
-    "MarcyMunch",
     "HitTheButton",
     "Factory",
     "ColorPasscode"
