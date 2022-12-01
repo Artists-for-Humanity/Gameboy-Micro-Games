@@ -1,5 +1,5 @@
 
-import eventsCenter from './EventsCenter';
+// import eventsCenter from './EventsCenter';
 import ButtonPressHandlers from './ButtonPressHandlers';
 
 
@@ -90,6 +90,7 @@ export default class MainMenu extends Phaser.Scene {
 
 
   initGamePad() {
+    console.log('reachme 00');
     this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.updateSelection(-1));
     this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.updateSelection(1));
     this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.buttonEvents(); });
