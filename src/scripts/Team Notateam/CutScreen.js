@@ -9,7 +9,12 @@ const L_START = -L_END;
 const R_START = 5 * L_END;
 
 const listOfGames = [
+<<<<<<< Updated upstream
     //"TrashSort",
+=======
+    "Cannon",
+    "TrashSort",
+>>>>>>> Stashed changes
     "CarPump",
     "CircleJump",
     "FlySwat",
