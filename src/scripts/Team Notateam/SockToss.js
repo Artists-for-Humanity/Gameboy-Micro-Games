@@ -177,6 +177,7 @@ export default class SockToss extends Phaser.Scene {
                 if (!this.dropped) {
                     this.dropcon(this);
                     eventsCenter.emit('stop_timer');
+
                 }
                 // Spins hand for throw
                 this.handrot();

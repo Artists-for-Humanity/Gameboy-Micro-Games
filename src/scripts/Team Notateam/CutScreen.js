@@ -9,10 +9,10 @@ const L_START = -L_END;
 const R_START = 5 * L_END;
 
 const listOfGames = [
-    "Factory",
+    // "Emeowgency",
     "SockToss",
+    "Factory",
     "Lowest",
-    "Emeowgency",
     "HitTheButton",
     "ColorPasscode",
     "DrinkPour",
@@ -124,8 +124,8 @@ export default class CutScreen extends Phaser.Scene {
 
         eventsCenter.on('game-end', this.closeDoor, this);
     }
-    update() {
-
+    update(time, delta) {
+        console.log(delta);
         if (!this.closed) {
             this.close_timer++;
             this.close_doors();

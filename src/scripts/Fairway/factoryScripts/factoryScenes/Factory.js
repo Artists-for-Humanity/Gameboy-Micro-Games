@@ -82,7 +82,7 @@ export default class Factory extends Phaser.Scene {
             import.meta.url).href);
         this.load.image('win1', new URL('../factoryAssets/youWin.png',
             import.meta.url).href);
-        this.load.image('lose', new URL('../factoryAssets/youLose.png',
+        this.load.image('lose1', new URL('../factoryAssets/youLose.png',
             import.meta.url).href);
         this.load.image('homescreen', new URL('../factoryAssets/startScreen.png',
             import.meta.url).href);
@@ -203,15 +203,15 @@ export default class Factory extends Phaser.Scene {
     }
     update(time, delta) {
         if (this.started) {
-            this.t += delta;
             this.timer++;
+            this.t += delta;
             if (this.timer >= 20 && this.canMove) {
                 this.moveBoxes(this.currBoxIdx);
                 this.currBoxIdx === this.boxList.length - 1 ? this.currBoxIdx = 0 : this.currBoxIdx += 1;
                 this.timer = 0;
             }
             this.spaceDown = false;
-            this.movePlayer();
+            // this.movePlayer();
             this.timeRun(this.t);
             this.buttonHandlers.update();
             if (!this.gamePad) {
@@ -226,10 +226,10 @@ export default class Factory extends Phaser.Scene {
         }
     }
     initGamePad() {
-        this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 1, () => this.onDownInput());
-        this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === -1, () => this.onUpInput());
-        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.onRightInput());
-        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.onLeftInput());
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.y > 0.5, () => this.onDownInput());
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.y < -0.5, () => this.onUpInput());
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x > 0.5, () => this.onRightInput());
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x < -0.5, () => this.onLeftInput());
         this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => {
             this.spaceDown = true;
         });
@@ -242,7 +242,8 @@ export default class Factory extends Phaser.Scene {
         }
     }
     timeRun(t) {
-        if (this.t >= 7000) {
+        // console.log(t);
+        if (t >= 6000) {
             this.gameOverValues();
         }
     }
@@ -742,7 +743,7 @@ export default class Factory extends Phaser.Scene {
         }
     }
     gameOverValues() {
-        this.add.image(540, 360, 'lose');
+        this.add.image(540, 360, 'lose1');
         this.loseBeep.play();
         this.boxA.visible = false;
         this.boxB.visible = false;
