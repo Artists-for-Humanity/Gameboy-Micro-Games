@@ -23,7 +23,7 @@ const listOfGames = [
     "Emeowgency",
     "SockToss",
     "HitTheButton",
-    "Factory",
+    //"Factory",
     "ColorPasscode"
 ];
 

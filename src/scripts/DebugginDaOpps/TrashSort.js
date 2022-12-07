@@ -153,9 +153,6 @@ export default class TrashSort extends Phaser.Scene {
     this.buttonHandlers.addPad(() => this.gamePad.leftStick.x < -0.5, () => this.moveTrash(-1));
     this.buttonHandlers.addPad(() => this.gamePad.leftStick.x > 0.5, () => this.moveTrash(1));
     this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 0, () => this.moveTrash(0));
-
-
-
   }
 
   timerCountdown(time) {

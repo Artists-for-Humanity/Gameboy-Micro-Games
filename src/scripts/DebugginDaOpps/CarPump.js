@@ -150,8 +150,8 @@ export default class CarPump extends Phaser.Scene {
   }
 
   initGamePad() {
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y > 0.7, () => this.upAndDown(0));
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y < -0.7, () => this.upAndDown(1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y > 0.5, () => this.upAndDown(0));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y < -0.5, () => this.upAndDown(1));
   }
   onEvent() {
     this.tempBg.visible = false;
