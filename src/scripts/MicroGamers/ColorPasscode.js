@@ -15,7 +15,7 @@ export default class ColorPasscode extends Phaser.Scene {
         this.door1, this.door2, this.door3, this.door4, this.door5;
         this.doors = [];
         this.box;
-
+        this.t = 0;
         this.goText;
         this.goTextTimer = 0;
         this.lossText;
@@ -129,6 +129,7 @@ export default class ColorPasscode extends Phaser.Scene {
     }
 
     update(time, delta) {
+
         if (this.started2) {
 
             if (this.door1.alpha < 1) {
@@ -151,6 +152,9 @@ export default class ColorPasscode extends Phaser.Scene {
             }
 
             if (this.interactive && !this.gameOver) {
+                this.t += delta;
+                this.timeUp(this.t);
+                // console.log(this.t);
                 this.buttonHandlers.update();
                 if (!this.gamePad) {
                     this.startGamePad();
@@ -252,7 +256,7 @@ export default class ColorPasscode extends Phaser.Scene {
             this.globalState.timerMessage('start_timer');
             this.hideGuessBlocks();
             for (var i = 0; i < this.guessBlocks.length; i++) {
-                console.log(i);
+                // console.log(i);
                 this.guessBlocks[i].setTexture('');
             }
         }, [], this);
@@ -326,7 +330,7 @@ export default class ColorPasscode extends Phaser.Scene {
     //200ms flash duration
     userInput(x) {
         if (this.guessNum < 4) {
-            console.log(this.guessNum);
+            // console.log(this.guessNum);
             if (x === 0) {
                 this.flash(0, 200);
                 this.guesses.push(0);
@@ -356,10 +360,17 @@ export default class ColorPasscode extends Phaser.Scene {
     }
 
     //check win loss
+    timeUp(t) {
+        if (t > 6700) {
+            this.lossText.visible = true;
+            this.gameOver = true;
+        }
+    }
     checkWL() {
 
         //loss
         if (JSON.stringify(this.guesses[this.guessNum]) != JSON.stringify(this.pattern[this.guessNum])) {
+
             this.lossText.visible = true;
             this.gameOver = true;
         }
