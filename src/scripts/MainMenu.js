@@ -1,8 +1,8 @@
 
-import eventsCenter from './EventsCenter';
 import ButtonPressHandlers from './ButtonPressHandlers';
 
-
+import eventsCenter from "./EventsCenter";
+import HiScoreScene from "./Hi-Score";
 const X = 1080;
 const Y = 720;
 
@@ -15,11 +15,19 @@ export default class MainMenu extends Phaser.Scene {
       key: 'MainMenu',
     });
 
+    // an array of sprites
     this.btns = [];
+
+    // array containing selected button animations
     this.animations = [];
+
+    // Finger sprite
     this.fingerIcon;
+
+    // corresponds to selected button index (i.g. when 0, 'PLAY' is highlighted)
     this.fingerPos = 0;
 
+    // inputs
     this.left;
     this.right;
     this.action;
@@ -66,9 +74,13 @@ export default class MainMenu extends Phaser.Scene {
     this.fingerIcon = this.add.image(this.btns[0].x, this.btns[0].y - 117, 'finger').setRotation(Math.PI / 2);
 
     this.left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-    this.right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-    this.action = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
+    this.right = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.RIGHT
+    );
+    this.action = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.SPACE
+    );
     this.animationBuilder();
     this.updateSelection();
   }
@@ -125,9 +137,11 @@ export default class MainMenu extends Phaser.Scene {
   buttonEvents() {
     switch (this.fingerPos) {
       case 0: // Play
-        this.playGame();
+        // this.playGame();
+        this.scene.start('MarcyMunch');
         break;
       case 1: // Scores
+        this.scene.start('HiScoreScene');
       default:
         break;
     }

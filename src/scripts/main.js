@@ -20,12 +20,11 @@ import DrinkPour from "./8Bitties/DrinkPour";
 import SockToss from "./Team Notateam/SockToss";
 import CutScreen from "./Team Notateam/CutScreen";
 import MainMenu from "./MainMenu";
-
 import Timer from "./Timer";
 import MarcyMunch from "./8Bitties/MarcyMunch";
 import CircleJump from "./TeamInflation/CircleJump";
 import Factory from "./Fairway/factoryScripts/factoryScenes/Factory";
-
+import HiScoreScene from "./Hi-Score";
 // Set configuration for phaser game instance
 const juice = new phaserJuice(this);
 
@@ -50,6 +49,7 @@ const config = {
   },
   scene: [
     MainMenu,
+    HiScoreScene,
     CutScreen,
     Timer,
     MarcyMunch,

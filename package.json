@@ -18,6 +18,7 @@
     "prettier": "^2.5.1"
   },
   "dependencies": {
+    "bluebird": "^3.7.2",
     "phaser": "^3.55.2",
     "snowpack": "^3.8.8",
     "webfontloader": "^1.6.28"
