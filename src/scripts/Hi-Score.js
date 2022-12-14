@@ -40,11 +40,12 @@ export default class HiScoreScene extends Phaser.Scene {
 
   update() {
     if (Phaser.Input.Keyboard.JustDown(this.action)) location.reload();
+    this.createLists();
   }
 
   createLists() {
-    // console.log("i should be starting");
-    for (let n = 0; n < this.globalState.names.length - 1; ) {
+    console.log("i should be starting");
+    for (let n = 0; n < this.globalState.names.length - 1;) {
       for (let l = 0; l < 3; l++) {
         // name
         this.add
@@ -58,7 +59,7 @@ export default class HiScoreScene extends Phaser.Scene {
           .image(700 + 40 * l, 200 + 60 * this.dataSet, "numbers")
           .setFrame(this.inti[l])
           .setScale(0.15);
-        console.log(this.parseNumber(this.scores[this.dataSet])  );
+        console.log(this.parseNumber(this.scores[this.dataSet]));
       }
       this.inti = [];
       this.dataSet++;
@@ -79,13 +80,13 @@ export default class HiScoreScene extends Phaser.Scene {
     this.inti.push(one);
     console.log(
       "Hundreds: " +
-        hun +
-        "\nTens: " +
-        ten +
-        "\nOnes: " +
-        one +
-        "\nTotal: " +
-        val
+      hun +
+      "\nTens: " +
+      ten +
+      "\nOnes: " +
+      one +
+      "\nTotal: " +
+      val
     );
     // return [hun, ten, one];
   }

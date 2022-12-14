@@ -19,6 +19,7 @@ export default class GameOver extends Phaser.Scene {
     this.active_letter = 0;
     this.sprite1;
     this.letterPos = 0;
+    this.count = 0;
     this.name = [];
     this.yesNoLetters = [
       [24, 4, 18],
@@ -71,6 +72,10 @@ export default class GameOver extends Phaser.Scene {
       fontStyle: "bold",
       align: "center",
     });
+    this.pointer = this.add
+      .image(150, 350, "pointer")
+      .setRotation(Math.PI / 2);
+    this.pointer.visible = false;
     this.name[0] = this.add.sprite(600, 470, "alphaSheet").setScale(0.3);
     // this.buttonHandlers.addKey(this.arrowButtons.down, () => this.onDownInput());
     // this.buttonHandlers.addKey(this.arrowButtons.up, () => this.onUpInput());
@@ -79,17 +84,27 @@ export default class GameOver extends Phaser.Scene {
 
   update() {
     if (Phaser.Input.Keyboard.JustDown(this.up)) {
-      this.onUpInput();
+      if (this.count < 3) {
+        this.onUpInput();
+      }
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.action)) {
+      // this.pointer.visible = false;
       this.onConfirmInput();
+      this.count++;
+      console.log(this.count);
+      if (this.count > 2 && this.pointer.visible === false) {
+        this.confirmNamePrompt();
+      }
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.down)) {
-      this.onDownInput();
+      if (this.count < 3) {
+        this.onDownInput();
+      }
     }
-    if (this.pointer) {
+    if (this.pointer.visible === true) {
       this.pointerStuff();
       this.bouyantMotion(this.pointer, 0.8, 4);
     }
@@ -115,14 +130,14 @@ export default class GameOver extends Phaser.Scene {
     }
   }
 
-  onUpInput() {
+  onDownInput() {
     if (this.active_letter < 25) {
       this.active_letter += 1;
     } else {
       this.active_letter = 0;
     }
   }
-  onDownInput() {
+  onUpInput() {
     if (this.active_letter > 0) {
       this.active_letter -= 1;
     } else {
@@ -130,14 +145,15 @@ export default class GameOver extends Phaser.Scene {
     }
   }
   onConfirmInput() {
-    if (this.letterPos != 2) {
+    if (this.letterPos < 2) {
+      this.active_letter = 0;
       this.letterPos++;
       this.name[this.letterPos] = this.add
         .sprite(600 + 60 * this.letterPos, 470, "alphaSheet")
         .setScale(0.3);
     }
-    
-    if (this.pointer) { 
+
+    if (this.pointer.visible === true) {
       switch (this.pointerPos) {
         case 0: //push data into array or something
           console.log("yes option");
@@ -145,18 +161,21 @@ export default class GameOver extends Phaser.Scene {
           break;
         case 1: // Scores
           console.log("no");
+          this.scene.restart();
+          this.active_letter = 0;
+          this.letterPos = 0;
+          this.count = -1;
+          this.pointer.visible = false;
+          this.pointer.y = 350;
           this.clearArray(this.prompt1);
-          console.log(this.yesNoOptions)
-        // this.promptPrinted = false;
+          // console.log(this.yesNoOptions);
+          this.promptPrinted = false;
         default:
           break;
       }
     }
-    if (this.name.length === 3 && !this.pointer) {
-      this.confirmNamePrompt(); 
-    }
   }
-  clearArray(array){
+  clearArray(array) {
     for (let i = 0; i < array.length; i++) {
       array[i].destroy();
     }
@@ -170,7 +189,7 @@ export default class GameOver extends Phaser.Scene {
         .setScale(0.1);
     }
 
-    for (let p = 0; p < 2; ) {
+    for (let p = 0; p < 2;) {
       for (let n = 0; n < this.yesNoLetters[p].length; n++) {
         this.yesNoOptions[p] = this.add
           .image(100 + 50 * n + 200 * p, 475, "alphaSheet")
@@ -180,9 +199,7 @@ export default class GameOver extends Phaser.Scene {
       p++;
     }
     if (this.promptPrinted === false) {
-      this.pointer = this.add
-        .image(150, 390, "pointer")
-        .setRotation(Math.PI / 2);
+      this.pointer.visible = true;
       this.promptPrinted = true;
     }
   }
