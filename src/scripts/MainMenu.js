@@ -71,7 +71,7 @@ export default class MainMenu extends Phaser.Scene {
       "finger",
       new URL("gameAssets/finger.png", import.meta.url).href
     );
-    console.log(this.globalState.names)
+    console.log(this.globalState.names);
   }
 
   create() {
@@ -143,10 +143,10 @@ export default class MainMenu extends Phaser.Scene {
     switch (this.fingerPos) {
       case 0: // Play
         // this.playGame();
-        this.scene.start('GameOver');
+        this.scene.start('MarcyMunch');
         break;
       case 1: // Scores
-      this.scene.start('HiScoreScene');
+        this.scene.start('HiScoreScene');
       default:
         break;
     }

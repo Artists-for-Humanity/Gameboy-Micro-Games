@@ -21,6 +21,7 @@ export default class GameOver extends Phaser.Scene {
     this.letterPos = 0;
     this.count = 0;
     this.name = [];
+    this.temp = [];
     this.yesNoLetters = [
       [24, 4, 18],
       [13, 14],
@@ -55,6 +56,7 @@ export default class GameOver extends Phaser.Scene {
   }
 
   create() {
+    console.log(this.globalState.score);
     this.arrowButtons = this.input.keyboard.createCursorKeys();
     this.add.image(X / 2, Y / 2, "go_bg");
     this.up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -90,10 +92,14 @@ export default class GameOver extends Phaser.Scene {
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.action)) {
+      if (this.count < 3) {
+        this.globalState.names.push(this.active_letter);
+      }
       // this.pointer.visible = false;
       this.onConfirmInput();
       this.count++;
-      console.log(this.count);
+      // console.log(this.count);
+      console.log(this.globalState.names);
       if (this.count > 2 && this.pointer.visible === false) {
         this.confirmNamePrompt();
       }
@@ -131,6 +137,7 @@ export default class GameOver extends Phaser.Scene {
   }
 
   onDownInput() {
+    // console.log(this.active_letter);
     if (this.active_letter < 25) {
       this.active_letter += 1;
     } else {
@@ -138,6 +145,7 @@ export default class GameOver extends Phaser.Scene {
     }
   }
   onUpInput() {
+    // console.log(this.active_letter);
     if (this.active_letter > 0) {
       this.active_letter -= 1;
     } else {
@@ -157,6 +165,9 @@ export default class GameOver extends Phaser.Scene {
       switch (this.pointerPos) {
         case 0: //push data into array or something
           console.log("yes option");
+          //add scene switch to high-score scene
+          this.scene.start('HiScoreScene');
+
           // location.reload(); 
           break;
         case 1: // Scores

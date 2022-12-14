@@ -3,7 +3,7 @@ export default class HiScoreScene extends Phaser.Scene {
   constructor() {
     super({
       active: false,
-      visible: false,
+      visible: true,
       key: "HiScoreScene",
     });
     this.names = [];
@@ -36,30 +36,32 @@ export default class HiScoreScene extends Phaser.Scene {
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
     this.createLists();
+    console.log(this.globalState.names);
   }
 
   update() {
     if (Phaser.Input.Keyboard.JustDown(this.action)) location.reload();
-    this.createLists();
   }
 
   createLists() {
-    console.log("i should be starting");
-    for (let n = 0; n < this.globalState.names.length - 1;) {
+    console.log(this.dataSet);
+    for (let n = 0; n < this.globalState.names.length - 2;) {
       for (let l = 0; l < 3; l++) {
         // name
         this.add
+          // .sprite(200 + 40 * l, 200 + 60 * this.dataSet, "alphaSheet")
+          // .setScale(0.3);
           .image(200 + 40 * l, 200 + 60 * this.dataSet, "alphaSheet")
-          .setFrame(this.sampleData[this.dataSet][l])
+          .setFrame(this.globalState.names[l])
           .setScale(0.2);
         // score
         // this.inti.push(this.parseNumber(this.scores[this.dataSet]));
-        this.parseNumber(this.globalState.scores[this.dataSet][3]);
-        this.add
-          .image(700 + 40 * l, 200 + 60 * this.dataSet, "numbers")
-          .setFrame(this.inti[l])
-          .setScale(0.15);
-        console.log(this.parseNumber(this.scores[this.dataSet]));
+        // this.parseNumber(this.globalState.scores[this.dataSet][3]);
+        // this.add
+        //   .image(700 + 40 * l, 200 + 60 * this.dataSet, "numbers")
+        //   .setFrame(this.inti[l])
+        //   .setScale(0.15);
+        // console.log(this.parseNumber(this.scores[this.dataSet]));
       }
       this.inti = [];
       this.dataSet++;
