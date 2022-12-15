@@ -4,7 +4,7 @@ import eventsCenter from "./EventsCenter";
 class GlobalState extends Phaser.Plugins.BasePlugin {
   constructor(pluginManager) {
     super(pluginManager);
-    this.score = 0;
+    this.scores = -1;
     this.val = 0;
     this.initialTime = 10;
     this.timedEvent;

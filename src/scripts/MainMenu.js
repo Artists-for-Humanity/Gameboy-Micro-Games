@@ -40,6 +40,8 @@ export default class MainMenu extends Phaser.Scene {
 
     this.buttonHandlers = new ButtonPressHandlers();
     this.gamePad = null;
+
+    this.high = HiScoreScene;
   }
 
   preload() {
@@ -137,8 +139,8 @@ export default class MainMenu extends Phaser.Scene {
   buttonEvents() {
     switch (this.fingerPos) {
       case 0: // Play
-        // this.playGame();
-        this.scene.start('MarcyMunch');
+        this.playGame();
+        // this.scene.start('MarcyMunch');
         break;
       case 1: // Scores
         this.scene.start('HiScoreScene');

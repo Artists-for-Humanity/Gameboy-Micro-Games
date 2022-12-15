@@ -1,4 +1,3 @@
-
 import Phaser from 'phaser';
 import eventsCenter from '../EventsCenter';
 const X = 1080;
@@ -9,25 +8,24 @@ const L_START = -L_END;
 const R_START = 5 * L_END;
 
 const listOfGames = [
-    "ColorPasscode",
-    "SockToss",
-    "Factory",
-    "FrogJump",
-    "TugOWar",
-    "ColorLab",
-    "Emeowgency",
-    "Lowest",
-    "HitTheButton",
-    "DrinkPour",
-    "BetweenSpace",
-    "HideFromCat",
-    "FlySwat",
-    "CircleJump",
-    "TrashSort",
-    "MarcyMunch",
-    "Cannon",
-    "CarPump"
-];
+    'MarcyMunch',
+    // 'CircleJump',
+    // 'SockToss',
+    // "Lowest",
+    // "FrogJump",
+    // "DrinkPour",
+    // "FlySwat",
+    // "Emeowgency",
+    // "ColorLab",
+    // "Cannon",
+    // "CarPump",
+    // "TrashSort",
+    // "ColorPasscode",
+    // "HideFromCat",
+    // "HitTheButton",
+    // "BetweenSpace",
+    // 'TugOWar',
+    'GameOver'];
 
 export default class CutScreen extends Phaser.Scene {
     // Game Class Constructor
@@ -39,9 +37,7 @@ export default class CutScreen extends Phaser.Scene {
             physics: {
                 default: 'arcade',
                 arcade: {
-                    gravity: {
-                        y: 0
-                    }
+                    gravity: { y: 0 }
                 }
             }
         });
@@ -60,7 +56,7 @@ export default class CutScreen extends Phaser.Scene {
         this.open = false;
 
         this.lost = false;
-        this.score = -1;
+        // this.score = -1;
 
         this.space;
 
@@ -78,43 +74,46 @@ export default class CutScreen extends Phaser.Scene {
         this.l_life;
         this.r_life;
 
+        this.textPrompt;
+
     }
 
     preload() {
         this.load.spritesheet(
-            'gba', new URL('assets/gba.png',
-                import.meta.url).href,
+            'gba', new URL('assets/gba.png', import.meta.url).href,
+            { frameWidth: 252, frameHeight: 162 });
+        this.load.spritesheet(
+            'loss', new URL('assets/loss_cat.png', import.meta.url).href,
+            { frameWidth: 419, frameHeight: 162 });
+        this.load.spritesheet(
+            'win', new URL('assets/win_cat.png', import.meta.url).href,
+            { frameWidth: 419, frameHeight: 162 });
+        this.load.spritesheet(
+            'numbers', new URL('../globalAssets/numsheet.png', import.meta.url).href,
+            { frameWidth: 77, frameHeight: 122 });
+        this.load.image('gba_socket', new URL('assets/gba_socket.png', import.meta.url).href);
+        this.load.image('num_plate', new URL('assets/num_plate.png', import.meta.url).href);
+        this.load.image('l_door', new URL('assets/l_door.png', import.meta.url).href);
+        this.load.image('r_door', new URL('assets/r_door.png', import.meta.url).href);
 
-            {
-                frameWidth: 252,
-                frameHeight: 162
-            });
-        this.load.spritesheet(
-            'loss', new URL('assets/loss_cat.png',
-                import.meta.url).href, {
-            frameWidth: 419,
-            frameHeight: 162
-        });
-        this.load.spritesheet(
-            'win', new URL('assets/win_cat.png',
-                import.meta.url).href, {
-            frameWidth: 419,
-            frameHeight: 162
-        });
-        this.load.spritesheet(
-            'numbers', new URL('../globalAssets/numsheet.png',
-                import.meta.url).href, {
-            frameWidth: 77,
-            frameHeight: 122
-        });
-        this.load.image('gba_socket', new URL('assets/gba_socket.png',
-            import.meta.url).href);
-        this.load.image('num_plate', new URL('assets/num_plate.png',
-            import.meta.url).href);
-        this.load.image('l_door', new URL('assets/l_door.png',
-            import.meta.url).href);
-        this.load.image('r_door', new URL('assets/r_door.png',
-            import.meta.url).href);
+        this.load.image('toss!', new URL('../textPrompts/toss.png', import.meta.url).href);
+        this.load.image('catch!', new URL('../textPrompts/Catch_Text.png', import.meta.url).href);
+        this.load.image('pour!', new URL('../textPrompts/pourtext.png', import.meta.url).href);
+        this.load.image('pull!', new URL('../textPrompts/pulltext.png', import.meta.url).href);
+        this.load.image('sort!', new URL('../textPrompts/sort.png', import.meta.url).href);
+        this.load.image('swat!', new URL('../textPrompts/swatText.png', import.meta.url).href);
+        this.load.image('swat!', new URL('../textPrompts/swatText.png', import.meta.url).href);
+        this.load.image('munch!', new URL('../textPrompts/munch.png', import.meta.url).href);
+        this.load.image('jump!', new URL('../textPrompts/Jump.png', import.meta.url).href);
+        this.load.image('pick the lowest!', new URL('../textPrompts/lowest.png', import.meta.url).href);
+        this.load.image('cheese it!', new URL('../textPrompts/cheeseit.png', import.meta.url).href);
+        this.load.image('memorize!', new URL('../textPrompts/memorize.png', import.meta.url).href);
+        this.load.image('slap it!', new URL('../textPrompts/slapit.png', import.meta.url).href);
+        this.load.image('mix!', new URL('../textPrompts/mix.png', import.meta.url).href);
+        this.load.image('pump!', new URL('../textPrompts/pump.png', import.meta.url).href);
+        this.load.image('dodge!', new URL('../textPrompts/dodge.png', import.meta.url).href);
+        this.load.image('avoid!', new URL('../textPrompts/avoid.png', import.meta.url).href);
+        this.load.image('add!', new URL('../textPrompts/add.png', import.meta.url).href);
     }
 
     create() {
@@ -122,15 +121,17 @@ export default class CutScreen extends Phaser.Scene {
 
         this.buildAnimations();
         this.buildObjects();
-        this.setScore(this.score);
+        this.setScore(this.globalState.scores);
 
         eventsCenter.on('game-end', this.closeDoor, this);
     }
     update() {
+
         if (!this.closed) {
             this.close_timer++;
             this.close_doors();
-        } else if (this.open) {
+        }
+        else if (this.open) {
             this.close_timer++;
             this.open_doors();
         }
@@ -142,7 +143,8 @@ export default class CutScreen extends Phaser.Scene {
         if (this.l_door.x < L_END) {
             this.l_close();
             this.r_close();
-        } else {
+        }
+        else {
             this.close_timer = 0;
             this.closecon();
             this.closed = true;
@@ -153,7 +155,8 @@ export default class CutScreen extends Phaser.Scene {
 
             this.l_open();
             this.r_open();
-        } else {
+        }
+        else {
             this.close_timer = 0;
             this.faceplate.anims.stop();
             this.faceplate.setFrame(0);
@@ -182,7 +185,8 @@ export default class CutScreen extends Phaser.Scene {
             this.l_life.children.iterate((child) => {
                 child.x = L_END;
             });
-        } else {
+        }
+        else {
             // Move Door
             this.l_door.x += this.close_timer;
 
@@ -221,7 +225,8 @@ export default class CutScreen extends Phaser.Scene {
                 child.x = L_START;
             });
 
-        } else {
+        }
+        else {
             // Move Door
             this.l_door.x -= this.close_timer;
 
@@ -237,8 +242,6 @@ export default class CutScreen extends Phaser.Scene {
             this.l_life.children.iterate((child) => {
                 child.x -= this.close_timer;
             });
-
-
         }
     }
     r_close() {
@@ -257,7 +260,8 @@ export default class CutScreen extends Phaser.Scene {
                 child.x = R_END;
             });
 
-        } else {
+        }
+        else {
             // Move Door
             this.r_door.x -= this.close_timer;
             this.faceplate.x -= this.close_timer;
@@ -284,7 +288,8 @@ export default class CutScreen extends Phaser.Scene {
             this.r_life.children.iterate((child) => {
                 child.x = R_START;
             });
-        } else {
+        }
+        else {
             // Move Door
             this.r_door.x += this.close_timer;
             this.faceplate.x += this.close_timer;
@@ -300,16 +305,9 @@ export default class CutScreen extends Phaser.Scene {
     }
     reduce_life() {
         switch (this.life_total) {
-            case 1:
-            case 2:
-                this.r_disable(this.life_total);
-                break;
-            case 3:
-            case 4:
-                this.l_disable(this.life_total);
-                break;
-            default:
-                return;
+            case 1: case 2: this.r_disable(this.life_total); break;
+            case 3: case 4: this.l_disable(this.life_total); break;
+            default: return;
         }
     }
     l_disable(index) {
@@ -333,18 +331,23 @@ export default class CutScreen extends Phaser.Scene {
     closecon() {
         console.log("Round ", this.roundNumber);
 
+        if (this.currentScene === 'CircleJump') {
+            eventsCenter.emit('end_circle');
+        }
+
         if (!this.lost) {
 
             this.faceplate.anims.play('win1').once('animationcomplete', () => {
                 this.faceplate.anims.play('win2');
             });
 
-            this.score++;
+            this.globalState.scores++;
 
             setTimeout(() => {
-                this.setScore(this.score);
+                this.setScore(this.globalState.scores);
             }, 200);
-        } else {
+        }
+        else {
             this.faceplate.anims.play('lose1').once('animationcomplete', () => {
                 this.faceplate.anims.play('lose2');
             });
@@ -356,7 +359,8 @@ export default class CutScreen extends Phaser.Scene {
         eventsCenter.emit('reset_timer');
         if (this.roundNumber > 0) {
             this.endGame();
-        } else {
+        }
+        else {
             if (this.scene.isActive('MainMenu'))
                 this.scene.remove('MainMenu');
         }
@@ -367,21 +371,28 @@ export default class CutScreen extends Phaser.Scene {
         //     this.currentScene = this.game.scene.scenes[this.roundNumber + 1]
         // } while(this.playedGames.includes(this.currentScene) && !this.finishedGames)
         //this.currentScene = "SockToss"
-        this.life_total > 1 ? this.currentScene = listOfGames[this.roundNumber] : this.currentScene = 'GameOver';
+        this.life_total > 1 ? this.setCurrentScene() : this.currentScene = 'GameOver';
+
         console.log(this.currentScene);
         this.scene.sendToBack('Timer');
         this.scene.sendToBack(this.currentScene);
-        if (this.currentScene !== 'GameOver')
+        if (this.currentScene !== 'GameOver') {
             this.scene.run('Timer');
-        else
+        } else {
             this.scene.remove('Timer');
+            // console.log(this.globalState.scores);
+        }
         this.scene.run(this.currentScene);
         console.log(this.currentScene + " should be running...");
         this.roundNumber++;
+        //Initial timeout for win/lose anim
         setTimeout(() => {
-            //add code to play text prompt for next game
-
-            this.open = true;
+            if (this.currentScene !== 'GameOver')
+                this.textPrompt.setVisible(true);
+            setTimeout(() => {
+                this.textPrompt.setVisible(false);
+                this.open = true;
+            }, 2000);
         }, 2000);
     }
     endGame() {
@@ -407,38 +418,22 @@ export default class CutScreen extends Phaser.Scene {
         this.l_sockets = this.physics.add.group({
             key: 'gba_socket',
             repeat: 1,
-            setXY: {
-                x: L_START,
-                y: 5 * Y / 6 - 185,
-                stepY: 185
-            }
+            setXY: { x: L_START, y: 5 * Y / 6 - 185, stepY: 185 }
         });
         this.l_life = this.physics.add.group({
             key: 'gba_socket',
             repeat: 1,
-            setXY: {
-                x: L_START,
-                y: 5 * Y / 6 - 185,
-                stepY: 185
-            }
+            setXY: { x: L_START, y: 5 * Y / 6 - 185, stepY: 185 }
         });
         this.r_sockets = this.physics.add.group({
             key: 'gba_socket',
             repeat: 1,
-            setXY: {
-                x: R_START,
-                y: 5 * Y / 6 - 185,
-                stepY: 185
-            }
+            setXY: { x: R_START, y: 5 * Y / 6 - 185, stepY: 185 }
         });
         this.r_life = this.physics.add.group({
             key: 'gba_socket',
             repeat: 1,
-            setXY: {
-                x: R_START,
-                y: 5 * Y / 6 - 185,
-                stepY: 185
-            }
+            setXY: { x: R_START, y: 5 * Y / 6 - 185, stepY: 185 }
         });
         this.l_sockets.setDepth(1);
         this.r_sockets.setDepth(1);
@@ -454,82 +449,42 @@ export default class CutScreen extends Phaser.Scene {
     buildAnimations() {
         this.anims.create({
             key: 'life',
-            frames: [{
-                key: 'gba',
-                frame: 0
-            },
-            {
-                key: 'gba',
-                frame: 0
-            },
-            {
-                key: 'gba',
-                frame: 1
-            },
-            {
-                key: 'gba',
-                frame: 2
-            },
-            {
-                key: 'gba',
-                frame: 2
-            },
-            {
-                key: 'gba',
-                frame: 1
-            }
+            frames: [
+                { key: 'gba', frame: 0 },
+                { key: 'gba', frame: 0 },
+                { key: 'gba', frame: 1 },
+                { key: 'gba', frame: 2 },
+                { key: 'gba', frame: 2 },
+                { key: 'gba', frame: 1 }
             ],
             frameRate: 6,
             repeat: -1
         });
         this.anims.create({
             key: 'blink',
-            frames: [{
-                key: 'gba',
-                frame: 0
-            },
-            {
-                key: 'gba_socket'
-            }
+            frames: [
+                { key: 'gba', frame: 0 },
+                { key: 'gba_socket' }
             ],
             frameRate: 6,
             repeat: 2
         });
         this.anims.create({
             key: 'lose1',
-            frames: [{
-                key: 'loss',
-                frame: 0
-            },
-            {
-                key: 'loss',
-                frame: 1
-            },
-            {
-                key: 'loss',
-                frame: 2
-            },
-            {
-                key: 'loss',
-                frame: 3
-            }
+            frames: [
+                { key: 'loss', frame: 0 },
+                { key: 'loss', frame: 1 },
+                { key: 'loss', frame: 2 },
+                { key: 'loss', frame: 3 }
             ],
             frameRate: 6
         });
         this.anims.create({
             key: 'lose2',
-            frames: [{
-                key: 'loss',
-                frame: 3
-            },
-            {
-                key: 'loss',
-                frame: 4
-            },
-            {
-                key: 'loss',
-                frame: 5
-            }
+            frames: [
+                { key: 'loss', frame: 3 },
+                { key: 'loss', frame: 4 },
+                { key: 'loss', frame: 5 }
             ],
             frameRate: 6,
             repeat: -1,
@@ -537,39 +492,20 @@ export default class CutScreen extends Phaser.Scene {
         });
         this.anims.create({
             key: 'win1',
-            frames: [{
-                key: 'win',
-                frame: 0
-            },
-            {
-                key: 'win',
-                frame: 1
-            },
-            {
-                key: 'win',
-                frame: 2
-            },
-            {
-                key: 'win',
-                frame: 3
-            }
+            frames: [
+                { key: 'win', frame: 0 },
+                { key: 'win', frame: 1 },
+                { key: 'win', frame: 2 },
+                { key: 'win', frame: 3 }
             ],
             frameRate: 6
         });
         this.anims.create({
             key: 'win2',
-            frames: [{
-                key: 'win',
-                frame: 3
-            },
-            {
-                key: 'win',
-                frame: 4
-            },
-            {
-                key: 'win',
-                frame: 5
-            }
+            frames: [
+                { key: 'win', frame: 3 },
+                { key: 'win', frame: 4 },
+                { key: 'win', frame: 5 }
             ],
             frameRate: 6,
             repeat: -1,
@@ -582,5 +518,67 @@ export default class CutScreen extends Phaser.Scene {
         console.log('emission received');
         //this.faceplate.anims.stop()
         this.closed = false;
+    }
+
+    setCurrentScene() {
+        this.currentScene = listOfGames[this.roundNumber];
+        let s;
+        switch (this.currentScene) {
+            case "Lowest":
+                s = 'pick the lowest!';
+                break;
+            case "FrogJump":
+                s = 'jump!';
+                break;
+            case "TugOWar":
+                s = 'pull!';
+                break;
+            case "DrinkPour":
+                s = 'pour!';
+                break;
+            case "FlySwat":
+                s = 'swat!';
+                break;
+            case "Emeowgency":
+                s = 'catch!';
+                break;
+            case 'MarcyMunch':
+                s = 'munch!';
+                break;
+            case 'SockToss':
+                s = 'toss!';
+                break;
+            case "ColorLab":
+                s = 'mix!';
+                break;
+            case "Cannon":
+                s = 'add!';
+                break;
+            case "CarPump":
+                s = 'pump!';
+                break;
+            case "TrashSort":
+                s = 'sort!';
+                break;
+            case "ColorPasscode":
+                s = 'memorize!';
+                break;
+            case "HideFromCat":
+                s = 'cheese it!';
+                break;
+            case "HitTheButton":
+                s = 'slap it!';
+                break;
+            case "CircleJump":
+                s = 'avoid!';
+                break;
+            case "BetweenSpace":
+                s = 'dodge!';
+                break;
+            default:
+                break;
+        }
+        this.textPrompt = this.add.image(X / 2, Y / 2, s);
+        this.textPrompt.setVisible(false).setDepth(1);
     }
 }

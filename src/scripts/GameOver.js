@@ -1,5 +1,6 @@
 import eventsCenter from "./EventsCenter";
 import gameDataBase from "./Database/GameDataBase";
+import ButtonPressHandlers from './ButtonPressHandlers';
 const X = 1080;
 const Y = 720;
 export default class GameOver extends Phaser.Scene {
@@ -29,10 +30,12 @@ export default class GameOver extends Phaser.Scene {
     this.yesNoOptions = [];
     this.prompt1 = [];
     this.confirm = [2, 14, 13, 5, 8, 17, 12];
-    this.pointerPos = 0;
+    this.pointerPos = 1;
     this.promptPrinted = false;
     this.bobberTimer = 0;
     this.bobDir = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
   }
 
   preload() {
@@ -56,7 +59,7 @@ export default class GameOver extends Phaser.Scene {
   }
 
   create() {
-    console.log(this.globalState.score);
+    console.log(this.globalState.scores);
     this.arrowButtons = this.input.keyboard.createCursorKeys();
     this.add.image(X / 2, Y / 2, "go_bg");
     this.up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -85,35 +88,39 @@ export default class GameOver extends Phaser.Scene {
   }
 
   update() {
-    if (Phaser.Input.Keyboard.JustDown(this.up)) {
-      if (this.count < 3) {
-        this.onUpInput();
-      }
-    }
 
-    if (Phaser.Input.Keyboard.JustDown(this.action)) {
-      if (this.count < 3) {
-        this.globalState.names.push(this.active_letter);
-      }
-      // this.pointer.visible = false;
-      this.onConfirmInput();
-      this.count++;
-      // console.log(this.count);
-      console.log(this.globalState.names);
-      if (this.count > 2 && this.pointer.visible === false) {
-        this.confirmNamePrompt();
-      }
+    this.buttonHandlers.update();
+    if (!this.gamePad) {
+      console.log("yes");
+      this.startGamePad();
     }
+    this.buttonHandlers.update();
 
-    if (Phaser.Input.Keyboard.JustDown(this.down)) {
-      if (this.count < 3) {
-        this.onDownInput();
-      }
-    }
-    if (this.pointer.visible === true) {
-      this.pointerStuff();
-      this.bouyantMotion(this.pointer, 0.8, 4);
-    }
+    // if (Phaser.Input.Keyboard.JustDown(this.up)) {
+    //   this.onUpInput();
+    // }
+
+    // if (Phaser.Input.Keyboard.JustDown(this.action)) {
+    //   if (this.count < 3) {
+    //     this.globalState.names.push(this.active_letter);
+    //   }
+    //   this.onConfirmInput();
+    //   this.count++;
+    //   console.log(this.globalState.names);
+    //   if (this.count > 2 && this.pointer.visible === false) {
+    //     this.confirmNamePrompt();
+    //   }
+    // }
+
+    // if (Phaser.Input.Keyboard.JustDown(this.down)) {
+    //   if (this.count < 3) {
+    //     this.onDownInput();
+    //   }
+    // }
+    // if (this.pointer.visible === true) {
+    //   this.pointerStuff();
+    //   this.bouyantMotion(this.pointer, 0.8, 4);
+    // }
 
     // if (this.initials.length === 3) {
     //   this.initials.push(this.globalState.score)
@@ -130,26 +137,75 @@ export default class GameOver extends Phaser.Scene {
     // this.startGamePad();}
   }
 
+  startGamePad() {
+    if (this.input.gamepad.total) {
+      this.gamePad = this.input.gamepad.pad1;
+      this.initGamePad();
+      console.log(this.gamePad);
+    }
+  }
+
+  initGamePad() {
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y > 0.5, () => this.checkInput(1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y < -0.5, () => this.checkInput(0));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x > 0.5, () => this.checkInput(3));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x < -0.5, () => this.checkInput(2));
+    this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => this.checkInput(4));
+  }
+
   updateText() {
     if (this.name[this.letterPos]) {
       this.name[this.letterPos].setFrame(this.active_letter);
     }
   }
+  checkInput(x) {
+    if (x === 1) {
+      this.onDownInput();
+    }
 
+    if (x === 0) {
+      this.onUpInput();
+    }
+    if (x === 4) {
+      if (this.count < 3) {
+        this.globalState.names.push(this.active_letter);
+      }
+      this.onConfirmInput();
+      this.count++;
+      console.log(this.globalState.names);
+      if (this.count > 2 && this.pointer.visible === false) {
+        this.confirmNamePrompt();
+      }
+    }
+    if (this.pointer.visible === true) {
+      this.bouyantMotion(this.pointer, 0.8, 4);
+      if (x === 3) {
+        this.pointerStuff(1);
+      }
+      if (x === 2) {
+        this.pointerStuff(0);
+      }
+    }
+
+  }
   onDownInput() {
-    // console.log(this.active_letter);
-    if (this.active_letter < 25) {
-      this.active_letter += 1;
-    } else {
-      this.active_letter = 0;
+    if (this.count < 3) {
+      // console.log(this.active_letter);
+      if (this.active_letter < 25) {
+        this.active_letter += 1;
+      } else {
+        this.active_letter = 0;
+      }
     }
   }
   onUpInput() {
-    // console.log(this.active_letter);
-    if (this.active_letter > 0) {
-      this.active_letter -= 1;
-    } else {
-      this.active_letter = 25;
+    if (this.count < 3) {
+      // console.log(this.active_letter);
+      if (this.active_letter > 0) {
+        this.active_letter -= 1;
+      } else {
+        this.active_letter = 25;
+      }
     }
   }
   onConfirmInput() {
@@ -163,25 +219,27 @@ export default class GameOver extends Phaser.Scene {
 
     if (this.pointer.visible === true) {
       switch (this.pointerPos) {
-        case 0: //push data into array or something
-          console.log("yes option");
-          //add scene switch to high-score scene
-          this.scene.start('HiScoreScene');
-
-          // location.reload(); 
-          break;
-        case 1: // Scores
+        case 0: // Scores
           console.log("no");
           this.scene.restart();
+          this.pointerPos = 1;
           this.active_letter = 0;
           this.letterPos = 0;
           this.count = -1;
           this.pointer.visible = false;
           this.pointer.y = 350;
           this.clearArray(this.prompt1);
+          this.globalState.names = [];
           // console.log(this.yesNoOptions);
           this.promptPrinted = false;
         default:
+          break;
+        case 1: //push data into array or something
+          console.log("yes option");
+          //add scene switch to high-score scene
+          this.scene.start('HiScoreScene');
+
+          // location.reload(); 
           break;
       }
     }
@@ -214,17 +272,19 @@ export default class GameOver extends Phaser.Scene {
       this.promptPrinted = true;
     }
   }
-  pointerStuff() {
+  pointerStuff(y) {
     this.updatePointer();
-    if (Phaser.Input.Keyboard.JustDown(this.left)) {
+    if (y === 1) {
       this.pointerPos === 0
         ? (this.pointerPos = this.yesNoOptions.length - 1)
         : this.pointerPos--;
+      console.log(this.pointerPos);
     }
-    if (Phaser.Input.Keyboard.JustDown(this.right)) {
+    if (y === 0) {
       this.pointerPos === this.yesNoOptions.length - 1
         ? (this.pointerPos = 0)
         : this.pointerPos++;
+      console.log(this.pointerPos);
     }
   }
   updatePointer() {
