@@ -34,34 +34,37 @@ class GameDataBase {
     const slicedHighscores = newHighScores.slice(0, this.leaderBoardLen);
     this.db.setItem("highscores", JSON.stringify(slicedHighscores));
   }
-  // setScore(playerName, playerScore) {
-  //   if (!(typeof playerName === "string" && typeof playerScore === "number")) {
-  //     console.error(
-  //       "When setting highscore, the Username must be type of string, and score must be type of number"
-  //     );
-  //   }
-  //   let highScores = this.readScores();
-  //   // Conditions where the score should not be saved
-  //   if (highScores.length > 0) {
-  //     const lowestLeaderboardScore = highScores[highScores.length - 1];
-  //     const existingScore = highScores.find(({ name }) => name === playerName);
+  setScore(playerName, playerScore) {
+    // if (!(typeof playerName === "string" && typeof playerScore === "number")) {
+    //   console.error(
+    //     "When setting highscore, the Username must be type of string, and score must be type of number"
+    //   );
+    // }
 
-  //     // 1) Current score must be higher than the database score of the user.
-  //     if (existingScore && playerScore <= existingScore.score) {
-  //       return;
-  //     }
+    console.log('Player Name: ' + playerName + ', Player Score: ' + playerScore);
 
-  //     // 2) If the user does not exist, and there are less than X total scores, and complies with previous
-  //     if (playerScore < lowestLeaderboardScore) {
-  //       return;
-  //     }
-  //   }
-  //     highScores.push({
-  //     name: playerName,
-  //     score: playerScore,
-  //   });
-  //   this.writeScores(highScores);
-  // }
+    let highScores = this.readScores();
+    // Conditions where the score should not be saved
+    if (highScores.length > 0) {
+      const lowestLeaderboardScore = highScores[highScores.length - 1];
+      const existingScore = highScores.find(({ name }) => name === playerName);
+
+      // 1) Current score must be higher than the database score of the user.
+      if (existingScore && playerScore <= existingScore.score) {
+        return;
+      }
+
+      // 2) If the user does not exist, and there are less than X total scores, and complies with previous
+      if (playerScore < lowestLeaderboardScore) {
+        return;
+      }
+    }
+    highScores.push({
+      name: playerName,
+      score: playerScore,
+    });
+    this.writeScores(highScores);
+  }
   scoreIsHighScore(score) {
     // return true if greater than the lowest score
     const highScores = this.readScores();

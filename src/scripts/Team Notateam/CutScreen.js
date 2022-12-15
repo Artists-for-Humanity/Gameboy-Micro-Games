@@ -13,7 +13,7 @@ const listOfGames = [
     // 'SockToss',
     // "Lowest",
     // "FrogJump",
-    // "DrinkPour",
+    // // "DrinkPour",
     // "FlySwat",
     // "Emeowgency",
     // "ColorLab",

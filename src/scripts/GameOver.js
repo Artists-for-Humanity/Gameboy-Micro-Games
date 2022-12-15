@@ -88,53 +88,22 @@ export default class GameOver extends Phaser.Scene {
   }
 
   update() {
-
     this.buttonHandlers.update();
     if (!this.gamePad) {
-      console.log("yes");
+      // console.log("yes");
       this.startGamePad();
     }
     this.buttonHandlers.update();
+    console.log(this.globalState.names.length);
 
-    // if (Phaser.Input.Keyboard.JustDown(this.up)) {
-    //   this.onUpInput();
-    // }
+    if (this.globalState.names.length === 3) {
+      gameDataBase.setScore(this.globalState.names, this.globalState.scores);
+      this.globalState.resetScore();
+      this.globalState.names = [];
+      // this.scene.start('MainMenu');
+    }
 
-    // if (Phaser.Input.Keyboard.JustDown(this.action)) {
-    //   if (this.count < 3) {
-    //     this.globalState.names.push(this.active_letter);
-    //   }
-    //   this.onConfirmInput();
-    //   this.count++;
-    //   console.log(this.globalState.names);
-    //   if (this.count > 2 && this.pointer.visible === false) {
-    //     this.confirmNamePrompt();
-    //   }
-    // }
-
-    // if (Phaser.Input.Keyboard.JustDown(this.down)) {
-    //   if (this.count < 3) {
-    //     this.onDownInput();
-    //   }
-    // }
-    // if (this.pointer.visible === true) {
-    //   this.pointerStuff();
-    //   this.bouyantMotion(this.pointer, 0.8, 4);
-    // }
-
-    // if (this.initials.length === 3) {
-    //   this.initials.push(this.globalState.score)
-    //   if (this.globalState.names.length < 10) {
-    //     this.globalState.names.push(this.initials)
-    //     this.initials = [];
-    //     console.log(this.globalState.names, "names");
-    //     // location.reload();
-    //   }
-    // }
     this.updateText();
-    // this.buttonHandlers.update();
-    // if (!this.gamePad) {
-    // this.startGamePad();}
   }
 
   startGamePad() {
@@ -229,7 +198,7 @@ export default class GameOver extends Phaser.Scene {
           this.pointer.visible = false;
           this.pointer.y = 350;
           this.clearArray(this.prompt1);
-          this.globalState.names = [];
+          // this.globalState.names = [];
           // console.log(this.yesNoOptions);
           this.promptPrinted = false;
         default:

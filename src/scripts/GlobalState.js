@@ -133,7 +133,7 @@ class GlobalState extends Phaser.Plugins.BasePlugin {
     // console.log("emission sent");
   }
   resetScore() {
-    this.val = 0;
+    this.scores = 0;
   }
 }
 

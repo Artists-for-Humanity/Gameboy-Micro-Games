@@ -45,6 +45,7 @@ export default class MainMenu extends Phaser.Scene {
   }
 
   preload() {
+    console.log('running main menu 00000');
     this.listOfGames = [
       "Emeowgency",
       "ColorLab",
@@ -98,7 +99,7 @@ export default class MainMenu extends Phaser.Scene {
     if (this.input.gamepad.total) {
       this.gamePad = this.input.gamepad.pad1;
       this.initGamePad();
-      console.log(this.gamePad);
+      // console.log(this.gamePad);
     }
   }
 
