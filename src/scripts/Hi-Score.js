@@ -51,8 +51,9 @@ export default class HiScoreScene extends Phaser.Scene {
     // );
     this.createLists();
     this.displayList();
-    console.log("the score is" + this.scores);
-    this.resetLists();
+    // console.log("the score is" + this.scores);
+    // this.resetLists();
+    console.log(this.names);
     // console.log(this.globalState.names);
   }
 
@@ -92,7 +93,7 @@ export default class HiScoreScene extends Phaser.Scene {
       // console.log("Item Score: " + item.score);
       console.log("item score is:" + item.score);
       let place = index + 1;
-      console.log("Place: " + place);
+      // console.log("Place: " + place);
       this.names.push(item.name);
       this.scores.push(item.score);
     });
@@ -102,8 +103,8 @@ export default class HiScoreScene extends Phaser.Scene {
     // if (this.globalState.names != []) {
     // console.log(this.dataSet);
     // console.log(this.globalState.names.length);
-    for (let n = 0; n < 3;) {
-      console.log("score 000: " + this.scores);
+    for (let n = 0; n < 10;) {
+      // console.log("score 000: " + this.scores);
       // console.log(this.names);
       // this.add
       //   .image(700, 200 + 60 * this.dataSet, "lScores")
@@ -119,7 +120,7 @@ export default class HiScoreScene extends Phaser.Scene {
 
       for (let l = 0; l < 3; l++) {
         // tempNum++;
-        console.log("names is: " + this.names[0][l]);
+        // console.log("names is: " + this.names[0][l]);
 
         // console.log("The current Letter Is: " + this.names[tempNum][l]);
 
@@ -128,7 +129,7 @@ export default class HiScoreScene extends Phaser.Scene {
           // .sprite(200 + 40 * l, 200 + 60 * this.dataSet, "alphaSheet")
           // .setScale(0.3);
           .image(200 + 40 * l, 200 + 50 * this.dataSet, "alphaSheet")
-          .setFrame(this.names[0][l])
+          .setFrame(this.names[n][l])
           .setScale(0.2);
         // score
         // this.inti.push(this.parseNumber(this.scores[this.dataSet]));
@@ -150,7 +151,7 @@ export default class HiScoreScene extends Phaser.Scene {
     // if (score < 0) {
     //   score = 0;
     // }
-    console.log("this is" + score);
+    // console.log("this is" + score);
     let o = score % 10;
     let h = Math.floor(score / 100);
     let t = Math.floor((score - (h * 100)) / 10);
