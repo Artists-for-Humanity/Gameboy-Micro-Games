@@ -51,9 +51,8 @@ export default class HiScoreScene extends Phaser.Scene {
     // );
     this.createLists();
     this.displayList();
+    console.log("the score is" + this.scores);
     this.resetLists();
-
-    this.setScore(this.scores);
     // console.log(this.globalState.names);
   }
 
@@ -86,23 +85,17 @@ export default class HiScoreScene extends Phaser.Scene {
   }
 
   createLists() {
-    console.log("GameData : " + this.gameData);
+    // console.log("GameData : " + this.gameData);
 
     this.gameData.forEach((item, index) => {
       // console.log("Item : " + item);
       // console.log("Item Score: " + item.score);
-
+      console.log("item score is:" + item.score);
       let place = index + 1;
       console.log("Place: " + place);
-
-      if (place >= 10) {
-
-        this.names.push(item.name);
-      }
+      this.names.push(item.name);
       this.scores.push(item.score);
     });
-
-    console.log("GameData: " + this.gameData);
 
   }
   displayList() {
@@ -110,6 +103,7 @@ export default class HiScoreScene extends Phaser.Scene {
     // console.log(this.dataSet);
     // console.log(this.globalState.names.length);
     for (let n = 0; n < 3;) {
+      console.log("score 000: " + this.scores);
       // console.log(this.names);
       // this.add
       //   .image(700, 200 + 60 * this.dataSet, "lScores")
@@ -156,7 +150,7 @@ export default class HiScoreScene extends Phaser.Scene {
     // if (score < 0) {
     //   score = 0;
     // }
-    // console.log(score);
+    console.log("this is" + score);
     let o = score % 10;
     let h = Math.floor(score / 100);
     let t = Math.floor((score - (h * 100)) / 10);
