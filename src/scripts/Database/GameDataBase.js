@@ -35,11 +35,11 @@ class GameDataBase {
     this.db.setItem("highscores", JSON.stringify(slicedHighscores));
   }
   setScore(playerName, playerScore) {
-    // if (!(typeof playerName === "string" && typeof playerScore === "number")) {
-    //   console.error(
-    //     "When setting highscore, the Username must be type of string, and score must be type of number"
-    //   );
-    // }
+    if (!(typeof playerName === "string" && typeof playerScore === "number")) {
+      console.error(
+        "When setting highscore, the Username must be type of string, and score must be type of number"
+      );
+    }
 
     console.log('Player Name: ' + playerName + ', Player Score: ' + playerScore);
 

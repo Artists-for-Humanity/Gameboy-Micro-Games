@@ -43,7 +43,7 @@ export default class HiScoreScene extends Phaser.Scene {
   }
   create() {
 
-
+    var n = 0;
     this.gameData = gameDataBase.getTopScores();
 
     // this.action = this.input.keyboard.addKey(
@@ -51,9 +51,11 @@ export default class HiScoreScene extends Phaser.Scene {
     // );
     this.createLists();
     this.displayList();
-    // console.log("the score is" + this.scores);
+    // this.setScore(this.scores[n]);
+
+    // console.log(this.scores);
     // this.resetLists();
-    console.log(this.names);
+    // console.log(this.names);
     // console.log(this.globalState.names);
   }
 
@@ -103,18 +105,21 @@ export default class HiScoreScene extends Phaser.Scene {
     // if (this.globalState.names != []) {
     // console.log(this.dataSet);
     // console.log(this.globalState.names.length);
-    for (let n = 0; n < 10;) {
-      // console.log("score 000: " + this.scores);
+    for (var n = 0; n < this.names.length;) {
+      // console.log("score 000: " + this.names.length);
       // console.log(this.names);
       // this.add
       //   .image(700, 200 + 60 * this.dataSet, "lScores")
       //   .setFrame(this.globalState.scores)
       //   .setScale(0.1);
-
+      // this.setScore(this.scores);
       this.ones = this.physics.add.sprite(700 + 50, 200 + 50 * this.dataSet, 'lScores');
       this.ones.setScale(0.1, 0.1);
       this.tens = this.physics.add.sprite(700, 200 + 50 * this.dataSet, 'lScores');
       this.tens.setScale(0.1, 0.1);
+      this.setScore(this.scores[n]);;
+
+      console.log("ones is: " + this.ones);
       // this.huns = this.physics.add.sprite(700 - 82, 200 + 60 * this.dataSet, 'lScores');
       // var tempNum = 0;
 
@@ -148,13 +153,15 @@ export default class HiScoreScene extends Phaser.Scene {
   }
 
   setScore(score) {
+
     // if (score < 0) {
     //   score = 0;
     // }
-    // console.log("this is" + score);
     let o = score % 10;
     let h = Math.floor(score / 100);
     let t = Math.floor((score - (h * 100)) / 10);
+    console.log("this is o: " + o);
+
 
     this.ones.setFrame(o);
     if (score >= 10)
