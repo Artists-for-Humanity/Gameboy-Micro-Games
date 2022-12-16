@@ -35,24 +35,46 @@ class GameDataBase {
     this.db.setItem("highscores", JSON.stringify(slicedHighscores));
   }
   setScore(playerName, playerScore) {
-    if (!(typeof playerName === "string" && typeof playerScore === "number")) {
+    if (!(typeof playerName === "object" && typeof playerScore === "number")) {
+      console.log('PlayerScore: ' + playerScore + ', PlayerName: ' + playerName);
+
       console.error(
         "When setting highscore, the Username must be type of string, and score must be type of number"
       );
     }
 
-    console.log('Player Name: ' + playerName + ', Player Score: ' + playerScore);
+    // console.log('Player Name: ' + playerName + ', Player Score: ' + playerScore);
 
     let highScores = this.readScores();
     // Conditions where the score should not be saved
     if (highScores.length > 0) {
       const lowestLeaderboardScore = highScores[highScores.length - 1];
       const existingScore = highScores.find(({ name }) => name === playerName);
+      // var existingScore = false
+      console.log('ExistingScore 00 : ' + existingScore);
+      for (let i = 0; i < highScores.length; i++) {
+        console.log('Player Name: ' + playerName);
+        console.log('highScores : ' + highScores[i].name);
+        if (highScores[i].name.toString() === playerName.toString()) {
+          // existingScore = true
+          console.log('ExistingScore 01: ' + existingScore);
+          // return;
+        }
+
+      }
+
+
+      // console.log('readScores : ' + this.readScores()[0][0]);
 
       // 1) Current score must be higher than the database score of the user.
+      // console.log('Existing Score: ' + existingScore.score + ', Player Score: ' + playerScore);
+      console.log('ExistingScore 01: ' + existingScore);
       if (existingScore && playerScore <= existingScore.score) {
+        console.log('reacme 00');
         return;
       }
+      console.log('reacme 01');
+
 
       // 2) If the user does not exist, and there are less than X total scores, and complies with previous
       if (playerScore < lowestLeaderboardScore) {

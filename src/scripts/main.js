@@ -48,8 +48,8 @@ const config = {
     gamepad: true
   },
   scene: [
-    HiScoreScene,
     MainMenu,
+    HiScoreScene,
     CutScreen,
     Timer,
     MarcyMunch,
