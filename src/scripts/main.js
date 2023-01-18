@@ -25,6 +25,7 @@ import MarcyMunch from "./8Bitties/MarcyMunch";
 import CircleJump from "./TeamInflation/CircleJump";
 import Factory from "./Fairway/factoryScripts/factoryScenes/Factory";
 import HiScoreScene from "./Hi-Score";
+import WhereisWilly from "./8Bitties/Where'sWilly.js";
 // Set configuration for phaser game instance
 const juice = new phaserJuice(this);
 
@@ -41,7 +42,7 @@ const config = {
       gravity: {
         y: 0,
       },
-      debug: false,
+      debug: true,
     },
   },
   input: {
@@ -70,6 +71,7 @@ const config = {
     HideFromCat,
     HitTheButton,
     ColorLab,
+    WhereisWilly,
     GameOver,
   ],
   audio: {
