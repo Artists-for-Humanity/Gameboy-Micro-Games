@@ -1,5 +1,5 @@
 import gameDataBase from "./Database/GameDataBase";
-import ButtonPressHandlers from './ButtonPressHandlers';
+import ButtonPressHandlers from "./ButtonPressHandlers";
 export default class HiScoreScene extends Phaser.Scene {
   gameData;
   constructor() {
@@ -19,10 +19,21 @@ export default class HiScoreScene extends Phaser.Scene {
     this.huns;
     this.buttonHandlers = new ButtonPressHandlers();
     this.gamePad = null;
-
-
   }
   preload() {
+    this.load.image('Hs_ListBG',
+      new URL("../scripts/globalAssets/LeaderboardListBg.png", import.meta.url).href
+    );
+    this.load.image('Hs_BG',
+      new URL("../scripts/globalAssets/LeaderboardBg.png", import.meta.url).href
+    );
+    this.load.image('Hs_Back',
+      new URL("../scripts/globalAssets/BackButton_Large.png", import.meta.url).href
+    );
+    this.load.image('Hs_Retry',
+      new URL("../scripts/globalAssets/PlayAgainButton_Large.png", import.meta.url).href
+    );
+    
     this.load.spritesheet(
       "lScores",
       new URL(
@@ -42,7 +53,7 @@ export default class HiScoreScene extends Phaser.Scene {
     );
   }
   create() {
-
+    this.add.image(540, 360, 'Hs_ListBG');
     var n = 0;
     this.gameData = gameDataBase.getTopScores();
 
@@ -65,7 +76,6 @@ export default class HiScoreScene extends Phaser.Scene {
     if (!this.gamePad) {
       this.startGamePad();
     }
-
   }
   startGamePad() {
     if (this.input.gamepad.total) {
@@ -76,7 +86,10 @@ export default class HiScoreScene extends Phaser.Scene {
   }
 
   initGamePad() {
-    this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => location.reload());
+    this.buttonHandlers.addPad(
+      () => this.gamePad.buttons[0].pressed,
+      () => location.reload()
+    );
   }
 
   resetLists() {
@@ -99,13 +112,12 @@ export default class HiScoreScene extends Phaser.Scene {
       this.names.push(item.name);
       this.scores.push(item.score);
     });
-
   }
   displayList() {
     // if (this.globalState.names != []) {
     // console.log(this.dataSet);
     // console.log(this.globalState.names.length);
-    for (var n = 0; n < this.names.length;) {
+    for (var n = 0; n < this.names.length; ) {
       // console.log("score 000: " + this.names.length);
       // console.log(this.names);
       // this.add
@@ -113,11 +125,19 @@ export default class HiScoreScene extends Phaser.Scene {
       //   .setFrame(this.globalState.scores)
       //   .setScale(0.1);
       // this.setScore(this.scores);
-      this.ones = this.physics.add.sprite(700 + 50, 200 + 50 * this.dataSet, 'lScores');
+      this.ones = this.physics.add.sprite(
+        700 + 50,
+        200 + 50 * this.dataSet,
+        "lScores"
+      );
       this.ones.setScale(0.1, 0.1);
-      this.tens = this.physics.add.sprite(700, 200 + 50 * this.dataSet, 'lScores');
+      this.tens = this.physics.add.sprite(
+        700,
+        200 + 50 * this.dataSet,
+        "lScores"
+      );
       this.tens.setScale(0.1, 0.1);
-      this.setScore(this.scores[n]);;
+      this.setScore(this.scores[n]);
 
       console.log("ones is: " + this.ones);
       // this.huns = this.physics.add.sprite(700 - 82, 200 + 60 * this.dataSet, 'lScores');
@@ -148,24 +168,20 @@ export default class HiScoreScene extends Phaser.Scene {
       this.inti = [];
       this.dataSet++;
       n++;
-
     }
   }
 
   setScore(score) {
-
     // if (score < 0) {
     //   score = 0;
     // }
     let o = score % 10;
     let h = Math.floor(score / 100);
-    let t = Math.floor((score - (h * 100)) / 10);
+    let t = Math.floor((score - h * 100) / 10);
     console.log("this is o: " + o);
 
-
     this.ones.setFrame(o);
-    if (score >= 10)
-      this.tens.setFrame(t);
+    if (score >= 10) this.tens.setFrame(t);
     // if (score >= 100)
     //   this.huns.setFrame(h);
   }
@@ -183,13 +199,13 @@ export default class HiScoreScene extends Phaser.Scene {
     this.inti.push(one);
     console.log(
       "Hundreds: " +
-      hun +
-      "\nTens: " +
-      ten +
-      "\nOnes: " +
-      one +
-      "\nTotal: " +
-      val
+        hun +
+        "\nTens: " +
+        ten +
+        "\nOnes: " +
+        one +
+        "\nTotal: " +
+        val
     );
     // return [hun, ten, one];
   }
