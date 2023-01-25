@@ -53,21 +53,11 @@ export default class HiScoreScene extends Phaser.Scene {
     );
   }
   create() {
-    this.add.image(540, 360, 'Hs_ListBG');
+    this.add.image(540, 360, 'Hs_BG');
     var n = 0;
     this.gameData = gameDataBase.getTopScores();
-
-    // this.action = this.input.keyboard.addKey(
-    //   Phaser.Input.Keyboard.KeyCodes.SPACE
-    // );
     this.createLists();
     this.displayList();
-    // this.setScore(this.scores[n]);
-
-    // console.log(this.scores);
-    // this.resetLists();
-    // console.log(this.names);
-    // console.log(this.globalState.names);
   }
 
   update() {
@@ -81,7 +71,6 @@ export default class HiScoreScene extends Phaser.Scene {
     if (this.input.gamepad.total) {
       this.gamePad = this.input.gamepad.pad1;
       this.initGamePad();
-      // console.log(this.gamePad);
     }
   }
 
@@ -114,17 +103,7 @@ export default class HiScoreScene extends Phaser.Scene {
     });
   }
   displayList() {
-    // if (this.globalState.names != []) {
-    // console.log(this.dataSet);
-    // console.log(this.globalState.names.length);
     for (var n = 0; n < this.names.length; ) {
-      // console.log("score 000: " + this.names.length);
-      // console.log(this.names);
-      // this.add
-      //   .image(700, 200 + 60 * this.dataSet, "lScores")
-      //   .setFrame(this.globalState.scores)
-      //   .setScale(0.1);
-      // this.setScore(this.scores);
       this.ones = this.physics.add.sprite(
         700 + 50,
         200 + 50 * this.dataSet,
@@ -156,15 +135,7 @@ export default class HiScoreScene extends Phaser.Scene {
           .image(200 + 40 * l, 200 + 50 * this.dataSet, "alphaSheet")
           .setFrame(this.names[n][l])
           .setScale(0.2);
-        // score
-        // this.inti.push(this.parseNumber(this.scores[this.dataSet]));
-        // this.parseNumber(this.globalState.scores[this.dataSet][3]);
-        // this.add
-        //   .image(700 + 40 * l, 200 + 60 * this.dataSet, "numbers")
-        //   .setFrame(this.inti[l])
-        //   .setScale(0.15);
-        // console.log(this.parseNumber(this.scores[this.dataSet]));
-      }
+        }
       this.inti = [];
       this.dataSet++;
       n++;

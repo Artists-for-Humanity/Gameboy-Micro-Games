@@ -1,5 +1,9 @@
 import Phaser from "phaser";
 import eventsCenter from "../EventsCenter";
+const leftBorder = 20; 
+const rightBorder = 1060;
+const TopBorder = 40;
+const lowBorder = 440;
 import ButtonPressHandlers from "../ButtonPressHandlers";
 export default class WhereisWilly extends Phaser.Scene {
   // Game Class Constructor
@@ -193,22 +197,55 @@ export default class WhereisWilly extends Phaser.Scene {
       }
     }
   }
-  getSuspectPos() {
-    const position = {
-      x: Math.floor(Phaser.Math.Between(100, 1000)),
-      y: Math.floor(Phaser.Math.Between(100, 400)),
+  negOrPos(int){
+    const coefficient = this.getRandomInt(2);
+    if (coefficient === 1){
+      const newInt = int * coefficient
+      return newInt
+    }
+    if (coefficient === 0){
+      return int;
+    }
+
+  }
+  getSuspectPos(thing) {
+    const place = {
+      x: thing.body.x * this.getRandomInt(2),
+      y: thing.body.y * this.getRandomInt(2)
+      // x: Math.floor(Phaser.Math.Between(100, 1000)),
+      // y: Math.floor(Phaser.Math.Between(100, 400)),
     };
-    if (
-      (position.x > this.correct.body.x + 100) &
-      (position.x < this.correct.body.x - 100)
-    )
-      this.getSuspectPos();
-    if (
-      (position.y > this.correct.body.y + 100) &
-      (position.y < this.correct.body.y - 100)
-    )
-      this.getSuspectPos();
-    return position;
+    if(place.x === 0||place.y){
+      this.getSuspectPos(thing);
+      console.log('reroll');
+    }
+    this.negOrPos(place.x);
+    this.negOrPos(place.y);
+    if (place.x < leftBorder){
+      const newVal = leftBorder - place.x;
+      place.x = newVal - rightBorder - 120;
+    }
+    if (place.x > rightBorder){
+      const newVal = place.x - rightBorder; 
+      place.x = newVal + leftBorder + 120;
+    }
+    if(place.y < TopBorder){
+      const newVal = TopBorder - place.x;
+      place.x = newVal - lowBorder - 140;
+    }
+    if(place.y > lowBorder){
+      const newVal = place.y - lowBorder;
+      place.y = newVal + TopBorder + 140; 
+    }
+
+    // if (
+    //   (place.x < thing.body.position.x + 1.5 * 120 &&
+    //     place.x > thing.body.position.x - 1.5 * 120) ||
+    //   (place.y < thing.body.position.y + 120 * 1.5 &&
+    //     place.y > thing.body.position.y - 120* 1.5)
+    // )
+    //   this.getSuspectPos(this.correct);
+    return place;
   }
   getRandomPosition() {
     const position = {
@@ -249,15 +286,22 @@ export default class WhereisWilly extends Phaser.Scene {
     if (this.finger.y <= 80) this.finger.y = 90;
     if (this.finger.y >= 480) this.finger.y = 470;
   }
-  spawnSuspects() {
+  spawnSuspects(thing) {
     for (let l = 0; l < 3; l++) {
       for (let i = 0; i < this.suspects; i++) {
         if (i === this.wantedNum) i++;
-        const Position = this.getSuspectPos();
+        const place = this.getSuspectPos(thing);
         this.suspectHead = this.add
-          .sprite(Position.x, Position.y, "8B6_Heads")
+          .sprite(place.x, place.y, "8B6_Heads")
           .setScale(0.5);
         this.suspectHead.setFrame(i);
+        // if(Phaser.Geom.Intersects.CircleToCircle(
+        //   this.correct.body,
+        //   this.suspectHead.body
+        // )){
+        //   this.suspectHead.destroy();
+        //   i--;
+        
       }
     }
   }
@@ -271,6 +315,6 @@ export default class WhereisWilly extends Phaser.Scene {
     this.wanted.setScale(0.25);
     this.spawnCorrect();
     this.suspectArray.length = this.suspects;
-    this.spawnSuspects();
+    this.spawnSuspects(this.correct);
   }
 }
