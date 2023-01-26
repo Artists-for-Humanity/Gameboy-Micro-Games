@@ -49,8 +49,8 @@ const config = {
     gamepad: true
   },
   scene: [
-    WhereisWilly,
     MainMenu,
+    WhereisWilly,
     HiScoreScene,
     CutScreen,
     Timer,

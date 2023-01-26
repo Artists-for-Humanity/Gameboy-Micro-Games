@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import eventsCenter from "../EventsCenter";
-const leftBorder = 20; 
+const leftBorder = 60;
 const rightBorder = 1060;
 const TopBorder = 40;
 const lowBorder = 440;
@@ -26,6 +26,7 @@ export default class WhereisWilly extends Phaser.Scene {
     this.wanted;
     this.correct;
     this.suspectArray = [];
+    this.newInt = 0;
   }
   preload() {
     this.load.image(
@@ -86,8 +87,6 @@ export default class WhereisWilly extends Phaser.Scene {
     if (this.started) {
       this.buttonHandlers.update();
       if (!this.gamePad) this.startGamePad();
-      //this.playSwatText();
-
       this.movefinger();
       this.borders();
       if (this.gameOver && !this.sent) {
@@ -197,55 +196,12 @@ export default class WhereisWilly extends Phaser.Scene {
       }
     }
   }
-  negOrPos(int){
-    const coefficient = this.getRandomInt(2);
-    if (coefficient === 1){
-      const newInt = int * coefficient
-      return newInt
-    }
-    if (coefficient === 0){
-      return int;
-    }
-
-  }
-  getSuspectPos(thing) {
-    const place = {
-      x: thing.body.x * this.getRandomInt(2),
-      y: thing.body.y * this.getRandomInt(2)
-      // x: Math.floor(Phaser.Math.Between(100, 1000)),
-      // y: Math.floor(Phaser.Math.Between(100, 400)),
+  rollNumbers() {
+    const value = {
+      x: Math.floor(Phaser.Math.Between(100, 1000)),
+      y: Math.floor(Phaser.Math.Between(100, 1000)),
     };
-    if(place.x === 0||place.y){
-      this.getSuspectPos(thing);
-      console.log('reroll');
-    }
-    this.negOrPos(place.x);
-    this.negOrPos(place.y);
-    if (place.x < leftBorder){
-      const newVal = leftBorder - place.x;
-      place.x = newVal - rightBorder - 120;
-    }
-    if (place.x > rightBorder){
-      const newVal = place.x - rightBorder; 
-      place.x = newVal + leftBorder + 120;
-    }
-    if(place.y < TopBorder){
-      const newVal = TopBorder - place.x;
-      place.x = newVal - lowBorder - 140;
-    }
-    if(place.y > lowBorder){
-      const newVal = place.y - lowBorder;
-      place.y = newVal + TopBorder + 140; 
-    }
-
-    // if (
-    //   (place.x < thing.body.position.x + 1.5 * 120 &&
-    //     place.x > thing.body.position.x - 1.5 * 120) ||
-    //   (place.y < thing.body.position.y + 120 * 1.5 &&
-    //     place.y > thing.body.position.y - 120* 1.5)
-    // )
-    //   this.getSuspectPos(this.correct);
-    return place;
+    return value;
   }
   getRandomPosition() {
     const position = {
@@ -254,7 +210,6 @@ export default class WhereisWilly extends Phaser.Scene {
     };
     return position;
   }
-
   choose() {
     if (
       Phaser.Geom.Intersects.CircleToRectangle(
@@ -279,6 +234,7 @@ export default class WhereisWilly extends Phaser.Scene {
       .setFrame(this.wantedNum);
     this.correct.setScale(0.5);
     this.correct.body.setCircle(120);
+    console.log("Xpos: " + this.correct.x, "Ypos: " + this.correct.y);
   }
   borders() {
     if (this.finger.x <= 40) this.finger.x = 50;
@@ -286,26 +242,39 @@ export default class WhereisWilly extends Phaser.Scene {
     if (this.finger.y <= 80) this.finger.y = 90;
     if (this.finger.y >= 480) this.finger.y = 470;
   }
-  spawnSuspects(thing) {
-    for (let l = 0; l < 3; l++) {
+  spawnSuspects() {
+    for (let l = 0; l < 2; l++) {
       for (let i = 0; i < this.suspects; i++) {
         if (i === this.wantedNum) i++;
-        const place = this.getSuspectPos(thing);
+        const place = this.getSuspectPos();
+        console.log("Xpos: " + place.x, "Ypos: " + place.y);
+
+        if (place.x < this.correct.x + 80 && place.x > this.correct.x - 80) {
+          console.log("moving");
+          if (rightBorder - place.x > 120) {
+            console.log("moved");
+            place.x += 110;
+          } else {
+            console.log("moved");
+            place.x -= 110;
+          }
+          console.log("after moving " + "Xpos: " + place.x, "Ypos: " + place.y);
+        }
+
         this.suspectHead = this.add
           .sprite(place.x, place.y, "8B6_Heads")
           .setScale(0.5);
         this.suspectHead.setFrame(i);
-        // if(Phaser.Geom.Intersects.CircleToCircle(
-        //   this.correct.body,
-        //   this.suspectHead.body
-        // )){
-        //   this.suspectHead.destroy();
-        //   i--;
-        
       }
     }
   }
-
+  getSuspectPos() {
+    const pos = {
+      x: Math.floor(Phaser.Math.Between(80, 1000)),
+      y: Math.floor(Phaser.Math.Between(90, 400)),
+    };
+    return pos;
+  }
   gameStart() {
     this.started = true;
     this.wantedNum = this.getRandomInt(6);
