@@ -49,9 +49,9 @@ const config = {
     gamepad: true
   },
   scene: [
-    MainMenu,
     WhereisWilly,
     HiScoreScene,
+    MainMenu,
     CutScreen,
     Timer,
     MarcyMunch,

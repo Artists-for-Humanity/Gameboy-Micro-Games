@@ -49,9 +49,9 @@ export default class WhereisWilly extends Phaser.Scene {
       ).href
     );
     this.load.spritesheet(
-      "8B6_Posters",
+      "missing",
       new URL(
-        "../8Bitties/assets/Where'sWilly/Wanted_Posters.png",
+        "../8Bitties/assets/Where'sWilly/Missing_Posters.png",
         import.meta.url
       ).href,
       {
@@ -59,6 +59,18 @@ export default class WhereisWilly extends Phaser.Scene {
         frameHeight: 726,
       }
     );
+    this.load.spritesheet(
+      "found",
+      new URL(
+        "../8Bitties/assets/Where'sWilly/Found_Posters.png",
+        import.meta.url
+      ).href,
+      {
+        frameWidth: 550,
+        frameHeight: 726,
+      }
+    );
+
     this.load.spritesheet(
       "8B6_Heads",
       new URL(
@@ -243,7 +255,7 @@ export default class WhereisWilly extends Phaser.Scene {
     if (this.finger.y >= 480) this.finger.y = 470;
   }
   spawnSuspects() {
-    for (let l = 0; l < 2; l++) {
+    for (let l = 0; l < 3; l++) {
       for (let i = 0; i < this.suspects; i++) {
         if (i === this.wantedNum) i++;
         const place = this.getSuspectPos();
@@ -253,10 +265,10 @@ export default class WhereisWilly extends Phaser.Scene {
           console.log("moving");
           if (rightBorder - place.x > 120) {
             console.log("moved");
-            place.x += 110;
+            place.x += 130;
           } else {
             console.log("moved");
-            place.x -= 110;
+            place.x -= 130;
           }
           console.log("after moving " + "Xpos: " + place.x, "Ypos: " + place.y);
         }
@@ -279,8 +291,8 @@ export default class WhereisWilly extends Phaser.Scene {
     this.started = true;
     this.wantedNum = this.getRandomInt(6);
     this.wanted = this.add
-      .image(550, 620, "8B6_Posters")
-      .setFrame(this.wantedNum * 2);
+      .image(550, 620, "missing")
+      .setFrame(this.wantedNum );
     this.wanted.setScale(0.25);
     this.spawnCorrect();
     this.suspectArray.length = this.suspects;
