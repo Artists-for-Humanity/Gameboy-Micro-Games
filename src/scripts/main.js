@@ -49,10 +49,9 @@ const config = {
     gamepad: true
   },
   scene: [
-    WhereisWilly,
-    HiScoreScene,
     MainMenu,
     CutScreen,
+    WhereisWilly,
     Timer,
     MarcyMunch,
     SockToss,
@@ -72,6 +71,7 @@ const config = {
     HideFromCat,
     HitTheButton,
     ColorLab,
+    HiScoreScene,
     GameOver,
   ],
   audio: {

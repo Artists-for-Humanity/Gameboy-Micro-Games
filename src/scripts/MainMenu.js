@@ -168,6 +168,7 @@ export default class MainMenu extends Phaser.Scene {
         yoyo: true,
       })
     );
+    
     this.animations.push(
       this.anims.create({
         key: "score_btn",

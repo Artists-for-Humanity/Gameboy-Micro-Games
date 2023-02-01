@@ -49,7 +49,7 @@ export default class WhereisWilly extends Phaser.Scene {
       ).href
     );
     this.load.spritesheet(
-      "missing",
+      "8B6_Missing",
       new URL(
         "../8Bitties/assets/Where'sWilly/Missing_Posters.png",
         import.meta.url
@@ -60,7 +60,7 @@ export default class WhereisWilly extends Phaser.Scene {
       }
     );
     this.load.spritesheet(
-      "found",
+      "8B6_Found",
       new URL(
         "../8Bitties/assets/Where'sWilly/Found_Posters.png",
         import.meta.url
@@ -229,7 +229,7 @@ export default class WhereisWilly extends Phaser.Scene {
         this.finger.body
       )
     ) {
-      this.add.image(540, 360, "8B6_Posters").setFrame(this.wantedNum * 2 + 1);
+      this.add.image(540, 360, "8B6_Found").setFrame(this.wantedNum);
       this.victory = true;
       setTimeout(() => {
         this.gameOver = true;
@@ -291,7 +291,7 @@ export default class WhereisWilly extends Phaser.Scene {
     this.started = true;
     this.wantedNum = this.getRandomInt(6);
     this.wanted = this.add
-      .image(550, 620, "missing")
+      .image(550, 620, "8b6_missing")
       .setFrame(this.wantedNum );
     this.wanted.setScale(0.25);
     this.spawnCorrect();

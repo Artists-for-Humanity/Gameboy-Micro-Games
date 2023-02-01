@@ -19,21 +19,36 @@ export default class HiScoreScene extends Phaser.Scene {
     this.huns;
     this.buttonHandlers = new ButtonPressHandlers();
     this.gamePad = null;
+    this.bobberTimer = 0;
+    this.bobDir = false;
   }
   preload() {
-    this.load.image('Hs_ListBG',
-      new URL("../scripts/globalAssets/LeaderboardListBg.png", import.meta.url).href
+    this.load.image(
+      "Hs_ListBG",
+      new URL("../scripts/globalAssets/LeaderboardListBg.png", import.meta.url)
+        .href
     );
-    this.load.image('Hs_BG',
+    this.load.image(
+      "Hs_BG",
       new URL("../scripts/globalAssets/LeaderboardBg.png", import.meta.url).href
     );
-    this.load.image('Hs_Back',
-      new URL("../scripts/globalAssets/BackButton_Large.png", import.meta.url).href
+    this.load.image(
+      "Hs_Back",
+      new URL("../scripts/globalAssets/BackButton_Large.png", import.meta.url)
+        .href
     );
-    this.load.image('Hs_Retry',
-      new URL("../scripts/globalAssets/PlayAgainButton_Large.png", import.meta.url).href
+    this.load.image(
+      "Hs_Retry",
+      new URL(
+        "../scripts/globalAssets/PlayAgainButton_Large.png",
+        import.meta.url
+      ).href
     );
-    
+    this.load.image(
+      "pointer",
+      new URL("gameAssets/finger.png", import.meta.url).href
+    );
+
     this.load.spritesheet(
       "lScores",
       new URL(
@@ -53,19 +68,23 @@ export default class HiScoreScene extends Phaser.Scene {
     );
   }
   create() {
-    this.add.image(540, 360, 'Hs_BG');
+    this.add.image(540, 360, "Hs_BG");
     var n = 0;
     this.gameData = gameDataBase.getTopScores();
     this.createLists();
     this.displayList();
+    this.back = this.add.image(530, 550, "Hs_Back");
+    this.pointer = this.add.image(530, 450, "pointer").setRotation(Math.PI / 2);
   }
 
   update() {
-    // if (Phaser.Input.Keyboard.JustDown(this.action)) location.reload();
     this.buttonHandlers.update();
     if (!this.gamePad) {
       this.startGamePad();
     }
+    this.buttonHandlers.update();
+    this.bouyantMotion(this.pointer, 1, 2);
+    
   }
   startGamePad() {
     if (this.input.gamepad.total) {
@@ -74,13 +93,29 @@ export default class HiScoreScene extends Phaser.Scene {
     }
   }
 
+  startGamePad() {
+    if (this.input.gamepad.total) {
+      this.gamePad = this.input.gamepad.pad1;
+      this.initGamePad();
+      console.log(this.gamePad);
+    }
+  }
   initGamePad() {
     this.buttonHandlers.addPad(
       () => this.gamePad.buttons[0].pressed,
       () => location.reload()
     );
   }
-
+  initGamePad() {
+    this.buttonHandlers.addPad(
+      () => this.gamePad.buttons[0].pressed,
+      () => this.checkInput(4)
+    );
+  }
+  checkInput(x) {
+    if (x === 4) {}
+    this.scene.start('MainMenu');
+  }
   resetLists() {
     this.gameData.forEach((item, index) => {
       let place = index + 1;
@@ -132,10 +167,10 @@ export default class HiScoreScene extends Phaser.Scene {
         this.add
           // .sprite(200 + 40 * l, 200 + 60 * this.dataSet, "alphaSheet")
           // .setScale(0.3);
-          .image(200 + 40 * l, 200 + 50 * this.dataSet, "alphaSheet")
+          .image(250 + 45 * l, 200 + 50 * this.dataSet, "alphaSheet")
           .setFrame(this.names[n][l])
           .setScale(0.2);
-        }
+      }
       this.inti = [];
       this.dataSet++;
       n++;
@@ -179,5 +214,14 @@ export default class HiScoreScene extends Phaser.Scene {
         val
     );
     // return [hun, ten, one];
+  }
+
+
+  bouyantMotion(obj, amount, speed) {
+    this.bobberTimer += speed;
+    if (this.bobberTimer % 100 === 0) {
+      this.bobDir = !this.bobDir;
+    }
+    this.bobDir ? (obj.y += amount) : (obj.y -= amount);
   }
 }
