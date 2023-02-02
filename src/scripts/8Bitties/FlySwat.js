@@ -121,7 +121,6 @@ export default class FlySwat extends Phaser.Scene {
     this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 0, () => this.moveSwatter(4));
     this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 0, () => this.moveSwatter(3));
     this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.swat(); });
-
   }
 
   swat() {

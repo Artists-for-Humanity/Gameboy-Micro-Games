@@ -1,6 +1,6 @@
 // Add imports for phaser library, scenes, and plugins
 import Phaser from "phaser";
-import phaserJuice from "./phaser3-juice-plugin/dist/phaserJuice.min.js";
+import phaserJuice from "./phaserJuice.js";
 import GlobalState from "./GlobalState";
 import GameOver from "./GameOver";
 import Emeowgency from "./8Bitties/Emeowgency";
@@ -20,12 +20,12 @@ import DrinkPour from "./8Bitties/DrinkPour";
 import SockToss from "./Team Notateam/SockToss";
 import CutScreen from "./Team Notateam/CutScreen";
 import MainMenu from "./MainMenu";
-
 import Timer from "./Timer";
 import MarcyMunch from "./8Bitties/MarcyMunch";
 import CircleJump from "./TeamInflation/CircleJump";
 import Factory from "./Fairway/factoryScripts/factoryScenes/Factory";
-
+import HiScoreScene from "./Hi-Score";
+import WhereisWilly from "./8Bitties/Where'sWilly.js";
 // Set configuration for phaser game instance
 const juice = new phaserJuice(this);
 
@@ -42,7 +42,7 @@ const config = {
       gravity: {
         y: 0,
       },
-      debug: false,
+      debug: true,
     },
   },
   input: {
@@ -51,6 +51,7 @@ const config = {
   scene: [
     MainMenu,
     CutScreen,
+    WhereisWilly,
     Timer,
     MarcyMunch,
     SockToss,
@@ -70,6 +71,7 @@ const config = {
     HideFromCat,
     HitTheButton,
     ColorLab,
+    HiScoreScene,
     GameOver,
   ],
   audio: {

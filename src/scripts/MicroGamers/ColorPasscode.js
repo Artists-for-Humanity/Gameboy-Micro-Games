@@ -15,7 +15,7 @@ export default class ColorPasscode extends Phaser.Scene {
         this.door1, this.door2, this.door3, this.door4, this.door5;
         this.doors = [];
         this.box;
-
+        this.t = 0;
         this.goText;
         this.goTextTimer = 0;
         this.lossText;
@@ -129,6 +129,7 @@ export default class ColorPasscode extends Phaser.Scene {
     }
 
     update(time, delta) {
+
         if (this.started2) {
 
             if (this.door1.alpha < 1) {
@@ -151,6 +152,9 @@ export default class ColorPasscode extends Phaser.Scene {
             }
 
             if (this.interactive && !this.gameOver) {
+                this.t += delta;
+                this.timeUp(this.t);
+                // console.log(this.t);
                 this.buttonHandlers.update();
                 if (!this.gamePad) {
                     this.startGamePad();
@@ -252,6 +256,7 @@ export default class ColorPasscode extends Phaser.Scene {
             this.globalState.timerMessage('start_timer');
             this.hideGuessBlocks();
             for (var i = 0; i < this.guessBlocks.length; i++) {
+                // console.log(i);
                 this.guessBlocks[i].setTexture('');
             }
         }, [], this);
@@ -324,36 +329,48 @@ export default class ColorPasscode extends Phaser.Scene {
 
     //200ms flash duration
     userInput(x) {
-        if (x === 0) {
-            this.flash(0, 200);
-            this.guesses.push(0);
-            this.guess();
-        } else if (x === 1) {
-            this.flash(1, 200);
-            this.guesses.push(1);
-            this.guess();
-        } else if (x === 2) {
-            this.flash(2, 200);
-            this.guesses.push(2);
-            this.guess();
-        } else if (x === 3) {
-            this.flash(3, 200);
-            this.guesses.push(3);
-            this.guess();
+        if (this.guessNum < 4) {
+            // console.log(this.guessNum);
+            if (x === 0) {
+                this.flash(0, 200);
+                this.guesses.push(0);
+                this.guess();
+            } else if (x === 1) {
+                this.flash(1, 200);
+                this.guesses.push(1);
+                this.guess();
+            } else if (x === 2) {
+                this.flash(2, 200);
+                this.guesses.push(2);
+                this.guess();
+            } else if (x === 3) {
+                this.flash(3, 200);
+                this.guesses.push(3);
+                this.guess();
+            }
         }
     }
 
     guess() {
-        this.showGuess(this.guesses[this.guessNum]);
-        this.checkWL();
-        this.guessNum++;
+        if (this.guessNum < 4) {
+            this.showGuess(this.guesses[this.guessNum]);
+            this.checkWL();
+            this.guessNum++;
+        }
     }
 
     //check win loss
+    timeUp(t) {
+        if (t > 6700) {
+            this.lossText.visible = true;
+            this.gameOver = true;
+        }
+    }
     checkWL() {
 
         //loss
         if (JSON.stringify(this.guesses[this.guessNum]) != JSON.stringify(this.pattern[this.guessNum])) {
+
             this.lossText.visible = true;
             this.gameOver = true;
         }
