@@ -291,7 +291,7 @@ export default class WhereisWilly extends Phaser.Scene {
     this.started = true;
     this.wantedNum = this.getRandomInt(6);
     this.wanted = this.add
-      .image(550, 620, "8b6_missing")
+      .image(550, 620, "8B6_Missing")
       .setFrame(this.wantedNum );
     this.wanted.setScale(0.25);
     this.spawnCorrect();
