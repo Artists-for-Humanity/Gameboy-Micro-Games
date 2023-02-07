@@ -85,7 +85,7 @@ export default class MainMenu extends Phaser.Scene {
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
     this.animationBuilder();
-    this.updateSelection();
+    //this.updateSelection();
   }
 
   update() {
@@ -123,7 +123,8 @@ export default class MainMenu extends Phaser.Scene {
 
 
   updateSelection(input) {
-
+     
+    console.log('this.btns: ',this.btns[this.fingerPos].anims.stop().setFrame(0))
     this.btns[this.fingerPos].anims.stop().setFrame(0);
 
     if (input === -1) {
@@ -144,7 +145,10 @@ export default class MainMenu extends Phaser.Scene {
         // this.scene.start('MarcyMunch');
         break;
       case 1: // Scores
-        this.scene.start('HiScoreScene');
+      this.resetMainMenu();
+      this.scene.stop('MainMenu'); 
+      this.scene.start('HiScoreScene');
+
       default:
         break;
     }
@@ -158,6 +162,11 @@ export default class MainMenu extends Phaser.Scene {
     }
   }
 
+  resetMainMenu(){
+    this.animations = [];
+    this.btns = [];
+    this.fingerPos = 0;
+  }
   animationBuilder() {
     this.animations.push(
       this.anims.create({

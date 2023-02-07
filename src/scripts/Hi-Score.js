@@ -109,13 +109,12 @@ export default class HiScoreScene extends Phaser.Scene {
   initGamePad() {
     this.buttonHandlers.addPad(
       () => this.gamePad.buttons[0].pressed,
-      () => this.checkInput(4)
+      () => this.resetScoreScene()
+
     );
   }
-  checkInput(x) {
-    if (x === 4) {}
-    this.scene.start('MainMenu');
-  }
+ 
+
   resetLists() {
     this.gameData.forEach((item, index) => {
       let place = index + 1;
@@ -215,7 +214,15 @@ export default class HiScoreScene extends Phaser.Scene {
     );
     // return [hun, ten, one];
   }
-
+resetScoreScene(){
+  this.names = [];
+  this.scores = [];
+  this.place = 1;
+  this.letter = 0;
+  this.dataSet = 0;
+  this.inti = [];
+  this.scene.start('MainMenu');
+}
 
   bouyantMotion(obj, amount, speed) {
     this.bobberTimer += speed;
