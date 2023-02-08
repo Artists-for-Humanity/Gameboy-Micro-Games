@@ -19,6 +19,7 @@ const listOfGames = [
     "ColorLab",
     "Cannon",
     "CarPump",
+    "PenguinSlide",
     "TrashSort",
     "ColorPasscode",
     "HideFromCat",
