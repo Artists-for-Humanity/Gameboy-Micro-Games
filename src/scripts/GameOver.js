@@ -206,8 +206,9 @@ export default class GameOver extends Phaser.Scene {
         case 1: //push data into array or something
           console.log("yes option");
           //add scene switch to high-score scene
+          this.scene.stop('CutScreen');
           this.scene.start('HiScoreScene');
-
+      
           // location.reload(); 
           break;
       }

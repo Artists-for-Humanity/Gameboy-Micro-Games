@@ -14,6 +14,7 @@ export default class MainMenu extends Phaser.Scene {
       visible: false,
       key: 'MainMenu',
     });
+    // console.log("Running Constructor");
 
     // an array of sprites
     this.btns = [];
@@ -31,6 +32,7 @@ export default class MainMenu extends Phaser.Scene {
     this.left;
     this.right;
     this.action;
+    this.buttonHandlers = new ButtonPressHandlers();
 
     this.sent = false;
 
@@ -38,14 +40,15 @@ export default class MainMenu extends Phaser.Scene {
 
     this.wobbleTimer = 0;
 
-    this.buttonHandlers = new ButtonPressHandlers();
+    this.buttonHandlers;
     this.gamePad = null;
 
     this.high = HiScoreScene;
   }
 
   preload() {
-    console.log('running main menu 00000');
+    // console.log('running main menu 00000');
+
     this.listOfGames = [
       "Emeowgency",
       "ColorLab",
@@ -70,9 +73,15 @@ export default class MainMenu extends Phaser.Scene {
   }
 
   create() {
+
+    this.resetMainMenu();
+    console.log(this.ButtonPressHandlers);
+
     this.add.image(X / 2, Y / 2, "bg1");
     this.btns.push(this.physics.add.sprite(X / 8, Y * .90, 'play'));
+    this.btns.push(this.physics.add.sprite(4*X/8, Y * .9, 'score'));
     this.btns.push(this.physics.add.sprite(7 * X / 8, Y * .90, 'score'));
+    
 
     this.fingerIcon = this.add.image(this.btns[0].x, this.btns[0].y - 117, 'finger').setRotation(Math.PI / 2);
 
@@ -85,16 +94,34 @@ export default class MainMenu extends Phaser.Scene {
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
     this.animationBuilder();
-    //this.updateSelection();
+    // console.log("FingerPos = " + this.fingerPos);
+    // console.log("btns length = " + this.btns.length);
+    // console.log("animations length = " + this.animations.length);
+
+    this.btns[this.fingerPos].anims.play(this.animations[this.fingerPos]);
   }
 
   update() {
-    // this.buttonPresses();
     this.verticalWobble(this.fingerIcon, .5, 4);
     this.buttonHandlers.update();
     if (!this.gamePad) this.startGamePad();
+    if (!this.gamePad) this.makeKeyboardKeys();
+    this.keyBoardInputs();
+    
   }
 
+  makeKeyboardKeys(){
+    this.left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+    this.right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+    this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+}
+keyBoardInputs(){
+  if(Phaser.Input.Keyboard.JustDown(this.left))this.updateSelection(-1);
+  if(Phaser.Input.Keyboard.JustDown(this.right))this.updateSelection(1);
+  if(Phaser.Input.Keyboard.JustDown(this.space))this.buttonEvents();
+
+
+}
   startGamePad() {
     if (this.input.gamepad.total) {
       this.gamePad = this.input.gamepad.pad1;
@@ -123,13 +150,15 @@ export default class MainMenu extends Phaser.Scene {
 
 
   updateSelection(input) {
+    console.log(this.gamePad.leftStick)
      
-    console.log('this.btns: ',this.btns[this.fingerPos].anims.stop().setFrame(0))
+    // console.log('this.btns: ',this.btns[this.fingerPos].anims.stop().setFrame(0))
     this.btns[this.fingerPos].anims.stop().setFrame(0);
-
+      //left
     if (input === -1) {
       this.fingerPos === 0 ? this.fingerPos = this.btns.length - 1 : this.fingerPos--;
     }
+    //right
     if (input === 1) {
       this.fingerPos === this.btns.length - 1 ? this.fingerPos = 0 : this.fingerPos++;
     }
@@ -139,13 +168,18 @@ export default class MainMenu extends Phaser.Scene {
   }
 
   buttonEvents() {
+    console.log(this.fingerPos)
     switch (this.fingerPos) {
       case 0: // Play
-        this.playGame();
+      this.playGame();
         // this.scene.start('MarcyMunch');
         break;
-      case 1: // Scores
-      this.resetMainMenu();
+      case 1: 
+        // this.resetMainMenu();
+        this.playEndless();
+        break; 
+      case 2: // Scores
+      // this.resetMainMenu();
       this.scene.stop('MainMenu'); 
       this.scene.start('HiScoreScene');
 
@@ -153,7 +187,12 @@ export default class MainMenu extends Phaser.Scene {
         break;
     }
   }
-
+  playEndless(){
+    if(!this.sent){
+      this.scene.start('EndlessCutScreen');
+      this.sent = true;
+    }
+  }
   playGame() {
     if (!this.sent) {
       this.scene.run("CutScreen");
@@ -166,6 +205,8 @@ export default class MainMenu extends Phaser.Scene {
     this.animations = [];
     this.btns = [];
     this.fingerPos = 0;
+    this.sent = false;
+
   }
   animationBuilder() {
     this.animations.push(
@@ -178,6 +219,16 @@ export default class MainMenu extends Phaser.Scene {
       })
     );
     
+    this.animations.push(
+      this.anims.create({
+        key: "score_btn",
+        frames: "score",
+        frameRate: 12,
+        repeat: -1,
+        yoyo: true,
+      })
+    );
+
     this.animations.push(
       this.anims.create({
         key: "score_btn",

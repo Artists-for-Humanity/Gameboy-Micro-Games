@@ -8,7 +8,7 @@ const L_START = -L_END;
 const R_START = 5 * L_END;
 
 const listOfGames = [
-    'MarcyMunch',
+    // 'MarcyMunch',
     // 'CircleJump',
     // 'SockToss',
     // "Lowest",
@@ -23,18 +23,18 @@ const listOfGames = [
     // "ColorPasscode",
     // "HideFromCat",
     // "HitTheButton",
-    // "BetweenSpace",
-    // 'TugOWar',
-    // 'WhereisWilly',
+    "BetweenSpace",
+    'TugOWar',
+    'WhereisWilly',
     'GameOver'];
 
-export default class CutScreen extends Phaser.Scene {
+export default class EndlessCutScreen extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
         super({
             active: false,
             visible: true,
-            key: 'CutScreen',
+            key: 'EndlessCutScreen',
             physics: {
                 default: 'arcade',
                 arcade: {
@@ -45,11 +45,11 @@ export default class CutScreen extends Phaser.Scene {
 
         this.finishedGames = false;
 
-        this.playedGames = [];
+        this.gameOrder = new Array(listOfGames.length-1)
 
         this.currentScene = "MainMenu";
         this.roundNumber = 0;
-
+        this.door= 0; 
 
         this.close_timer = 0;
         this.life_total = 5;
@@ -60,7 +60,6 @@ export default class CutScreen extends Phaser.Scene {
         // this.score = -1;
 
         this.space;
-
         this.l_door;
         this.r_door;
 
@@ -119,11 +118,9 @@ export default class CutScreen extends Phaser.Scene {
 
     create() {
         this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-
         this.buildAnimations();
         this.buildObjects();
         this.setScore(this.globalState.scores);
-
         eventsCenter.on('game-end', this.closeDoor, this);
     }
     update() {
@@ -363,17 +360,20 @@ export default class CutScreen extends Phaser.Scene {
         }
         else {
             if (this.scene.isActive('MainMenu'))
-                this.scene.stop('MainMenu');
+                this.scene.remove('MainMenu');
+                // this.callfunction(this.shuffleGames(), 1)
         }
         this.nextGame();
     }
+    callfunction(callback, num){
+        const x  = 0; 
+        if(x < num) {
+            callback;
+        }
+        
+    }
     nextGame() {
-        // do{
-        //     this.currentScene = this.game.scene.scenes[this.roundNumber + 1]
-        // } while(this.playedGames.includes(this.currentScene) && !this.finishedGames)
-        //this.currentScene = "SockToss"
         this.life_total > 1 ? this.setCurrentScene() : this.currentScene = 'GameOver';
-
         console.log(this.currentScene);
         this.scene.sendToBack('Timer');
         this.scene.sendToBack(this.currentScene);
@@ -384,6 +384,7 @@ export default class CutScreen extends Phaser.Scene {
             // console.log(this.globalState.scores);
         }
         this.scene.run(this.currentScene);
+        console.log(this.scene);
         console.log(this.currentScene + " should be running...");
         this.roundNumber++;
         //Initial timeout for win/lose anim
@@ -396,9 +397,10 @@ export default class CutScreen extends Phaser.Scene {
             }, 2000);
         }, 2000);
     }
+
     endGame() {
-        console.log(this.currentScene);
-        this.scene.remove(this.currentScene);
+        this.scene.sleep(this.currentScene);
+        this.scene.sendToBack(this.currentScene);
     }
     buildObjects() {
         // Build Doors
@@ -520,9 +522,36 @@ export default class CutScreen extends Phaser.Scene {
         //this.faceplate.anims.stop()
         this.closed = false;
     }
+    shuffleGames(){
+        for (let i = 0; i < listOfGames.length; ) {
+            const num =  Math.floor(Math.random() * listOfGames.length);
+            console.log('neutral number',  num)
+            for (let n = 0; n < this.gameOrder.length;) {
+                if (num === this.gameOrder[n]){
+                    this.door = 'locked'
+                }
+                if( n === this.gameOrder.length, this.door === 'neutral'){
+                    this.door = 'yes'; 
+                }
+            }
+            if(this.door === 'yes') {this.gameOrder[i] = num
+                 this.door = 'neutral'}
+            if(this.door === 'no'){
+                i--;
+                this.door = 'neutral'}
+            
+            console.log("GO after shuffle", this.gameOrder)
+        }
+        i++;   
+    }
 
+     
     setCurrentScene() {
-        this.currentScene = listOfGames[this.roundNumber];
+        if(this.roundNumber === listOfGames.length-1){
+            this.gameOrder = [];
+            this.shuffleGames();
+        }
+        this.currentScene = listOfGames[this.gameOrder[this.roundNumber]];
         let s;
         switch (this.currentScene) {
             case "Lowest":

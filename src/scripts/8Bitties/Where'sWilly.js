@@ -246,7 +246,7 @@ export default class WhereisWilly extends Phaser.Scene {
       .setFrame(this.wantedNum);
     this.correct.setScale(0.5);
     this.correct.body.setCircle(120);
-    console.log("Xpos: " + this.correct.x, "Ypos: " + this.correct.y);
+    // console.log("Xpos: " + this.correct.x, "Ypos: " + this.correct.y);
   }
   borders() {
     if (this.finger.x <= 40) this.finger.x = 50;
@@ -259,18 +259,18 @@ export default class WhereisWilly extends Phaser.Scene {
       for (let i = 0; i < this.suspects; i++) {
         if (i === this.wantedNum) i++;
         const place = this.getSuspectPos();
-        console.log("Xpos: " + place.x, "Ypos: " + place.y);
+        // console.log("Xpos: " + place.x, "Ypos: " + place.y);
 
         if (place.x < this.correct.x + 80 && place.x > this.correct.x - 80) {
-          console.log("moving");
+          // console.log("moving");
           if (rightBorder - place.x > 120) {
-            console.log("moved");
+            // console.log("moved");
             place.x += 130;
           } else {
-            console.log("moved");
+            // console.log("moved");
             place.x -= 130;
           }
-          console.log("after moving " + "Xpos: " + place.x, "Ypos: " + place.y);
+          // console.log("after moving " + "Xpos: " + place.x, "Ypos: " + place.y);
         }
 
         this.suspectHead = this.add

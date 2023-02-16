@@ -119,14 +119,14 @@ export default class BetweenSpace extends Phaser.Scene {
 
         this.asteroidMovements(this.asteroidg1);
         this.asteroidMovements(this.asteroidg2);
-        console.log('reachme 00');
+        // console.log('reachme 00');
 
 
-        this.player.anims.play('TI_3run', true);
-        console.log('reachme 01');
+        // this.player.anims.play('TI_3run', true);
+        // // console.log('reachme 01');
 
-        this.goal.anims.play('TI_3spin', true);
-        console.log('reachme 02');
+        // this.goal.anims.play('TI_3spin', true);
+        // // console.log('reachme 02');
 
       }
 
