@@ -10,17 +10,7 @@ export default class CircleJump extends Phaser.Scene {
       key: 'CircleJump',
     });
 
-    this.player;
-    this.ball;
-    this.started = false;
-    this.victory = false;
-    this.gameOver = false;
-    this.sent = false;
-    this.buttonHandlers = new ButtonPressHandlers();
-    this.gamePad = null;
-
-    this.bandaid = false;
-
+    
   }
 
   preload() {
@@ -36,6 +26,7 @@ export default class CircleJump extends Phaser.Scene {
   }
 
   create() {
+    this.setCircleJump();
     this.graphics = this.add.graphics({
       lineStyle: {
         width: 4,
@@ -213,7 +204,19 @@ export default class CircleJump extends Phaser.Scene {
     });
 
   }
+  setCircleJump(){
+    this.player;
+    this.ball;
+    this.started = false;
+    this.victory = false;
+    this.gameOver = false;
+    this.sent = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
 
+    this.bandaid = false;
+
+  }
   degrees_to_radians(degrees) {
     var pi = Math.PI;
     return degrees * (pi / 180);

@@ -73,7 +73,6 @@ export default class MainMenu extends Phaser.Scene {
   }
 
   create() {
-
     this.resetMainMenu();
     console.log(this.ButtonPressHandlers);
 
@@ -194,8 +193,9 @@ keyBoardInputs(){
     }
   }
   playGame() {
-    if (!this.sent) {
-      this.scene.run("CutScreen");
+    if (!this.sent){
+      console.log('cutscreenrunning .... ');
+      this.scene.start("CutScreen"); 
       //this.globalState.sendMessage(true)
       this.sent = true;
     }

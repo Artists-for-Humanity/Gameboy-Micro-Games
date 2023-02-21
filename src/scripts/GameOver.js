@@ -13,32 +13,11 @@ export default class GameOver extends Phaser.Scene {
       visible: false,
       key: "GameOver",
     });
-    this.confirmKey;
-    this.arrowButtons;
-    this.HighScoreText;
-    this.initials = [];
-    this.active_letter = 0;
-    this.sprite1;
-    this.letterPos = 0;
-    this.count = 0;
-    this.name = [];
-    this.temp = [];
-    this.yesNoLetters = [
-      [24, 4, 18],
-      [13, 14],
-    ];
-    this.yesNoOptions = [];
-    this.prompt1 = [];
-    this.confirm = [2, 14, 13, 5, 8, 17, 12];
-    this.pointerPos = 1;
-    this.promptPrinted = false;
-    this.bobberTimer = 0;
-    this.bobDir = false;
-    this.buttonHandlers = new ButtonPressHandlers();
-    this.gamePad = null;
+    
   }
 
   preload() {
+    this.setGameOver();
     this.load.image(
       "go_bg",
       new URL("globalAssets/go_screen.png", import.meta.url).href
@@ -198,18 +177,11 @@ export default class GameOver extends Phaser.Scene {
           this.pointer.visible = false;
           this.pointer.y = 350;
           this.clearArray(this.prompt1);
-          // this.globalState.names = [];
-          // console.log(this.yesNoOptions);
           this.promptPrinted = false;
         default:
           break;
-        case 1: //push data into array or something
-          console.log("yes option");
-          //add scene switch to high-score scene
-          this.scene.stop('CutScreen');
+        case 1: 
           this.scene.start('HiScoreScene');
-      
-          // location.reload(); 
           break;
       }
     }
@@ -260,7 +232,31 @@ export default class GameOver extends Phaser.Scene {
   updatePointer() {
     this.pointer.x = 150 + 150 * this.pointerPos;
   }
-
+  setGameOver(){
+    this.confirmKey;
+    this.arrowButtons;
+    this.HighScoreText;
+    this.initials = [];
+    this.active_letter = 0;
+    this.sprite1;
+    this.letterPos = 0;
+    this.count = 0;
+    this.name = [];
+    this.temp = [];
+    this.yesNoLetters = [
+      [24, 4, 18],
+      [13, 14],
+    ];
+    this.yesNoOptions = [];
+    this.prompt1 = [];
+    this.confirm = [2, 14, 13, 5, 8, 17, 12];
+    this.pointerPos = 1;
+    this.promptPrinted = false;
+    this.bobberTimer = 0;
+    this.bobDir = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
+  }
   bouyantMotion(obj, amount, speed) {
     this.bobberTimer += speed;
     if (this.bobberTimer % 100 === 0) {

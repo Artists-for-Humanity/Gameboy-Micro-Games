@@ -88,6 +88,7 @@ export default class SockToss extends Phaser.Scene {
     }
 
     create() {
+        this.setSocktoss();
         // Add images to Scene
         this.add.image(1080 / 2, 720 / 2, 'background1').setScale(SCALE_MULTIPLIER);
         this.basket_b = this.add.image(13 * SCALE_MULTIPLIER, 21 * SCALE_MULTIPLIER, 'basket_back');
@@ -353,6 +354,15 @@ export default class SockToss extends Phaser.Scene {
             this.player.scale += 0.01;
         }
         // close doors
+    }
+    setSocktoss(){
+        this.victory = false;
+        this.gameOver = false;
+        this.sent = false;
+        this.timerStopped = false;
+        this.buttonHandlers = new ButtonPressHandlers();
+        this.gamePad = null;
+
     }
     losecon() {
         this.hand.anims.play('lose');

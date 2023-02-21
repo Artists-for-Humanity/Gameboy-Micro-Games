@@ -18,7 +18,6 @@ export default class Emeowgency extends Phaser.Scene {
     this.catchScale = 0;
     this.catch;
     this.grass;
-    this.catfalling = true;
     this.catFail = false;
     this.catFall = true;
     this.catSafe = false;
@@ -118,6 +117,7 @@ export default class Emeowgency extends Phaser.Scene {
   }
 
   create() {
+    this.resetEmeowgency();
     this.grass = this.add.image(540, 360, "8B4_grass").setDepth(-10);
     this.catch = this.add.image(540, 360, "8B4_catch");
     this.catch.setScale(0);
@@ -185,7 +185,31 @@ export default class Emeowgency extends Phaser.Scene {
     this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 0, () => this.moveBlanket(3));
   }
 
-
+  resetEmeowgency(){
+    this.timer = 43;
+    this.catchScale = 0;
+    this.catFail = false;
+    this.catFall = true;
+    this.catSafe = false;
+    this.shadowScale = 0;
+    this.shadowTimer = 0;
+    this.safeScale = 0;
+    this.safeTimer = 0;
+    this.failScale = 0;
+    this.failTimer = 0;
+    this.createImage = false;
+    this.failScaleToggle = false;
+    this.safeScaleToggle = false;
+    this.victory = false;
+    this.gameOver = false;
+    this.gOtimerToggle = false;
+    this.sent = false;
+    this.gOtimer = 0;
+    this.fallen = false;
+    this.started = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
+  }
   //Catch!, the image in the beggining
   scaleCatch() {
     if (this.catchScale <= 1) {
@@ -196,7 +220,6 @@ export default class Emeowgency extends Phaser.Scene {
       this.catch.destroy();
 
       this.timer = 0;
-      this.catfalling = true;
     }
   }
 
@@ -222,7 +245,6 @@ export default class Emeowgency extends Phaser.Scene {
   spawnShadow() {
     const position = this.getRandomPosition();
     this.shadow = this.physics.add.sprite(position.x, position.y, "8B4_yang");
-
     this.shadow.alpha = 0.5;
   }
 
@@ -260,7 +282,6 @@ export default class Emeowgency extends Phaser.Scene {
           this.cat.setScale(0.5);
           this.cat.anims.play("8B4_safe");
           this.shadowTimer = 0;
-          return;
         }
 
 

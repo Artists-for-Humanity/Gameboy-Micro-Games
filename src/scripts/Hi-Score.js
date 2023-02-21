@@ -97,7 +97,6 @@ export default class HiScoreScene extends Phaser.Scene {
     if (this.input.gamepad.total) {
       this.gamePad = this.input.gamepad.pad1;
       this.initGamePad();
-      console.log(this.gamePad);
     }
   }
   initGamePad() {
@@ -124,12 +123,9 @@ export default class HiScoreScene extends Phaser.Scene {
   }
 
   createLists() {
-    // console.log("GameData : " + this.gameData);
+
 
     this.gameData.forEach((item, index) => {
-      // console.log("Item : " + item);
-      // console.log("Item Score: " + item.score);
-      console.log("item score is:" + item.score);
       let place = index + 1;
       // console.log("Place: " + place);
       this.names.push(item.name);
@@ -152,15 +148,11 @@ export default class HiScoreScene extends Phaser.Scene {
       this.tens.setScale(0.1, 0.1);
       this.setScore(this.scores[n]);
 
-      console.log("ones is: " + this.ones);
       // this.huns = this.physics.add.sprite(700 - 82, 200 + 60 * this.dataSet, 'lScores');
       // var tempNum = 0;
 
       for (let l = 0; l < 3; l++) {
         // tempNum++;
-        // console.log("names is: " + this.names[0][l]);
-
-        // console.log("The current Letter Is: " + this.names[tempNum][l]);
 
         // name
         this.add
@@ -183,7 +175,6 @@ export default class HiScoreScene extends Phaser.Scene {
     let o = score % 10;
     let h = Math.floor(score / 100);
     let t = Math.floor((score - h * 100) / 10);
-    console.log("this is o: " + o);
 
     this.ones.setFrame(o);
     if (score >= 10) this.tens.setFrame(t);
@@ -202,17 +193,6 @@ export default class HiScoreScene extends Phaser.Scene {
     this.inti.push(hun);
     this.inti.push(ten);
     this.inti.push(one);
-    console.log(
-      "Hundreds: " +
-        hun +
-        "\nTens: " +
-        ten +
-        "\nOnes: " +
-        one +
-        "\nTotal: " +
-        val
-    );
-    // return [hun, ten, one];
   }
 resetScoreScene(){
   this.names = [];

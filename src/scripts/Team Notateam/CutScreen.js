@@ -8,14 +8,14 @@ const L_START = -L_END;
 const R_START = 5 * L_END;
 
 const listOfGames = [
-    'MarcyMunch',
+    // 'MarcyMunch',
     // 'CircleJump',
     // 'SockToss',
     // "Lowest",
     // "FrogJump",
     // "DrinkPour",
     // "FlySwat",
-    // "Emeowgency",
+    "Emeowgency",
     // "ColorLab",
     // "Cannon",
     // "CarPump",
@@ -42,10 +42,6 @@ export default class CutScreen extends Phaser.Scene {
                 }
             }
         });
-
-        this.finishedGames = false;
-
-        this.playedGames = [];
 
         this.currentScene = "MainMenu";
         this.roundNumber = 0;
@@ -118,6 +114,7 @@ export default class CutScreen extends Phaser.Scene {
     }
 
     create() {
+        this.setCutScreen();
         this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
 
         this.buildAnimations();
@@ -368,19 +365,16 @@ export default class CutScreen extends Phaser.Scene {
         this.nextGame();
     }
     nextGame() {
-        // do{
-        //     this.currentScene = this.game.scene.scenes[this.roundNumber + 1]
-        // } while(this.playedGames.includes(this.currentScene) && !this.finishedGames)
-        //this.currentScene = "SockToss"
+    
         this.life_total > 1 ? this.setCurrentScene() : this.currentScene = 'GameOver';
-
         console.log(this.currentScene);
         this.scene.sendToBack('Timer');
         this.scene.sendToBack(this.currentScene);
         if (this.currentScene !== 'GameOver') {
             this.scene.run('Timer');
         } else {
-            this.scene.remove('Timer');
+            this.scene.stop('Timer');
+            this.scene.stop('CutScreen');
             // console.log(this.globalState.scores);
         }
         this.scene.run(this.currentScene);
@@ -398,7 +392,7 @@ export default class CutScreen extends Phaser.Scene {
     }
     endGame() {
         console.log(this.currentScene);
-        this.scene.remove(this.currentScene);
+        this.scene.stop(this.currentScene);
     }
     buildObjects() {
         // Build Doors
@@ -581,5 +575,17 @@ export default class CutScreen extends Phaser.Scene {
         }
         this.textPrompt = this.add.image(X / 2, Y / 2, s);
         this.textPrompt.setVisible(false).setDepth(1);
+    }
+    setCutScreen(){
+        this.currentScene = "MainMenu";
+        this.roundNumber = 0;
+
+
+        this.close_timer = 0;
+        this.life_total = 5;
+        this.closed = false;
+        this.open = false;
+
+        this.lost = false;
     }
 }
