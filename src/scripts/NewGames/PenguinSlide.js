@@ -16,18 +16,21 @@ export default class PenguinSlide extends Phaser.Scene {
     this.sent = false;
     this.started = false;
     this.startTimer = false;
-    this.displayedPenguins = false;
-    // custom properties
-    this.penguinCount = Math.floor(Math.random() * 5) + 1;
-    this.sealCount = Math.floor(Math.random() * 4); // 0 to 3 penguins
-    this.animals = [...(new Array(this.penguinCount).fill('penguin')), ...(new Array(this.sealCount).fill('seal'))];
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
+    this.displayedAnimals = false;
+    
+    // number of penguins and seals to display, respectively
+    this.penguinCount = Math.floor(Math.random() * 5) + 1; // 1 to 5 penguins
+    this.sealCount = Math.floor(Math.random() * 4); // 0 to 3 seals
+    
+    // this is an array of the potential animals (seal or penguin) and the order is randomized
+    this.animals = (() => {
+      let totalAnimals = [...(new Array(this.penguinCount).fill('penguin')), ...(new Array(this.sealCount).fill('seal'))];
+      for (let i = totalAnimals.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+        [totalAnimals[i], totalAnimals[j]] = [totalAnimals[j], totalAnimals[i]];
       }
-    }
-    shuffle(this.animals);
+      return totalAnimals;
+    })();
     this.animalTween = 0;
     this.buttonHandlers = new ButtonPressHandlers();
     this.gamePad = null;
@@ -70,8 +73,8 @@ export default class PenguinSlide extends Phaser.Scene {
 
     this.graphics = this.add.graphics();
 
-    this.path = { t: 0, vec: new Phaser.Math.Vector2() };
-    this.sealPath = { t: 0, vec: new Phaser.Math.Vector2() }
+    this.animalPath = { t: 0, vec: new Phaser.Math.Vector2() };
+    this.victorySealPath = { t: 0, vec: new Phaser.Math.Vector2() }
 
     const penguinCurvePoints = [
       new Phaser.Math.Vector2(168, 363),
@@ -87,8 +90,8 @@ export default class PenguinSlide extends Phaser.Scene {
       new Phaser.Math.Vector2(1035, 800),
     ]
 
-    this.curve = new Phaser.Curves.CubicBezier(...penguinCurvePoints);
-    this.sealCurve = new Phaser.Curves.CubicBezier(...sealCurvePoints);
+    this.animalCurve = new Phaser.Curves.CubicBezier(...penguinCurvePoints);
+    this.victorySealCurve = new Phaser.Curves.CubicBezier(...sealCurvePoints);
     // this.loseText = this.add.image(168, 224, 'TI_3lose');
     // this.loseText.setScrollFactor(0);
     // this.loseText.setOrigin(0, 0);
@@ -101,51 +104,53 @@ export default class PenguinSlide extends Phaser.Scene {
 
     eventsCenter.on('start_game', () => { this.started = true;});
     this.tweens.add({
-      targets: this.path,
+      targets: this.animalPath,
       delay: 5000,
       t: 1,
       ease: 'Sine.easeIn',
       duration: 1500,
       yoyo: false,
       repeat: this.animals.length - 1,
+      onStart: () => {
+        this.instructiveText.watch.setVisible(true);
+      },
       onRepeat: () => {
-        this.penguin.setTexture(this.animals[this.animalTween]);
-        if (this.penguin.texture.key === 'seal') {
-          this.penguin.flipX = true;
+        this.activeAnimal.setTexture(this.animals[this.animalTween]);
+        if (this.activeAnimal.texture.key === 'seal') {
+          this.activeAnimal.flipX = true;
         } else {
-          this.penguin.flipX = false;
+          this.activeAnimal.flipX = false;
         }
         this.animalTween++;
-        console.log(this.animals);
       },
       onUpdate: () => {
-        if (this.penguin.texture.key === 'seal') {
-          if (this.penguin.anims.isPlaying) {
-            this.penguin.anims.stop();
+        if (this.activeAnimal.texture.key === 'seal') {
+          if (this.activeAnimal.anims.isPlaying) {
+            this.activeAnimal.anims.stop();
           }
-          if (this.path.t > 0.45) {
-            this.penguin.setAngle(0);
-          } else if (this.path.t > 0.65) {
-            this.penguin.setAngle(45)
+          if (this.animalPath.t > 0.45) {
+            this.activeAnimal.setAngle(0);
+          } else if (this.animalPath.t > 0.65) {
+            this.activeAnimal.setAngle(45)
           }
-        } else if (this.penguin.texture.key === 'penguin') {
-          this.penguin.setAngle(0);
-          if (this.path.t < 0.4) {
-            this.penguin.anims.play('penguin-walk')
-          } else if (this.path.t > 0.45 && this.path.t < 0.48) {
-            this.penguin.anims.stopAfterRepeat();
-            this.penguin.setFrame(2);
-          } else if (this.path.t > 0.48) {
-            this.penguin.anims.stopAfterRepeat();
-            this.penguin.setFrame(3);
+        } else if (this.activeAnimal.texture.key === 'penguin') {
+          this.activeAnimal.setAngle(0);
+          if (this.animalPath.t < 0.4) {
+            this.activeAnimal.anims.play('penguin-walk')
+          } else if (this.animalPath.t > 0.45 && this.animalPath.t < 0.48) {
+            this.activeAnimal.anims.stopAfterRepeat();
+            this.activeAnimal.setFrame(2);
+          } else if (this.animalPath.t > 0.48) {
+            this.activeAnimal.anims.stopAfterRepeat();
+            this.activeAnimal.setFrame(3);
           }
         }
       },
       onComplete: () => {
-        this.displayedPenguins = true;
+        this.displayedAnimals = true;
       }
     });
-    this.penguin = this.add.sprite(this.path.vec.x, this.path.vec.y, "penguin", 0).setDepth(0);
+    this.activeAnimal = this.add.sprite(this.animalPath.vec.x, this.animalPath.vec.y, "penguin", 0).setDepth(0);
 
     this.scorebox = this.add.sprite(734, 318, 'scorebox', 0);
     this.scoreboxText = this.add.text(this.scorebox.getCenter().x, this.scorebox.getCenter().y, '0', {
@@ -153,24 +158,28 @@ export default class PenguinSlide extends Phaser.Scene {
       fontSize: "64px",
     }).setOrigin(0.5);
 
-    this.seal = this.add.sprite(100, 1500, 'seal', 0).setAngle(-25);
-    this.seal.flipX = true;
+    this.victorySeal = this.add.sprite(100, 1500, 'seal', 0).setAngle(-25);
+    this.victorySeal.flipX = true;
 
     this.zzz = this.add.sprite(this.igloo.getRightCenter().x, this.igloo.getTopRight().y + (this.igloo.height / 4), 'zzz', 0).setOrigin(0, 1).setVisible(false);
+
+    this.setupText();
   }
 
   update() {
     if (this.started) {
       if (!this.gamePad) this.startGamePad();
-      this.curve.getPoint(this.path.t, this.path.vec);
-      this.penguin.setPosition(this.path.vec.x, this.path.vec.y);
+      this.animalCurve.getPoint(this.animalPath.t, this.animalPath.vec);
+      this.activeAnimal.setPosition(this.animalPath.vec.x, this.animalPath.vec.y);
 
-      if (this.displayedPenguins && !this.startTimer) {
+      if (this.displayedAnimals && !this.startTimer) {
+        this.instructiveText.go.setVisible(true);
+        this.instructiveText.watch.setVisible(false);
         this.scorebox.anims.play('scorebox-shift');
         this.startTimer = true;
         this.started = true;
         eventsCenter.emit('start_timer');
-      } else if (!this.displayedPenguins) {
+      } else if (!this.displayedAnimals) {
         eventsCenter.emit('reset_timer');
       }
       
@@ -210,20 +219,20 @@ export default class PenguinSlide extends Phaser.Scene {
   }
 
   updateGuess(num) {
-    // if the current guess is 0 and the num is also less than 0 do nothing
-    if (this.currentGuess === 0 && num < 0) {
-      return;
+    if (this.displayedAnimals === true) {
+      if (this.currentGuess === 0 && num < 0) {
+        return; // if the current guess is 0 and the input is down do nothing
+      }
+      this.currentGuess += num;
+      this.scoreboxText.setText(this.currentGuess.toString()); // otherwise, update the current guess
     }
-    this.currentGuess += num;
-    this.scoreboxText.setText(this.currentGuess.toString());
-    // otherwise, update the current guess
   }
 
   confirmGuess() {
     if (this.currentGuess === this.penguinCount) {
       eventsCenter.emit('stop_timer');
       this.tweens.add({
-        targets: this.sealPath,
+        targets: this.victorySealPath,
         t: 1,
         duration: 1500,
         ease: 'Sine.easeOut',
@@ -235,26 +244,26 @@ export default class PenguinSlide extends Phaser.Scene {
           eventsCenter.emit('game_end');
         },
         onUpdate: () => {
-          this.sealCurve.getPoint(this.sealPath.t, this.sealPath.vec);
-          this.seal.setPosition(this.sealPath.vec.x, this.sealPath.vec.y);
+          this.victorySealCurve.getPoint(this.victorySealPath.t, this.victorySealPath.vec);
+          this.victorySeal.setPosition(this.victorySealPath.vec.x, this.victorySealPath.vec.y);
 
           // this can be optimized a bit
-          if (this.sealPath.t < 0.25) {
-            this.seal.setAngle(-45);
-          } else if (this.sealPath.t < 0.5) {
-            this.seal.setAngle(-25);
-          } else if (this.sealPath.t > 0.4 && this.sealPath.t < 0.6) {
-            this.seal.setAngle(0);
-          } else if (this.sealPath.t > 0.5) {
-            this.seal.setAngle(25);
-          } else if (this.sealPath.t > 0.75) {
-            this.seal.setAngle(45)
+          if (this.victorySealPath.t < 0.25) {
+            this.victorySeal.setAngle(-45);
+          } else if (this.victorySealPath.t < 0.5) {
+            this.victorySeal.setAngle(-25);
+          } else if (this.victorySealPath.t > 0.4 && this.victorySealPath.t < 0.6) {
+            this.victorySeal.setAngle(0);
+          } else if (this.victorySealPath.t > 0.5) {
+            this.victorySeal.setAngle(25);
+          } else if (this.victorySealPath.t > 0.75) {
+            this.victorySeal.setAngle(45)
           }
         }
       });
     } else {
       eventsCenter.emit('stop_timer');
-      this.penguin.setVisible(false);
+      this.activeAnimal.setVisible(false);
       this.zzz.setVisible(true);
       this.zzz.anims.play('sleeping_igloo').once('animationcomplete', () => {
         this.gameOver = true;
@@ -305,52 +314,36 @@ export default class PenguinSlide extends Phaser.Scene {
   }
 
   setupText () {
-    // this.winText = this.add.text(540, 360, 'YOU WON!');
-    // this.winText.setStyle({
-    //     fontSize: '160px',
-    //     fill: '#00ff00',
-    //     align: 'center',
-    //     stroke: '#808080',
-    //     strokeThickness: 8
-    // });
-    // this.winText.setOrigin(0.5);
-    // this.winText.visible = false;
-    // this.winText.depth = 20;
-
-    // this.lossText = this.add.text(540, 360, 'YOU LOST!');
-    // this.lossText.setStyle({
-    //     fontSize: '160px',
-    //     fill: '#ff0000',
-    //     align: 'center',
-    //     stroke: '#808080',
-    //     strokeThickness: 8
-    // });
-    // this.lossText.setOrigin(0.5);
-    // this.lossText.visible = false;
-    // this.lossText.depth = 20;
-    this.look = this.add.text(540, 360, 'WATCH!', {
-      fontSize: '160px',
-      color: '#00ff00',
+    const watchText = this.add.text(540, 120, 'COUNT THE PENGUINS!', {
+      fontSize: '48px',
+      color: '#FFFFFF',
       align: 'center',
       // stroke: '#808080',
       // strokeThickness: 8,
-    }).setVisible(false);
-    this.go = this.add.text(540, 360, 'GO!', {
-      fontSize: '160px',
-      color: '#00ff00',
+    }).setVisible(false).setOrigin(0.5);
+    const goText = this.add.text(540, 120, 'how many penguins were there?', {
+      fontSize: '48px',
+      color: '#FFFFFF',
       align: 'center',
-    }).setVisible(false);
+    }).setVisible(false).setOrigin(0.5);
 
-    this.win = this.add.text(540, 360, 'YOU WIN!', {
+    const winText = this.add.text(540, 360, 'YOU WIN!', {
       fontSize: '160px',
       color: '#00FF00',
       align: 'center',
-    }).setVisible(false);
+    }).setVisible(false).setOrigin(0.5);
     
-    this.lose = this.add.text(540, 360, 'YOU LOSE!', {
+    const loseText = this.add.text(540, 360, 'YOU LOSE!', {
       fontSize: '160px',
       color: '#FF0000',
       align: 'center'
-    }).setVisible(false);
+    }).setVisible(false).setOrigin(0.5);
+
+    this.instructiveText = {
+      watch: watchText,
+      go: goText,
+      win: winText,
+      lose: loseText,
+    };
   }
 }
