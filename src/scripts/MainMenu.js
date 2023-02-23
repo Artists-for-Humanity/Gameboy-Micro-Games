@@ -110,9 +110,9 @@ export default class MainMenu extends Phaser.Scene {
   }
 
   makeKeyboardKeys(){
-    this.left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-    this.right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-    this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+  this.left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+  this.right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+  this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 }
 keyBoardInputs(){
   if(Phaser.Input.Keyboard.JustDown(this.left))this.updateSelection(-1);
@@ -206,6 +206,7 @@ keyBoardInputs(){
     this.btns = [];
     this.fingerPos = 0;
     this.sent = false;
+    this.gamepad = null;
 
   }
   animationBuilder() {

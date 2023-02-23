@@ -105,13 +105,7 @@ export default class HiScoreScene extends Phaser.Scene {
       () => location.reload()
     );
   }
-  initGamePad() {
-    this.buttonHandlers.addPad(
-      () => this.gamePad.buttons[0].pressed,
-      () => this.resetScoreScene()
-
-    );
-  }
+ 
  
 
   resetLists() {

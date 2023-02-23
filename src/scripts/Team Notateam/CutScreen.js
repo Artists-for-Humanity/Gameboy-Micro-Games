@@ -8,21 +8,21 @@ const L_START = -L_END;
 const R_START = 5 * L_END;
 
 const listOfGames = [
-    // 'MarcyMunch',
+    'MarcyMunch',
     // 'CircleJump',
     // 'SockToss',
     // "Lowest",
     // "FrogJump",
     // "DrinkPour",
     // "FlySwat",
-    "Emeowgency",
+    // "Emeowgency"(currently not functioning),
     // "ColorLab",
     // "Cannon",
     // "CarPump",
     // "TrashSort",
     // "ColorPasscode",
     // "HideFromCat",
-    // "HitTheButton",
+    // "HitTheButton"(button not turning green),
     // "BetweenSpace",
     // 'TugOWar',
     // 'WhereisWilly',
@@ -114,6 +114,7 @@ export default class CutScreen extends Phaser.Scene {
     }
 
     create() {
+
         this.setCutScreen();
         this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
 
@@ -326,71 +327,83 @@ export default class CutScreen extends Phaser.Scene {
             this.huns.setFrame(h + 1);
     }
 
-    closecon() {
-        console.log("Round ", this.roundNumber);
-
-        if (this.currentScene === 'CircleJump') {
-            eventsCenter.emit('end_circle');
-        }
-
+    showGameResult(){
         if (!this.lost) {
-
             this.faceplate.anims.play('win1').once('animationcomplete', () => {
                 this.faceplate.anims.play('win2');
             });
-
             this.globalState.scores++;
-
             setTimeout(() => {
                 this.setScore(this.globalState.scores);
             }, 200);
-        }
-        else {
+        } else {
             this.faceplate.anims.play('lose1').once('animationcomplete', () => {
                 this.faceplate.anims.play('lose2');
             });
-
             this.life_total--;
             this.reduce_life();
         }
-        eventsCenter.emit('stop_timer');
-        eventsCenter.emit('reset_timer');
+    }
+
+    // Runs every time "doors" finish closing
+    closecon() {
+
+        console.log("Round ", this.roundNumber);
+
+        // if (this.currentScene === 'CircleJump') {
+        //     eventsCenter.emit('end_circle');
+        // }
+
+        // Plays victory or loss animation and increments score accordingly
+        this.showGameResult()
+
+        // Stops and resets game timer
+        this.resetTimer()
+        
+        // Ends the current game if we have started playing
+        this.endCurrentScene()
+
+        this.startNextScene();
+    }
+
+    endCurrentScene(){
         if (this.roundNumber > 0) {
-            this.endGame();
-        }
-        else {
+            this.endCurrentGame();
+        } else {
             if (this.scene.isActive('MainMenu'))
                 this.scene.stop('MainMenu');
         }
-        this.nextGame();
     }
-    nextGame() {
-    
+    startNextScene() {
+
+        // Life total is less than or equal to one, game ends.
         this.life_total > 1 ? this.setCurrentScene() : this.currentScene = 'GameOver';
-        console.log(this.currentScene);
-        this.scene.sendToBack('Timer');
-        this.scene.sendToBack(this.currentScene);
-        if (this.currentScene !== 'GameOver') {
+
+        if (this.currentScene !== 'GameOver' && this.currentScene !== 'MainMenu' && this.currentScene !== 'Hi-Score') {
             this.scene.run('Timer');
         } else {
             this.scene.stop('Timer');
-            this.scene.stop('CutScreen');
             // console.log(this.globalState.scores);
         }
+
         this.scene.run(this.currentScene);
         console.log(this.currentScene + " should be running...");
+
+        this.scene.sendToBack('Timer');
+        this.scene.sendToBack(this.currentScene);
+
         this.roundNumber++;
-        //Initial timeout for win/lose anim
+
+        // Plays prompt for next game
         setTimeout(() => {
-            if (this.currentScene !== 'GameOver')
+            if (this.currentScene !== 'GameOver' && this.currentScene !== 'MainMenu' && this.currentScene !== 'Hi-Score')
                 this.textPrompt.setVisible(true);
-            setTimeout(() => {
-                this.textPrompt.setVisible(false);
-                this.open = true;
-            }, 2000);
+            // Door opens after prompt
+            this.openDoor()
         }, 2000);
     }
-    endGame() {
+
+    endCurrentGame() {
         console.log(this.currentScene);
         this.scene.stop(this.currentScene);
     }
@@ -513,6 +526,18 @@ export default class CutScreen extends Phaser.Scene {
         console.log('emission received');
         //this.faceplate.anims.stop()
         this.closed = false;
+    }
+    openDoor(){
+        setTimeout(() => {
+            this.textPrompt.setVisible(false);
+            this.open = true;
+        }, 2000);
+    }
+    resetTimer(){
+        // Stop game timer
+        eventsCenter.emit('stop_timer');
+        // Reset game timer
+        eventsCenter.emit('reset_timer');
     }
 
     setCurrentScene() {

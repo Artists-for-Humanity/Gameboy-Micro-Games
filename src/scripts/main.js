@@ -51,8 +51,8 @@ const config = {
   },
   scene: [
     MainMenu,
-    EndlessCutScreen,
     CutScreen,
+    EndlessCutScreen,
     WhereisWilly,
     Timer,
     MarcyMunch,

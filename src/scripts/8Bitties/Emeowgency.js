@@ -131,7 +131,9 @@ export default class Emeowgency extends Phaser.Scene {
     this.spawnBlanket();
 
     eventsCenter.on('start_game', () => {
-      this.started = true; this.globalState.timerMessage('start_timer'); this.gameStart();
+      this.started = true; 
+      this.globalState.timerMessage('start_timer'); 
+      this.gameStart();
     });
 
   }

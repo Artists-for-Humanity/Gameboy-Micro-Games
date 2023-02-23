@@ -77,6 +77,7 @@ export default class HitTheButton extends Phaser.Scene {
     }
 
     create() {
+        this.resetHTB();
         this.createAnims();
         this.setText();
         this.background = this.add.image(540, 360, '23background');
@@ -163,6 +164,23 @@ export default class HitTheButton extends Phaser.Scene {
             eventsCenter.emit("game-end", this.victory);
             this.sent = true
         }
+    }
+    
+    resetHTB(){
+        this.startCheck = false;
+        this.gameActive = false;
+        this.gameOver = false;
+        this.victory = false;
+        this.sent = false;
+        this.started = false;
+        this.myScore = 0;
+        this.cpuScore = 0;
+        this.round = 1;
+        this.cpuTimer = 0;
+        this.keyPressAvailable = true;
+        this.delayedCallCheck = false;
+        this.buttonHandlers = new ButtonPressHandlers();
+        this.gamePad = null
     }
 
     initGamePad() {
@@ -267,7 +285,7 @@ export default class HitTheButton extends Phaser.Scene {
         this.roundActive = true;
 
         //turn button green
-        this.goGreen = this.time.delayedCall(this.getIntBetween(1200, 3500), () => {
+        this.time.delayedCall(this.getIntBetween(1200, 3500), () => {
             this.button.anims.play('green');
         }, [], this);
     }
