@@ -5,6 +5,7 @@ import ButtonPressHandlers from '../ButtonPressHandlers';
 
 export default class Emeowgency extends Phaser.Scene {
   // Game Class Constructor
+  //note: try making the cat and shadow exist at the begining of the gmae and just toggle visibility, also use set frames whne you lose/win or something
   constructor() {
     super({
       active: false,
@@ -164,6 +165,8 @@ export default class Emeowgency extends Phaser.Scene {
         eventsCenter.emit('stop_timer');
         eventsCenter.emit("game-end", this.victory);
         this.sent = true;
+        this.cat.destroy();
+        this.shadow.destroy();
 
       }
 

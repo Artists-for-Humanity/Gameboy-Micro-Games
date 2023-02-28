@@ -8,21 +8,21 @@ const L_START = -L_END;
 const R_START = 5 * L_END;
 
 const listOfGames = [
-    'MarcyMunch',
+    // 'MarcyMunch',
     // 'CircleJump',
     // 'SockToss',
     // "Lowest",
     // "FrogJump",
     // "DrinkPour",
     // "FlySwat",
-    // "Emeowgency"(currently not functioning),
+    // "Emeowgency"not working,
     // "ColorLab",
     // "Cannon",
     // "CarPump",
     // "TrashSort",
     // "ColorPasscode",
     // "HideFromCat",
-    // "HitTheButton"(button not turning green),
+    // "HitTheButton",
     // "BetweenSpace",
     // 'TugOWar',
     // 'WhereisWilly',
@@ -541,7 +541,7 @@ export default class CutScreen extends Phaser.Scene {
     }
 
     setCurrentScene() {
-        this.currentScene = listOfGames[this.roundNumber];
+        this.currentScene = listOfGames[0];
         let s;
         switch (this.currentScene) {
             case "Lowest":

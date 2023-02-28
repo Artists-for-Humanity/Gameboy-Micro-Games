@@ -84,6 +84,7 @@ export default class WhereisWilly extends Phaser.Scene {
     );
   }
   create() {
+    this.resetWisW();
     this.bricks = this.add.image(540, 360, "8B6_wall");
     this.field = this.add.image(540, 360, "8B6_field");
     this.finger = this.physics.add.image(540, 360, "8B6_finger").setDepth(100);
@@ -108,6 +109,18 @@ export default class WhereisWilly extends Phaser.Scene {
       }
     }
   }
+  resetWisW() {
+    this.victory = false;
+    this.gameOver = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
+    this.started = false;
+    this.suspects = 7;
+    this.wantedNum = 0;
+    this.suspectArray = [];
+    this.newInt = 0;
+  }
+
   createKeys() {
     this.spacebar = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.SPACE
@@ -292,7 +305,7 @@ export default class WhereisWilly extends Phaser.Scene {
     this.wantedNum = this.getRandomInt(6);
     this.wanted = this.add
       .image(550, 620, "8B6_Missing")
-      .setFrame(this.wantedNum );
+      .setFrame(this.wantedNum);
     this.wanted.setScale(0.25);
     this.spawnCorrect();
     this.suspectArray.length = this.suspects;

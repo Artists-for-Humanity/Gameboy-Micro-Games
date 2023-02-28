@@ -74,8 +74,6 @@ export default class MainMenu extends Phaser.Scene {
 
   create() {
     this.resetMainMenu();
-    console.log(this.ButtonPressHandlers);
-
     this.add.image(X / 2, Y / 2, "bg1");
     this.btns.push(this.physics.add.sprite(X / 8, Y * .90, 'play'));
     this.btns.push(this.physics.add.sprite(4*X/8, Y * .9, 'score'));
@@ -105,7 +103,6 @@ export default class MainMenu extends Phaser.Scene {
     this.buttonHandlers.update();
     if (!this.gamePad) this.startGamePad();
     if (!this.gamePad) this.makeKeyboardKeys();
-    this.keyBoardInputs();
     
   }
 
@@ -113,6 +110,8 @@ export default class MainMenu extends Phaser.Scene {
   this.left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
   this.right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
   this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+  this.keyBoardInputs();
+
 }
 keyBoardInputs(){
   if(Phaser.Input.Keyboard.JustDown(this.left))this.updateSelection(-1);
@@ -149,7 +148,6 @@ keyBoardInputs(){
 
 
   updateSelection(input) {
-    console.log(this.gamePad.leftStick)
      
     // console.log('this.btns: ',this.btns[this.fingerPos].anims.stop().setFrame(0))
     this.btns[this.fingerPos].anims.stop().setFrame(0);
@@ -188,25 +186,31 @@ keyBoardInputs(){
   }
   playEndless(){
     if(!this.sent){
-      this.scene.start('EndlessCutScreen');
+      eventsCenter.emit('start-endless');
       this.sent = true;
     }
   }
   playGame() {
     if (!this.sent){
       console.log('cutscreenrunning .... ');
-      this.scene.start("CutScreen"); 
+      eventsCenter.emit('start-normal');
       //this.globalState.sendMessage(true)
       this.sent = true;
     }
   }
 
   resetMainMenu(){
-    this.animations = [];
-    this.btns = [];
-    this.fingerPos = 0;
-    this.sent = false;
-    this.gamepad = null;
+   this.btns = [];
+   this.animations = [];
+   this.fingerPos = 0;
+   this.left;
+   this.right;
+   this.action;
+   this.buttonHandlers = new ButtonPressHandlers();
+   this.sent = false;
+   this.wobbleDir = false;
+   this.wobbleTimer = 0;
+   this.gamePad = null;
 
   }
   animationBuilder() {

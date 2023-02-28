@@ -26,7 +26,8 @@ import CircleJump from "./TeamInflation/CircleJump";
 import Factory from "./Fairway/factoryScripts/factoryScenes/Factory";
 import HiScoreScene from "./Hi-Score";
 import WhereisWilly from "./8Bitties/Where'sWilly.js";
-import EndlessCutScreen from "./Team Notateam/EndlessCutScreen.js";
+import EndlessCutScreen from "./Team Notateam/newCutScreen.js";
+import newCutScreen from "./Team Notateam/newCutScreen.js";
 // Set configuration for phaser game instance
 const juice = new phaserJuice(this);
 
@@ -50,9 +51,9 @@ const config = {
     gamepad: true
   },
   scene: [
+    newCutScreen,
     MainMenu,
-    CutScreen,
-    EndlessCutScreen,
+    // CutScreen,
     WhereisWilly,
     Timer,
     MarcyMunch,

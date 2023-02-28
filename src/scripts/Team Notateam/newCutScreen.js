@@ -8,14 +8,14 @@ const L_START = -L_END;
 const R_START = 5 * L_END;
 
 const listOfGames = [
-    // 'MarcyMunch',
-    // 'CircleJump',
-    // 'SockToss',
-    // "Lowest",
-    // "FrogJump",
-    // "DrinkPour",
-    // "FlySwat",
-    // "Emeowgency",
+    'MarcyMunch',
+    'CircleJump',
+    'SockToss',
+    "Lowest",
+    "FrogJump",
+    "DrinkPour",
+    "FlySwat",
+    // "Emeowgency" not working,
     // "ColorLab",
     // "Cannon",
     // "CarPump",
@@ -23,18 +23,18 @@ const listOfGames = [
     // "ColorPasscode",
     // "HideFromCat",
     // "HitTheButton",
-    "BetweenSpace",
-    'TugOWar',
-    'WhereisWilly',
+    // "BetweenSpace",
+    // 'TugOWar',
+    // 'WhereisWilly',
     'GameOver'];
 
-export default class EndlessCutScreen extends Phaser.Scene {
+export default class newCutScreen extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
         super({
             active: false,
             visible: true,
-            key: 'EndlessCutScreen',
+            key: 'CutScreen',
             physics: {
                 default: 'arcade',
                 arcade: {
@@ -43,13 +43,9 @@ export default class EndlessCutScreen extends Phaser.Scene {
             }
         });
 
-        this.finishedGames = false;
-
-        this.gameOrder = new Array(listOfGames.length-1)
-
         this.currentScene = "MainMenu";
         this.roundNumber = 0;
-        this.door= 0; 
+
 
         this.close_timer = 0;
         this.life_total = 5;
@@ -60,6 +56,7 @@ export default class EndlessCutScreen extends Phaser.Scene {
         // this.score = -1;
 
         this.space;
+
         this.l_door;
         this.r_door;
 
@@ -117,11 +114,30 @@ export default class EndlessCutScreen extends Phaser.Scene {
     }
 
     create() {
+        this.setCutScreen();
         this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        this.scene.run('MainMenu');
+        this.scene.sendToBack('MainMenu')
         this.buildAnimations();
         this.buildObjects();
         this.setScore(this.globalState.scores);
+
         eventsCenter.on('game-end', this.closeDoor, this);
+        eventsCenter.on('start-normal', () => {
+            this.closed = false;
+            setTimeout(() => {
+            if (this.scene.isActive('MainMenu'))
+            this.scene.stop('MainMenu')});
+        }, 2000);
+        eventsCenter.on('start-endless', () => {
+            this.shuffleGameOrder();
+            this.closed = false;
+            setTimeout(() => {
+            if (this.scene.isActive('MainMenu'))
+            this.scene.stop('MainMenu')});
+        }, 2000);
+        this.endless = true;
+
     }
     update() {
 
@@ -326,81 +342,82 @@ export default class EndlessCutScreen extends Phaser.Scene {
             this.huns.setFrame(h + 1);
     }
 
-    closecon() {
-        console.log("Round ", this.roundNumber);
-
-        if (this.currentScene === 'CircleJump') {
-            eventsCenter.emit('end_circle');
-        }
-
+    showGameResult(){
         if (!this.lost) {
-
             this.faceplate.anims.play('win1').once('animationcomplete', () => {
                 this.faceplate.anims.play('win2');
             });
-
             this.globalState.scores++;
-
             setTimeout(() => {
                 this.setScore(this.globalState.scores);
             }, 200);
-        }
-        else {
+        } else {
             this.faceplate.anims.play('lose1').once('animationcomplete', () => {
                 this.faceplate.anims.play('lose2');
             });
-
             this.life_total--;
             this.reduce_life();
         }
-        eventsCenter.emit('stop_timer');
-        eventsCenter.emit('reset_timer');
-        if (this.roundNumber > 0) {
-            this.endGame();
-        }
-        else {
-            if (this.scene.isActive('MainMenu'))
-                this.scene.remove('MainMenu');
-                // this.callfunction(this.shuffleGames(), 1)
-        }
-        this.nextGame();
     }
-    callfunction(callback, num){
-        const x  = 0; 
-        if(x < num) {
-            callback;
-        }
+
+    // Runs every time "doors" finish closing
+    closecon() {
+
+        console.log("Round ", this.roundNumber);
+
+        // if (this.currentScene === 'CircleJump') {
+        //     eventsCenter.emit('end_circle');
+        // }
+
+        // Plays victory or loss animation and increments score accordingly
+        this.showGameResult()
+
+        // Stops and resets game timer
+        this.resetTimer()
         
+        // Ends the current game if we have started playing
+        this.endCurrentScene()
+
+        this.startNextScene();
     }
-    nextGame() {
+
+    endCurrentScene(){
+        if (this.roundNumber > 0) {
+            this.endCurrentGame();
+        } 
+    }
+    startNextScene() {
+
+        // Life total is less than or equal to one, game ends.
         this.life_total > 1 ? this.setCurrentScene() : this.currentScene = 'GameOver';
-        console.log(this.currentScene);
-        this.scene.sendToBack('Timer');
-        this.scene.sendToBack(this.currentScene);
-        if (this.currentScene !== 'GameOver') {
+
+        if (this.currentScene !== 'GameOver' && this.currentScene !== 'MainMenu' && this.currentScene !== 'Hi-Score') {
             this.scene.run('Timer');
         } else {
-            this.scene.remove('Timer');
+            this.scene.stop('Timer');
             // console.log(this.globalState.scores);
         }
+
         this.scene.run(this.currentScene);
-        console.log(this.scene);
         console.log(this.currentScene + " should be running...");
+
+        this.scene.sendToBack('Timer');
+        this.scene.sendToBack(this.currentScene);
+
         this.roundNumber++;
-        //Initial timeout for win/lose anim
+
+        // Plays prompt for next game
         setTimeout(() => {
-            if (this.currentScene !== 'GameOver')
+            if (this.currentScene !== 'GameOver' && this.currentScene !== 'MainMenu' && this.currentScene !== 'Hi-Score')
                 this.textPrompt.setVisible(true);
-            setTimeout(() => {
-                this.textPrompt.setVisible(false);
-                this.open = true;
-            }, 2000);
+            // Door opens after prompt
+            this.openDoor()
         }, 2000);
     }
 
-    endGame() {
-        this.scene.sleep(this.currentScene);
-        this.scene.sendToBack(this.currentScene);
+    endCurrentGame() {
+        console.log(this.currentScene);
+        this.scene.stop(this.currentScene);
     }
     buildObjects() {
         // Build Doors
@@ -522,36 +539,28 @@ export default class EndlessCutScreen extends Phaser.Scene {
         //this.faceplate.anims.stop()
         this.closed = false;
     }
-    shuffleGames(){
-        for (let i = 0; i < listOfGames.length; ) {
-            const num =  Math.floor(Math.random() * listOfGames.length);
-            console.log('neutral number',  num)
-            for (let n = 0; n < this.gameOrder.length;) {
-                if (num === this.gameOrder[n]){
-                    this.door = 'locked'
-                }
-                if( n === this.gameOrder.length, this.door === 'neutral'){
-                    this.door = 'yes'; 
-                }
-            }
-            if(this.door === 'yes') {this.gameOrder[i] = num
-                 this.door = 'neutral'}
-            if(this.door === 'no'){
-                i--;
-                this.door = 'neutral'}
-            
-            console.log("GO after shuffle", this.gameOrder)
-        }
-        i++;   
+    openDoor(){
+        setTimeout(() => {
+            this.textPrompt.setVisible(false);
+            this.open = true;
+        }, 2000);
+    }
+    resetTimer(){
+        // Stop game timer
+        eventsCenter.emit('stop_timer');
+        // Reset game timer
+        eventsCenter.emit('reset_timer');
     }
 
-     
     setCurrentScene() {
-        if(this.roundNumber === listOfGames.length-1){
-            this.gameOrder = [];
-            this.shuffleGames();
+        this.currentScene = listOfGames[this.roundNumber];
+        //will only run when endless is selected
+        if(this.endless === true){
+            this.currentScene = listOfGames[this.gameorder[this.roundNumber]]
+            if(this.roundNumber === listOfGames.length - 1){
+                this.shuffleGameOrder();
+            }
         }
-        this.currentScene = listOfGames[this.gameOrder[this.roundNumber]];
         let s;
         switch (this.currentScene) {
             case "Lowest":
@@ -610,5 +619,30 @@ export default class EndlessCutScreen extends Phaser.Scene {
         }
         this.textPrompt = this.add.image(X / 2, Y / 2, s);
         this.textPrompt.setVisible(false).setDepth(1);
+    }
+    setCutScreen(){
+        this.currentScene = "MainMenu";
+        this.roundNumber = 0;
+        this.close_timer = 0;
+        this.life_total = 5;
+        this.closed = true;
+        this.open = false;
+        this.lost = false;
+        this.endless = true
+        this.gameOrder = new Array(listOfGames.length)
+        this.rand = 0;
+    }
+    shuffleGameOrder(){
+        for (let i = 0; i < this.gameOrder.length; i++) {
+            this.rand = Math.floor(Math.random() * this.gameOrder.length + 1 ); 
+            //cheking if this.rand has an equivilent value inside of game order
+            for (let n = 0; n < this.gameOrder;) {
+                //is it equal ? make door invalid and stop the cycling, else door is valid and n++;
+               this.rand === this.gameOrder[n]? ()=> {this.pass = 'invalid', n = this.gameOrder.length} : n++;
+               
+                
+            }
+            
+        }
     }
 }
