@@ -10,11 +10,11 @@ const R_START = 5 * L_END;
 const listOfGames = [
     'MarcyMunch',
     'CircleJump',
-    'SockToss',
-    "Lowest",
-    "FrogJump",
-    "DrinkPour",
-    "FlySwat",
+    // 'SockToss',
+    // "Lowest",
+    // "FrogJump",
+    // "DrinkPour",
+    // "FlySwat",
     // "Emeowgency" not working,
     // "ColorLab",
     // "Cannon",
@@ -45,7 +45,8 @@ export default class newCutScreen extends Phaser.Scene {
 
         this.currentScene = "MainMenu";
         this.roundNumber = 0;
-
+        this.pass = 'neutral'
+        this.gameOrder = new Array(listOfGames.length)
 
         this.close_timer = 0;
         this.life_total = 5;
@@ -362,7 +363,7 @@ export default class newCutScreen extends Phaser.Scene {
 
     // Runs every time "doors" finish closing
     closecon() {
-
+        console.log("Before Running gameOrder is?: ", this.gameOrder)
         console.log("Round ", this.roundNumber);
 
         // if (this.currentScene === 'CircleJump') {
@@ -389,6 +390,7 @@ export default class newCutScreen extends Phaser.Scene {
     startNextScene() {
 
         // Life total is less than or equal to one, game ends.
+        console.log(this.gameOrder)
         this.life_total > 1 ? this.setCurrentScene() : this.currentScene = 'GameOver';
 
         if (this.currentScene !== 'GameOver' && this.currentScene !== 'MainMenu' && this.currentScene !== 'Hi-Score') {
@@ -552,13 +554,21 @@ export default class newCutScreen extends Phaser.Scene {
         eventsCenter.emit('reset_timer');
     }
 
+    testFunction() {
+        console.error("erewrewrwerwerwer")
+    }
+
     setCurrentScene() {
+        console.log("in the setCurrentScene ", this.gameOrder, this.roundNumber, listOfGames)
         this.currentScene = listOfGames[this.roundNumber];
         //will only run when endless is selected
         if(this.endless === true){
-            this.currentScene = listOfGames[this.gameorder[this.roundNumber]]
-            if(this.roundNumber === listOfGames.length - 1){
+            this.currentScene = listOfGames[this.gameOrder[this.roundNumber]]
+            if(this.roundNumber === this.gameOrder.length - 1){
+                this.pass = 'neutral'
+                this.gameOrder = new Array(listOfGames.length -1)
                 this.shuffleGameOrder();
+                console.log('shuffle now')
             }
         }
         let s;
@@ -629,20 +639,34 @@ export default class newCutScreen extends Phaser.Scene {
         this.open = false;
         this.lost = false;
         this.endless = true
-        this.gameOrder = new Array(listOfGames.length)
+        this.gameOrder = new Array(listOfGames.length -1 )
         this.rand = 0;
+        this.pass = 'neutral';
     }
     shuffleGameOrder(){
         for (let i = 0; i < this.gameOrder.length; i++) {
-            this.rand = Math.floor(Math.random() * this.gameOrder.length + 1 ); 
+            this.rand = Math.floor(Math.random() * this.gameOrder.length); 
             //cheking if this.rand has an equivilent value inside of game order
-            for (let n = 0; n < this.gameOrder;) {
+            for (let n = 0; n < this.gameOrder.length; n++) {
                 //is it equal ? make door invalid and stop the cycling, else door is valid and n++;
-               this.rand === this.gameOrder[n]? ()=> {this.pass = 'invalid', n = this.gameOrder.length} : n++;
-               
-                
+               this.rand === this.gameOrder[n] ? this.pass = 'invalid' : this.pass = 'valid';
+               if (this.pass === 'invalid') {
+                    break
+                }
             }
-            
+            if(this.pass === 'invalid'){
+                i--;
+                this.pass = 'neutral'
+            }
+            if(this.pass === 'valid'){
+                // console.log('rnd', this.rand);
+                this.gameOrder[i] = this.rand;
+                this.pass = 'neutral'
+            }
+            console.log('i: ' + i)
+            console.log('rnd: '+ this.rand)
+            console.log('game number: ', this.gameOrder[i])
+
         }
     }
 }
