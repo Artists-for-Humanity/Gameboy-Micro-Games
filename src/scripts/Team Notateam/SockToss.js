@@ -5,7 +5,7 @@ import ButtonPressHandlers from '../ButtonPressHandlers';
 const SCALE_MULTIPLIER = 4.5;
 const METER_WIDTH = 108;
 const WIN_VALUE = 80;
-
+//REMINDER: multiple variables in the scene are declared and need to b set to true or false//
 export default class SockToss extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
@@ -362,6 +362,7 @@ export default class SockToss extends Phaser.Scene {
         this.timerStopped = false;
         this.buttonHandlers = new ButtonPressHandlers();
         this.gamePad = null;
+        this.started = false;
 
     }
     losecon() {

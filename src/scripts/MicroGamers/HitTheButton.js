@@ -23,17 +23,13 @@ export default class HitTheButton extends Phaser.Scene {
         this.cpuName;
         this.myHand;
         this.cpuHand;
-        // this.myScoreTracker;
-        // this.cpuScoreTracker;
         this.myScore = 0;
         this.cpuScore = 0;
         this.round = 1;
         this.cpuTimer = 0;
-
-        // this.permaText;
         this.myText;
         this.endText;
-
+        this.roundActive = false;
         this.keySPACE;
         this.keyPressAvailable = true;
         this.delayedCallCheck = false;
@@ -120,6 +116,7 @@ export default class HitTheButton extends Phaser.Scene {
                 //delayedCallCheck used to prevent multiple rounds starting at once
                 if (!this.roundActive && !this.delayedCallCheck) {
                     this.time.delayedCall(1000, () => {
+                        console.log('started')
                         this.startRound();
                         console.log('round start');
                     }, [], this);
@@ -167,6 +164,7 @@ export default class HitTheButton extends Phaser.Scene {
     }
     
     resetHTB(){
+        this.roundActive = false;
         this.startCheck = false;
         this.gameActive = false;
         this.gameOver = false;
@@ -282,6 +280,7 @@ export default class HitTheButton extends Phaser.Scene {
     }
 
     startRound() {
+        console.log('reachme00')
         this.roundActive = true;
 
         //turn button green

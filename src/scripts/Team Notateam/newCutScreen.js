@@ -8,9 +8,9 @@ const L_START = -L_END;
 const R_START = 5 * L_END;
 
 const listOfGames = [
-    'MarcyMunch',
-    'CircleJump',
-    // 'SockToss',
+    // 'MarcyMunch',
+    // 'CircleJump',
+    // 'SockToss'(code review needed),
     // "Lowest",
     // "FrogJump",
     // "DrinkPour",
@@ -24,7 +24,7 @@ const listOfGames = [
     // "HideFromCat",
     // "HitTheButton",
     // "BetweenSpace",
-    // 'TugOWar',
+    'TugOWar',
     // 'WhereisWilly',
     'GameOver'];
 
@@ -388,9 +388,7 @@ export default class newCutScreen extends Phaser.Scene {
         } 
     }
     startNextScene() {
-
         // Life total is less than or equal to one, game ends.
-        console.log(this.gameOrder)
         this.life_total > 1 ? this.setCurrentScene() : this.currentScene = 'GameOver';
 
         if (this.currentScene !== 'GameOver' && this.currentScene !== 'MainMenu' && this.currentScene !== 'Hi-Score') {
@@ -553,23 +551,20 @@ export default class newCutScreen extends Phaser.Scene {
         // Reset game timer
         eventsCenter.emit('reset_timer');
     }
-
-    testFunction() {
-        console.error("erewrewrwerwerwer")
-    }
-
     setCurrentScene() {
-        console.log("in the setCurrentScene ", this.gameOrder, this.roundNumber, listOfGames)
         this.currentScene = listOfGames[this.roundNumber];
         //will only run when endless is selected
         if(this.endless === true){
-            this.currentScene = listOfGames[this.gameOrder[this.roundNumber]]
-            if(this.roundNumber === this.gameOrder.length - 1){
+            if(this.roundNumber === this.gameOrder.length ){
                 this.pass = 'neutral'
-                this.gameOrder = new Array(listOfGames.length -1)
+                this.gameOrder =  new Array(listOfGames.length-1); 
                 this.shuffleGameOrder();
+                this.roundNumber = 0;
                 console.log('shuffle now')
+                console.log('GameOrder:', this.gameOrder)
             }
+            this.currentScene = listOfGames[this.gameOrder[this.roundNumber]]
+
         }
         let s;
         switch (this.currentScene) {
@@ -656,15 +651,13 @@ export default class newCutScreen extends Phaser.Scene {
             }
             if(this.pass === 'invalid'){
                 i--;
-                this.pass = 'neutral'
+                this.pass = 'neutral';
             }
             if(this.pass === 'valid'){
                 // console.log('rnd', this.rand);
                 this.gameOrder[i] = this.rand;
-                this.pass = 'neutral'
+                this.pass = 'neutral';
             }
-            console.log('i: ' + i)
-            console.log('rnd: '+ this.rand)
             console.log('game number: ', this.gameOrder[i])
 
         }

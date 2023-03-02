@@ -105,6 +105,7 @@ export default class Chew extends Phaser.Scene {
     this.started = false;
     this.buttonHandlers = new ButtonPressHandlers();
     this.gamePad = null
+    this.sent = false; 
   }
   makeAnims() {
     this.anims.create({
