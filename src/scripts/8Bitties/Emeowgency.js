@@ -130,7 +130,8 @@ export default class Emeowgency extends Phaser.Scene {
       Phaser.Input.Keyboard.KeyCodes.RIGHT
     );
     this.spawnBlanket();
-
+    this.spawnShadow();
+    this.spawnCat();
     eventsCenter.on('start_game', () => {
       this.started = true; 
       this.globalState.timerMessage('start_timer'); 
@@ -144,7 +145,6 @@ export default class Emeowgency extends Phaser.Scene {
       this.buttonHandlers.update();
       if (!this.gamePad) this.startGamePad();
       this.catch.setVisible(false);
-      this.gameOverTimer();
       this.playSafe();
       this.playFail();
       this.scaleCatch();
@@ -162,11 +162,14 @@ export default class Emeowgency extends Phaser.Scene {
       }
 
       if (this.gameOver && !this.sent) {
+
+        // this.cat.destroy();
+        // this.shadow.destroy();
         eventsCenter.emit('stop_timer');
+
         eventsCenter.emit("game-end", this.victory);
         this.sent = true;
-        this.cat.destroy();
-        this.shadow.destroy();
+        
 
       }
 
@@ -231,8 +234,9 @@ export default class Emeowgency extends Phaser.Scene {
   //starts the game after Catch! finnishes popping up
   gameStart() {
     if (!this.gameOver) {
-      this.spawnShadow();
-      this.spawnCat();
+      this.cat.visible = true;
+      this.shadow.visible = true;
+      
     }
 
   }
@@ -251,6 +255,7 @@ export default class Emeowgency extends Phaser.Scene {
     const position = this.getRandomPosition();
     this.shadow = this.physics.add.sprite(position.x, position.y, "8B4_yang");
     this.shadow.alpha = 0.5;
+    this.shadow.visible = false;
   }
 
   spawnBlanket() {
@@ -267,6 +272,7 @@ export default class Emeowgency extends Phaser.Scene {
     this.cat = this.add
       .sprite(this.shadow.x, this.shadow.y - 83 * 4, "8B4_yangSafe")
       .setScale(1.9);
+    this.cat.visible = false; 
 
   }
 
@@ -449,10 +455,7 @@ export default class Emeowgency extends Phaser.Scene {
     this.failScaleToggle = true;
     this.gOtimerToggle = true;
   }
-  gameOverTimer() {
-    if (this.gOtimerToggle === true) this.gOtimer++;
-    if (this.gOtimer === 80) this.gameOver = true;
-  }
+
 
 }
 

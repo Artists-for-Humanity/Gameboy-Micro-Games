@@ -145,12 +145,11 @@ export default class TugOWar extends Phaser.Scene {
 
   }
   resetToW(){
+    this.sent = false;
     this.gamestart = false;
     this.gameStarted = false;
-    this.youlose;
     this.loseScale = 0;
     this.LoseTimer = 0;
-    this.youwin;
     this.winTimer = 0;
     this.winScale = 0;
     this.imageCreated = false;
@@ -159,9 +158,9 @@ export default class TugOWar extends Phaser.Scene {
     this.lose = false;
     this.gameOver = false;
     this.slip = false;
-    this.started = false;
     this.buttonHandlers = new ButtonPressHandlers();
     this.gamePad = null;
+  
   }
   startGamePad() {
     if (this.input.gamepad.total) {

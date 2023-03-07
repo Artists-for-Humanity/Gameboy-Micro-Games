@@ -88,7 +88,7 @@ export default class SockToss extends Phaser.Scene {
     }
 
     create() {
-        this.setSocktoss();
+        // this.setSocktoss();
         // Add images to Scene
         this.add.image(1080 / 2, 720 / 2, 'background1').setScale(SCALE_MULTIPLIER);
         this.basket_b = this.add.image(13 * SCALE_MULTIPLIER, 21 * SCALE_MULTIPLIER, 'basket_back');

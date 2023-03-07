@@ -10,12 +10,12 @@ const R_START = 5 * L_END;
 const listOfGames = [
     // 'MarcyMunch',
     // 'CircleJump',
-    // 'SockToss'(code review needed),
+    'SockToss',
     // "Lowest",
     // "FrogJump",
     // "DrinkPour",
     // "FlySwat",
-    // "Emeowgency" not working,
+    // "Emeowgency",
     // "ColorLab",
     // "Cannon",
     // "CarPump",
@@ -24,7 +24,7 @@ const listOfGames = [
     // "HideFromCat",
     // "HitTheButton",
     // "BetweenSpace",
-    'TugOWar',
+    // 'TugOWar',
     // 'WhereisWilly',
     'GameOver'];
 
