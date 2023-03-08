@@ -28,6 +28,7 @@ import HiScoreScene from "./Hi-Score";
 import WhereisWilly from "./8Bitties/Where'sWilly.js";
 import EndlessCutScreen from "./Team Notateam/newCutScreen.js";
 import newCutScreen from "./Team Notateam/newCutScreen.js";
+import fruitBasket from "./8Bitties/fruitBasket.js";
 // Set configuration for phaser game instance
 const juice = new phaserJuice(this);
 
@@ -53,9 +54,9 @@ const config = {
   scene: [
     newCutScreen,
     MainMenu,
-    // CutScreen,
-    WhereisWilly,
     Timer,
+    fruitBasket,
+    WhereisWilly,
     MarcyMunch,
     SockToss,
     CarPump,
