@@ -1,12 +1,12 @@
 // Add imports for phaser library, scenes, and plugins
 import Phaser from "phaser";
-import phaserJuice from "./phaserJuice.js";
 import GlobalState from "./GlobalState";
 import GameOver from "./GameOver";
 import Emeowgency from "./8Bitties/Emeowgency";
 import ColorLab from "./8Bitties/ColorLab";
 import CarPump from "./DebugginDaOpps/CarPump";
 import TrashSort from "./DebugginDaOpps/TrashSort";
+import phaserJuice from "./phaserJuice.js";
 import Cannon from "./DebugginDaOpps/Cannon";
 import Lowest from "./TeamInflation/Lowest";
 import FrogJump from "./TeamInflation/FrogJump";
@@ -52,10 +52,10 @@ const config = {
     gamepad: true
   },
   scene: [
+    fruitBasket,
     newCutScreen,
     MainMenu,
     Timer,
-    fruitBasket,
     WhereisWilly,
     MarcyMunch,
     SockToss,

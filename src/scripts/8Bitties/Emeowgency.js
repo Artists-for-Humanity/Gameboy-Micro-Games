@@ -163,8 +163,6 @@ export default class Emeowgency extends Phaser.Scene {
 
       if (this.gameOver && !this.sent) {
 
-        // this.cat.destroy();
-        // this.shadow.destroy();
         eventsCenter.emit('stop_timer');
 
         eventsCenter.emit("game-end", this.victory);
@@ -221,12 +219,10 @@ export default class Emeowgency extends Phaser.Scene {
   //Catch!, the image in the beggining
   scaleCatch() {
     if (this.catchScale <= 1) {
-
       this.catchScale += 0.3 / this.timer;
       this.catch.setScale(this.catchScale);
     } else if (this.timer === 43) {
       this.catch.destroy();
-
       this.timer = 0;
     }
   }
@@ -236,9 +232,7 @@ export default class Emeowgency extends Phaser.Scene {
     if (!this.gameOver) {
       this.cat.visible = true;
       this.shadow.visible = true;
-      
     }
-
   }
 
   //makes a random x and y coordiante
@@ -262,9 +256,7 @@ export default class Emeowgency extends Phaser.Scene {
     this.blanket = this.physics.add
       .sprite(480, 360, "8B4_blanketSheet")
       .setScale(0.65)
-
       .setDepth(-10);
-
   }
 
   //spawns the cat above the Shadow based on how long shadow takes to get big
@@ -273,7 +265,6 @@ export default class Emeowgency extends Phaser.Scene {
       .sprite(this.shadow.x, this.shadow.y - 83 * 4, "8B4_yangSafe")
       .setScale(1.9);
     this.cat.visible = false; 
-
   }
 
   //scales the shadow up to 1 , also determines the end of the game
@@ -294,8 +285,6 @@ export default class Emeowgency extends Phaser.Scene {
           this.cat.anims.play("8B4_safe");
           this.shadowTimer = 0;
         }
-
-
         if (this.catSafe === true) {
           this.safeScaleToggle = true;
         }
@@ -315,7 +304,6 @@ export default class Emeowgency extends Phaser.Scene {
         this.cat.anims.play("8B4_fail_2");
       });
       this.fallen = true;
-
     }
   }
 
@@ -336,7 +324,6 @@ export default class Emeowgency extends Phaser.Scene {
     if (x === 0) this.blanket.setVelocityX(0);
     if (x === 3) this.blanket.setVelocityY(0);
   }
-
   //creates the image for safe! on cene and scales it up gradually
   playSafe() {
     if (this.safeScaleToggle === true) {
@@ -351,7 +338,6 @@ export default class Emeowgency extends Phaser.Scene {
       }
       else
         this.gameOver = true;
-
       this.victory = true;
 
     }
@@ -378,7 +364,6 @@ export default class Emeowgency extends Phaser.Scene {
     this.anims.create({
       key: "8B4_shadow",
       frames: [{ key: "8B4_yang", frame: 0 }],
-
       frameRate: 1,
       repeat: -1,
     });
@@ -434,8 +419,7 @@ export default class Emeowgency extends Phaser.Scene {
         { key: "8B4_blanketSheet", frame: 2 },
         { key: "8B4_blanketSheet", frame: 3 },
         { key: "8B4_blanketSheet", frame: 4 },
-        { key: "8B4_blanketSheet", frame: 5 },
-
+        { key: "8B4_blanketSheet", frame: 5 }, 
       ],
       frameRate: 12,
       repeat: 0,
