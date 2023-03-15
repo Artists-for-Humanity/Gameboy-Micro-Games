@@ -8,26 +8,27 @@ const L_START = -L_END;
 const R_START = 5 * L_END;
 
 const listOfGames = [
-    //'fruitBasket',
-    'MarcyMunch',
-    'CircleJump',
-    'SockToss',
-    "Lowest",
-    "FrogJump",
-    "DrinkPour",
-    "FlySwat",
-    "Emeowgency",
-    "ColorLab",
-    "Cannon",
-    "CarPump",
-    "TrashSort",
-    "ColorPasscode",
-    "HideFromCat",
-    "HitTheButton",
-    "BetweenSpace",
-    'TugOWar',
-    'WhereisWilly',
-    'GameOver'];
+    'fruitBasket',
+    // 'MarcyMunch',
+    // 'CircleJump',
+    // 'SockToss',
+    // "Lowest",
+    // "FrogJump",
+    // "DrinkPour",
+    // "FlySwat",
+    // "Emeowgency",
+    // "ColorLab",
+    // "Cannon",
+    // "CarPump",
+    // "TrashSort",
+    // "ColorPasscode",
+    // "HideFromCat",
+    // "HitTheButton",
+    // "BetweenSpace",
+    // 'TugOWar',
+    // 'WhereisWilly',
+    'GameOver'
+];
 
 export default class newCutScreen extends Phaser.Scene {
     // Game Class Constructor

@@ -52,9 +52,9 @@ const config = {
     gamepad: true
   },
   scene: [
-    fruitBasket,
     newCutScreen,
     MainMenu,
+    fruitBasket,
     Timer,
     WhereisWilly,
     MarcyMunch,
