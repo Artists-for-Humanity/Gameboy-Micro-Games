@@ -26,7 +26,6 @@ import CircleJump from "./TeamInflation/CircleJump";
 import Factory from "./Fairway/factoryScripts/factoryScenes/Factory";
 import HiScoreScene from "./Hi-Score";
 import WhereisWilly from "./8Bitties/Where'sWilly.js";
-import CatMaze from "./Team Notateam/CatMaze.js";
 // Set configuration for phaser game instance
 const juice = new phaserJuice(this);
 
@@ -52,7 +51,6 @@ const config = {
   scene: [
     MainMenu,
     CutScreen,
-    CatMaze,
     WhereisWilly,
     Timer,
     MarcyMunch,

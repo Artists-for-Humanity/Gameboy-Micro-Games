@@ -200,7 +200,7 @@ export default class FrogJump extends Phaser.Scene {
     generatePlatform(level) {
         this.platforms = this.physics.add.staticGroup();
         if (level === 0) {
-            console.log('Map 0');
+
             this.platforms.create(500, 450, 'platform').setScale(0.2).refreshBody();
             this.platforms.create(720, 250, 'platform').setScale(0.2).refreshBody();
             this.platforms.create(0, 30, "platform").setScale(1.5, 0.2).refreshBody();
@@ -208,7 +208,7 @@ export default class FrogJump extends Phaser.Scene {
             this.fly = this.physics.add.sprite(150, -5, 'fly').setScale(0.2, 0.2);
             this.delayTime = 10000;
         } else if (level === 1) {
-            console.log('Map 1');
+            console.log('reach me 01');
             this.platforms.create(680, 450, 'platform').setScale(0.2).refreshBody();
             this.platforms.create(535, 250, 'platform').setScale(0.2).refreshBody();
             this.platforms.create(250, 150, "platform").setScale(0.2).refreshBody();
@@ -221,7 +221,8 @@ export default class FrogJump extends Phaser.Scene {
             this.fly = this.physics.add.sprite(900, 40, 'fly').setScale(0.2, 0.2);
             this.delayTime = 13000;
         } else {
-            console.log('Map 2');
+            console.log('reach me 02');
+
             this.platforms.create(40, 450, 'platform').setScale(0.2).refreshBody();
             this.platforms.create(800, 430, 'platform').setScale(0.2).refreshBody();
             this.platforms.create(1040, 200, 'platform').setScale(0.2).refreshBody();
