@@ -10,12 +10,12 @@ export default class fruitBasket extends Phaser.Scene {
       active: false,
       visible: false,
     });
-    this.leftCloud;
+    this.gameOver = false;
     this.victory = true;
     this.sent = false;
     this.fruits = new Array(4);
     this.fruitsIn = false;
-    this.touchDown = false;
+    this.touchDown = 0;
     this.fallingFruit = 0;
     this.Basket;
     this.buttonHandlers = new ButtonPressHandlers();
@@ -63,6 +63,7 @@ export default class fruitBasket extends Phaser.Scene {
     );
   }
   create() {
+    this.gameBools()
     this.makeAnims();
     this.addBaseAssets();
     this.cloudAnims();
@@ -82,7 +83,6 @@ export default class fruitBasket extends Phaser.Scene {
       if (!this.gamePad) this.startGamePad();
       this.spawnFruits();
       this.fruitsAction();
-      this.winCon();
     }
 
     if (this.gameOver && !this.sent) {
@@ -92,13 +92,8 @@ export default class fruitBasket extends Phaser.Scene {
     }
   }
   winCon() {
-    if(this.fruitsIn === true){
-    // if(Phaser.Geom.Intersects.GetRectangleToRectangle(this.fruits[this.fallingFruit], this.fruitBasket)){
-    //   this.Basket.anims.play('wobble');
-    //   this.fallingFruit+= 1;
-    //   this.fruits[this.fallingFruit -1 ].destroy()
-    // }
-    console.log(this.fruits[this.fallingFruit].y);}
+    this.fruitsIn = false;
+    this.gameOver = true;
   }
   startGamePad() {
     if (this.input.gamepad.total) {
@@ -124,19 +119,24 @@ export default class fruitBasket extends Phaser.Scene {
   moveBasket(x) {
     if (x === -1) {
       this.basket.setVelocityX(-350);
-
     }
     if (x === 1) {
       this.basket.setVelocityX(350);
-
     }
     if (x === 0) {
       this.basket.setVelocityX(0);
-
     }
   }
   fruitsAction() {
-    if (this.fruitsIn === true) {
+    if ((this.gameOver === false) & (this.fruitsIn === true)) {
+      if (
+        Phaser.Geom.Intersects.RectangleToRectangle(
+          this.basket.body,
+          this.fruits[this.fallingFruit].body
+        )
+      ) {
+        this.nextFruit();
+      }
       this.fruits[this.fallingFruit].visible = true;
       if (this.fruits[this.fallingFruit].y < 680) {
         this.fruits[this.fallingFruit].y += 5;
@@ -145,7 +145,15 @@ export default class fruitBasket extends Phaser.Scene {
       }
     }
   }
-
+  nextFruit() {
+    console.log('touchdown')
+    this.touchDown += 1;
+    if (this.touchDown === 4) {
+      this.winCon();
+    }else{
+    this.fallingFruit += 1;
+    this.fruits[this.fallingFruit - 1].destroy();}
+  }
   defeted() {
     this.victory = false;
     this.gameOver = true;
@@ -180,6 +188,17 @@ export default class fruitBasket extends Phaser.Scene {
       [],
       this
     );
+  }
+  gameBools(){
+    this.gameOver = false;
+    this.victory = true;
+    this.sent = false;
+    this.fruits = new Array(4);
+    this.fruitsIn = false;
+    this.touchDown = 0;
+    this.fallingFruit = 0;
+    this.Basket;
+    this.buttonHandlers = new ButtonPressHandlers();
   }
   makeAnims() {
     this.anims.create({
