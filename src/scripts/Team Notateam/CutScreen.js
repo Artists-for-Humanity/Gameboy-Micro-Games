@@ -8,13 +8,15 @@ const L_START = -L_END;
 const R_START = 5 * L_END;
 
 const listOfGames = [
+    'CatMaze',
+    // 'WhereisWilly',
+    "FlySwat",
     'MarcyMunch',
     'CircleJump',
     'SockToss',
     "Lowest",
     "FrogJump",
     "DrinkPour",
-    "FlySwat",
     "Emeowgency",
     "ColorLab",
     "Cannon",
@@ -25,7 +27,6 @@ const listOfGames = [
     "HitTheButton",
     "BetweenSpace",
     'TugOWar',
-    'WhereisWilly',
     'GameOver'];
 
 export default class CutScreen extends Phaser.Scene {
@@ -96,7 +97,7 @@ export default class CutScreen extends Phaser.Scene {
         this.load.image('num_plate', new URL('assets/num_plate.png', import.meta.url).href);
         this.load.image('l_door', new URL('assets/l_door.png', import.meta.url).href);
         this.load.image('r_door', new URL('assets/r_door.png', import.meta.url).href);
-
+        //this.load.image('run away!', new URL('../textPrompts/toss.png', import.meta.url).href);
         this.load.image('toss!', new URL('../textPrompts/toss.png', import.meta.url).href);
         this.load.image('catch!', new URL('../textPrompts/Catch_Text.png', import.meta.url).href);
         this.load.image('pour!', new URL('../textPrompts/pourtext.png', import.meta.url).href);
@@ -525,6 +526,9 @@ export default class CutScreen extends Phaser.Scene {
         this.currentScene = listOfGames[this.roundNumber];
         let s;
         switch (this.currentScene) {
+            case "CatMaze":
+                s = "run away!";
+                break;
             case "Lowest":
                 s = 'pick the lowest!';
                 break;
