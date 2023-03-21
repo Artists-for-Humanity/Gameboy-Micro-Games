@@ -11,7 +11,7 @@ export default class fruitBasket extends Phaser.Scene {
       visible: false,
     });
     this.gameOver = false;
-    this.victory = true;
+    this.victory = false;
     this.sent = false;
     this.fruits = new Array(4);
     this.fruitsIn = false;
@@ -19,6 +19,7 @@ export default class fruitBasket extends Phaser.Scene {
     this.fallingFruit = 0;
     this.Basket;
     this.buttonHandlers = new ButtonPressHandlers();
+    this.started = false;
   }
   preload() {
     this.load.image(
@@ -94,6 +95,7 @@ export default class fruitBasket extends Phaser.Scene {
   winCon() {
     this.fruitsIn = false;
     this.gameOver = true;
+    this.victory = true; 
   }
   startGamePad() {
     if (this.input.gamepad.total) {
@@ -149,6 +151,7 @@ export default class fruitBasket extends Phaser.Scene {
     console.log('touchdown')
     this.touchDown += 1;
     if (this.touchDown === 4) {
+      this.fruits[this.fallingFruit].visible = false;
       this.winCon();
     }else{
     this.fallingFruit += 1;
@@ -197,8 +200,9 @@ export default class fruitBasket extends Phaser.Scene {
     this.fruitsIn = false;
     this.touchDown = 0;
     this.fallingFruit = 0;
-    this.Basket;
     this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null
+    this.started = false;
   }
   makeAnims() {
     this.anims.create({
