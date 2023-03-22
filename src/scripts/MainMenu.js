@@ -70,13 +70,15 @@ export default class MainMenu extends Phaser.Scene {
     this.load.spritesheet('score', new URL('gameAssets/score_btn.png', import.meta.url).href,
       { frameWidth: 239, frameHeight: 117 });
     this.load.image('finger', new URL('gameAssets/finger.png', import.meta.url).href);
+    this.load.image('endless', new URL ('gameAssets/EButton_Large.png', import.meta.url).href);
+
   }
 
   create() {
     this.resetMainMenu();
     this.add.image(X / 2, Y / 2, "bg1");
     this.btns.push(this.physics.add.sprite(X / 8, Y * .90, 'play'));
-    this.btns.push(this.physics.add.sprite(4*X/8, Y * .9, 'score'));
+    this.btns.push(this.physics.add.image(4*X/8, Y * .9, 'endless').setScale(.45));
     this.btns.push(this.physics.add.sprite(7 * X / 8, Y * .90, 'score'));
     
 
@@ -149,8 +151,10 @@ keyBoardInputs(){
 
   updateSelection(input) {
      
-    // console.log('this.btns: ',this.btns[this.fingerPos].anims.stop().setFrame(0))
+    // console.log(this.fingerPos)
+    if(this.fingerPos != 1){
     this.btns[this.fingerPos].anims.stop().setFrame(0);
+    }
       //left
     if (input === -1) {
       this.fingerPos === 0 ? this.fingerPos = this.btns.length - 1 : this.fingerPos--;
@@ -161,7 +165,9 @@ keyBoardInputs(){
     }
 
     this.fingerIcon.x = this.btns[this.fingerPos].x;
+    if(this.fingerPos != 1){
     this.btns[this.fingerPos].anims.play(this.animations[this.fingerPos]);
+    }
   }
 
   buttonEvents() {

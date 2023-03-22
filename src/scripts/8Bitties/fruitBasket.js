@@ -165,7 +165,7 @@ export default class fruitBasket extends Phaser.Scene {
     if (this.fruitsIn === false) {
       for (let i = 0; i < this.fruits.length; i++) {
         this.frameNumber = Math.floor(Math.random() * 4);
-        const Xpostion = Math.floor(Phaser.Math.Between(120, 980));
+        const Xpostion = Math.floor(Phaser.Math.Between(180, 920));
         this.fruits[i] = this.physics.add
           .sprite(Xpostion, 120, "8B7_FRUITS")
           .setFrame(this.frameNumber);
