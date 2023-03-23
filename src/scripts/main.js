@@ -45,7 +45,7 @@ const config = {
       gravity: {
         y: 0,
       },
-      debug: true,
+      debug: false,
     },
   },
   input: {
@@ -64,7 +64,7 @@ const config = {
     BetweenSpace,
     CircleJump,
     Lowest,
-    Factory,
+    Factory, 
     FrogJump,
     TugOWar,
     FlySwat,

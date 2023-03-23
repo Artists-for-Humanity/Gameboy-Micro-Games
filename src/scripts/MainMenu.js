@@ -68,6 +68,10 @@ export default class MainMenu extends Phaser.Scene {
       new URL("gameAssets/greenGradiant.png", import.meta.url).href
     );
     this.load.image(
+      "green2",
+      new URL("gameAssets/solidGreen.png", import.meta.url).href
+    );
+    this.load.image(
       "bg1",
       new URL("globalAssets/title_screen.png", import.meta.url).href
     );
@@ -100,7 +104,7 @@ export default class MainMenu extends Phaser.Scene {
     );
     this.btns.push(this.physics.add.sprite((7 * X) / 8, Y * 0.9, "score"));
     this.greenSlip = this.add
-      .image(this.btns[0].x, this.btns[0].y, "green1")
+      .image(this.btns[0].x, this.btns[0].y, "green2")
       .setScale(0.4);
 
     this.fingerIcon = this.add
