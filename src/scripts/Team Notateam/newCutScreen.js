@@ -27,7 +27,7 @@ const listOfGames = [
     "BetweenSpace",
     'TugOWar',
     'WhereisWilly',
-    'GameOver'
+    'GameOver',
 ];
 
 export default class newCutScreen extends Phaser.Scene {
@@ -48,8 +48,7 @@ export default class newCutScreen extends Phaser.Scene {
         this.currentScene = "MarcyMunch";
         this.roundNumber = 0;
         this.pass = 'neutral'
-        this.gameOrder = new Array(listOfGames.length)
-
+        this.gameOrder = new Array(listOfGames.length -1)
         this.close_timer = 0;
         this.life_total = 5;
         this.closed = false;
@@ -365,7 +364,7 @@ export default class newCutScreen extends Phaser.Scene {
 
     // Runs every time "doors" finish closing
     closecon() {
-        console.log("Before Running gameOrder is?: ", this.gameOrder)
+        // console.log("Before Running gameOrder is?: ", this.gameOrder)
         console.log("Round ", this.roundNumber);
 
         // if (this.currentScene === 'CircleJump') {
@@ -399,6 +398,8 @@ export default class newCutScreen extends Phaser.Scene {
             this.scene.stop('Timer');
             // console.log(this.globalState.scores);
         }
+        // console.log(this.currentScene)
+
         this.scene.run(this.currentScene);
         console.log(this.currentScene + " should be running...");
 
@@ -417,7 +418,7 @@ export default class newCutScreen extends Phaser.Scene {
     }
 
     endCurrentGame() {
-        console.log(this.currentScene);
+        // console.log(this.currentScene);
         this.scene.stop(this.currentScene);
     }
     buildObjects() {
@@ -561,12 +562,13 @@ export default class newCutScreen extends Phaser.Scene {
                 this.shuffleGameOrder();
                 this.roundNumber = 0;
                 console.log('shuffling ...')
-                console.log('GameOrder:', this.gameOrder)
+                // console.log('GameOrder:', this.gameOrder)
             }else{
-            this.currentScene = listOfGames[this.gameOrder[this.roundNumber]]
+            this.currentScene = listOfGames[this.gameOrder[this.roundNumber]];
+            // console.log(this.currentScene, 'is the current scene')
             }
-        }
-        this.currentScene = listOfGames[this.roundNumber];
+        }else{
+        this.currentScene = listOfGames[this.roundNumber];}
         let s;
         switch (this.currentScene) {
             case "Lowest":
@@ -660,7 +662,7 @@ export default class newCutScreen extends Phaser.Scene {
                 this.gameOrder[i] = this.rand;
                 this.pass = 'neutral';
             }
-            console.log('game number: ', this.gameOrder[i])
+            // console.log('game number: ', this.gameOrder[i])
 
         }
     }
