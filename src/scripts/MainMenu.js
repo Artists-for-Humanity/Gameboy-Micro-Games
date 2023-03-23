@@ -1,6 +1,5 @@
-
-import ButtonPressHandlers from './ButtonPressHandlers';
-import phaserJuice from './phaserJuice';
+import ButtonPressHandlers from "./ButtonPressHandlers";
+import phaserJuice from "./phaserJuice";
 import eventsCenter from "./EventsCenter";
 import HiScoreScene from "./Hi-Score";
 const X = 1080;
@@ -12,7 +11,7 @@ export default class MainMenu extends Phaser.Scene {
     super({
       active: false,
       visible: false,
-      key: 'MainMenu',
+      key: "MainMenu",
     });
     // console.log("Running Constructor");
 
@@ -37,12 +36,12 @@ export default class MainMenu extends Phaser.Scene {
     this.sent = false;
 
     this.wobbleDir = false;
-
+    this.alphaVal = false;
     this.wobbleTimer = 0;
 
     this.buttonHandlers;
     this.gamePad = null;
-
+    this.pass = true;
     this.high = HiScoreScene;
   }
 
@@ -62,27 +61,51 @@ export default class MainMenu extends Phaser.Scene {
       "HitTheButton",
       "TugOWar",
       "FlySwat",
-      "DrinkPour"];
-
-    this.load.image('bg1', new URL('globalAssets/title_screen.png', import.meta.url).href);
-    this.load.spritesheet('play', new URL('gameAssets/play_btn.png', import.meta.url).href,
-      { frameWidth: 239, frameHeight: 117 });
-    this.load.spritesheet('score', new URL('gameAssets/score_btn.png', import.meta.url).href,
-      { frameWidth: 239, frameHeight: 117 });
-    this.load.image('finger', new URL('gameAssets/finger.png', import.meta.url).href);
-    this.load.image('endless', new URL('gameAssets/EButton_Large.png', import.meta.url).href);
-
+      "DrinkPour",
+    ];
+    this.load.image(
+      "green1",
+      new URL("gameAssets/greenGradiant.png", import.meta.url).href
+    );
+    this.load.image(
+      "bg1",
+      new URL("globalAssets/title_screen.png", import.meta.url).href
+    );
+    this.load.spritesheet(
+      "play",
+      new URL("gameAssets/play_btn.png", import.meta.url).href,
+      { frameWidth: 239, frameHeight: 117 }
+    );
+    this.load.spritesheet(
+      "score",
+      new URL("gameAssets/score_btn.png", import.meta.url).href,
+      { frameWidth: 239, frameHeight: 117 }
+    );
+    this.load.image(
+      "finger",
+      new URL("gameAssets/finger.png", import.meta.url).href
+    );
+    this.load.image(
+      "endless",
+      new URL("gameAssets/EButton_Large.png", import.meta.url).href
+    );
   }
 
   create() {
     this.resetMainMenu();
     this.add.image(X / 2, Y / 2, "bg1");
-    this.btns.push(this.physics.add.sprite(X / 8, Y * .90, 'play'));
-    this.btns.push(this.physics.add.image(4 * X / 8, Y * .9, 'endless').setScale(.45));
-    this.btns.push(this.physics.add.sprite(7 * X / 8, Y * .90, 'score'));
+    this.btns.push(this.physics.add.sprite(X / 8, Y * 0.9, "play"));
+    this.btns.push(
+      this.physics.add.image((4 * X) / 8, Y * 0.9, "endless").setScale(0.45)
+    );
+    this.btns.push(this.physics.add.sprite((7 * X) / 8, Y * 0.9, "score"));
+    this.greenSlip = this.add
+      .image(this.btns[0].x, this.btns[0].y, "green1")
+      .setScale(0.4);
 
-
-    this.fingerIcon = this.add.image(this.btns[0].x, this.btns[0].y - 117, 'finger').setRotation(Math.PI / 2);
+    this.fingerIcon = this.add
+      .image(this.btns[0].x, this.btns[0].y - 117, "finger")
+      .setRotation(Math.PI / 2);
 
     this.left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
 
@@ -92,37 +115,33 @@ export default class MainMenu extends Phaser.Scene {
     this.action = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
-    this.animationBuilder();
-    // console.log("FingerPos = " + this.fingerPos);
-    // console.log("btns length = " + this.btns.length);
-    // console.log("animations length = " + this.animations.length);
-
-    this.btns[this.fingerPos].anims.play(this.animations[this.fingerPos]);
 
     this.juice = new phaserJuice(this);
   }
 
   update() {
-    this.verticalWobble(this.fingerIcon, .5, 4);
+    this.verticalWobble(this.fingerIcon, 0.8, 4);
+    this.alterOppacity(this.greenSlip, 5 / 250);
+
     this.buttonHandlers.update();
     if (!this.gamePad) this.startGamePad();
     if (!this.gamePad) this.makeKeyboardKeys();
-
   }
 
   makeKeyboardKeys() {
     this.left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-    this.right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-    this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    this.right = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.RIGHT
+    );
+    this.space = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.SPACE
+    );
     this.keyBoardInputs();
-
   }
   keyBoardInputs() {
     if (Phaser.Input.Keyboard.JustDown(this.left)) this.updateSelection(-1);
     if (Phaser.Input.Keyboard.JustDown(this.right)) this.updateSelection(1);
     if (Phaser.Input.Keyboard.JustDown(this.space)) this.buttonEvents();
-
-
   }
   startGamePad() {
     if (this.input.gamepad.total) {
@@ -132,52 +151,51 @@ export default class MainMenu extends Phaser.Scene {
     }
   }
 
-
   initGamePad() {
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === -1, () => this.updateSelection(-1));
-    this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 1, () => this.updateSelection(1));
-    this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.buttonEvents(); });
-
+    this.buttonHandlers.addPad(
+      () => this.gamePad.leftStick.x === -1,
+      () => this.updateSelection(-1)
+    );
+    this.buttonHandlers.addPad(
+      () => this.gamePad.leftStick.x === 1,
+      () => this.updateSelection(1)
+    );
+    this.buttonHandlers.addPad(
+      () => this.gamePad.buttons[0].pressed,
+      () => {
+        this.buttonEvents();
+      }
+    );
   }
-
-
 
   verticalWobble(obj, amount, speed) {
     this.wobbleTimer += speed;
     if (this.wobbleTimer % 100 === 0) {
       this.wobbleDir = !this.wobbleDir;
     }
-    this.wobbleDir ? obj.y += amount : obj.y -= amount;
+    this.wobbleDir ? (obj.y += amount) : (obj.y -= amount);
   }
 
-
   updateSelection(input) {
-
-    // console.log(this.fingerPos)
-    if (this.fingerPos != 1) {
-      this.btns[this.fingerPos].anims.stop().setFrame(0);
-    } else {
-      this.juice.fadeInOut(this.btns[this.fingerPos], null, true)
-    }
     //left
     if (input === -1) {
-      this.fingerPos === 0 ? this.fingerPos = this.btns.length - 1 : this.fingerPos--;
+      this.fingerPos === 0
+        ? (this.fingerPos = this.btns.length - 1)
+        : this.fingerPos--;
     }
     //right
     if (input === 1) {
-      this.fingerPos === this.btns.length - 1 ? this.fingerPos = 0 : this.fingerPos++;
+      this.fingerPos === this.btns.length - 1
+        ? (this.fingerPos = 0)
+        : this.fingerPos++;
     }
 
     this.fingerIcon.x = this.btns[this.fingerPos].x;
-    if (this.fingerPos != 1) {
-      this.btns[this.fingerPos].anims.play(this.animations[this.fingerPos]);
-    } else {
-      this.juice.fadeInOut(this.btns[this.fingerPos])
-    }
+    this.greenSlip.x = this.btns[this.fingerPos].x;
   }
 
   buttonEvents() {
-    console.log(this.fingerPos)
+    console.log(this.fingerPos);
     switch (this.fingerPos) {
       case 0: // Play
         this.playGame();
@@ -189,8 +207,8 @@ export default class MainMenu extends Phaser.Scene {
         break;
       case 2: // Scores
         // this.resetMainMenu();
-        this.scene.stop('MainMenu');
-        this.scene.start('HiScoreScene');
+        this.scene.stop("MainMenu");
+        this.scene.start("HiScoreScene");
 
       default:
         break;
@@ -198,14 +216,14 @@ export default class MainMenu extends Phaser.Scene {
   }
   playEndless() {
     if (!this.sent) {
-      eventsCenter.emit('start-endless');
+      eventsCenter.emit("start-endless");
       this.sent = true;
     }
   }
   playGame() {
     if (!this.sent) {
-      console.log('cutscreenrunning .... ');
-      eventsCenter.emit('start-normal');
+      console.log("cutscreenrunning .... ");
+      eventsCenter.emit("start-normal");
       //this.globalState.sendMessage(true)
       this.sent = true;
     }
@@ -213,17 +231,39 @@ export default class MainMenu extends Phaser.Scene {
 
   resetMainMenu() {
     this.btns = [];
+    this.opac = 0.5;
     this.animations = [];
     this.fingerPos = 0;
     this.left;
+    // this.int = 0;
     this.right;
+    // this.pass = true;
     this.action;
     this.buttonHandlers = new ButtonPressHandlers();
     this.sent = false;
     this.wobbleDir = false;
     this.wobbleTimer = 0;
     this.gamePad = null;
-
+    // this.toggle = true;
+    this.alphaVal = false;
+    this.alphaTimer = false;
+    this.sign = true;
+  }
+  alterOppacity(obj, speed) {
+    if (this.sign === true) {
+      obj.setAlpha(this.opac);
+      this.opac -= speed;
+      if (this.opac <= 0) {
+        this.sign = false;
+      }
+    }
+    if (this.sign === false) {
+      obj.setAlpha(this.opac);
+      this.opac += speed;
+      if (this.opac >= 0.5) {
+        this.sign = true;
+      }
+    }
   }
   animationBuilder() {
     this.animations.push(
