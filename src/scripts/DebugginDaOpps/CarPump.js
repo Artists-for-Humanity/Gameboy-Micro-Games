@@ -81,6 +81,7 @@ export default class CarPump extends Phaser.Scene {
   }
 
   create() {
+    this.resetCarPump()
     this.add.image(1080 / 2, 720 / 2, "DO2_pumpgame_bg");
     this.lever = this.physics.add.sprite(955, 480, "DO2_lever");
     this.car = this.add.image(540, 350, "DO2_car");
@@ -112,6 +113,21 @@ export default class CarPump extends Phaser.Scene {
     this.createAnimations();
     eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer'); });
 
+  }
+  resetCarPump(){
+    this.gameStarted = false;
+    this.gameOver = false;
+    this.gameState = true;
+    this.victory = false;
+    this.sent = false;
+    this.started = false;
+    this.carpumpTimer = 0;
+    this.playerPumps = 0;
+    this.downInt = 0;
+    this.inflateInt = 0;
+    this.endgameTimer = 0;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
   }
 
   update(time, delta) {

@@ -8,27 +8,29 @@ const L_START = -L_END;
 const R_START = 5 * L_END;
 
 const listOfGames = [
-    // 'MarcyMunch',
-    // 'CircleJump',
-    // 'SockToss',
-    // "Lowest",
-    // "FrogJump",
-    // "DrinkPour",
-    // "FlySwat",
-    // "Emeowgency"not working,
-    // "ColorLab",
-    // "Cannon",
-    // "CarPump",
-    // "TrashSort",
-    // "ColorPasscode",
-    // "HideFromCat",
-    // "HitTheButton",
-    // "BetweenSpace",
-    // 'TugOWar',
-    // 'WhereisWilly',
-    'GameOver'];
+    'fruitBasket',
+    'MarcyMunch',
+    'CircleJump',
+    'SockToss',
+    "Lowest",
+    "FrogJump",
+    "DrinkPour",
+    "FlySwat",
+    "Emeowgency",
+    "ColorLab",
+    "Cannon",
+    "CarPump",
+    "TrashSort",
+    "ColorPasscode",
+    "HideFromCat",
+    "HitTheButton",
+    "BetweenSpace",
+    'TugOWar',
+    'WhereisWilly',
+    'GameOver'
+];
 
-export default class CutScreen extends Phaser.Scene {
+export default class newCutScreen extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
         super({
@@ -43,15 +45,16 @@ export default class CutScreen extends Phaser.Scene {
             }
         });
 
-        this.currentScene = "MainMenu";
+        this.currentScene = "MarcyMunch";
         this.roundNumber = 0;
-
+        this.pass = 'neutral'
+        this.gameOrder = new Array(listOfGames.length)
 
         this.close_timer = 0;
         this.life_total = 5;
         this.closed = false;
         this.open = false;
-
+        this.endless = false;
         this.lost = false;
         // this.score = -1;
 
@@ -114,15 +117,30 @@ export default class CutScreen extends Phaser.Scene {
     }
 
     create() {
-
         this.setCutScreen();
         this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-
+        this.scene.run('MainMenu');
+        this.scene.sendToBack('MainMenu')
         this.buildAnimations();
         this.buildObjects();
         this.setScore(this.globalState.scores);
 
         eventsCenter.on('game-end', this.closeDoor, this);
+        eventsCenter.on('start-normal', () => {
+            this.closed = false;
+            setTimeout(() => {
+            if (this.scene.isActive('MainMenu'))
+            this.scene.stop('MainMenu')});
+        }, 2000);
+        eventsCenter.on('start-endless', () => {
+            this.shuffleGameOrder();
+            this.closed = false;
+            setTimeout(() => {
+            if (this.scene.isActive('MainMenu'))
+            this.scene.stop('MainMenu')});
+        }, 2000);
+        this.endless = true;
+
     }
     update() {
 
@@ -347,7 +365,7 @@ export default class CutScreen extends Phaser.Scene {
 
     // Runs every time "doors" finish closing
     closecon() {
-
+        console.log("Before Running gameOrder is?: ", this.gameOrder)
         console.log("Round ", this.roundNumber);
 
         // if (this.currentScene === 'CircleJump') {
@@ -369,13 +387,9 @@ export default class CutScreen extends Phaser.Scene {
     endCurrentScene(){
         if (this.roundNumber > 0) {
             this.endCurrentGame();
-        } else {
-            if (this.scene.isActive('MainMenu'))
-                this.scene.stop('MainMenu');
-        }
+        } 
     }
     startNextScene() {
-
         // Life total is less than or equal to one, game ends.
         this.life_total > 1 ? this.setCurrentScene() : this.currentScene = 'GameOver';
 
@@ -385,7 +399,6 @@ export default class CutScreen extends Phaser.Scene {
             this.scene.stop('Timer');
             // console.log(this.globalState.scores);
         }
-
         this.scene.run(this.currentScene);
         console.log(this.currentScene + " should be running...");
 
@@ -539,9 +552,21 @@ export default class CutScreen extends Phaser.Scene {
         // Reset game timer
         eventsCenter.emit('reset_timer');
     }
-
     setCurrentScene() {
-        this.currentScene = listOfGames[0];
+        //will only run when endless is selected
+        if(this.endless === true){
+            if(this.roundNumber === this.gameOrder.length ){
+                this.pass = 'neutral'
+                this.gameOrder =  new Array(listOfGames.length-1); 
+                this.shuffleGameOrder();
+                this.roundNumber = 0;
+                console.log('shuffling ...')
+                console.log('GameOrder:', this.gameOrder)
+            }else{
+            this.currentScene = listOfGames[this.gameOrder[this.roundNumber]]
+            }
+        }
+        this.currentScene = listOfGames[this.roundNumber];
         let s;
         switch (this.currentScene) {
             case "Lowest":
@@ -604,13 +629,39 @@ export default class CutScreen extends Phaser.Scene {
     setCutScreen(){
         this.currentScene = "MainMenu";
         this.roundNumber = 0;
-
-
         this.close_timer = 0;
         this.life_total = 5;
-        this.closed = false;
+        this.closed = true;
         this.open = false;
-
         this.lost = false;
+        this.endless = true
+        this.gameOrder = new Array(listOfGames.length -1 )
+        this.rand = 0;
+        this.pass = 'neutral';
+        this.endless = 0;
+    }
+    shuffleGameOrder(){
+        for (let i = 0; i < this.gameOrder.length; i++) {
+            this.rand = Math.floor(Math.random() * this.gameOrder.length); 
+            //cheking if this.rand has an equivilent value inside of game order
+            for (let n = 0; n < this.gameOrder.length; n++) {
+                //is it equal ? make door invalid and stop the cycling, else door is valid and n++;
+               this.rand === this.gameOrder[n] ? this.pass = 'invalid' : this.pass = 'valid';
+               if (this.pass === 'invalid') {
+                    break
+                }
+            }
+            if(this.pass === 'invalid'){
+                i--;
+                this.pass = 'neutral';
+            }
+            if(this.pass === 'valid'){
+                // console.log('rnd', this.rand);
+                this.gameOrder[i] = this.rand;
+                this.pass = 'neutral';
+            }
+            console.log('game number: ', this.gameOrder[i])
+
+        }
     }
 }

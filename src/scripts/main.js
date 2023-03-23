@@ -1,12 +1,12 @@
 // Add imports for phaser library, scenes, and plugins
 import Phaser from "phaser";
-import phaserJuice from "./phaserJuice.js";
 import GlobalState from "./GlobalState";
 import GameOver from "./GameOver";
 import Emeowgency from "./8Bitties/Emeowgency";
 import ColorLab from "./8Bitties/ColorLab";
 import CarPump from "./DebugginDaOpps/CarPump";
 import TrashSort from "./DebugginDaOpps/TrashSort";
+import phaserJuice from "./phaserJuice.js";
 import Cannon from "./DebugginDaOpps/Cannon";
 import Lowest from "./TeamInflation/Lowest";
 import FrogJump from "./TeamInflation/FrogJump";
@@ -26,6 +26,9 @@ import CircleJump from "./TeamInflation/CircleJump";
 import Factory from "./Fairway/factoryScripts/factoryScenes/Factory";
 import HiScoreScene from "./Hi-Score";
 import WhereisWilly from "./8Bitties/Where'sWilly.js";
+import EndlessCutScreen from "./Team Notateam/newCutScreen.js";
+import newCutScreen from "./Team Notateam/newCutScreen.js";
+import fruitBasket from "./8Bitties/fruitBasket.js";
 // Set configuration for phaser game instance
 const juice = new phaserJuice(this);
 
@@ -34,7 +37,7 @@ const config = {
   width: 1080,
   height: 720,
   transparent: false,
-  backgroundColor: "#4488aa",
+  backgroundColor: "black",
 
   // Add physics, arcade, scene, and audio
   physics: {
@@ -50,10 +53,11 @@ const config = {
     gamepad: true
   },
   scene: [
+    newCutScreen,
     MainMenu,
-    CutScreen,
-    WhereisWilly,
+    fruitBasket,
     Timer,
+    WhereisWilly,
     MarcyMunch,
     SockToss,
     CarPump,
@@ -61,7 +65,7 @@ const config = {
     BetweenSpace,
     CircleJump,
     Lowest,
-    Factory,
+    Factory, 
     FrogJump,
     TugOWar,
     FlySwat,
