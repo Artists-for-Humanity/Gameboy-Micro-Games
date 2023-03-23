@@ -38,6 +38,7 @@ const config = {
   height: 720,
   transparent: false,
   backgroundColor: "black",
+
   // Add physics, arcade, scene, and audio
   physics: {
     default: "arcade",
@@ -81,6 +82,7 @@ const config = {
   audio: {
     disableWebAudio: true,
   },
+
   plugins: {
     global: [{
       key: "GlobalState",
