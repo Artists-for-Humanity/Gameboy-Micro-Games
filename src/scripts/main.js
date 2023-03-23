@@ -37,7 +37,7 @@ const config = {
   width: 1080,
   height: 720,
   transparent: false,
-  backgroundColor: "#4488aa",
+  backgroundColor: "black",
   // Add physics, arcade, scene, and audio
   physics: {
     default: "arcade",

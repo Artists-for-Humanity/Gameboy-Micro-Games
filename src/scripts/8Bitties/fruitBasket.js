@@ -70,6 +70,7 @@ export default class fruitBasket extends Phaser.Scene {
     this.cloudAnims();
     this.spawnFruits();
     this.basket = this.physics.add.sprite(w / 2, h * 0.875, "8B7_baskets");
+    this.basket.body.setSize( 200,90,);
 
     eventsCenter.on("start_game", () => {
       this.started = true;
@@ -154,6 +155,7 @@ export default class fruitBasket extends Phaser.Scene {
       this.fruits[this.fallingFruit].visible = false;
       this.winCon();
     }else{
+    this.basket.anims.play('wobble')
     this.fallingFruit += 1;
     this.fruits[this.fallingFruit - 1].destroy();}
   }
@@ -170,6 +172,7 @@ export default class fruitBasket extends Phaser.Scene {
           .sprite(Xpostion, 120, "8B7_FRUITS")
           .setFrame(this.frameNumber);
         this.fruits[i].visible = false;
+        this.fruits[i].body.setSize(79, 77), true;
       }
       this.fruitsIn = true;
     }
@@ -212,7 +215,8 @@ export default class fruitBasket extends Phaser.Scene {
         { key: "8B7_baskets", frame: 1 },
       ],
       frameRate: 5,
-      repeat: 2,
+      repeat: 0,
+      yoyo: true, 
     });
     this.anims.create({
       key: "FruitChoice",
