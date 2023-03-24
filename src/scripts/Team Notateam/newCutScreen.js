@@ -137,8 +137,8 @@ export default class newCutScreen extends Phaser.Scene {
             setTimeout(() => {
             if (this.scene.isActive('MainMenu'))
             this.scene.stop('MainMenu')});
+            this.endless = true;
         }, 2000);
-        this.endless = true;
 
     }
     update() {
