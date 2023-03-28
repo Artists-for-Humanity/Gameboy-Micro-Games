@@ -147,6 +147,7 @@ ColorLabReset(){
   this.victory = false;
   this.gameOver = false;
   this.sent = false;
+  this.lose =false;
   this.started = false;
   this.catchScale = 0;
   this.catchScale = 0;
