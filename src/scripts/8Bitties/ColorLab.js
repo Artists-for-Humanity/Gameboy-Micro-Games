@@ -150,6 +150,23 @@ export default class ColorLab extends Phaser.Scene {
       this.globalState.timerMessage('start_timer');
     });
   }
+ColorLabReset(){
+  this.victory = false;
+  this.gameOver = false;
+  this.sent = false;
+  this.lose =false;
+  this.started = false;
+  this.catchScale = 0;
+  this.catchScale = 0;
+  this.safeScale = 0;
+  this.safeTimer = 0;
+  this.failScale = 0;
+  this.failTimer = 0;
+  this.createImage = false;
+  this.buttonHandlers = new ButtonPressHandlers();
+  this.gamePad = null;
+}
+
 
   update() {
     if (this.gameOver && !this.sent) {
