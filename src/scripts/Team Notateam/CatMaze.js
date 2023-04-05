@@ -12,7 +12,6 @@ export default class CatMaze extends Phaser.Scene {
             key: 'CatMaze',
         });
 
-        this.gameOver = false;
         this.sent = false;
         this.timerStopped = false;
         //this.gamestart = false;
@@ -77,38 +76,41 @@ export default class CatMaze extends Phaser.Scene {
         this.add.image(this.game.config.width / 2, this.game.config.height / 2, 'background');
 
         this.player = this.physics.add.sprite(120, 400, 'player');
-        this.enemy = this.physics.add.sprite(-1620, 400, 'enemy');
+        this.enemy = this.physics.add.sprite(-1700, 400, 'enemy');
         this.star = this.physics.add.sprite(405, 650, 'star');
         
         
         this.walls = this.physics.add.staticGroup();
-        this.walls.create(320, 490, 'void1')
-        this.walls.create(536, 169, 'void2')
-        this.walls.create(751, 319, 'void3')
-        this.walls.create(910, 314, 'void4')
-        this.walls.create(990, 459, 'void5')
-        this.walls.create(1070, 300, 'void6')
-        this.walls.create(250, 714, 'void7')
-        this.walls.create(600, 6, 'void8')
-        this.walls.create(80, 138, 'space1')
-        this.walls.create(80, 690, 'space2')
-        this.walls.create(780, 676, 'space3')
-        this.walls.create(533, 385, 'space4')
-
-        this.player.setCollideWorldBounds(true);
-        // This will work because we need null as the fourth parameter.
-        this.physics.add.collider(this.player, this.walls);
-        this.physics.add.collider(this.enemy, this.walls);
-        this.physics.add.collider(this.player, this.enemy, this.gameLost, null, this);
+        this.walls.create(320, 470, 'void1') //across spawn
+        this.walls.create(536, 169, 'void2') //above space4
+        this.walls.create(751, 319, 'void3') //right of space4 
+        this.walls.create(910, 314, 'void4') //across void3
+        this.walls.create(990, 459, 'void5') //touching void6 
+        this.walls.create(1070, 300, 'void6') //right
+        this.walls.create(250, 714, 'void7') //bottom
+        this.walls.create(600, .05, 'void8') //top
+        this.walls.create(80, 138, 'space1') //top left
+        this.walls.create(80, 690, 'space2') //bottom left
+        this.walls.create(780, 676, 'space3') //bottom right
+        this.walls.create(533, 385, 'space4') //middle
 
         
+        this.player.setCollideWorldBounds(true);
+        // This will work because we need null as the fourth parameter.
+    
+        this.physics.add.collider(this.player, this.walls, this.gameLost, null, this);
+        // this.physics.add.collider(this.player, this.enemy, this.gameLost, null, this);
 
         this.physics.add.overlap(this.player, this.star, this.collectStar, null, this);
 
     }
 
+    
+
+    
+
     update() {
-      this.enemyFollows();
+      // this.enemyFollows();
 
       this.buttonHandlers.update();
         if (!this.gamePad) {
@@ -119,18 +121,7 @@ export default class CatMaze extends Phaser.Scene {
             if (!this.gamePad) this.startGamePad(); 
         }
      
-        // if (this.cursors.left.isDown) {
-        //     this.player.x -= 10;
-        // }
-        // if (this.cursors.right.isDown) {
-        //     this.player.x += 10; 
-        // }
-        // if (this.cursors.up.isDown) {
-        //     this.player.y -= 10;
-        // }
-        // if (this.cursors.down.isDown) {
-        //     this.player.y += 10;
-        // }
+        
 
         if (this.gameOver && !this.sent) {
           eventsCenter.emit('stop_timer');
@@ -139,13 +130,10 @@ export default class CatMaze extends Phaser.Scene {
         };
     }
 
-    printSomething() {
-      
-    }
 
     startGamePad() {
         if (this.input.gamepad.total) {
-      console.log('reachme 01');
+      console.log('reachme 02');
 
             this.gamePad = this.input.gamepad.pad1;
             this.initGamePad();
@@ -153,15 +141,19 @@ export default class CatMaze extends Phaser.Scene {
         }
     }
 
+
     initGamePad() {
         this.buttonHandlers.addPad(() => this.gamePad.leftStick.x < -.5, () => this.movePlayer(-1));
         this.buttonHandlers.addPad(() => this.gamePad.leftStick.x > 0.5, () => this.movePlayer(1));
         this.buttonHandlers.addPad(() => this.gamePad.leftStick.y > 0.5, () => this.movePlayer(-2));
         this.buttonHandlers.addPad(() => this.gamePad.leftStick.y < -0.5, () => this.movePlayer(2));
-        // this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 0, () => this.movePlayer(0));
-        // this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 0, () => this.movePlayer(3));
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 0, () => this.movePlayer(0));
+        this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 0, () => this.movePlayer(3));
       }
-      movePlayer(x) {
+
+
+    movePlayer(x) {
+
         if (x === 2) {
           this.player.setVelocityY(-350);
         }
@@ -174,22 +166,21 @@ export default class CatMaze extends Phaser.Scene {
         if (x === 1) {
           this.player.setVelocityX(350);
         }
-        // if (x === 0) this.player.setVelocityX(0);
-        // if (x === 3) this.player.setVelocityY(0);
-      }
+        if (x === 0){
+          this.player.setVelocityY(0);
+          this.player.setVelocityX(0);
+        }
+    }
 
 
      enemyFollows (sec) {
       this.enemy.setVelocity(1);
       this.physics.moveToObject(this.enemy, this.player, 330);
-      // if (this.enemy.body.velocity.y === 0) {
-      //   this.enemy.body.velocity.x = 10
-
-      // }
     }
 
     gameLost () {
       this.gameOver = true;
+      console.log('You Lose!')
     }
     
 
@@ -197,6 +188,7 @@ export default class CatMaze extends Phaser.Scene {
       this.star.setVisible(false); 
       this.victory = true;
       this.gameOver = true;
+      console.log('You Win!')
     }        
 
 }
