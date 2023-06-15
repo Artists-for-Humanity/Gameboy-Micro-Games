@@ -10,11 +10,13 @@ export default class Yipee extends Phaser.Scene {
       visible: false,
       key: "Yipee",
     });
-    this.boundary;
+    this.started = false;
+    // this.boundary;
+    this.cursor;
     console.log("constructor end");
   }
   preload() {
-    console.log("preload start");
+   console.log("preload start");
    this.load.image("background", new URL('../Team Notateam/YipeeAssets/Ybg.png', import.meta.url).href);
    this.load.image("box", new URL('../Team Notateam/YipeeAssets/box.png', import.meta.url).href);
   console.log("preload end");
@@ -22,9 +24,10 @@ export default class Yipee extends Phaser.Scene {
   create() {
     console.log("create start");
     this.add.image(540, 360, "background");
+    // this.boundary = this.physics.add.sprite(1080-270, 720-180, "box" );
+    this.buttonHandlers = new ButtonPressHandlers();    
+    // this.makeAnims();
     
-    this.makeAnims();
-    this.boundary = this.physics.add.sprite(1080-270, 720-180, "box" );
     this.boundary.setVisible = true;
     console.log("create end");
   }
@@ -52,9 +55,9 @@ export default class Yipee extends Phaser.Scene {
       this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => {if (this.biteCount < 6) this.chewing()});
   }
   
-  makeAnims() {
-    console.log('reachme 00');
-  }
+  // makeAnims() {
+  //   console.log('reachme 00');
+  // }
   
 
 }
