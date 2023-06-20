@@ -27,10 +27,23 @@ export default class Yipee extends Phaser.Scene {
     this.up;
     this.down;
     this.select;
-    // this.curRow;
-    // this.curCol;
+    //this.cursor = {
+    //r: 0;
+    //c: 0;
+    //}
     this.buttonHandlers = new ButtonPressHandlers();
-
+//2d array
+// this.arr = [];
+// for(let i=0; i<3;i++){
+//   for (let j=0; j<5;j++){
+//  if ((i%2===0&&j%2===1||i%2===1&&j%2===0)){
+//   this.arr[i][j]= {
+//     status: "unselect";
+//   }
+//  }
+//   }
+// }
+//
 
     console.log("constructor end");
   }
@@ -65,7 +78,7 @@ export default class Yipee extends Phaser.Scene {
         this.sent = true
       }
     }
-    
+    //add ? : for the hover highlight thingy
   }
 
   // input(i){
@@ -91,31 +104,41 @@ export default class Yipee extends Phaser.Scene {
   }
 
 //  keyInputs(){
-// if()
-
+  // if (Phaser.Input.Keyboard.JustDown(this.up)) this.updateSelection(1);
+  // if (Phaser.Input.Keyboard.JustDown(this.down)) this.updateSelection(2);
+  // if (Phaser.Input.Keyboard.JustDown(this.left)) this.updateSelection(3);
+  // if (Phaser.Input.Keyboard.JustDown(this.right)) this.updateSelection(4);
+  // if (Phaser.Input.Keyboard.JustDown(this.select)) this.click(curRow, curCol);
 
 //   }
-//inputs- 1-4 are movement, 5 is selection
+//inputs- 1-4 are movement
 //  updateInput(i){
 // switch(i){
 //   case 1:
-
+//this.cursor.r-=1;
+// console.log("up");
 //     break;
 //   case 2:
-
+//this.cursor.r+=1;
+//console.log("down");
 //     break;
 //   case 3:
-
+//this.cursor.c-=1;
+//console.log("left");
 //     break;
 //   case 4:
-    
+//this.cursor.c+=1;
+//console.log("right");
 //     break;
-//   case 5:
 
-//     break;
-// }
+// }end of switch statement
 
-// }
+// }end of updateInput
+
+//click(row,col){
+
+//}
+
   startGamePad() {
       if (this.input.gamepad.total) {
           this.gamePad = this.input.gamepad.pad1;
