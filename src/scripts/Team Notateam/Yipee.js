@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import ButtonPressHandlers from '../ButtonPressHandlers';
 import eventsCenter from "../EventsCenter";
-let padding = 20;
+
 let l = 720;
 let w = 1080;
 
@@ -70,28 +70,22 @@ export default class Yipee extends Phaser.Scene {
   }
   initArr(){
     this.arr =[["","",""], ["","",""], ["","",""], ["","",""], ["","",""] ];
-    for(let i=0; i<3;i++){
-      for (let j=0; j<5;j++){
-        if ((i%2===0&&j%2===1||i%2===1&&j%2===0)){
-          if (i%2===0&&j%2===1){
-            this.arr[i][j]= {
-              status: "unselect",
-              orien: "h",
-              //box: this.add.rectangle(w/2,l/2, 200, 100, 'red') ,
-            }
-          }
-          else if (i%2===1&&j%2===0){
-            this.arr[i][j]= {
-            status: "unselect",
-            orien: "v",
-            //box: this.add.rectangle(w/2,l/2, 100, 200, 'gray') ,
-            }
-          }
-        }else{
+    for(let i=0; i<5;i++){
+      for (let j=0; j<3;j++){
+        if (i%2===0&&j%2===1){//h
           this.arr[i][j]= {
-          status: null,
-          orien: null,
-          //box: null
+            status: "unselect",
+            orien: "h",
+            box: this.add.rectangle(w/2, l/2, 100, 50, 0xcdb4db) ,
+            outline: this.add.rectangle(w/2, l/2, 100, 50, 0xa2d2ff, false)
+          }
+        }
+        else if (i%2===1&&j%2===0){
+          this.arr[i][j]= {
+          status: "unselect",
+          orien: "v",
+          box: this.add.rectangle(w/2,l/2, 50, 100, 0xcdb4db) ,
+          outline: this.add.rectangle(w/2, l/2, 50, 100, 0xa2d2ff, false)
           }
         }
       }
@@ -99,11 +93,11 @@ export default class Yipee extends Phaser.Scene {
   }
   
   disArray(){
-    let shortLen = 100;
-    let longLen = 200;
+    let shortLen = 50;
+    let longLen = 100;
     let origin = {
-      x: w-padding-300,
-      y: l-padding-700
+      x: w*(2.4/3),
+      y: l*(1.5/3)
     }
     let location = {
       x: origin.x,
@@ -148,7 +142,6 @@ export default class Yipee extends Phaser.Scene {
   if (Phaser.Input.Keyboard.JustDown(this.left)) this.updateSelection(3);
   if (Phaser.Input.Keyboard.JustDown(this.right)) this.updateSelection(4);
   if (Phaser.Input.Keyboard.JustDown(this.select)) this.click(this.cursor.r, this.cursor.c);
-
   }
   //inputs- 1-4 are movement
  updateInput(i) {
@@ -205,4 +198,14 @@ export default class Yipee extends Phaser.Scene {
   makeAnims() {
     console.log('reachme 00');
   }
+
+
+  // trapezoid (num){
+  //   var faceDown = [
+  //     new Phaser.Math.Vector2(25,50),   // Top-left point
+  //     new Phaser.Math.Vector2(75,50),   // Top-right point
+  //     new Phaser.Math.Vector2(100,0),   // Bottom-right point
+  //     new Phaser.Math.Vector2(0,0)    // Bottom-left point
+  // ];
+  // }
 }
