@@ -72,9 +72,10 @@ export default class Yipee extends Phaser.Scene {
     this.arr =[["","",""], ["","",""], ["","",""], ["","",""], ["","",""] ];
     for(let i=0; i<5;i++){
       for (let j=0; j<3;j++){
+        //status--> 2= on, 1=hover, 0= off,
         if (i%2===0&&j%2===1){//h
           this.arr[i][j]= {
-            status: "unselect",
+            status: 0,
             orien: "h",
             box: this.add.rectangle(w/2, l/2, 100, 50, 0xcdb4db) ,
             outline: this.add.rectangle(w/2, l/2, 100, 50, 0xa2d2ff, false)
@@ -82,7 +83,7 @@ export default class Yipee extends Phaser.Scene {
         }
         else if (i%2===1&&j%2===0){
           this.arr[i][j]= {
-          status: "unselect",
+          status: 0,
           orien: "v",
           box: this.add.rectangle(w/2,l/2, 50, 100, 0xcdb4db) ,
           outline: this.add.rectangle(w/2, l/2, 50, 100, 0xa2d2ff, false)
@@ -145,28 +146,67 @@ export default class Yipee extends Phaser.Scene {
   }
   //inputs- 1-4 are movement
  updateInput(i) {
+  let rLim = this.arr.length-1;
+  let cLim = this.arr[0].length-1;
     switch(i){
       case 1:
-        this.cursor.r-=1;
+        if (this.cursor.r===0){
+          this.cursor.r =rLim;
+        }else{
+          this.cursor.r-=1;
+        }
         console.log("up");
         break;
       case 2:
-        this.cursor.r+=1;
+        if (this.cursor.r===rLim){
+          this.cursor.r =0;
+        }else{
+          this.cursor.r+=1;
+        }
+        if ((this.cursor.r===1&&this.cursor.c===1)||
+          (this.cursor.r===3&&this.cursor.c===1)||
+          (this.cursor.r===2&&this.cursor.c===0)||
+          (this.cursor.r===2&&this.cursor.c===2)){
+          this.cursor.r+=1;
+        }
         console.log("down");
         break;
       case 3:
-        this.cursor.c-=1;
+        if (this.cursor.c===0){
+          this.cursor.c =cLim;
+        }else{
+          this.cursor.c-=1;
+        }
+        if((this.cursor.r===1&&this.cursor.c===1)||
+        (this.cursor.r===3&&this.cursor.c===1)){
+          this.cursor.c-=1;
+        }
         console.log("left");
         break;
       case 4:
-        this.cursor.c+=1;
+        if (this.cursor.c===cLim){
+          this.cursor.c =0;
+        }else{
+          this.cursor.c+=1;
+        }
+        if((this.cursor.r===1&&this.cursor.c===1)||
+        (this.cursor.r===3&&this.cursor.c===1)){
+          this.cursor.c+=1;
+        }
         console.log("right");
         break;
-    }//end of switch statement
-  }//end of updateInput
+    }
+    console.log("row: " + this.cursor.r );
+    console.log("column: " + this.cursor.c);
+  }
 
   click(row,col){
     console.log("clicky click ehhehehehe...");
+    if (this.arr[row][col]!=null){
+      this.arr[row][col].status = 2;
+    }else{
+      this.arr[row][col].status = 0;
+    }
   }
 
   startGamePad(){
@@ -190,16 +230,13 @@ export default class Yipee extends Phaser.Scene {
     this.buttonHandlers.addPad(
       () => this.gamePad.leftStick.x===1, 
       () => this.updateInput(4));
-      this.buttonHandlers.addPad(
-        () => this.gamePad.buttons[0].pressed, 
-        () => this.click(this.cursor.r, this.cursor.c)
-      );
+    this.buttonHandlers.addPad(
+      () => this.gamePad.buttons[0].pressed, 
+      () => this.click(this.cursor.r, this.cursor.c));
   }
   makeAnims() {
     console.log('reachme 00');
   }
-
-
   // trapezoid (num){
   //   var faceDown = [
   //     new Phaser.Math.Vector2(25,50),   // Top-left point
