@@ -250,6 +250,7 @@ export default class Emeowgency extends Phaser.Scene {
     this.shadow = this.physics.add.sprite(position.x, position.y, "8B4_yang");
     this.shadow.alpha = 0.5;
     this.shadow.visible = false;
+    this.shadow.setCircle(30, 15)
   }
 
   spawnBlanket() {
@@ -257,6 +258,7 @@ export default class Emeowgency extends Phaser.Scene {
       .sprite(480, 360, "8B4_blanketSheet")
       .setScale(0.65)
       .setDepth(-10);
+      this.blanket.setBodySize(400,300);
   }
 
   //spawns the cat above the Shadow based on how long shadow takes to get big
