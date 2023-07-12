@@ -1,5 +1,5 @@
-import Phaser from 'phaser';
-import eventsCenter from '../EventsCenter';
+import Phaser from "phaser";
+import eventsCenter from "../EventsCenter";
 const X = 1080;
 const Y = 720;
 const L_END = X / 4;
