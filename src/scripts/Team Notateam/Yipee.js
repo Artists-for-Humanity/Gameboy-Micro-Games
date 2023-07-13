@@ -24,13 +24,18 @@ export default class Yipee extends Phaser.Scene {
       r: 0,
       c: 0,
     };
-    this.buttonHandlers = new ButtonPressHandlers();
+    this.buttonHandlers = new ButtonPressHandlers(); 
     console.log("constructor end");
   }
   preload() {
    console.log("preload start");
-   this.load.image("background", new URL('../Team Notateam/YipeeAssets/Ybg.png', import.meta.url).href);
-   //this.load.image("box", new URL('../Team Notateam/YipeeAssets/box.png', import.meta.url).href);
+   this.load.image("background", new URL('src/scripts/Team Notateam/YipeeAssets/sky(10).png ', import.meta.url).href);
+   this.load.image("cat", new URL('src/scripts/Team Notateam/YipeeAssets/orangeCat copy.png', import.meta.url).href); 
+   this.load.spritesheet("up", new URL('src/scripts/Team Notateam/YipeeAssets/upLimb.png', import.meta.url).href,{ frameWidth:679/4, frameHeight:42 });
+   this.load.spritesheet("down", new URL('src/scripts/Team Notateam/YipeeAssets/downLimb.png', import.meta.url).href,{ frameWidth:679/4, frameHeight:42});
+   this.load.spritesheet("left", new URL('src/scripts/Team Notateam/YipeeAssets/leftLimb.png', import.meta.url).href,{ frameWidth:168/4, frameHeight:169});
+   this.load.spritesheet("right", new URL('src/scripts/Team Notateam/YipeeAssets/rightLimb.png', import.meta.url).href,{ frameWidth:168/4, frameHeight:169});
+   this.load.spritesheet("center", new URL('src/scripts/Team Notateam/YipeeAssets/centerLimb.png', import.meta.url).href,{ frameWidth:636/4, frameHeight:41});
    console.log("preload end");
   }
   create() {
@@ -58,19 +63,49 @@ export default class Yipee extends Phaser.Scene {
     for(let i=0; i<5;i++){
       for (let j=0; j<3;j++){
         //status sel nosel
+        let b = this.arr[i][j];
         if (i%2===0&&j%2===1){//h
-          this.arr[i][j]= {
-            box: this.add.rectangle(w/2, l/2, 100, 50, 0xcdb4db) ,
+          switch(i){
+            case 0:
+              b = {
+                limb : this.physics.add.sprite(w/2,l/2, "up", 0),
+              }
+              b.isHovering = "n";
+              b.status = "nosel";
+              break;
+            case 2:
+              b = {
+                limb : this.physics.add.sprite(w/2,l/2, "center", 0),
+              }
+              b.isHovering = "n";
+              b.status = "nosel";
+              break;
+            case 4:
+              b = {
+                limb : this.physics.add.sprite(w/2,l/2, "down", 0),
+              }
+              b.isHovering = "n";
+              b.status = "nosel";
+              break; 
           }
-          this.arr[i][j].status="nosel";
-          this.arr[i][j].isHovering="n";
         }
         else if (i%2===1&&j%2===0){
-          this.arr[i][j]= {
-          box: this.add.rectangle(w/2,l/2, 50, 100, 0xcdb4db) ,
+          switch(j){
+            case 0:
+              b = {
+                limb : this.physics.add.sprite(w/2,l/2, "left", 0),
+              }
+              b.isHovering = "n";
+              b.status = "nosel";
+              break;
+            case 2:
+              b = {
+                limb : this.physics.add.sprite(w/2,l/2, "right", 0),
+              }
+              b.isHovering = "n";
+              b.status = "nosel";
+              break;
           }
-          this.arr[i][j].status = "nosel";
-          this.arr[i][j].isHovering = "n";
         }
       }
     }
@@ -88,23 +123,23 @@ export default class Yipee extends Phaser.Scene {
     }
     location.x+=shortLen+longLen/2;
     location.y+=shortLen/2;
-    this.arr[0][1].box.x=location.x;
-    this.arr[0][1].box.y=location.y;
+    this.arr[0][1].limb.x=location.x;
+    this.arr[0][1].limb.y=location.y;
     for (let i = 1; i<5;i+=2){
       let col = 0;
       location.y+= shortLen/2+longLen/2;
       location.x-= longLen/2+shortLen/2;
-      this.arr[i][col].box.x= location.x;
-      this.arr[i][col].box.y= location.y;
+      this.arr[i][col].limb.x= location.x;
+      this.arr[i][col].limb.y= location.y;
       location.x+=shortLen/2+longLen+shortLen/2;
       col+=2;
-      this.arr[i][col].box.x= location.x
-      this.arr[i][col].box.y= location.y;
+      this.arr[i][col].limb.x= location.x
+      this.arr[i][col].limb.y= location.y;
       location.x -=shortLen/2+longLen/2;
       location.y+=longLen/2+shortLen/2;
       col-=1;
-      this.arr[i+1][col].box.x= location.x;
-      this.arr[i+1][col].box.y= location.y;
+      this.arr[i+1][col].limb.x= location.x;
+      this.arr[i+1][col].limb.y= location.y;
     }
     this.updateColor();
   }
@@ -204,17 +239,17 @@ export default class Yipee extends Phaser.Scene {
     for (let i= 0; i<this.arr.length; i++){
       for (let j=0; j<this.arr[0].length;j++){
         let box = this.arr[i][j]
-        // if (box!=''){
-        //   if (box.status==="sel"&&box.isHovering==="y"){
-        //     console.log("outline+blue");
-        //   } else if(box.status==="sel"&&box.isHovering==="n"){
-        //     console.log("no outline+blue");
-        //   } else if(box.status==="nosel"&&box.isHovering==="y"){
-        //     console.log("outline+red");
-        //   } else {
-        //     console.log("no outline+red");
-        //   }
-        // }
+        if (box!=''){
+          if (box.status==="nosel"&&box.isHovering==="n"){
+            box.limb.setFrame(0);
+          } else if(box.status==="nosel"&&box.isHovering==="y"){
+            box.limb.setFrame(1);
+          } else if(box.status==="sel"&&box.isHovering==="n"){
+            box.limb.setFrame(2);
+          } else {
+            box.limb.setFrame(3);
+          }
+        }
       }
     }
   }
