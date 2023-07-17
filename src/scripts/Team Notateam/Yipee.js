@@ -14,7 +14,9 @@ export default class Yipee extends Phaser.Scene {
         key: "Yipee",
       }
     );
+    this.gameOver= false;
     this.started = false;
+    this.victory = false;
     this.left;
     this.right;
     this.up;
@@ -26,6 +28,7 @@ export default class Yipee extends Phaser.Scene {
       c: 0,
     };
     this.buttonHandlers = new ButtonPressHandlers(); 
+    this.catWord;
     console.log("constructor end");
   }
   preload() {
@@ -33,10 +36,11 @@ export default class Yipee extends Phaser.Scene {
    this.load.image("background", new URL('YipeeAssets/sky.png ', import.meta.url).href);
    this.load.image("cat", new URL('YipeeAssets/orangeCat.png', import.meta.url).href); 
    this.load.spritesheet("up", new URL('YipeeAssets/upLimb.png', import.meta.url).href,{ frameWidth:169, frameHeight:42 });
-  //  this.load.spritesheet("down", new URL('YipeeAssets/downLimb.png', import.meta.url).href,{ frameWidth:169, frameHeight:42});
-  //  this.load.spritesheet("left", new URL('YipeeAssets/leftLimb.png', import.meta.url).href,{ frameWidth:42, frameHeight:169});
    this.load.spritesheet("right", new URL('YipeeAssets/rightLimb.png', import.meta.url).href,{ frameWidth:42, frameHeight:169});
    this.load.spritesheet("center", new URL('YipeeAssets/centerLimb.png', import.meta.url).href,{ frameWidth:159, frameHeight:41});
+   this.load.image("catEmpty", new URL('YipeeAssets/c-t.png', import.meta.url).href); 
+   this.load.image("catFull", new URL('YipeeAssets/cat.png', import.meta.url).href); 
+   this.load.image("fillBlank", new URL('YipeeAssets/fillTheBlank.png', import.meta.url).href); 
    console.log("preload end");
   }
 
@@ -44,24 +48,25 @@ export default class Yipee extends Phaser.Scene {
     console.log("create start");
     this.started= true;
     this.add.image(540, 360, "background");
-    this.add.image(249/2+30,l-30-295/2, "cat");
+    this.add.image(w/5,l-30-295/2, "cat");
+    this.add.image(w/2,l/10,"fillBlank");
+    this.catWord = this.physics.add.sprite(w/2, l/3,"catEmpty");
     this.createKeys();
     this.initArr();
     console.log("create end");
   }
   update() {
     console.log("update start");
-    //if(this.started){
+    if(this.started){
     this.buttonHandlers.update();
     this.updateColor();
     if (!this.gamePad) this.startGamePad();
     if(this.gameOver && !this.sent){
       this.globalState.timerMessage('stop_timer')
       this.globalState.sendMessage(this.victory)
-      this.sent = true
+      this.sent = true;
     }
-    
-  //}
+  }
   }
   initArr(){
     this.arr =[["","",""], ["","",""], ["","",""], ["","",""], ["","",""] ];
@@ -142,6 +147,17 @@ export default class Yipee extends Phaser.Scene {
   if (Phaser.Input.Keyboard.JustDown(this.right)) this.updateSelection(4);
   if (Phaser.Input.Keyboard.JustDown(this.select)) this.click(this.cursor.r, this.cursor.c);
   }
+
+  winUpdate(){
+    if( this.arr[0][1].stat ==="sel"&&this.arr[1][0].stat ==="sel"
+    &&this.arr[1][2].stat ==="sel"&&this.arr[2][1].stat ==="sel"
+    &&this.arr[3][0].stat ==="sel"&&this.arr[3][2].stat ==="sel"
+    &&this.arr[4][1].stat ==="nosel"){
+      this.catWord.setFrame("catFull");
+      this.gameOver = true;
+      this.victory = true;
+    }
+  }
   //inputs- 1-4 are movement
  updateInput(i) {
   let rLim = this.arr.length-1;
@@ -164,12 +180,12 @@ export default class Yipee extends Phaser.Scene {
         }else{
           this.cursor.r+=1;
         }
-        if ((this.cursor.r===1&&this.cursor.c===1)||
-          (this.cursor.r===3&&this.cursor.c===1)||
-          (this.cursor.r===2&&this.cursor.c===0)||
-          (this.cursor.r===2&&this.cursor.c===2)){
-          this.cursor.r+=1;
-        }
+        // if ((this.cursor.r===1&&this.cursor.c===1)||
+        //   (this.cursor.r===3&&this.cursor.c===1)||
+        //   (this.cursor.r===2&&this.cursor.c===0)||
+        //   (this.cursor.r===2&&this.cursor.c===2)){
+        //   this.cursor.r+=1;
+        // }
         console.log("down");
         break;
       case 3:
@@ -204,6 +220,7 @@ export default class Yipee extends Phaser.Scene {
      }else{
       console.log(this.arr[this.cursor.r][this.cursor.c]);
     }
+    this.winUpdate();
   }
   click(row,col){
     console.log("clicky click ehhehehehe...");
@@ -215,6 +232,7 @@ export default class Yipee extends Phaser.Scene {
       }
     }
     console.log("sel or nosel: " + this.arr[row][col].stat);
+    this.winUpdate();
   }
   updateColor(){
     for (let i= 0; i<this.arr.length; i++){
