@@ -49,6 +49,7 @@ export default class Yipee extends Phaser.Scene {
     this.started= true;
     this.add.image(540, 360, "background");
     this.add.image(w/5,l-30-295/2, "cat");
+    console.log(l-30-295/2);
     this.add.image(w/2,l/10,"fillBlank");
     this.catWord = this.physics.add.sprite(w/2, l/3,"catEmpty");
     this.createKeys();

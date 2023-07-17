@@ -8,8 +8,8 @@ const L_START = -L_END;
 const R_START = 5 * L_END;
 
 const listOfGames = [
-    'Yipee',
     'fruitBasket',
+    'Yipee',
     'MarcyMunch',
     'CircleJump',
     'SockToss',
@@ -587,9 +587,9 @@ export default class newCutScreen extends Phaser.Scene {
             case "FlySwat":
                 s = 'swat!';
                 break;
-            case "Emeowgency":
-                s = 'catch!';
-                break;
+            // case "Emeowgency":
+            //     s = 'catch!';
+            //     break;
             case 'MarcyMunch':
                 s = 'munch!';
                 break;
