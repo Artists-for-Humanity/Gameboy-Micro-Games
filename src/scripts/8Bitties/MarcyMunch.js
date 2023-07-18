@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import ButtonPressHandlers from '../ButtonPressHandlers';
+import ButtonPressHandlers from "../ButtonPressHandlers";
 import eventsCenter from "../EventsCenter";
 
 export default class Chew extends Phaser.Scene {
@@ -53,9 +53,18 @@ export default class Chew extends Phaser.Scene {
         frameWidth: 43,
       }
     );
+    this.load.audio(
+      "chomp",
+      new URL("../8Bitties/assets/Chew/chomp.mp3", import.meta.url).href
+    );
+    this.load.audio(
+      "bark",
+      new URL("../8Bitties/assets/Chew/bark.mp3", import.meta.url).href
+    );
   }
   create() {
-    this.setMarcy()
+    this.setMarcy();
+    this.makeSounds();
     this.bg = this.add.image(540, 360, "8B1_bg");
     this.table = this.add.image(750, 630, "8B1_table");
     this.candle = this.add.sprite(580, 570, "8B1_candle");
@@ -70,31 +79,39 @@ export default class Chew extends Phaser.Scene {
     this.drumStick = this.add.sprite(750, 300, "8B1_meat", 0);
     this.tail.anims.play("wag", true);
 
-    eventsCenter.on('start_game', () => {this.started = true; this.globalState.timerMessage('start_timer')})
+    eventsCenter.on("start_game", () => {
+      this.started = true;
+      this.globalState.timerMessage("start_timer");
+    });
   }
   update() {
-    if(this.started){
+    if (this.started) {
       this.buttonHandlers.update();
       if (!this.gamePad) this.startGamePad();
-      if(this.gameOver && !this.sent){
-        this.globalState.timerMessage('stop_timer')
-        this.globalState.sendMessage(this.victory)
-        this.sent = true
+      if (this.gameOver && !this.sent) {
+        this.globalState.timerMessage("stop_timer");
+        this.globalState.sendMessage(this.victory);
+        this.sent = true;
       }
     }
   }
   startGamePad() {
-      if (this.input.gamepad.total) {
-          this.gamePad = this.input.gamepad.pad1;
-          this.initGamePad();
-          console.log(this.gamePad);
-      }
+    if (this.input.gamepad.total) {
+      this.gamePad = this.input.gamepad.pad1;
+      this.initGamePad();
+      console.log(this.gamePad);
     }
+  }
 
   initGamePad() {
-      this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => {if (this.biteCount < 6) this.chewing()});
+    this.buttonHandlers.addPad(
+      () => this.gamePad.buttons[0].pressed,
+      () => {
+        if (this.biteCount < 6) this.chewing();
+      }
+    );
   }
-  setMarcy(){
+  setMarcy() {
     this.victory = false;
     this.gameOver = false;
     this.keyInt = 0;
@@ -104,8 +121,8 @@ export default class Chew extends Phaser.Scene {
     this.frameNum = 0;
     this.started = false;
     this.buttonHandlers = new ButtonPressHandlers();
-    this.gamePad = null
-    this.sent = false; 
+    this.gamePad = null;
+    this.sent = false;
   }
   makeAnims() {
     this.anims.create({
@@ -152,6 +169,11 @@ export default class Chew extends Phaser.Scene {
     if (this.chewInt === 4) {
       this.chewInt = 0;
       this.biteCount += 1;
+      this.chompsound.play({
+        volume: .3, 
+      }
+        
+      )
       this.meatStick();
     }
     if (this.biteCount === 6) {
@@ -164,6 +186,9 @@ export default class Chew extends Phaser.Scene {
     if (this.biteCount === 6) {
       this.marcy.play("lick");
       this.victory = true;
+      this.barksound.play({
+        volune: .1
+      });
       //this.gameOver = true;
     }
   }
@@ -175,5 +200,9 @@ export default class Chew extends Phaser.Scene {
     }
 
     this.marcy.setFrame(this.frameNum);
+  }
+  makeSounds(){
+    this.chompsound = this.sound.add('chomp');
+    this.barksound = this.sound.add('bark');
   }
 }
