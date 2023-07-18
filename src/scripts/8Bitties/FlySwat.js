@@ -186,6 +186,7 @@ export default class FlySwat extends Phaser.Scene {
   moveFly() {
     if (this.fly) {
       this.timer += 0.1;
+      console.log(this.timer);
       if (this.flightPattern === 1) {
         this.fly.x = Math.sin(this.timer / 2) * 320 + 540;
         this.fly.y = Math.sin(this.timer) * 128 + 360;

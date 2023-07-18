@@ -29,6 +29,8 @@ import WhereisWilly from "./8Bitties/Where'sWilly.js";
 import EndlessCutScreen from "./Team Notateam/newCutScreen.js";
 import newCutScreen from "./Team Notateam/newCutScreen.js";
 import fruitBasket from "./8Bitties/fruitBasket.js";
+import DirtyPig from "./Team Notateam/DirtyPig";
+
 // Set configuration for phaser game instance
 const juice = new phaserJuice(this);
 
@@ -52,30 +54,31 @@ const config = {
   input: {
     gamepad: true
   },
-  scene: [
+  scene: [ 
+   DirtyPig, 
+   FlySwat,  
     newCutScreen,
     MainMenu,
-    fruitBasket,
+    // fruitBasket,
     Timer,
-    WhereisWilly,
-    MarcyMunch,
-    SockToss,
-    CarPump,
-    Emeowgency,
-    BetweenSpace,
-    CircleJump,
-    Lowest,
-    Factory, 
-    FrogJump,
-    TugOWar,
-    FlySwat,
-    DrinkPour,
-    Cannon,
-    TrashSort,
-    ColorPasscode,
-    HideFromCat,
-    HitTheButton,
-    ColorLab,
+    // WhereisWilly,
+    // MarcyMunch,
+    // SockToss,
+    // CarPump,
+    // Emeowgency,
+    // BetweenSpace,
+    // CircleJump,
+    // Lowest,
+    // Factory, 
+    // FrogJump,
+    // TugOWar,
+    // DrinkPour,
+    // Cannon,
+    // TrashSort,
+    // ColorPasscode,
+    // HideFromCat,
+    // HitTheButton,
+    // ColorLab,
     HiScoreScene,
     GameOver,
   ],
