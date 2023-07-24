@@ -27,24 +27,35 @@ export default class DirtyPig extends Phaser.Scene {
 
   preload() {
     this.load.image(
-      "Grass",
-      new URL("./assets/DirtyPigAssets/Grass.png", import.meta.url).href
+      "grass-fense-background",
+      new URL('./assets/DirtyPigAssets/grass-fense-background.png', import.meta.url).href
     );
+    
+    // this.load.image( 
+    //   "Dirty Pig Run",
+    // new URL("./assets/DirtyPigAssets/Dirty Pig Run.png", import.meta.url).href
+    // );
   
-    this.load.image(
-      "Dirty Pig Run",
-      new URL("./assets/DirtyPigAssets/Dirty Pig Run.png", import.meta.url).href
-    );
+   
+   
+    
 
     this.load.image(
       "Mud",
       new URL("./assets/DirtyPigAssets/Mud.png", import.meta.url).href
-    )
+    );
 
     this.load.image(
       "Pig's Food",
       new URL("./assets/DirtyPigAssets/Pig's Food.png", import.meta.url).href
-    )
+    );
+
+    this.load.image(
+      "Cleaner",
+      new URL("./assets/DirtyPigAssets/Cleaner.png", import.meta.url).href
+    );
+
+    this.load.spritesheet('Pig', new URL("./assets/DirtyPigAssets/DirtyPigRun.png", import.meta.url).href, { frameWidth: 340, frameHeight: 256 });
    
   }
 
@@ -52,25 +63,30 @@ export default class DirtyPig extends Phaser.Scene {
     this.add.image(
       this.game.config.width / 2,
       this.game.config.height / 2,
-      "Grass"
+      "grass-fense-background"
     );
 
-    this.pig = this.physics.add.image(
+    this.pig = this.physics.add.sprite(
       this.game.config.width / 2,
       this.game.config.height / 2,
-      "Dirty Pig Run"
-    ).setScale(.75);
+      "Pig"
+    ).setScale(.5);
 
-    this.add.image(940, 560, "Mud").setScale(2);
+    this.add.image(1000, 500, "Mud").setScale(2);
 
     this.add.image(940, 150, "Pig's Food");
+    
+    this.add.image(
+    this.game.config.width /2, 
+    this.game.config.height / 2,
+     "Cleaner"
+    ).setScale(.3);
    
     //set pig movement to the left
-    this.pig.body.setVelocityX(-320);
+    // this.pig.body.setVelocityX(-0);
 
     this.flightPattern = Math.floor(1)
 
-    console.log('pig x position = ' + this.pig.x)
     
     
 
@@ -91,6 +107,13 @@ export default class DirtyPig extends Phaser.Scene {
     eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer'); });
 
     this.juice = new phaserJuice(this);
+
+    this.anims.create({
+      key: 'run',
+      frames: this.anims.generateFrameNumbers('Pig', { start: 0, end: 1 }),
+      frameRate: 5,
+      repeat: -1
+  });
   }
 
 
@@ -110,28 +133,13 @@ export default class DirtyPig extends Phaser.Scene {
 
   
     if(this.triesToWin === 4){
-      this.timer += .05;
+      this.timer += -0.04;
       this.pig.x = Math.sin(this.timer) * 200 + 500;
       this.pig.y = Math.cos(this.timer) *  150 + 360;
     }
 
-   
-      // this.fly.y = Math.sin * 160 + 320;
-    //   this.pig.body.setVelocityX(320);
-    //   this.pig.body.setVelocityY(320);
-    // }
-    // if(this.pig.y >700) {
-    //   this.pig.body.setVelocityX(320);
-    //   this.pig.body.setVelocityY(-320);
-    // }
-    // else if( this.pig.x >800) {
-  
-    //   this.pig.body.setVelocityX(-320);
-    //   this.pig.body.setVelocityY(-320);
-    
-
-  
-
+    this.pig.rotation += .04;
+    this.pig.anims.play('run', true);
  
     
   }
