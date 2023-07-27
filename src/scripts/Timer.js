@@ -21,6 +21,7 @@ export default class Timer extends Phaser.Scene {
         this.victory = false;
 
         this.started = false;
+
     }
 
     preload() {
