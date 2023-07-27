@@ -5,7 +5,7 @@ import ButtonPressHandlers from '../ButtonPressHandlers';
 const SCALE_MULTIPLIER = 4.5;
 const METER_WIDTH = 108;
 const WIN_VALUE = 80;
-//REMINDER: multiple variables in the scene are declared and need to b set to true or false//
+
 export default class SockToss extends Phaser.Scene {
     // Game Class Constructor
     constructor() {
@@ -16,11 +16,11 @@ export default class SockToss extends Phaser.Scene {
             physics: {
                 default: 'arcade',
                 arcade: {
-                    gravity: { y: 4500 }
-                }
-            }
+                    gravity: { y: 4500 },
+                },
+            },
         });
-        // determines how low the sock can fall     
+        // determines how low the sock can fall
         this.floorval;
         // number tells us if the game is won - 0 for ongoing, 1 for won, 2 for lost
         this.victory = false;
@@ -88,7 +88,6 @@ export default class SockToss extends Phaser.Scene {
     }
 
     create() {
-        // this.setSocktoss();
         // Add images to Scene
         this.add.image(1080 / 2, 720 / 2, 'background1').setScale(SCALE_MULTIPLIER);
         this.basket_b = this.add.image(13 * SCALE_MULTIPLIER, 21 * SCALE_MULTIPLIER, 'basket_back');
@@ -141,26 +140,30 @@ export default class SockToss extends Phaser.Scene {
         this.timer2 = 0;
         //this.toss.scale = 0
 
-        eventsCenter.on('start_game', () => { if (!this.gameOver) { this.started = true; eventsCenter.emit('start_timer'); } });
+        eventsCenter.on('start_game', () => {
+            if (!this.gameOver) {
+                this.started = true;
+                eventsCenter.emit('start_timer');
+            }
+        });
 
         this.anims.create({
             key: 'throw',
-            frames: [{ key: 'hand_closed' }]
+            frames: [{ key: 'hand_closed' }],
         });
         this.anims.create({
             key: 'win',
-            frames: [{ key: 'hand_win' }]
+            frames: [{ key: 'hand_win' }],
         });
         this.anims.create({
             key: 'lose',
-            frames: [{ key: 'hand_lose' }]
+            frames: [{ key: 'hand_lose' }],
         });
     }
     update() {
         // this nested if-statement plays the intro "TOSS" text
         // Started will be set to true at the end
         if (this.started) {
-
             this.buttonHandlers.update();
             if (!this.gamePad) this.startGamePad();
 
@@ -174,7 +177,8 @@ export default class SockToss extends Phaser.Scene {
                 this.throwncon();
             }
             // Run when spacebar is pressed
-            else {   // Runs dropping code only once
+            else {
+                // Runs dropping code only once
                 if (!this.dropped) {
                     this.dropcon(this);
                     eventsCenter.emit('stop_timer');
@@ -195,7 +199,6 @@ export default class SockToss extends Phaser.Scene {
                     }
                 }
             }
-
         }
     }
 
@@ -208,13 +211,22 @@ export default class SockToss extends Phaser.Scene {
     }
 
     initGamePad() {
-        this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.thrown = true; });
+        this.buttonHandlers.addPad(
+            () => this.gamePad.buttons[0].pressed,
+            () => {
+                this.thrown = true;
+            }
+        );
     }
-
 
     maskdraw() {
         this.mmask.clear();
-        this.mmask.fillRect(127 * SCALE_MULTIPLIER, 142 * SCALE_MULTIPLIER, (this.meterX + 1) * SCALE_MULTIPLIER, 14 * SCALE_MULTIPLIER);
+        this.mmask.fillRect(
+            127 * SCALE_MULTIPLIER,
+            142 * SCALE_MULTIPLIER,
+            (this.meterX + 1) * SCALE_MULTIPLIER,
+            14 * SCALE_MULTIPLIER
+        );
     }
     // tosstext() {
     //     // grow "TOSS" until it reaches max scale
@@ -260,8 +272,7 @@ export default class SockToss extends Phaser.Scene {
         // move the meter in that direction
         if (this.decreasing) {
             this.deccon();
-        }
-        else {
+        } else {
             this.inccon();
         }
         // move hand
@@ -279,7 +290,7 @@ export default class SockToss extends Phaser.Scene {
     }
     handrot() {
         if (this.hand.angle > -90) {
-            this.hand.angle -= (15 / Math.sqrt(2));
+            this.hand.angle -= 15 / Math.sqrt(2);
         }
     }
     dropcon() {
@@ -287,28 +298,30 @@ export default class SockToss extends Phaser.Scene {
 
         this.hand.anims.play('throw');
         this.player.remove(this.sock);
-        this.sock.x = this.player.x - (2 * SCALE_MULTIPLIER);
-        this.sock.y = this.player.y - (6 * SCALE_MULTIPLIER);
+        this.sock.x = this.player.x - 2 * SCALE_MULTIPLIER;
+        this.sock.y = this.player.y - 6 * SCALE_MULTIPLIER;
         this.sock.angle = this.player.angle;
         this.sock.body.setAllowGravity(true);
 
         if (this.meterX >= WIN_VALUE) {
-
-            this.xrange = (-1 * (60 + 10 * ((this.meterX - 80) / 28))) * SCALE_MULTIPLIER;
+            this.xrange = -1 * (60 + 10 * ((this.meterX - 80) / 28)) * SCALE_MULTIPLIER;
             this.yrange = -755 * SCALE_MULTIPLIER;
-            this.basket_f = this.physics.add.sprite(13 * SCALE_MULTIPLIER, 21 * SCALE_MULTIPLIER, 'basket_front');
+            this.basket_f = this.physics.add.sprite(
+                13 * SCALE_MULTIPLIER,
+                21 * SCALE_MULTIPLIER,
+                'basket_front'
+            );
             this.basket_f.setOrigin(0, 0);
             this.basket_f.setScale(SCALE_MULTIPLIER);
             this.basket_f.body.setAllowGravity(false);
 
             this.floorval = 720 / 2;
             this.victory = true;
-        }
-        else {
-            this.xrange = (-70 * this.meterX / (METER_WIDTH)) * SCALE_MULTIPLIER;
-            this.yrange = (-755 * this.meterX / (METER_WIDTH - 28)) * SCALE_MULTIPLIER;
+        } else {
+            this.xrange = ((-70 * this.meterX) / METER_WIDTH) * SCALE_MULTIPLIER;
+            this.yrange = ((-755 * this.meterX) / (METER_WIDTH - 28)) * SCALE_MULTIPLIER;
 
-            this.floorval = 720 * .75;
+            this.floorval = 720 * 0.75;
             this.victory = false;
         }
 
@@ -341,29 +354,17 @@ export default class SockToss extends Phaser.Scene {
         this.player.y = 26 * SCALE_MULTIPLIER;
         if (this.win.scale < 4) {
             this.win.scale += 1 / 4;
-        }
-        else
+        } else
             setTimeout(() => {
                 this.gameOver = true;
             }, 1500);
         this.dircheck(this.player.scale >= 1.2, this.player.scale <= 1);
         if (this.decreasing) {
             this.player.scale -= 0.01;
-        }
-        else {
+        } else {
             this.player.scale += 0.01;
         }
         // close doors
-    }
-    setSocktoss(){
-        this.victory = false;
-        this.gameOver = false;
-        this.sent = false;
-        this.timerStopped = false;
-        this.buttonHandlers = new ButtonPressHandlers();
-        this.gamePad = null;
-        this.started = false;
-
     }
     losecon() {
         this.hand.anims.play('lose');
@@ -373,16 +374,14 @@ export default class SockToss extends Phaser.Scene {
         this.player.y = 60 * SCALE_MULTIPLIER;
         if (this.lose.scale < 4) {
             this.lose.scale += 1 / 4;
-        }
-        else
+        } else
             setTimeout(() => {
                 this.gameOver = true;
             }, 1500);
         this.dircheck(this.player.scale >= 1, this.player.scale <= 0.8);
         if (this.decreasing) {
             this.player.scale -= 0.005;
-        }
-        else {
+        } else {
             this.player.scale += 0.005;
         }
     }

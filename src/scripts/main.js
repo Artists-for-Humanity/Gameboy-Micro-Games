@@ -19,6 +19,7 @@ import TugOWar from './8Bitties/TugOWar';
 import FlySwat from './8Bitties/FlySwat';
 import DrinkPour from './8Bitties/DrinkPour';
 import SockToss from './Team Notateam/SockToss';
+import CutScreen from './Team Notateam/CutScreen';
 import MainMenu from './MainMenu';
 import Timer from './Timer';
 import MarcyMunch from './8Bitties/MarcyMunch';
@@ -27,7 +28,7 @@ import Factory from './Fairway/factoryScripts/factoryScenes/Factory';
 import HiScoreScene from './Hi-Score';
 import WhereisWilly from "./8Bitties/Where'sWilly.js";
 import PenguinSlide from './NewGames/PenguinSlide.js';
-import newCutScreen from './Team Notateam/newCutScreen.js';
+import NewCutScreen from './Team Notateam/NewCutScreen.js';
 import fruitBasket from './8Bitties/fruitBasket.js';
 
 // Set configuration for phaser game instance
@@ -53,11 +54,9 @@ const config = {
     gamepad: true,
   },
   scene: [
-    newCutScreen,
     MainMenu,
-    fruitBasket,
-    Timer,
     WhereisWilly,
+    Timer,
     MarcyMunch,
     SockToss,
     CarPump,
