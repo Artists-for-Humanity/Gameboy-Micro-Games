@@ -1,5 +1,4 @@
-/* eslint-disable no-undef */
-import eventsCenter from '../EventsCenter';
+import eventsCenter from "../EventsCenter";
 import ButtonPressHandlers from '../ButtonPressHandlers';
 
 export default class PenguinSlide extends Phaser.Scene {
@@ -7,7 +6,7 @@ export default class PenguinSlide extends Phaser.Scene {
     super({
       active: false,
       visible: false,
-      key: 'PenguinSlide',
+      key: "PenguinSlide",
     });
 
     // minigame globals
@@ -18,17 +17,14 @@ export default class PenguinSlide extends Phaser.Scene {
     this.started = false;
     this.startTimer = false;
     this.displayedAnimals = false;
-
+    
     // number of penguins and seals to display, respectively
     this.penguinCount = Math.floor(Math.random() * 5) + 1; // 1 to 5 penguins
     this.sealCount = Math.floor(Math.random() * 4); // 0 to 3 seals
-
+    
     // this is an array of the potential animals (seal or penguin) and the order is randomized
     this.animals = (() => {
-      let totalAnimals = [
-        ...new Array(this.penguinCount).fill('penguin'),
-        ...new Array(this.sealCount).fill('seal'),
-      ];
+      let totalAnimals = [...(new Array(this.penguinCount).fill('penguin')), ...(new Array(this.sealCount).fill('seal'))];
       for (let i = totalAnimals.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
         [totalAnimals[i], totalAnimals[j]] = [totalAnimals[j], totalAnimals[i]];
@@ -41,34 +37,34 @@ export default class PenguinSlide extends Phaser.Scene {
   }
 
   preload() {
-    this.load.spritesheet('arrow', new URL('assets/arrow_sheet.png', import.meta.url).href, {
+    this.load.spritesheet("arrow", new URL("assets/arrow_sheet.png", import.meta.url).href, {
       frameWidth: 87,
       frameHeight: 77,
     });
-    this.load.spritesheet('penguin', new URL('assets/penguins.png', import.meta.url).href, {
+    this.load.spritesheet("penguin", new URL("assets/penguins.png", import.meta.url).href, {
       frameWidth: 147,
       frameHeight: 125,
     });
-    this.load.spritesheet('scorebox', new URL('assets/scorebox.png', import.meta.url).href, {
+    this.load.spritesheet("scorebox", new URL("assets/scorebox.png", import.meta.url).href, {
       frameWidth: 558 / 2,
       frameHeight: 172,
     });
-    this.load.spritesheet('seal', new URL('assets/seal.png', import.meta.url).href, {
+    this.load.spritesheet("seal", new URL("assets/seal.png", import.meta.url).href, {
       frameWidth: 244,
       frameHeight: 142,
     });
-    this.load.spritesheet('zzz', new URL('assets/zzz.png', import.meta.url).href, {
+    this.load.spritesheet("zzz", new URL("assets/zzz.png", import.meta.url).href, {
       frameWidth: 90,
       frameHeight: 94,
     });
-    this.load.image('background', new URL('assets/background.png', import.meta.url).href);
-    this.load.image('igloo', new URL('assets/igloo.png', import.meta.url).href);
+    this.load.image("background", new URL("assets/background.png", import.meta.url).href);
+    this.load.image("igloo", new URL("assets/igloo.png", import.meta.url).href);
   }
 
   create() {
     this.gameWidth = this.game.config.width;
     this.gameHeight = this.game.config.height;
-    this.add.image(this.gameWidth / 2, this.gameHeight / 2, 'background').setOrigin(0.5);
+    this.add.image(this.gameWidth / 2, this.gameHeight / 2, "background").setOrigin(0.5);
     this.igloo = this.add.image(0, 209, 'igloo').setOrigin(0).setDepth(1);
     // this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -78,21 +74,21 @@ export default class PenguinSlide extends Phaser.Scene {
     this.graphics = this.add.graphics();
 
     this.animalPath = { t: 0, vec: new Phaser.Math.Vector2() };
-    this.victorySealPath = { t: 0, vec: new Phaser.Math.Vector2() };
+    this.victorySealPath = { t: 0, vec: new Phaser.Math.Vector2() }
 
     const penguinCurvePoints = [
       new Phaser.Math.Vector2(168, 363),
       new Phaser.Math.Vector2(309, 342),
       new Phaser.Math.Vector2(618, 400),
       new Phaser.Math.Vector2(726, 787),
-    ];
+    ]
 
     const sealCurvePoints = [
       new Phaser.Math.Vector2(-130, 822),
       new Phaser.Math.Vector2(334, 232),
       new Phaser.Math.Vector2(800, 300),
       new Phaser.Math.Vector2(1035, 800),
-    ];
+    ]
 
     this.animalCurve = new Phaser.Curves.CubicBezier(...penguinCurvePoints);
     this.victorySealCurve = new Phaser.Curves.CubicBezier(...sealCurvePoints);
@@ -106,9 +102,7 @@ export default class PenguinSlide extends Phaser.Scene {
     // this.winText.setScrollFactor(0);
     // this.winText.setVisible(false);
 
-    eventsCenter.on('start_game', () => {
-      this.started = true;
-    });
+    eventsCenter.on('start_game', () => { this.started = true;});
     this.tweens.add({
       targets: this.animalPath,
       delay: 5000,
@@ -137,12 +131,12 @@ export default class PenguinSlide extends Phaser.Scene {
           if (this.animalPath.t > 0.45) {
             this.activeAnimal.setAngle(0);
           } else if (this.animalPath.t > 0.65) {
-            this.activeAnimal.setAngle(45);
+            this.activeAnimal.setAngle(45)
           }
         } else if (this.activeAnimal.texture.key === 'penguin') {
           this.activeAnimal.setAngle(0);
           if (this.animalPath.t < 0.4) {
-            this.activeAnimal.anims.play('penguin-walk');
+            this.activeAnimal.anims.play('penguin-walk')
           } else if (this.animalPath.t > 0.45 && this.animalPath.t < 0.48) {
             this.activeAnimal.anims.stopAfterRepeat();
             this.activeAnimal.setFrame(2);
@@ -154,32 +148,20 @@ export default class PenguinSlide extends Phaser.Scene {
       },
       onComplete: () => {
         this.displayedAnimals = true;
-      },
+      }
     });
-    this.activeAnimal = this.add
-      .sprite(this.animalPath.vec.x, this.animalPath.vec.y, 'penguin', 0)
-      .setDepth(0);
+    this.activeAnimal = this.add.sprite(this.animalPath.vec.x, this.animalPath.vec.y, "penguin", 0).setDepth(0);
 
     this.scorebox = this.add.sprite(734, 318, 'scorebox', 0);
-    this.scoreboxText = this.add
-      .text(this.scorebox.getCenter().x, this.scorebox.getCenter().y, '0', {
-        color: '#000',
-        fontSize: '64px',
-      })
-      .setOrigin(0.5);
+    this.scoreboxText = this.add.text(this.scorebox.getCenter().x, this.scorebox.getCenter().y, '0', {
+      color: "#000",
+      fontSize: "64px",
+    }).setOrigin(0.5);
 
     this.victorySeal = this.add.sprite(100, 1500, 'seal', 0).setAngle(-25);
     this.victorySeal.flipX = true;
 
-    this.zzz = this.add
-      .sprite(
-        this.igloo.getRightCenter().x,
-        this.igloo.getTopRight().y + this.igloo.height / 4,
-        'zzz',
-        0
-      )
-      .setOrigin(0, 1)
-      .setVisible(false);
+    this.zzz = this.add.sprite(this.igloo.getRightCenter().x, this.igloo.getTopRight().y + (this.igloo.height / 4), 'zzz', 0).setOrigin(0, 1).setVisible(false);
 
     this.setupText();
   }
@@ -200,9 +182,9 @@ export default class PenguinSlide extends Phaser.Scene {
       } else if (!this.displayedAnimals) {
         eventsCenter.emit('reset_timer');
       }
-
+      
       // this.displayPenguins(this.penguinCount);
-
+      
       if (this.lose === false) {
         this.buttonHandlers.update();
         // if (!this.gamePad) this.startGamePad();
@@ -210,10 +192,11 @@ export default class PenguinSlide extends Phaser.Scene {
     }
     if (this.gameOver && !this.sent) {
       eventsCenter.emit('stop_timer');
-      eventsCenter.emit('game-end', this.victory);
+      eventsCenter.emit("game-end", this.victory);
       this.sent = true;
     }
   }
+
 
   loseState() {
     this.physics.pause();
@@ -230,18 +213,9 @@ export default class PenguinSlide extends Phaser.Scene {
   }
 
   initGamepad() {
-    this.buttonHandlers.addPad(
-      () => this.gamePad.leftStick.y === 1,
-      () => this.updateGuess(-1)
-    );
-    this.buttonHandlers.addPad(
-      () => this.gamePad.leftStick.y === -1,
-      () => this.updateGuess(1)
-    );
-    this.buttonHandlers.addPad(
-      () => this.gamePad.buttons[0].pressed,
-      () => this.confirmGuess()
-    );
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === 1, () => this.updateGuess(-1));
+    this.buttonHandlers.addPad(() => this.gamePad.leftStick.y === -1, () => this.updateGuess(1));
+    this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => this.confirmGuess());
   }
 
   updateGuess(num) {
@@ -283,9 +257,9 @@ export default class PenguinSlide extends Phaser.Scene {
           } else if (this.victorySealPath.t > 0.5) {
             this.victorySeal.setAngle(25);
           } else if (this.victorySealPath.t > 0.75) {
-            this.victorySeal.setAngle(45);
+            this.victorySeal.setAngle(45)
           }
-        },
+        }
       });
     } else {
       eventsCenter.emit('stop_timer');
@@ -320,12 +294,12 @@ export default class PenguinSlide extends Phaser.Scene {
     this.anims.create({
       key: 'penguin-slide',
       frames: [
-        { key: 'penguin', frame: 2 },
-        { key: 'penguin', frame: 3 },
+        { key: 'penguin', frame: 2},
+        { key: 'penguin', frame: 3},
       ],
       repeat: 0,
       frameRate: 2,
-    });
+    })
     this.anims.create({
       key: 'sleeping_igloo',
       frames: [
@@ -339,43 +313,31 @@ export default class PenguinSlide extends Phaser.Scene {
     });
   }
 
-  setupText() {
-    const watchText = this.add
-      .text(540, 120, 'COUNT THE PENGUINS!', {
-        fontSize: '48px',
-        color: '#FFFFFF',
-        align: 'center',
-        // stroke: '#808080',
-        // strokeThickness: 8,
-      })
-      .setVisible(false)
-      .setOrigin(0.5);
-    const goText = this.add
-      .text(540, 120, 'how many penguins were there?', {
-        fontSize: '48px',
-        color: '#FFFFFF',
-        align: 'center',
-      })
-      .setVisible(false)
-      .setOrigin(0.5);
+  setupText () {
+    const watchText = this.add.text(540, 120, 'COUNT THE PENGUINS!', {
+      fontSize: '48px',
+      color: '#FFFFFF',
+      align: 'center',
+      // stroke: '#808080',
+      // strokeThickness: 8,
+    }).setVisible(false).setOrigin(0.5);
+    const goText = this.add.text(540, 120, 'how many penguins were there?', {
+      fontSize: '48px',
+      color: '#FFFFFF',
+      align: 'center',
+    }).setVisible(false).setOrigin(0.5);
 
-    const winText = this.add
-      .text(540, 360, 'YOU WIN!', {
-        fontSize: '160px',
-        color: '#00FF00',
-        align: 'center',
-      })
-      .setVisible(false)
-      .setOrigin(0.5);
-
-    const loseText = this.add
-      .text(540, 360, 'YOU LOSE!', {
-        fontSize: '160px',
-        color: '#FF0000',
-        align: 'center',
-      })
-      .setVisible(false)
-      .setOrigin(0.5);
+    const winText = this.add.text(540, 360, 'YOU WIN!', {
+      fontSize: '160px',
+      color: '#00FF00',
+      align: 'center',
+    }).setVisible(false).setOrigin(0.5);
+    
+    const loseText = this.add.text(540, 360, 'YOU LOSE!', {
+      fontSize: '160px',
+      color: '#FF0000',
+      align: 'center'
+    }).setVisible(false).setOrigin(0.5);
 
     this.instructiveText = {
       watch: watchText,

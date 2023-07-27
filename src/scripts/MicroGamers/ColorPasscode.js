@@ -83,7 +83,6 @@ export default class ColorPasscode extends Phaser.Scene {
     }
 
     create() {
-        this.resetColorPasscode();
         // this.startGamePad();
         this.drawUI();
         this.setText();
@@ -128,27 +127,6 @@ export default class ColorPasscode extends Phaser.Scene {
         eventsCenter.on('start_game', () => { this.started2 = true; eventsCenter.emit('stop_timer'); });
         // console.log('start');
     }
-    resetColorPasscode(){
-        this.doors = [];
-        this.t = 0;
-        this.goTextTimer = 0;
-        this.started = false;
-        this.started2 = false;
-        this.gameOver = false;
-        this.victory = false;
-        this.sent = false;
-        this.startTimer = 0;
-        this.lightColorButtons = [];
-        this.darkColorButtons = [];
-        this.pattern = [];
-        this.guessBlocks = [];
-        this.guesses = [];
-        this.guessNum = 0;
-        this.interactive = false;
-        this.buttonHandlers = new ButtonPressHandlers();
-        this.gamePad = null;
-    }
-
 
     update(time, delta) {
 

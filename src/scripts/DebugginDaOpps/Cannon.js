@@ -110,7 +110,6 @@ export default class Cannon extends Phaser.Scene {
   }
 
   create() {
-    this.resetCannonGame();
     this.LEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
     this.RIGHT = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.RIGHT
@@ -201,16 +200,7 @@ export default class Cannon extends Phaser.Scene {
     eventsCenter.on('start_game', () => { this.started = true; this.globalState.timerMessage('start_timer'); });
 
   }
-  resetCannonGame() {
-    this.inputNum = 1;
-    this.gameOver = false;
-    this.victory = false;
-    this.sent = false;
-    this.tries = 0;
-    this.started = false;
-    this.buttonHandlers = new ButtonPressHandlers();
-    this.gamePad = null;
-  }
+
   createAnims() {
 
     this.anims.create({

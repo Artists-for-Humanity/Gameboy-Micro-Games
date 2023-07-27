@@ -85,7 +85,6 @@ export default class DrinkPour extends Phaser.Scene {
   }
 
   create() {
-    this.resetDrinkPour();
     // create scene animations
     this.animate();
 
@@ -185,21 +184,17 @@ export default class DrinkPour extends Phaser.Scene {
     }
   }
 
-  resetDrinkPour(){
-    this.fill_value = H;
-    this.gameLost = false;
-    this.pourScale = 0;
-    this.gameStart = false;
-    this.stopped = false;
-    this.unpoured = true;
-    this.overfill = false;
-    this.gameOver = false;
-    this.victory = false;
-    this.sent = false;
-    this.buttonHandlers = new ButtonPressHandlers();
-    this.gamePad = null;
-    this.press = false;
-  }
+  //dectects when button is pressed
+  // pressed() {
+  //   if (this.stopped === false) {
+  //     if (this.fill_value > 0 && this.gameStart) {
+  //       this.fill_value -= 9;
+  //       this.maskdraw();
+  //       this.unpoured = false;
+  //       this.pourAnim();
+  //     }
+  //   }
+  // }
 
   startGamePad() {
     if (this.input.gamepad.total) {
