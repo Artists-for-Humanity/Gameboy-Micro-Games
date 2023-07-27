@@ -74,7 +74,6 @@ export default class FrogJump extends Phaser.Scene {
 
     }
     create() {
-        this.setfrogJump()
         // this.gamestarted = true;
         this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, "sky");
         this.background.setOrigin(0, 0);
@@ -393,19 +392,6 @@ export default class FrogJump extends Phaser.Scene {
         if (this.playerSprite.body.velocity.y > 0) {
             this.playerSprite.anims.play('fall');
         }
-    }
-
-    setfrogJump(){
-        this.delayed = false;
-        this.winState = false;
-        this.offGround = false;
-        this.randomNum = Math.floor(Math.random() * 3);
-        this.victory = false;
-        this.gameOver = false;
-        this.sent = false;
-        this.started = false;
-        this.buttonHandlers = new ButtonPressHandlers();
-        this.gamePad = null;
     }
 
 

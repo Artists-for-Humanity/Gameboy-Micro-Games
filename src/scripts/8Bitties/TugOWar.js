@@ -91,7 +91,6 @@ export default class TugOWar extends Phaser.Scene {
   }
 
   create() {
-    this.resetToW();
     this.createAnimations();
     this.grass = this.add.image(540, 360, "8B6_background").setDepth(-10);
     this.mud = this.add.sprite(540, 620, "8B6_mud").setDepth(-9);
@@ -144,24 +143,7 @@ export default class TugOWar extends Phaser.Scene {
     }
 
   }
-  resetToW(){
-    this.sent = false;
-    this.gamestart = false;
-    this.gameStarted = false;
-    this.loseScale = 0;
-    this.LoseTimer = 0;
-    this.winTimer = 0;
-    this.winScale = 0;
-    this.imageCreated = false;
-    this.dashPos = 50;
-    this.victory = false;
-    this.lose = false;
-    this.gameOver = false;
-    this.slip = false;
-    this.buttonHandlers = new ButtonPressHandlers();
-    this.gamePad = null;
-  
-  }
+
   startGamePad() {
     if (this.input.gamepad.total) {
       this.gamePad = this.input.gamepad.pad1;

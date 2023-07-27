@@ -9,6 +9,16 @@ export default class Chew extends Phaser.Scene {
       visible: false,
       key: "MarcyMunch",
     });
+    this.victory = false;
+    this.gameOver = false;
+    this.keyInt = 0;
+    this.biteCount = 0;
+    this.chewInt = 0;
+    this.marcy;
+    this.frameNum = 0;
+    this.started = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null
   }
   preload() {
     this.load.spritesheet(
@@ -55,7 +65,6 @@ export default class Chew extends Phaser.Scene {
     );
   }
   create() {
-    this.setMarcy()
     this.bg = this.add.image(540, 360, "8B1_bg");
     this.table = this.add.image(750, 630, "8B1_table");
     this.candle = this.add.sprite(580, 570, "8B1_candle");
@@ -93,19 +102,6 @@ export default class Chew extends Phaser.Scene {
 
   initGamePad() {
       this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => {if (this.biteCount < 6) this.chewing()});
-  }
-  setMarcy(){
-    this.victory = false;
-    this.gameOver = false;
-    this.keyInt = 0;
-    this.biteCount = 0;
-    this.chewInt = 0;
-    this.marcy;
-    this.frameNum = 0;
-    this.started = false;
-    this.buttonHandlers = new ButtonPressHandlers();
-    this.gamePad = null
-    this.sent = false; 
   }
   makeAnims() {
     this.anims.create({
