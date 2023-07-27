@@ -14,7 +14,7 @@ export default class TrashSort extends Phaser.Scene {
     this.triesToWin = 4;
     this.startScreen;
     this.timedEvent;
-    this.currTrashItem= null;
+    this.currTrashItem;
     this.playerScore = 0;
     this.firstTrash = Phaser.Math.Between(0, 3);
     this.victory = false;
@@ -61,7 +61,6 @@ export default class TrashSort extends Phaser.Scene {
   }
 
   create() {
-    this.resetTrashSort()
     this.add.image(
       this.game.config.width / 2,
       this.game.config.height / 2,
@@ -97,22 +96,6 @@ export default class TrashSort extends Phaser.Scene {
 
     this.juice = new phaserJuice(this);
   }
-  resetTrashSort(){
-    this.triesToWin = 4;
-    this.playerScore = 0;
-    this.firstTrash = Phaser.Math.Between(0, 3);
-    this.victory = false;
-    this.gameOver = false;
-    this.sent = false;
-    this.started = false;
-    this.buttonHandlers = new ButtonPressHandlers();
-    this.gamePad = null;
-    this.currTrashItem= null;
-
-
-
-  }
-
 
   update() {
     if (this.started) {
@@ -131,7 +114,7 @@ export default class TrashSort extends Phaser.Scene {
         });
       }
 
-      if (this.currTrashItem === null) {
+      if (this.currTrashItem === undefined) {
         this.currTrashItem = this.physics.add
           .image(
             this.game.config.width / 2,
@@ -226,7 +209,6 @@ export default class TrashSort extends Phaser.Scene {
         a.destroy();
         this.juice.shake(trashBinType);
         this.spawnTrash();
-
       }
     });
   }

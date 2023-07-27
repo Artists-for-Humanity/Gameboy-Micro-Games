@@ -83,7 +83,6 @@ export default class HideFromCat extends Phaser.Scene {
     }
 
     create() {
-        this.resetHideFromCat();
         this.createAnims();
         this.background = this.add.image(540, 360, '22background');
         this.eyes = this.add.image(540, 360, 'eyes');
@@ -126,22 +125,6 @@ export default class HideFromCat extends Phaser.Scene {
 
         eventsCenter.on('start_game', () => { this.started = true; eventsCenter.emit('stop_timer'); });
 
-    }
-    resetHideFromCat(){
-        this.hitboxes = [];
-        this.arrows = [];
-        this.arrowTimer = 0;
-        this.buttonHandlers = new ButtonPressHandlers();
-        this.gamePad = null;
-        this.side = 0;
-        this.sweeping = false;
-        this.touched = false;
-        this.textDisplayed = false;
-        this.gamestarted = false;
-        this.gameOver = false;
-        this.victory = false;
-        this.sent = false;
-        this.started = false;
     }
 
     update(time, delta) {
