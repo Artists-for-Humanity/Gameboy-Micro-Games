@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // Add imports for phaser library, scenes, and plugins
 import Phaser from 'phaser';
+import phaserJuice from './phaserJuice.js';
 import GlobalState from './GlobalState';
 import GameOver from './GameOver';
 import Emeowgency from './8Bitties/Emeowgency';
 import ColorLab from './8Bitties/ColorLab';
 import CarPump from './DebugginDaOpps/CarPump';
 import TrashSort from './DebugginDaOpps/TrashSort';
-import phaserJuice from './phaserJuice.js';
 import Cannon from './DebugginDaOpps/Cannon';
 import Lowest from './TeamInflation/Lowest';
 import FrogJump from './TeamInflation/FrogJump';
@@ -38,8 +38,7 @@ const config = {
   width: 1080,
   height: 720,
   transparent: false,
-  backgroundColor: 'black',
-
+  backgroundColor: '#4488aa',
   // Add physics, arcade, scene, and audio
   physics: {
     default: 'arcade',
@@ -84,7 +83,6 @@ const config = {
   audio: {
     disableWebAudio: true,
   },
-
   plugins: {
     global: [
       {
