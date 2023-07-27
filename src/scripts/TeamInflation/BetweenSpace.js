@@ -50,6 +50,7 @@ export default class BetweenSpace extends Phaser.Scene {
   }
 
   create() {
+    this.resetBetweenSpace();
     this.gameWidth = this.game.config.width;
     this.gameHeight = this.game.config.height;
     this.add.image(this.gameWidth / 2, this.gameHeight / 2, "TI_3background");
@@ -108,6 +109,16 @@ export default class BetweenSpace extends Phaser.Scene {
     eventsCenter.on('start_game', () => { this.started = true; eventsCenter.emit('start_timer'); });
 
   }
+  resetBetweenSpace(){
+    this.lose = false;
+    this.gameOver = false;
+    this.victory = false;
+    this.sent = false;
+    this.started = false;
+    this.randomNum = Math.floor(Math.random() * 71);
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
+  }
 
   update() {
     if (this.started) {
@@ -119,14 +130,14 @@ export default class BetweenSpace extends Phaser.Scene {
 
         this.asteroidMovements(this.asteroidg1);
         this.asteroidMovements(this.asteroidg2);
-        console.log('reachme 00');
+        // console.log('reachme 00');
 
 
-        this.player.anims.play('TI_3run', true);
-        console.log('reachme 01');
+        // this.player.anims.play('TI_3run', true);
+        // // console.log('reachme 01');
 
-        this.goal.anims.play('TI_3spin', true);
-        console.log('reachme 02');
+        // this.goal.anims.play('TI_3spin', true);
+        // // console.log('reachme 02');
 
       }
 
