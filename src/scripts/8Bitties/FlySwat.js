@@ -75,7 +75,6 @@ export default class FlySwat extends Phaser.Scene {
   }
 
   create() {
-    this.setflySwat()
     this.makeAnimations();
     this.kitchen = this.add.image(540, 360, "8B5_kitchen").setDepth(-4);
     this.createKeys();
@@ -123,25 +122,7 @@ export default class FlySwat extends Phaser.Scene {
     this.buttonHandlers.addPad(() => this.gamePad.leftStick.x === 0, () => this.moveSwatter(3));
     this.buttonHandlers.addPad(() => this.gamePad.buttons[0].pressed, () => { this.swat(); });
   }
-  setflySwat(){
-    this.swatdown = false;
-    this.swatTimer = 2;
-    this.swatTextTimer = 0;
-    this.swatTextScale = 0;
-    this.gamestart = false;
-    this.flightPattern;
-    this.swingCD = 100;
-    this.swung = false;
-    this.timer = 0;
-    this.gameOver = false;
-    this.dead = false;
-    this.victory = false;
-    this.sent = false;
-    this.started = false;
-    this.gameStartRan = false;
-    this.buttonHandlers = new ButtonPressHandlers();
-    this.gamePad = null;
-  }
+
   swat() {
     if (!this.swung) {
       this.swatter.anims.play("8B5_down", true);
