@@ -19,7 +19,6 @@ import TugOWar from './8Bitties/TugOWar';
 import FlySwat from './8Bitties/FlySwat';
 import DrinkPour from './8Bitties/DrinkPour';
 import SockToss from './Team Notateam/SockToss';
-import CutScreen from './Team Notateam/CutScreen';
 import MainMenu from './MainMenu';
 import Timer from './Timer';
 import MarcyMunch from './8Bitties/MarcyMunch';
@@ -54,9 +53,12 @@ const config = {
     gamepad: true,
   },
   scene: [
+    NewCutScreen,
     MainMenu,
+    PenguinSlide,
     WhereisWilly,
     Timer,
+    fruitBasket,
     MarcyMunch,
     SockToss,
     CarPump,
@@ -69,7 +71,6 @@ const config = {
     TugOWar,
     FlySwat,
     DrinkPour,
-    PenguinSlide,
     Cannon,
     TrashSort,
     ColorPasscode,
