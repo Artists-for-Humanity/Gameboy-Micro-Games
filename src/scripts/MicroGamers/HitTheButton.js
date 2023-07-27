@@ -23,17 +23,13 @@ export default class HitTheButton extends Phaser.Scene {
         this.cpuName;
         this.myHand;
         this.cpuHand;
-        // this.myScoreTracker;
-        // this.cpuScoreTracker;
         this.myScore = 0;
         this.cpuScore = 0;
         this.round = 1;
         this.cpuTimer = 0;
-
-        // this.permaText;
         this.myText;
         this.endText;
-
+        this.roundActive = false;
         this.keySPACE;
         this.keyPressAvailable = true;
         this.delayedCallCheck = false;
@@ -77,6 +73,7 @@ export default class HitTheButton extends Phaser.Scene {
     }
 
     create() {
+        this.resetHTB();
         this.createAnims();
         this.setText();
         this.background = this.add.image(540, 360, '23background');
@@ -119,6 +116,7 @@ export default class HitTheButton extends Phaser.Scene {
                 //delayedCallCheck used to prevent multiple rounds starting at once
                 if (!this.roundActive && !this.delayedCallCheck) {
                     this.time.delayedCall(1000, () => {
+                        console.log('started')
                         this.startRound();
                         console.log('round start');
                     }, [], this);
@@ -163,6 +161,24 @@ export default class HitTheButton extends Phaser.Scene {
             eventsCenter.emit("game-end", this.victory);
             this.sent = true
         }
+    }
+    
+    resetHTB(){
+        this.roundActive = false;
+        this.startCheck = false;
+        this.gameActive = false;
+        this.gameOver = false;
+        this.victory = false;
+        this.sent = false;
+        this.started = false;
+        this.myScore = 0;
+        this.cpuScore = 0;
+        this.round = 1;
+        this.cpuTimer = 0;
+        this.keyPressAvailable = true;
+        this.delayedCallCheck = false;
+        this.buttonHandlers = new ButtonPressHandlers();
+        this.gamePad = null
     }
 
     initGamePad() {
@@ -264,10 +280,11 @@ export default class HitTheButton extends Phaser.Scene {
     }
 
     startRound() {
+        console.log('reachme00')
         this.roundActive = true;
 
         //turn button green
-        this.goGreen = this.time.delayedCall(this.getIntBetween(1200, 3500), () => {
+        this.time.delayedCall(this.getIntBetween(1200, 3500), () => {
             this.button.anims.play('green');
         }, [], this);
     }
