@@ -84,6 +84,7 @@ export default class WhereisWilly extends Phaser.Scene {
     );
   }
   create() {
+    this.resetWisW();
     this.bricks = this.add.image(540, 360, "8B6_wall");
     this.field = this.add.image(540, 360, "8B6_field");
     this.finger = this.physics.add.image(540, 360, "8B6_finger").setDepth(100);
@@ -108,6 +109,18 @@ export default class WhereisWilly extends Phaser.Scene {
       }
     }
   }
+  resetWisW() {
+    this.victory = false;
+    this.gameOver = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
+    this.started = false;
+    this.suspects = 7;
+    this.wantedNum = 0;
+    this.suspectArray = [];
+    this.newInt = 0;
+  }
+
   createKeys() {
     this.spacebar = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.SPACE
@@ -246,7 +259,7 @@ export default class WhereisWilly extends Phaser.Scene {
       .setFrame(this.wantedNum);
     this.correct.setScale(0.5);
     this.correct.body.setCircle(120);
-    console.log("Xpos: " + this.correct.x, "Ypos: " + this.correct.y);
+    // console.log("Xpos: " + this.correct.x, "Ypos: " + this.correct.y);
   }
   borders() {
     if (this.finger.x <= 40) this.finger.x = 50;
@@ -259,18 +272,18 @@ export default class WhereisWilly extends Phaser.Scene {
       for (let i = 0; i < this.suspects; i++) {
         if (i === this.wantedNum) i++;
         const place = this.getSuspectPos();
-        console.log("Xpos: " + place.x, "Ypos: " + place.y);
+        // console.log("Xpos: " + place.x, "Ypos: " + place.y);
 
         if (place.x < this.correct.x + 80 && place.x > this.correct.x - 80) {
-          console.log("moving");
+          // console.log("moving");
           if (rightBorder - place.x > 120) {
-            console.log("moved");
+            // console.log("moved");
             place.x += 130;
           } else {
-            console.log("moved");
+            // console.log("moved");
             place.x -= 130;
           }
-          console.log("after moving " + "Xpos: " + place.x, "Ypos: " + place.y);
+          // console.log("after moving " + "Xpos: " + place.x, "Ypos: " + place.y);
         }
 
         this.suspectHead = this.add
@@ -291,8 +304,8 @@ export default class WhereisWilly extends Phaser.Scene {
     this.started = true;
     this.wantedNum = this.getRandomInt(6);
     this.wanted = this.add
-      .image(550, 620, "8b6_missing")
-      .setFrame(this.wantedNum );
+      .image(550, 620, "8B6_Missing")
+      .setFrame(this.wantedNum);
     this.wanted.setScale(0.25);
     this.spawnCorrect();
     this.suspectArray.length = this.suspects;
