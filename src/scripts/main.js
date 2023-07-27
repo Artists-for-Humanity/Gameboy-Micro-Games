@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // Add imports for phaser library, scenes, and plugins
 import Phaser from 'phaser';
 import GlobalState from './GlobalState';
@@ -25,7 +26,7 @@ import CircleJump from './TeamInflation/CircleJump';
 import Factory from './Fairway/factoryScripts/factoryScenes/Factory';
 import HiScoreScene from './Hi-Score';
 import WhereisWilly from "./8Bitties/Where'sWilly.js";
-import EndlessCutScreen from './Team Notateam/newCutScreen.js';
+// import PenguinSlide from './NewGames/PenguinSlide.js';
 import newCutScreen from './Team Notateam/newCutScreen.js';
 import fruitBasket from './8Bitties/fruitBasket.js';
 
@@ -70,6 +71,7 @@ const config = {
     TugOWar,
     FlySwat,
     DrinkPour,
+    // PenguinSlide,
     Cannon,
     TrashSort,
     ColorPasscode,
