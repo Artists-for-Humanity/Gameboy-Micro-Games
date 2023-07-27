@@ -26,7 +26,7 @@ import CircleJump from './TeamInflation/CircleJump';
 import Factory from './Fairway/factoryScripts/factoryScenes/Factory';
 import HiScoreScene from './Hi-Score';
 import WhereisWilly from "./8Bitties/Where'sWilly.js";
-// import PenguinSlide from './NewGames/PenguinSlide.js';
+import PenguinSlide from './NewGames/PenguinSlide.js';
 import newCutScreen from './Team Notateam/newCutScreen.js';
 import fruitBasket from './8Bitties/fruitBasket.js';
 
@@ -71,7 +71,7 @@ const config = {
     TugOWar,
     FlySwat,
     DrinkPour,
-    // PenguinSlide,
+    PenguinSlide,
     Cannon,
     TrashSort,
     ColorPasscode,
