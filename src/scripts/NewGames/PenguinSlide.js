@@ -62,6 +62,7 @@ export default class PenguinSlide extends Phaser.Scene {
   }
 
   create() {
+    this.setPengSlide()
     this.gameWidth = this.game.config.width;
     this.gameHeight = this.game.config.height;
     this.add.image(this.gameWidth / 2, this.gameHeight / 2, "background").setOrigin(0.5);
@@ -345,5 +346,31 @@ export default class PenguinSlide extends Phaser.Scene {
       win: winText,
       lose: loseText,
     };
+  }
+  setPengSlide(){
+    this.lose = false;
+    this.gameOver = false;
+    this.victory = false;
+    this.sent = false;
+    this.started = false;
+    this.startTimer = false;
+    this.displayedAnimals = false;
+
+    // number of penguins and seals to display, respectively
+    this.penguinCount = Math.floor(Math.random() * 5) + 1; // 1 to 5 penguins
+    this.sealCount = Math.floor(Math.random() * 4); // 0 to 3 seals
+
+    // this is an array of the potential animals (seal or penguin) and the order is randomized
+    this.animals = (() => {
+      let totalAnimals = [...(new Array(this.penguinCount).fill('penguin')), ...(new Array(this.sealCount).fill('seal'))];
+      for (let i = totalAnimals.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [totalAnimals[i], totalAnimals[j]] = [totalAnimals[j], totalAnimals[i]];
+      }
+      return totalAnimals;
+    })();
+    this.animalTween = 0;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
   }
 }
