@@ -27,7 +27,7 @@ import Factory from './Fairway/factoryScripts/factoryScenes/Factory';
 import HiScoreScene from './Hi-Score';
 import WhereisWilly from "./8Bitties/Where'sWilly.js";
 import PenguinSlide from './NewGames/PenguinSlide.js';
-import NewCutScreen from './Team Notateam/NewCutScreen.js';
+import newCutScreen from './Team Notateam/newCutScreen.js';
 import fruitBasket from './8Bitties/fruitBasket.js';
 
 // Set configuration for phaser game instance
@@ -53,7 +53,7 @@ const config = {
     gamepad: true,
   },
   scene: [
-    NewCutScreen,
+    newCutScreen,
     MainMenu,
     PenguinSlide,
     WhereisWilly,
