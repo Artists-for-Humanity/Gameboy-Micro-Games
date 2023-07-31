@@ -32,10 +32,18 @@ export default class CircleJump extends Phaser.Scene {
       { frameWidth: 19, frameHeight: 19 });
     this.load.spritesheet("TI_4diamonds", new URL("./assets/CircleJump/diamond.png", import.meta.url).href,
       { frameWidth: 16, frameHeight: 16 });
-
+    this.load.audio(
+      'TI_4jump',
+      new URL('./assets/CircleJump/jumpsound.mp3', import.meta).href,
+    );
+    this.load.audio(
+      'TI_4lose',
+      new URL('./assets/CircleJump/CjLose.wav', import.meta).href,
+    );
   }
 
   create() {
+    this.makeSounds();
     this.graphics = this.add.graphics({
       lineStyle: {
         width: 4,
@@ -142,6 +150,9 @@ export default class CircleJump extends Phaser.Scene {
   }
 
   updatePlayer() {
+    this.bounceSound.play({
+      volume: 1.3,
+    })
     this.player.setVelocityY(-200);
   }
 
@@ -220,6 +231,9 @@ export default class CircleJump extends Phaser.Scene {
   }
   loseState() {
     // this.physics.pause();
+    this.loseSound.play({
+      volume: 1, 
+    })
     this.gameOver = true;
     this.loseText.setVisible(true);
   }
@@ -228,6 +242,9 @@ export default class CircleJump extends Phaser.Scene {
     if (!this.bandaid)
       this.physics.resume();
   }
-
+makeSounds(){
+  this.bounceSound = this.sound.add('TI_4jump');
+  this.loseSound = this.sound.add('T4_Ilose');
+}
 }
 

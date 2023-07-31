@@ -27,7 +27,7 @@ const listOfGames = [
   'BetweenSpace',
   'TugOWar',
   'WhereisWilly',
-   'PenguinSlide',
+  'PenguinSlide',
   'GameOver',
 ];
 
@@ -149,6 +149,9 @@ export default class newCutScreen extends Phaser.Scene {
     eventsCenter.on(
       'start-endless',
       () => {
+        this.closeSound.play({
+          volume: 0.3,
+        });
         this.shuffleGameOrder();
         this.closed = false;
         setTimeout(() => {

@@ -68,7 +68,14 @@ export default class Lowest extends Phaser.Scene {
       frameWidth: 1408 / 4,
       frameHeight: 294
     });
-
+    this.load.audio(
+      'TI_1hover',
+      new URL('./assets/Lowest/chooseHover.wav', import.meta).href
+    );
+    this.load.audio(
+      'TI_1badChoice',
+      new URL('./assets/Lowest/wrong_choise.mp3', import.meta).href
+    );
   }
   create() {
 
@@ -131,7 +138,7 @@ export default class Lowest extends Phaser.Scene {
     this.winText.setVisible(false);
 
     eventsCenter.on('start_game', () => { eventsCenter.emit('start_timer'); this.started = true; });
-
+    this.makeSounds();
   }
   update() {
 
@@ -399,5 +406,9 @@ export default class Lowest extends Phaser.Scene {
       this.box[this.selected].y + 80
     );
     this.box[this.selected].anims.play("TI_1box");
+  }
+  makeSounds(){
+    this.highlightSound = this.sound.add( 'TI_1hover');
+    this.wrongAnswer = this.sound.add('TI_1badChoice');
   }
 }
