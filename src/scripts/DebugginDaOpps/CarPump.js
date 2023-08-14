@@ -78,9 +78,22 @@ export default class CarPump extends Phaser.Scene {
       new URL("./assets/100car_spritesheet.png", import.meta.url).href,
       { frameWidth: 1080, frameHeight: 720 }
     );
+    this.load.audio(
+      'DO2_carSound',
+      new URL('./assets/car start up.wav', import.meta.url).href
+    );
+    this.load.audio(
+      'DO2_pump1',
+      new URL('./assets/pump1.wav', import.meta.url).href
+    );
+    this.load.audio(
+      'DO2_pump2',
+      new URL('./assets/pump2.wav', import.meta.url).href
+    );
   }
 
   create() {
+    this.makeSounds();
     this.add.image(1080 / 2, 720 / 2, "DO2_pumpgame_bg");
     this.lever = this.physics.add.sprite(955, 480, "DO2_lever");
     this.car = this.add.image(540, 350, "DO2_car");
@@ -383,5 +396,10 @@ export default class CarPump extends Phaser.Scene {
       this.car100.anims.play("DO2_car_inflate100%", true);
       this.car75.visible = false;
     }
+  }
+  makeSounds(){
+    this.pump1 = this.sound.add('DO2_pump1')
+    this.pump2 = this.sound.add('DO2_pump2')
+    this.carStartSound = this.sound.add('DO2_carSound')
   }
 }

@@ -146,12 +146,18 @@ export default class Emeowgency extends Phaser.Scene {
 
       if (this.gameOver && !this.sent) {
         eventsCenter.emit('stop_timer');
-
         eventsCenter.emit("game-end", this.victory);
         this.sent = true;
 
 
       }
+    }else{
+      if(this.cat){
+        this.cat.destroy();
+      }
+      if(this.shadow){
+      this.shadow.destroy();
+    }
     }
   }
 
@@ -193,6 +199,7 @@ export default class Emeowgency extends Phaser.Scene {
   resetEmeowgency() {
     this.timer = 43;
     this.catchScale = 0;
+    this.catfalling = true;
     this.catFail = false;
     this.catFall = true;
     this.catSafe = false;
@@ -253,7 +260,7 @@ export default class Emeowgency extends Phaser.Scene {
     this.shadow = this.physics.add.sprite(position.x, position.y, "8B4_yang");
 
     this.shadow.alpha = 0.5;
-    this.shadow.visible = false;
+    this.shadow.visible = true;
     this.shadow.setCircle(30, 15)
   }
 

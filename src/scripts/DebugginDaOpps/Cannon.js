@@ -107,9 +107,26 @@ export default class Cannon extends Phaser.Scene {
         frameHeight: 400,
       }
     );
+    this.load.audio(
+      'DO1_cannonNoise',
+      new URL('./assets2/cannonFire.mp3', import.meta.url).href
+    );
+    this.load.audio(
+      'DO1_hover1',
+      new URL('./assets/gun moevement 4.wav', import.meta.url).href
+    );
+    this.load.audio(
+      'DO1_hover2',
+      new URL('gun movement 5.wav', import.meta.url).href
+    );
+    this.load.audio(
+      'DO1_hover3',
+      new URL('gun movement 7.wav', import.meta.url).href
+    );
   }
 
   create() {
+    this.makeSounds();
     this.LEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
     this.RIGHT = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.RIGHT
@@ -519,5 +536,11 @@ export default class Cannon extends Phaser.Scene {
       {},
       sortedBarrelByLevel
     );
+  }
+  makeSounds(){
+    this.cannonFireSound = this.sound.add('DO1_fire');
+    this.cursorSound1 = this.sound.add('DO1_hover1');
+    this.cursorSound2 = this.sound.add('DO1_hover2');
+    this.cursorSound3 = this.sound.add('DO1_hover3');
   }
 }

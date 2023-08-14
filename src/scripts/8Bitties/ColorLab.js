@@ -86,11 +86,19 @@ export default class ColorLab extends Phaser.Scene {
       "8B2_fail",
       new URL("../8Bitties/assets/colorlab/fail_text.png", import.meta.url).href
     );
-
+    this.load.audio(
+      '8B2_explosion',
+      new URL('./assets/colorlab/explosion.mp3', import.meta.url).href
+    );
+    this.load.audio(
+      '8B2_bubbles',
+      new URL('./assets/colorlab/bubbles 14.wav', import.meta.url).href
+    );
     this.loadSpriteSheets();
   }
 
   create() {
+    this.makeSounds();
     this.background = this.add.image(540, 360, "8B2_background");
 
     this.createSprites();
@@ -827,5 +835,9 @@ export default class ColorLab extends Phaser.Scene {
       this.fail = this.add.image(540, 360, "8B2_fail").setDepth(100);
       this.createImage = true;
     }
+  }
+  makeSounds(){
+    this.explosionSound = this.sound.add('8B2_explosion');
+    this.bubbleSound = this.sound.add('8B2_bubbles');
   }
 }

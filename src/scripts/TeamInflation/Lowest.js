@@ -70,11 +70,11 @@ export default class Lowest extends Phaser.Scene {
     });
     this.load.audio(
       'TI_1hover',
-      new URL('./assets/Lowest/chooseHover.wav', import.meta).href
+      new URL('./assets/Lowest/chooseHover.wav', import.meta.url).href
     );
     this.load.audio(
       'TI_1badChoice',
-      new URL('./assets/Lowest/wrong_choise.mp3', import.meta).href
+      new URL('./assets/Lowest/wrong_choise.mp3', import.meta.url).href
     );
   }
   create() {
@@ -342,6 +342,9 @@ export default class Lowest extends Phaser.Scene {
         this.victory = true;
         this.winText.setVisible(true);
       } else {
+        this.wrongAnswer.play({
+          volume: .1, 
+        })
         console.log("Less good job");
         this.loseText.setVisible(true);
       }
@@ -350,6 +353,9 @@ export default class Lowest extends Phaser.Scene {
     } else {
       // stop current animation 
       this.box[this.selected].anims.stop();
+      this.highlightSound.play({
+        volume:.1 ,
+      })
       switch (this.selected) {
         // moving from top left
         case 0:

@@ -34,11 +34,11 @@ export default class CircleJump extends Phaser.Scene {
       { frameWidth: 16, frameHeight: 16 });
     this.load.audio(
       'TI_4jump',
-      new URL('./assets/CircleJump/jumpsound.mp3', import.meta).href,
+      new URL('./assets/CircleJump/jumpsound.mp3', import.meta.url).href,
     );
     this.load.audio(
       'TI_4lose',
-      new URL('./assets/CircleJump/CjLose.wav', import.meta).href,
+      new URL('./assets/CircleJump/CjLose.wav', import.meta.url).href,
     );
   }
 
@@ -232,7 +232,7 @@ export default class CircleJump extends Phaser.Scene {
   loseState() {
     // this.physics.pause();
     this.loseSound.play({
-      volume: 1, 
+      volume: .3, 
     })
     this.gameOver = true;
     this.loseText.setVisible(true);
@@ -244,7 +244,7 @@ export default class CircleJump extends Phaser.Scene {
   }
 makeSounds(){
   this.bounceSound = this.sound.add('TI_4jump');
-  this.loseSound = this.sound.add('T4_Ilose');
+  this.loseSound = this.sound.add('TI_4lose');
 }
 }
 
