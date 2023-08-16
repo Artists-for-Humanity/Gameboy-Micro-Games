@@ -80,10 +80,29 @@ export default class ColorPasscode extends Phaser.Scene {
             import.meta.url).href);
         this.load.image('darkBlue', new URL('assets/ColorPasscode/darkBlue.png',
             import.meta.url).href);
+    
+        this.load.audio(
+            'MG_b4',
+            new URL('assets/colorPasscode/b4.wav', import.meta.url).href
+        );
+        this.load.audio(
+            'MG_c4',
+            new URL('assets/colorPasscode/c4.wav', import.meta.url).href
+        );
+        this.load.audio(
+            'MG_d4',
+            new URL('assets/colorPasscode/d4.wav', import.meta.url).href
+        );
+        this.load.audio(
+            'MG_g4',
+            new URL('assets/colorPasscode/g4.wav', import.meta.url).href
+        );
+        
     }
 
     create() {
         // this.startGamePad();
+        this.makeSounds();
         this.drawUI();
         this.setText();
         // this.Left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
@@ -423,5 +442,12 @@ export default class ColorPasscode extends Phaser.Scene {
             this.winText.visible = true;
             this.gameOver = true;
         }, [], this);
+    }
+    makeSounds(){
+        this.c4 = this.sound.add('MG_c4');
+        this.b4 = this.sound.add('MG_b4');
+        this.d4 = this.sound.add('MG_d4');
+        this.g4 = this.sound.add('MG_g4');
+
     }
 }
