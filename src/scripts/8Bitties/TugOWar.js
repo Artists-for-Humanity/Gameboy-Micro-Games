@@ -88,9 +88,22 @@ export default class TugOWar extends Phaser.Scene {
         frameHeight: 237,
       }
     );
+    this.load.audio(
+      '8B6_tugNoise',
+      new URL('../8Bitties/assets/TugOWar/rope tugging.wav', import.meta.url).href
+    );
+    this.load.audio(
+      '8B6_slipNoise',
+      new URL('../8Bitties/assets/TugOWar/slip.wav', import.meta.url).href
+    );
+    this.load.audio(
+      '8B6_splatNoise',
+      new URL('../8Bitties/assets/TugOWar/splatOn mud.wav', import.meta.url).href
+    );
   }
 
   create() {
+    this.createSounds();
     this.createAnimations();
     this.grass = this.add.image(540, 360, "8B6_background").setDepth(-10);
     this.mud = this.add.sprite(540, 620, "8B6_mud").setDepth(-9);
@@ -320,5 +333,10 @@ export default class TugOWar extends Phaser.Scene {
       this.npcRopePile.visible = true;
       return;
     }
+  }
+  createSounds(){
+    this.slipSound = this.sound.add('8B6_slipNoise');
+    this.splatSound = this.sound.add('8B6_splatNoise');
+    this.tugSound = this.soound.add('8B6_tugNoise');
   }
 }

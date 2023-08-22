@@ -25,9 +25,9 @@ const listOfGames = [
   // 'HideFromCat'(no sounds yet),
   // 'HitTheButton'(no sounds yet),
   // 'BetweenSpace',
-  'TugOWar',
-  // 'WhereisWilly',
-  // 'PenguinSlide',
+  // 'TugOWar',
+  // 'WhereisWilly'(sound not implimented ),
+  // 'PenguinSlide'(sound not implimented ),
   'GameOver',
 ];
 
