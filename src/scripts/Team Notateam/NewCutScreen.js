@@ -15,7 +15,7 @@ const listOfGames = [
   // 'Lowest',
   // 'FrogJump',
   // 'DrinkPour',
-  // 'FlySwat',
+  'FlySwat',
   // 'Emeowgency'(broken),
   // 'ColorLab',
   // 'Cannon',

@@ -345,7 +345,7 @@ export default class DrinkPour extends Phaser.Scene {
   }
   makeSounds(){
     this.spillingNoise = this.sound.add('water spilling');
-    this.pouringNoise = this.sound.add('waterpPouring') ;
+    this.pouringNoise = this.sound.add('waterPouring') ;
     this.pitcherPlacementNoise = this.sound.add('pitcherPlacement');
   }
 }
