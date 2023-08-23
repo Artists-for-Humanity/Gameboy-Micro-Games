@@ -86,11 +86,19 @@ export default class ColorLab extends Phaser.Scene {
       "8B2_fail",
       new URL("../8Bitties/assets/colorlab/fail_text.png", import.meta.url).href
     );
-
+    this.load.audio(
+      '8B2_explosion',
+      new URL('./assets/colorlab/explosion.mp3', import.meta.url).href
+    );
+    this.load.audio(
+      '8B2_bubbles',
+      new URL('./assets/colorlab/bubbles 14.wav', import.meta.url).href
+    );
     this.loadSpriteSheets();
   }
 
   create() {
+    this.makeSounds();
     this.background = this.add.image(540, 360, "8B2_background");
 
     this.createSprites();
@@ -142,6 +150,23 @@ export default class ColorLab extends Phaser.Scene {
       this.globalState.timerMessage('start_timer');
     });
   }
+ColorLabReset(){
+  this.victory = false;
+  this.gameOver = false;
+  this.sent = false;
+  this.lose =false;
+  this.started = false;
+  this.catchScale = 0;
+  this.catchScale = 0;
+  this.safeScale = 0;
+  this.safeTimer = 0;
+  this.failScale = 0;
+  this.failTimer = 0;
+  this.createImage = false;
+  this.buttonHandlers = new ButtonPressHandlers();
+  this.gamePad = null;
+}
+
 
   update() {
     if (this.gameOver && !this.sent) {
@@ -827,5 +852,9 @@ export default class ColorLab extends Phaser.Scene {
       this.fail = this.add.image(540, 360, "8B2_fail").setDepth(100);
       this.createImage = true;
     }
+  }
+  makeSounds(){
+    this.explosionSound = this.sound.add('8B2_explosion');
+    this.bubbleSound = this.sound.add('8B2_bubbles');
   }
 }

@@ -71,9 +71,19 @@ export default class FrogJump extends Phaser.Scene {
             import.meta.url).href);
         this.load.image('TIFJlose', new URL("./assets/frogJump/youlosefrog.png",
             import.meta.url).href);
+        this.load.audio(
+            'TI_FJboing',
+            new URL('./assets/frogJump/boing.mp3', import.meta.url).href
+        );
+        this.load.audio(
+            'TI_FJfrogWalking',
+            new URL('./assets/frogJump/frog-walk-trimmed.mp3', import.meta.url).href
+        );
 
     }
     create() {
+        this.setFrogJump();
+        this.makeSounds();
         // this.gamestarted = true;
         this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, "sky");
         this.background.setOrigin(0, 0);
@@ -182,15 +192,28 @@ export default class FrogJump extends Phaser.Scene {
     updatePlayer(x) {
         if (x === 0) {
             this.walk(true);
+            this.walkingNoise.play({
+                volume:1,
+                loop: true,
+            });
         } else if (x === 1) {
             this.walk(false);
+            this.walkingNoise.play({
+                volume:1,
+                loop: true,
+            });  
+           
         } else if (x === 2) {
             this.playerSprite.setVelocityX(0);
+            this.walkingNoise.stop()
             if (this.playerSprite.body.touching.down) {
                 this.playerSprite.anims.play('turn');
             }
         }
         if (x === 3 && this.playerSprite.body.touching.down) {
+            this.jumpNoise.play({
+                volume: .1,
+            });
             this.playerSprite.anims.play('jump');
             this.playerSprite.setVelocityY(-600 * 1.2);
         }
@@ -414,5 +437,20 @@ export default class FrogJump extends Phaser.Scene {
             this.playerSprite.anims.play('walk', true);
         }
     }
-
+    makeSounds(){
+        this.jumpNoise = this.sound.add('TI_FJboing');
+        this.walkingNoise = this.sound.add('TI_FJfrogWalking');
+    }
+    setFrogJump(){
+        this.delayed = false;
+        this.winState = false;
+        this.offGround = false;
+        this.randomNum = Math.floor(Math.random() * 3);
+        this.victory = false;
+        this.gameOver = false;
+        this.sent = false;
+        this.started = false;
+        this.buttonHandlers = new ButtonPressHandlers();
+        this.gamePad = null;
+    }
 }

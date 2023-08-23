@@ -58,9 +58,24 @@ export default class TrashSort extends Phaser.Scene {
       "DO3_soda_can",
       new URL("./assets1/soda-can.png", import.meta.url).href
     );
+    this.load.audio(
+      'DO3_canNoise',
+      new URL('./assets1/can.wav', import.meta.url).href
+    );
+    this.load.audio(
+      'DO3_recycle1Noise',
+      new URL('./assets1/trash.wav', import.meta.url).href
+    );
+    this.load.audio(
+      'DO3_recycle2Noise',
+      new URL('./assets1/trash2.wav', import.meta.url).href
+    );
+    
   }
 
   create() {
+    this.setTrashSort();
+    this.makeSounds();
     this.add.image(
       this.game.config.width / 2,
       this.game.config.height / 2,
@@ -208,8 +223,27 @@ export default class TrashSort extends Phaser.Scene {
         this.playerScore += 1;
         a.destroy();
         this.juice.shake(trashBinType);
+        this.canNoise.play({
+          volume:1, 
+        })
         this.spawnTrash();
       }
     });
+  }
+  makeSounds(){
+    this.canNoise = this.sound.add('DO3_canNoise');
+    this.recycleSound = this.sound.add('DO3_recycle1Noise');
+    this.recycleSound2 = this.sound.add('DO3_recycle2Noise')
+  }
+  setTrashSort(){
+    this.triesToWin = 4;
+    this.playerScore = 0;
+    this.firstTrash = Phaser.Math.Between(0, 3);
+    this.victory = false;
+    this.gameOver = false;
+    this.sent = false;
+    this.started = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
   }
 }

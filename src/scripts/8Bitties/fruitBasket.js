@@ -62,8 +62,19 @@ export default class fruitBasket extends Phaser.Scene {
         frameHeight: 153,
       }
     );
+    this.load.audio(
+      '8B7_Splat',
+      new URL('./assets/fruitBaskets/splat.wav', import.meta.url).href
+    );
+    this.load.audio(
+      '8B7_FruitIn',
+      new URL('./assets/fruitBaskets/FruitIn.wav', import.meta.url).href
+    );
+    
+      
   }
   create() {
+    this.makeSounds();
     this.gameBools()
     this.makeAnims();
     this.addBaseAssets();
@@ -138,12 +149,19 @@ export default class fruitBasket extends Phaser.Scene {
           this.fruits[this.fallingFruit].body
         )
       ) {
+        this.basketSound.play({
+          volume: 1.5,
+        })
         this.nextFruit();
       }
       this.fruits[this.fallingFruit].visible = true;
       if (this.fruits[this.fallingFruit].y < 680) {
         this.fruits[this.fallingFruit].y += 5;
+
       } else {
+        this.splatSound.play({
+          volume: 1.5,
+        });
         this.defeted();
       }
     }
@@ -249,5 +267,9 @@ export default class fruitBasket extends Phaser.Scene {
       frameRate: 1,
       repeat: -1,
     });
+  }
+  makeSounds(){
+    this.basketSound = this.sound.add('8B7_FruitIn');
+    this.splatSound = this.sound.add('8B7_Splat');
   }
 }

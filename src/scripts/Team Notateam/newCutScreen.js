@@ -1,5 +1,5 @@
-import Phaser from 'phaser';
-import eventsCenter from '../EventsCenter';
+import Phaser from "phaser";
+import eventsCenter from "../EventsCenter";
 const X = 1080;
 const Y = 720;
 const L_END = X / 4;
@@ -7,27 +7,27 @@ const R_END = 3 * L_END;
 const L_START = -L_END;
 const R_START = 5 * L_END;
 
-const listOfGames = [
-  'PenguinSlide',
+const listOfGames = [ 
   'fruitBasket',
   'MarcyMunch',
   'CircleJump',
-  'SockToss',
+  // 'SockToss'(no sounds),
   'Lowest',
   'FrogJump',
-  'DrinkPour',
+  // 'DrinkPour'(sound not working correctly),
   'FlySwat',
-  'Emeowgency',
-  'ColorLab',
+  // 'Emeowgency'(broken),
+  // 'ColorLab'(not finnished),
   'Cannon',
   'CarPump',
   'TrashSort',
-  'ColorPasscode',
-  'HideFromCat',
-  'HitTheButton',
+  'ColorPasscode', 
+  // 'HideFromCat'(no sounds yet),
+  // 'HitTheButton'(no sounds yet),
   'BetweenSpace',
   'TugOWar',
-  'WhereisWilly',
+  // 'WhereisWilly'(sound not implimented ),
+  'PenguinSlide',
   'GameOver',
 ];
 
@@ -149,6 +149,9 @@ export default class newCutScreen extends Phaser.Scene {
     eventsCenter.on(
       'start-endless',
       () => {
+        this.closeSound.play({
+          volume: 0.3,
+        });
         this.shuffleGameOrder();
         this.closed = false;
         setTimeout(() => {

@@ -37,31 +37,37 @@ export default class PenguinSlide extends Phaser.Scene {
   }
 
   preload() {
-    this.load.spritesheet("arrow", new URL("assets/arrow_sheet.png", import.meta.url).href, {
+    this.load.spritesheet("arrow", new URL("assets/penguinSlide/arrow_sheet.png", import.meta.url).href, {
       frameWidth: 87,
       frameHeight: 77,
     });
-    this.load.spritesheet("penguin", new URL("assets/penguins.png", import.meta.url).href, {
+    this.load.spritesheet("penguin", new URL("assets/penguinSlide/penguins.png", import.meta.url).href, {
       frameWidth: 147,
       frameHeight: 125,
     });
-    this.load.spritesheet("scorebox", new URL("assets/scorebox.png", import.meta.url).href, {
+    this.load.spritesheet("scorebox", new URL("assets/penguinSlide/scorebox.png", import.meta.url).href, {
       frameWidth: 558 / 2,
       frameHeight: 172,
     });
-    this.load.spritesheet("seal", new URL("assets/seal.png", import.meta.url).href, {
+    this.load.spritesheet("seal", new URL("assets/penguinSlide/seal.png", import.meta.url).href, {
       frameWidth: 244,
       frameHeight: 142,
     });
-    this.load.spritesheet("zzz", new URL("assets/zzz.png", import.meta.url).href, {
+    this.load.spritesheet("zzz", new URL("assets/penguinSlide/zzz.png", import.meta.url).href, {
       frameWidth: 90,
       frameHeight: 94,
     });
-    this.load.image("background", new URL("assets/background.png", import.meta.url).href);
-    this.load.image("igloo", new URL("assets/igloo.png", import.meta.url).href);
+    this.load.image("background", new URL("assets/penguinSlide/background.png", import.meta.url).href);
+    this.load.image("igloo", new URL("assets/penguinSlide/igloo.png", import.meta.url).href);
+    this.load.audio(
+      'Peng_slip',
+    new URL('assets/penguinSlide/slip.wav', import.meta.url).href
+    );
   }
 
   create() {
+    this.setPengSlide()
+    this.makeNoise();
     this.gameWidth = this.game.config.width;
     this.gameHeight = this.game.config.height;
     this.add.image(this.gameWidth / 2, this.gameHeight / 2, "background").setOrigin(0.5);
@@ -113,8 +119,14 @@ export default class PenguinSlide extends Phaser.Scene {
       repeat: this.animals.length - 1,
       onStart: () => {
         this.instructiveText.watch.setVisible(true);
+        this.slipNoise.play({
+          volume:1
+        })
       },
       onRepeat: () => {
+        this.slipNoise.play({
+          volume:1
+        })
         this.activeAnimal.setTexture(this.animals[this.animalTween]);
         if (this.activeAnimal.texture.key === 'seal') {
           this.activeAnimal.flipX = true;
@@ -345,5 +357,34 @@ export default class PenguinSlide extends Phaser.Scene {
       win: winText,
       lose: loseText,
     };
+  }
+  setPengSlide(){
+    this.lose = false;
+    this.gameOver = false;
+    this.victory = false;
+    this.sent = false;
+    this.started = false;
+    this.startTimer = false;
+    this.displayedAnimals = false;
+
+    // number of penguins and seals to display, respectively
+    this.penguinCount = Math.floor(Math.random() * 5) + 1; // 1 to 5 penguins
+    this.sealCount = Math.floor(Math.random() * 4); // 0 to 3 seals
+
+    // this is an array of the potential animals (seal or penguin) and the order is randomized
+    this.animals = (() => {
+      let totalAnimals = [...(new Array(this.penguinCount).fill('penguin')), ...(new Array(this.sealCount).fill('seal'))];
+      for (let i = totalAnimals.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [totalAnimals[i], totalAnimals[j]] = [totalAnimals[j], totalAnimals[i]];
+      }
+      return totalAnimals;
+    })();
+    this.animalTween = 0;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
+  }
+  makeNoise(){
+    this.slipNoise = this.sound.add('Peng_slip')
   }
 }

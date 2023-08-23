@@ -82,11 +82,25 @@ export default class DrinkPour extends Phaser.Scene {
         frameHeight: 538,
       }
     );
+    this.load.audio(
+      'waterPouring', 
+      new URL('./assets/drink pour/Pouring-Liquid.wav', import.meta.url).href
+    );
+    this.load.audio(
+      'pitcherPlacement',
+      new URL('./assets/drink pour/Putting-Down-Glass-Cup.wav', import.meta.url).href
+    );
+    this.load.audio(
+      'water spilling', 
+      new URL('./assets/drink pour/water spilling.wav', import.meta.url).href
+    );
   }
 
   create() {
     // create scene animations
+    this.drinkPourReset();
     this.animate();
+    this.makeSounds();
 
     //background
     this.add.image(540, 360, "8B3_background");
@@ -329,5 +343,25 @@ export default class DrinkPour extends Phaser.Scene {
     this.pitcher.setY(460);
     this.pitcher.setX(200);
     this.pitcher.anims.play("8B3_idle pitcher anim", true);
+  }
+  makeSounds(){
+    this.spillingNoise = this.sound.add('water spilling');
+    this.pouringNoise = this.sound.add('waterPouring') ;
+    this.pitcherPlacementNoise = this.sound.add('pitcherPlacement');
+  }
+  drinkPourReset(){
+    this.fill_value = H;
+    this.gameLost = false;
+    this.pourScale = 0;
+    this.gameStart = false;
+    this.stopped = false;
+    this.unpoured = true;
+    this.overfill = false;
+    this.gameOver = false;
+    this.victory = false;
+    this.sent = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
+    this.press = false;
   }
 }

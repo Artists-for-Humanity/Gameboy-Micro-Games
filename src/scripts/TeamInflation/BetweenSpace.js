@@ -43,6 +43,16 @@ export default class BetweenSpace extends Phaser.Scene {
       frameWidth: 38,
       frameHeight: 38
     });
+    
+    this.add.audio(
+      'TI_3explosionSound',
+      new URL('./assets/Explode16bit.wav', import.meta.url).href
+    );
+    this.add.audio(
+      'TI_3rocketSound',
+      new URL('./assets/ship engine.wav', import.meta.url).href
+    );
+
 
 
 

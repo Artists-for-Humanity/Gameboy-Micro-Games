@@ -66,6 +66,14 @@ export default class WhereisWilly extends Phaser.Scene {
         frameHeight: 235,
       }
     );
+    this.load.audio(
+      '8B6_WrongChoise',
+      new URL('', import.meta.url).href
+    );
+    this.load.audio(
+      '8B6_rightChoice',
+      new URL('', import.meta.url).href
+    );
   }
   create() {
     this.bricks = this.add.image(540, 360, '8B6_wall');

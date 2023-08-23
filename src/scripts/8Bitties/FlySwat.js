@@ -72,9 +72,20 @@ export default class FlySwat extends Phaser.Scene {
         frameHeight: 130,
       }
     );
+    this.load.audio(
+      '8B5_Kaboom',
+      new URL('../8Bitties/assets/FlySwat/explosion.mp3', import.meta.url).href,
+    );
+
+    this.load.audio(
+      '8B5_Slap',
+      new URL('../8Bitties/assets/FlySwat/slap.mp3', import.meta.url).href
+    );
   }
 
   create() {
+    this.setFlySwat();
+    this.createSounds();
     this.makeAnimations();
     this.kitchen = this.add.image(540, 360, "8B5_kitchen").setDepth(-4);
     this.createKeys();
@@ -124,9 +135,15 @@ export default class FlySwat extends Phaser.Scene {
   }
 
   swat() {
+    
     if (!this.swung) {
       this.swatter.anims.play("8B5_down", true);
       this.swung = true;
+        
+      this.slapNoise.play({
+          volume:.3,
+        });
+
       if (
         Phaser.Geom.Intersects.CircleToRectangle(
           this.fly.body,
@@ -160,6 +177,11 @@ export default class FlySwat extends Phaser.Scene {
     }
   }
   killFly() {
+    this.kaboomNoise.play(
+      {
+        volume: 1,
+      }
+    )
     this.fly.anims.play("8B5_crash");
     this.dead = true;
   }
@@ -233,13 +255,19 @@ export default class FlySwat extends Phaser.Scene {
   }
   swing() {
     if (this.swatter && !this.gameOver) {
+     
       if (this.swung === true) {
         this.swingCD -= 10;
       }
+      
+      
+
       if (this.swingCD <= 0) {
+        
         this.swatter.anims.play("8B5_up", true);
         this.swatter.on('animationcomplete', () => {
           this.swung = false;
+          
         });
         this.swingCD = 100;
       }
@@ -289,5 +317,27 @@ export default class FlySwat extends Phaser.Scene {
         this.swatter.setVelocityY(0);
       }
     }
+  }
+  setFlySwat(){
+    this.swatdown = false;
+    this.swatTimer = 2;
+    this.swatTextTimer = 0;
+    this.swatTextScale = 0;
+    this.gamestart = false;
+    this.swingCD = 100;
+    this.swung = false;
+    this.timer = 0;
+    this.gameOver = false;
+    this.dead = false;
+    this.victory = false;
+    this.sent = false;
+    this.started = false;
+    this.gameStartRan = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
+  }
+  createSounds(){
+    this.kaboomNoise = this.sound.add('8B5_Kaboom');
+    this.slapNoise = this.sound.add('8B5_Slap');
   }
 }

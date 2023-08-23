@@ -80,10 +80,30 @@ export default class ColorPasscode extends Phaser.Scene {
             import.meta.url).href);
         this.load.image('darkBlue', new URL('assets/ColorPasscode/darkBlue.png',
             import.meta.url).href);
+    
+        this.load.audio(
+            'MG_b4',
+            new URL('assets/colorPasscode/b4.wav', import.meta.url).href
+        );
+        this.load.audio(
+            'MG_c4',
+            new URL('assets/colorPasscode/c4.wav', import.meta.url).href
+        );
+        this.load.audio(
+            'MG_d4',
+            new URL('assets/colorPasscode/d4.wav', import.meta.url).href
+        );
+        this.load.audio(
+            'MG_g4',
+            new URL('assets/colorPasscode/g4.wav', import.meta.url).href
+        );
+        
     }
 
     create() {
+        this.resetCPC();
         // this.startGamePad();
+        this.makeSounds();
         this.drawUI();
         this.setText();
         // this.Left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
@@ -387,15 +407,27 @@ export default class ColorPasscode extends Phaser.Scene {
         var key;
         if (num === 0) {
             key = 'lightRed';
+            this.c4.play({
+                volume:1,
+            });
         }
         else if (num === 1) {
             key = 'lightYellow';
+            this.b4.play({
+                volume:1,
+            });
         }
         else if (num === 2) {
             key = 'lightPurple';
+            this.d4.play({
+                volume:1,
+            });
         }
         else if (num === 3) {
             key = 'lightBlue';
+            this.g4.play({
+                volume:1,
+            });
         }
         this.guessBlocks[this.guessNum].setTexture(key);
         this.guessBlocks[this.guessNum].visible = true;
@@ -423,5 +455,35 @@ export default class ColorPasscode extends Phaser.Scene {
             this.winText.visible = true;
             this.gameOver = true;
         }, [], this);
+    }
+    makeSounds(){
+        this.c4 = this.sound.add('MG_c4');
+        this.b4 = this.sound.add('MG_b4');
+        this.d4 = this.sound.add('MG_d4');
+        this.g4 = this.sound.add('MG_g4');
+
+    }
+    resetCPC(){
+        this.doors = [];
+        this.t = 0;
+        this.goTextTimer = 0;
+        this.started = false;
+        this.started2 = false;
+        this.gameOver = false;
+        this.victory = false;
+        this.sent = false;
+        this.startTimer = 0;
+        this.lightColorButtons = [];
+        this.darkColorButtons = [];
+        this.pattern = [];
+
+        this.g1, this.g2, this.g3, this.g4;
+        this.guessBlocks = [];
+        this.guesses = [];
+        this.guessNum = 0;
+
+        this.interactive = false;
+        this.buttonHandlers = new ButtonPressHandlers();
+        this.gamePad = null;
     }
 }

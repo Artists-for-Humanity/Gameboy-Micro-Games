@@ -68,10 +68,17 @@ export default class Lowest extends Phaser.Scene {
       frameWidth: 1408 / 4,
       frameHeight: 294
     });
-
+    this.load.audio(
+      'TI_1hover',
+      new URL('./assets/Lowest/chooseHover.wav', import.meta.url).href
+    );
+    this.load.audio(
+      'TI_1badChoice',
+      new URL('./assets/Lowest/wrong_choise.mp3', import.meta.url).href
+    );
   }
   create() {
-
+    this.setLowest();
     // SET INPUTS
     this.up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
     this.down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
@@ -131,7 +138,7 @@ export default class Lowest extends Phaser.Scene {
     this.winText.setVisible(false);
 
     eventsCenter.on('start_game', () => { eventsCenter.emit('start_timer'); this.started = true; });
-
+    this.makeSounds();
   }
   update() {
 
@@ -335,6 +342,9 @@ export default class Lowest extends Phaser.Scene {
         this.victory = true;
         this.winText.setVisible(true);
       } else {
+        this.wrongAnswer.play({
+          volume: .1, 
+        })
         console.log("Less good job");
         this.loseText.setVisible(true);
       }
@@ -343,6 +353,9 @@ export default class Lowest extends Phaser.Scene {
     } else {
       // stop current animation 
       this.box[this.selected].anims.stop();
+      this.highlightSound.play({
+        volume:.1 ,
+      })
       switch (this.selected) {
         // moving from top left
         case 0:
@@ -399,5 +412,24 @@ export default class Lowest extends Phaser.Scene {
       this.box[this.selected].y + 80
     );
     this.box[this.selected].anims.play("TI_1box");
+  }
+  makeSounds(){
+    this.highlightSound = this.sound.add( 'TI_1hover');
+    this.wrongAnswer = this.sound.add('TI_1badChoice');
+  }
+  setLowest(){
+    this.selected = 2;
+    this.equations = [];
+    this.box = [];
+    this.num1 = [];
+    this.opcode = [];
+    this.num2 = [];
+    this.evaluated = [];
+    this.gameOver = false;
+    this.victory = false;
+    this.sent = false;
+    this.started = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
   }
 }

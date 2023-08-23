@@ -107,9 +107,27 @@ export default class Cannon extends Phaser.Scene {
         frameHeight: 400,
       }
     );
+    this.load.audio(
+      'DO1_cannonNoise',
+      new URL('./assets2/cannonFire.mp3', import.meta.url).href
+    );
+    this.load.audio(
+      'DO1_hover1',
+      new URL('./assets2/gun_movement_4.wav', import.meta.url).href
+    );
+    this.load.audio(
+      'DO1_hover2',
+      new URL('./assets2/gun_movement_4.wav', import.meta.url).href
+    );
+    this.load.audio(
+      'DO1_hover3',
+      new URL('./assets2/gun_movement_4.wav', import.meta.url).href
+    );
   }
 
   create() {
+    this.resetGame();
+    this.makeSounds();
     this.LEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
     this.RIGHT = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.RIGHT
@@ -345,14 +363,24 @@ export default class Cannon extends Phaser.Scene {
     //left and right
     if ((this.cannonSelect > 0 && this.cannonSelect < 3 && x === 1)) {
       this.cannonSelect += 1;
+      this.soundArray[Math.floor(Math.random() * 3)].play({
+        volume: .3,
+      });
       this.time.delayedCall(100, this.animateCannonBall, [], this);
     }
     else if ((this.cannonSelect > 0 && this.cannonSelect < 3 && x === -1)) {
       this.cannonSelect -= 1;
+      this.soundArray[Math.floor(Math.random() * 3)].play({
+        volume: .3,
+      });
       this.time.delayedCall(100, this.animateCannonBall, [], this);
     }
     else if (this.cannonSelect === 0 && x === -1) {
       this.cannonSelect = 3;
+      this.soundArray[Math.floor(Math.random() * 3)].play({
+        volume: .3,
+      });
+      
       this.time.delayedCall(100, this.animateCannonBall, [], this);
     }
     // <<<<<<< HEAD
@@ -378,6 +406,9 @@ export default class Cannon extends Phaser.Scene {
       this.cannon.anims.play("DO1_cannon_shoot", true);
       this.fire.anims.play("DO1_fire", true).setVisible(true);
       this.totalBarrels -= this.selectedValue;
+      this.cannonFireSound.play({
+        volume: 1,
+      });
       if (this.selectedValue > this.barrelGrp.getChildren().length) {
         this.gameOver = true;
         this.time.delayedCall(
@@ -519,5 +550,22 @@ export default class Cannon extends Phaser.Scene {
       {},
       sortedBarrelByLevel
     );
+  }
+  makeSounds(){
+    this.cannonFireSound = this.sound.add('DO1_cannonNoise');
+    this.cursorSound1 = this.sound.add('DO1_hover1');
+    this.cursorSound2 = this.sound.add('DO1_hover2');
+    this.cursorSound3 = this.sound.add('DO1_hover3');
+    this.soundArray = [this.cursorSound1,this.cursorSound2,this.cursorSound3]
+  }
+  resetGame(){
+    this.inputNum = 1;
+    this.gameOver = false;
+    this.victory = false;
+    this.sent = false;
+    this.tries = 0;
+    this.started = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
   }
 }
