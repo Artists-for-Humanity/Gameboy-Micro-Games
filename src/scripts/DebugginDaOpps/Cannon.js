@@ -377,6 +377,9 @@ export default class Cannon extends Phaser.Scene {
     }
     else if (this.cannonSelect === 0 && x === -1) {
       this.cannonSelect = 3;
+      this.soundArray[Math.floor(Math.random() * 3)].play({
+        volume: .3,
+      });
       
       this.time.delayedCall(100, this.animateCannonBall, [], this);
     }

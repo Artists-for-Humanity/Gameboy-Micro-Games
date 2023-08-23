@@ -101,6 +101,7 @@ export default class ColorPasscode extends Phaser.Scene {
     }
 
     create() {
+        this.resetCPC();
         // this.startGamePad();
         this.makeSounds();
         this.drawUI();
@@ -406,15 +407,27 @@ export default class ColorPasscode extends Phaser.Scene {
         var key;
         if (num === 0) {
             key = 'lightRed';
+            this.c4.play({
+                volume:1,
+            });
         }
         else if (num === 1) {
             key = 'lightYellow';
+            this.b4.play({
+                volume:1,
+            });
         }
         else if (num === 2) {
             key = 'lightPurple';
+            this.d4.play({
+                volume:1,
+            });
         }
         else if (num === 3) {
             key = 'lightBlue';
+            this.g4.play({
+                volume:1,
+            });
         }
         this.guessBlocks[this.guessNum].setTexture(key);
         this.guessBlocks[this.guessNum].visible = true;
@@ -449,5 +462,28 @@ export default class ColorPasscode extends Phaser.Scene {
         this.d4 = this.sound.add('MG_d4');
         this.g4 = this.sound.add('MG_g4');
 
+    }
+    resetCPC(){
+        this.doors = [];
+        this.t = 0;
+        this.goTextTimer = 0;
+        this.started = false;
+        this.started2 = false;
+        this.gameOver = false;
+        this.victory = false;
+        this.sent = false;
+        this.startTimer = 0;
+        this.lightColorButtons = [];
+        this.darkColorButtons = [];
+        this.pattern = [];
+
+        this.g1, this.g2, this.g3, this.g4;
+        this.guessBlocks = [];
+        this.guesses = [];
+        this.guessNum = 0;
+
+        this.interactive = false;
+        this.buttonHandlers = new ButtonPressHandlers();
+        this.gamePad = null;
     }
 }

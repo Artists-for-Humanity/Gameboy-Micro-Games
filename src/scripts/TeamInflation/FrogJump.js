@@ -82,6 +82,7 @@ export default class FrogJump extends Phaser.Scene {
 
     }
     create() {
+        this.setFrogJump();
         this.makeSounds();
         // this.gamestarted = true;
         this.background = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, "sky");
@@ -440,5 +441,16 @@ export default class FrogJump extends Phaser.Scene {
         this.jumpNoise = this.sound.add('TI_FJboing');
         this.walkingNoise = this.sound.add('TI_FJfrogWalking');
     }
-
+    setFrogJump(){
+        this.delayed = false;
+        this.winState = false;
+        this.offGround = false;
+        this.randomNum = Math.floor(Math.random() * 3);
+        this.victory = false;
+        this.gameOver = false;
+        this.sent = false;
+        this.started = false;
+        this.buttonHandlers = new ButtonPressHandlers();
+        this.gamePad = null;
+    }
 }

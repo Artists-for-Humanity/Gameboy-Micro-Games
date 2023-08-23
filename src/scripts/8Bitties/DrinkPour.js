@@ -98,6 +98,7 @@ export default class DrinkPour extends Phaser.Scene {
 
   create() {
     // create scene animations
+    this.drinkPourReset();
     this.animate();
     this.makeSounds();
 
@@ -347,5 +348,20 @@ export default class DrinkPour extends Phaser.Scene {
     this.spillingNoise = this.sound.add('water spilling');
     this.pouringNoise = this.sound.add('waterPouring') ;
     this.pitcherPlacementNoise = this.sound.add('pitcherPlacement');
+  }
+  drinkPourReset(){
+    this.fill_value = H;
+    this.gameLost = false;
+    this.pourScale = 0;
+    this.gameStart = false;
+    this.stopped = false;
+    this.unpoured = true;
+    this.overfill = false;
+    this.gameOver = false;
+    this.victory = false;
+    this.sent = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
+    this.press = false;
   }
 }

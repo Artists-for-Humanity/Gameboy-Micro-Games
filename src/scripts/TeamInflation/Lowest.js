@@ -78,7 +78,7 @@ export default class Lowest extends Phaser.Scene {
     );
   }
   create() {
-
+    this.setLowest();
     // SET INPUTS
     this.up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
     this.down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
@@ -416,5 +416,20 @@ export default class Lowest extends Phaser.Scene {
   makeSounds(){
     this.highlightSound = this.sound.add( 'TI_1hover');
     this.wrongAnswer = this.sound.add('TI_1badChoice');
+  }
+  setLowest(){
+    this.selected = 2;
+    this.equations = [];
+    this.box = [];
+    this.num1 = [];
+    this.opcode = [];
+    this.num2 = [];
+    this.evaluated = [];
+    this.gameOver = false;
+    this.victory = false;
+    this.sent = false;
+    this.started = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
   }
 }

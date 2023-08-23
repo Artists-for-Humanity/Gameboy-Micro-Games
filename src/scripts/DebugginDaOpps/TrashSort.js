@@ -74,6 +74,7 @@ export default class TrashSort extends Phaser.Scene {
   }
 
   create() {
+    this.setTrashSort();
     this.makeSounds();
     this.add.image(
       this.game.config.width / 2,
@@ -222,6 +223,9 @@ export default class TrashSort extends Phaser.Scene {
         this.playerScore += 1;
         a.destroy();
         this.juice.shake(trashBinType);
+        this.canNoise.play({
+          volume:1, 
+        })
         this.spawnTrash();
       }
     });
@@ -230,5 +234,16 @@ export default class TrashSort extends Phaser.Scene {
     this.canNoise = this.sound.add('DO3_canNoise');
     this.recycleSound = this.sound.add('DO3_recycle1Noise');
     this.recycleSound2 = this.sound.add('DO3_recycle2Noise')
+  }
+  setTrashSort(){
+    this.triesToWin = 4;
+    this.playerScore = 0;
+    this.firstTrash = Phaser.Math.Between(0, 3);
+    this.victory = false;
+    this.gameOver = false;
+    this.sent = false;
+    this.started = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
   }
 }

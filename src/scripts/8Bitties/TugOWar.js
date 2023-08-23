@@ -103,6 +103,7 @@ export default class TugOWar extends Phaser.Scene {
   }
 
   create() {
+    this.resetTow();
     this.createSounds();
     this.createAnimations();
     this.grass = this.add.image(540, 360, "8B6_background").setDepth(-10);
@@ -319,6 +320,14 @@ export default class TugOWar extends Phaser.Scene {
       if (this.slip != true) {
         this.player.anims.play("fail", true);
         this.slip = true;
+        this.slipSound.play({
+          volume:1
+        });
+        this.setTimeout(() => {
+         this.splatSound.play({
+          volume:1, 
+         })
+        }, 200);
       }
     }
   }
@@ -338,5 +347,21 @@ export default class TugOWar extends Phaser.Scene {
     this.slipSound = this.sound.add('8B6_slipNoise');
     this.splatSound = this.sound.add('8B6_splatNoise');
     this.tugSound = this.soound.add('8B6_tugNoise');
+  }
+  resetTow(){
+    this.gamestart = false;
+    this.gameStarted = false;
+    this.loseScale = 0;
+    this.LoseTimer = 0;
+    this.winTimer = 0;
+    this.winScale = 0;
+    this.imageCreated = false;
+    this.dashPos = 50;
+    this.victory = false;
+    this.lose = false;
+    this.gameOver = false;
+    this.slip = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
   }
 }
