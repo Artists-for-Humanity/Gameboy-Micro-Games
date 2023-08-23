@@ -93,6 +93,7 @@ export default class CarPump extends Phaser.Scene {
   }
 
   create() {
+    this.setCarPump();
     this.makeSounds();
     this.add.image(1080 / 2, 720 / 2, "DO2_pumpgame_bg");
     this.lever = this.physics.add.sprite(955, 480, "DO2_lever");
@@ -196,6 +197,9 @@ export default class CarPump extends Phaser.Scene {
     if (this.car4 === false) {
       this.car75.visible = false;
       this.car100.anims.play("DO2_car_inflate100%");
+      this.carStartSound.play(
+        {volume: 1,}
+      )
       this.car4 = true;
       this.car100.visible = true;
       this.victory = true;
@@ -216,12 +220,18 @@ export default class CarPump extends Phaser.Scene {
       this.upArrow.visible = false;
       this.downArrow.visible = true;
       this.lever.anims.play("DO2_lever_up", true);
+      this.pump1.play({
+        volume: .1,
+      });
     }
     if (x === 1 /*|| Phaser.Input.Keyboard.JustDown(this.down)*/) {
       this.upArrow.visible = true;
       this.downArrow.visible = false;
       this.lever.anims.play("DO2_lever_down", true);
       this.downInt += 1;
+      this.pump2.play({
+        volume: .1,
+      });
       this.updatePump();
     }
   }
@@ -401,5 +411,20 @@ export default class CarPump extends Phaser.Scene {
     this.pump1 = this.sound.add('DO2_pump1')
     this.pump2 = this.sound.add('DO2_pump2')
     this.carStartSound = this.sound.add('DO2_carSound')
+  }
+  setCarPump(){
+    this.gameStarted = false;
+    this.gameOver = false;
+    this.gameState = true;
+    this.victory = false;
+    this.sent = false;
+    this.started = false;
+    this.carpumpTimer = 0;
+    this.playerPumps = 0;
+    this.downInt = 0;
+    this.inflateInt = 0;
+    this.endgameTimer = 0;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
   }
 }

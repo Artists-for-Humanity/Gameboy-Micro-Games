@@ -18,7 +18,7 @@ export default class CircleJump extends Phaser.Scene {
     this.sent = false;
     this.buttonHandlers = new ButtonPressHandlers();
     this.gamePad = null;
-
+    this.soundPlayed = false; 
     this.bandaid = false;
 
   }
@@ -43,6 +43,7 @@ export default class CircleJump extends Phaser.Scene {
   }
 
   create() {
+    this.resetGame();
     this.makeSounds();
     this.graphics = this.add.graphics({
       lineStyle: {
@@ -151,7 +152,7 @@ export default class CircleJump extends Phaser.Scene {
 
   updatePlayer() {
     this.bounceSound.play({
-      volume: 1.3,
+      volume: 1,
     })
     this.player.setVelocityY(-200);
   }
@@ -231,10 +232,15 @@ export default class CircleJump extends Phaser.Scene {
   }
   loseState() {
     // this.physics.pause();
-    this.loseSound.play({
-      volume: .3, 
-    })
+   
     this.gameOver = true;
+    if(this.soundPlayed === false){
+      this.loseSound.play({
+        volume: .3, 
+      });
+    }
+    
+    this.soundPlayed = true; 
     this.loseText.setVisible(true);
   }
 
@@ -246,5 +252,19 @@ makeSounds(){
   this.bounceSound = this.sound.add('TI_4jump');
   this.loseSound = this.sound.add('TI_4lose');
 }
+resetGame(){
+  this.player;
+    this.ball;
+    this.started = false;
+    this.victory = false;
+    this.gameOver = false;
+    this.sent = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
+    this.soundPlayed = false; 
+    this.bandaid = false;
+    this.soundPlayed = false; 
+
+  }
 }
 

@@ -197,16 +197,21 @@ export default class FrogJump extends Phaser.Scene {
             });
         } else if (x === 1) {
             this.walk(false);
-            this.walkingNoise.stop()
+            this.walkingNoise.play({
+                volume:1,
+                loop: true,
+            });  
+           
         } else if (x === 2) {
             this.playerSprite.setVelocityX(0);
+            this.walkingNoise.stop()
             if (this.playerSprite.body.touching.down) {
                 this.playerSprite.anims.play('turn');
             }
         }
         if (x === 3 && this.playerSprite.body.touching.down) {
             this.jumpNoise.play({
-                volume:1,
+                volume: .1,
             });
             this.playerSprite.anims.play('jump');
             this.playerSprite.setVelocityY(-600 * 1.2);
