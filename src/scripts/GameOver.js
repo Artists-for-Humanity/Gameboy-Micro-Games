@@ -39,6 +39,7 @@ export default class GameOver extends Phaser.Scene {
   }
 
   preload() {
+    this.resetGo();
     this.load.image(
       "go_bg",
       new URL("globalAssets/go_screen.png", import.meta.url).href
@@ -206,7 +207,7 @@ export default class GameOver extends Phaser.Scene {
         case 1: //push data into array or something
           console.log("yes option");
           //add scene switch to high-score scene
-          this.scene.start('HiScoreScene');
+          location.reload();
 
           // location.reload(); 
           break;
@@ -266,5 +267,26 @@ export default class GameOver extends Phaser.Scene {
       this.bobDir = !this.bobDir;
     }
     this.bobDir ? (obj.y += amount) : (obj.y -= amount);
+  }
+  resetGo(){
+    this.initials = [];
+    this.active_letter = 0;
+    this.letterPos = 0;
+    this.count = 0;
+    this.name = [];
+    this.temp = [];
+    this.yesNoLetters = [
+      [24, 4, 18],
+      [13, 14],
+    ];
+    this.yesNoOptions = [];
+    this.prompt1 = [];
+    this.confirm = [2, 14, 13, 5, 8, 17, 12];
+    this.pointerPos = 1;
+    this.promptPrinted = false;
+    this.bobberTimer = 0;
+    this.bobDir = false;
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
   }
 }

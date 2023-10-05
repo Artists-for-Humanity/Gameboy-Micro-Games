@@ -44,11 +44,11 @@ export default class BetweenSpace extends Phaser.Scene {
       frameHeight: 38
     });
     
-    this.add.audio(
+    this.load.audio(
       'TI_3explosionSound',
       new URL('./assets/Explode16bit.wav', import.meta.url).href
     );
-    this.add.audio(
+    this.load.audio(
       'TI_3rocketSound',
       new URL('./assets/ship engine.wav', import.meta.url).href
     );
@@ -60,6 +60,7 @@ export default class BetweenSpace extends Phaser.Scene {
   }
 
   create() {
+    this.resetBtwnSpace();
     this.gameWidth = this.game.config.width;
     this.gameHeight = this.game.config.height;
     this.add.image(this.gameWidth / 2, this.gameHeight / 2, "TI_3background");
@@ -302,5 +303,16 @@ export default class BetweenSpace extends Phaser.Scene {
       frameRate: 7,
       repeat: -1,
     });
+  }
+  resetBtwnSpace(){
+    this.lose = false;
+    this.gameOver = false;
+    this.victory = false;
+    this.sent = false;
+    this.started = false;
+    this.randomNum = Math.floor(Math.random() * 71);
+
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;0
   }
 }

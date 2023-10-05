@@ -68,6 +68,7 @@ export default class HiScoreScene extends Phaser.Scene {
     );
   }
   create() {
+    this.resetHiScore()
     this.add.image(540, 360, "Hs_BG");
     var n = 0;
     this.gameData = gameDataBase.getTopScores();
@@ -114,7 +115,7 @@ export default class HiScoreScene extends Phaser.Scene {
   }
   checkInput(x) {
     if (x === 4) {}
-    this.scene.start('MainMenu');
+    location.reload();
   }
   resetLists() {
     this.gameData.forEach((item, index) => {
@@ -223,5 +224,17 @@ export default class HiScoreScene extends Phaser.Scene {
       this.bobDir = !this.bobDir;
     }
     this.bobDir ? (obj.y += amount) : (obj.y -= amount);
+  }
+  resetHiScore(){
+    this.names = [];
+    this.scores = [];
+    this.place = 1;
+    this.letter = 0;
+    this.dataSet = 0;
+    this.inti = [];
+    this.buttonHandlers = new ButtonPressHandlers();
+    this.gamePad = null;
+    this.bobberTimer = 0;
+    this.bobDir = false;
   }
 }

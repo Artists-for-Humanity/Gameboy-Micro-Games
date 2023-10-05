@@ -46,7 +46,7 @@ const config = {
       gravity: {
         y: 0,
       },
-      debug: true,
+      debug: false,
     },
   },
   input: {
@@ -55,6 +55,7 @@ const config = {
   scene: [
     newCutScreen,
     MainMenu,
+    ColorPasscode,
     PenguinSlide,
     WhereisWilly,
     Timer,
@@ -73,7 +74,6 @@ const config = {
     DrinkPour,
     Cannon,
     TrashSort,
-    ColorPasscode,
     HideFromCat,
     HitTheButton,
     ColorLab,

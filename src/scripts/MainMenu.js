@@ -141,6 +141,10 @@ export default class MainMenu extends Phaser.Scene {
         this.buttonEvents();
       }
     );
+    this.buttonHandlers.addPad(
+      () => this.gamePad.buttons[1].pressed,
+      () => this.updateSelection(1)
+    );
   }
 
   verticalWobble(obj, amount, speed) {
@@ -215,7 +219,7 @@ export default class MainMenu extends Phaser.Scene {
     this.wobbleDir = false;
     this.wobbleTimer = 0;
     this.gamePad = null;
-    // this.toggle = true;
+    this.toggle = true;
     this.alphaVal = false;
     this.alphaTimer = false;
     this.sign = true;

@@ -306,7 +306,7 @@ export default class TugOWar extends Phaser.Scene {
       this.youwin.setScale(this.winScale);
     } else this.gameOver = true;
   }
-  endgameCheck() {
+  endgameCheck(time) {
     this.winOrLose();
     if (this.victory === true) {
       this.youWin();
@@ -320,17 +320,21 @@ export default class TugOWar extends Phaser.Scene {
       if (this.slip != true) {
         this.player.anims.play("fail", true);
         this.slip = true;
-        this.slipSound.play({
-          volume:1
-        });
-        this.setTimeout(() => {
-         this.splatSound.play({
-          volume:1, 
-         })
-        }, 200);
+        eventsCenter.emit('triggerSounds')
+        eventsCenter.on('triggerSounds', ( )=> {
+          this.slipSound.play({
+            volume:1
+          });
+          setTimeout(() => {
+            this.splatSound.play({volume: 1,})
+          });
+        }, 
+        1000
+        ); 
       }
     }
   }
+
   ropePile() {
     if (this.rope.x < 510) {
       this.playerRopePile.visible = true;
@@ -346,7 +350,7 @@ export default class TugOWar extends Phaser.Scene {
   createSounds(){
     this.slipSound = this.sound.add('8B6_slipNoise');
     this.splatSound = this.sound.add('8B6_splatNoise');
-    this.tugSound = this.soound.add('8B6_tugNoise');
+    this.tugSound = this.sound.add('8B6_tugNoise');
   }
   resetTow(){
     this.gamestart = false;

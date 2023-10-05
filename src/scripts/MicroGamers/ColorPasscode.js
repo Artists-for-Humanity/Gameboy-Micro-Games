@@ -83,19 +83,19 @@ export default class ColorPasscode extends Phaser.Scene {
     
         this.load.audio(
             'MG_b4',
-            new URL('assets/colorPasscode/b4.wav', import.meta.url).href
+            new URL('assets/ColorPasscode/b4.wav', import.meta.url).href
         );
         this.load.audio(
             'MG_c4',
-            new URL('assets/colorPasscode/c4.wav', import.meta.url).href
+            new URL('assets/ColorPasscode/c4.wav', import.meta.url).href
         );
         this.load.audio(
             'MG_d4',
-            new URL('assets/colorPasscode/d4.wav', import.meta.url).href
+            new URL('assets/ColorPasscode/d4.wav', import.meta.url).href
         );
         this.load.audio(
-            'MG_g4',
-            new URL('assets/colorPasscode/g4.wav', import.meta.url).href
+            'MG_g#4',
+            new URL('assets/ColorPasscode/g4.wav', import.meta.url).href
         );
         
     }
@@ -204,6 +204,20 @@ export default class ColorPasscode extends Phaser.Scene {
         this.buttonHandlers.addPad(() => this.gamePad.leftStick.x > 0.7, () => this.userInput(1));
         this.buttonHandlers.addPad(() => this.gamePad.leftStick.y > 0.7, () => this.userInput(2));
         this.buttonHandlers.addPad(() => this.gamePad.leftStick.y < -0.7, () => this.userInput(0));
+        this.buttonHandlers.addPad(
+            () => this.gamePad.buttons[1].pressed, () => {
+                this.buttonEvents();
+              }
+          );
+        //   this.buttonHandlers.addPad(
+        //     () => this.gamePad.buttons[2].pressed,
+        //   );
+        //   this.buttonHandlers.addPad(
+        //     () => this.gamePad.buttons[3].pressed,
+        //   );
+        //   this.buttonHandlers.addPad(
+        //     () => this.gamePad.buttons[4].pressed,
+        //   );
     }
 
     drawUI() {
@@ -425,7 +439,7 @@ export default class ColorPasscode extends Phaser.Scene {
         }
         else if (num === 3) {
             key = 'lightBlue';
-            this.g4.play({
+            this.gSharp4.play({
                 volume:1,
             });
         }
@@ -460,7 +474,7 @@ export default class ColorPasscode extends Phaser.Scene {
         this.c4 = this.sound.add('MG_c4');
         this.b4 = this.sound.add('MG_b4');
         this.d4 = this.sound.add('MG_d4');
-        this.g4 = this.sound.add('MG_g4');
+        this.gSharp4 = this.sound.add('MG_g#4');
 
     }
     resetCPC(){

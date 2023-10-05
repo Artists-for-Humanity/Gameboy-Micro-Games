@@ -8,10 +8,11 @@ const L_START = -L_END;
 const R_START = 5 * L_END;
 
 const listOfGames = [ 
+  'ColorPasscode', 
   'fruitBasket',
   'MarcyMunch',
   'CircleJump',
-  // 'SockToss'(no sounds),
+  'SockToss',
   'Lowest',
   'FrogJump',
   // 'DrinkPour'(sound not working correctly),
@@ -20,14 +21,13 @@ const listOfGames = [
   // 'ColorLab'(not finnished),
   'Cannon',
   'CarPump',
-  'TrashSort',
-  'ColorPasscode', 
-  // 'HideFromCat'(no sounds yet),
+  // 'TrashSort',
+  // 'HideFromCat'(broken),
   // 'HitTheButton'(no sounds yet),
   'BetweenSpace',
-  'TugOWar',
+  // 'TugOWar',(BROKEN)
   // 'WhereisWilly'(sound not implimented ),
-  'PenguinSlide',
+  // 'PenguinSlide',
   'GameOver',
 ];
 
@@ -135,7 +135,7 @@ export default class newCutScreen extends Phaser.Scene {
     eventsCenter.on('game-end', this.closeDoor, this);
     eventsCenter.on(
       'start-normal',
-      () => {
+      () => { 
         this.closed = false;
         this.closeSound.play({
           volume: 0.3,
