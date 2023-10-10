@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import eventsCenter from "../EventsCenter";
+import fruitBasket from "../8Bitties/fruitBasket";
 const X = 1080;
 const Y = 720;
 const L_END = X / 4;
@@ -588,6 +589,9 @@ export default class newCutScreen extends Phaser.Scene {
     }
     let s;
     switch (this.currentScene) {
+      case 'fruitBasket':
+        s = 'catch!';
+        break;
       case 'Lowest':
         s = 'pick the lowest!';
         break;

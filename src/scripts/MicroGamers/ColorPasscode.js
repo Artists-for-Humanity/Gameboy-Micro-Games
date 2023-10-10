@@ -80,7 +80,6 @@ export default class ColorPasscode extends Phaser.Scene {
             import.meta.url).href);
         this.load.image('darkBlue', new URL('assets/ColorPasscode/darkBlue.png',
             import.meta.url).href);
-    
         this.load.audio(
             'MG_b4',
             new URL('assets/colorPasscode/b4.wav', import.meta.url).href
@@ -97,6 +96,10 @@ export default class ColorPasscode extends Phaser.Scene {
             'MG_g4',
             new URL('assets/colorPasscode/g4.wav', import.meta.url).href
         );
+        this.load.audio(
+            'demoDing',
+            new URL('assets/colorPasscode/passcodeding.wav', import.meta.url).href
+        )
         
     }
 
@@ -278,6 +281,9 @@ export default class ColorPasscode extends Phaser.Scene {
             for (var i = 0; i < this.guessBlocks.length; i++) {
                 // console.log(i);
                 this.guessBlocks[i].setTexture('');
+                this.demoDing.play({
+                    volume:1,
+                  });
             }
         }, [], this);
     }
@@ -461,6 +467,7 @@ export default class ColorPasscode extends Phaser.Scene {
         this.b4 = this.sound.add('MG_b4');
         this.d4 = this.sound.add('MG_d4');
         this.g4 = this.sound.add('MG_g4');
+        this.demoDing = this.sound.add('demoDing');
 
     }
     resetCPC(){

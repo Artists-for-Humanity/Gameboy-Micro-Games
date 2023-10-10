@@ -68,6 +68,7 @@ export default class Lowest extends Phaser.Scene {
       frameWidth: 1408 / 4,
       frameHeight: 294
     });
+    
     this.load.audio(
       'TI_1hover',
       new URL('./assets/Lowest/chooseHover.wav', import.meta.url).href
@@ -298,7 +299,7 @@ export default class Lowest extends Phaser.Scene {
       else {
         this.rollNumbers(i);
         this.equateNumbers(this.opcode[i], i);
-      }
+      } 
     }
 
   }

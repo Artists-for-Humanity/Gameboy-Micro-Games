@@ -81,6 +81,10 @@ export default class FlySwat extends Phaser.Scene {
       '8B5_Slap',
       new URL('../8Bitties/assets/FlySwat/slap.mp3', import.meta.url).href
     );
+    this.load.audio(
+      '8B5_Buzz',
+      new URL('../8Bitties/assets/FlySwat/buzz.wav', import.meta.url).href,
+    );
   }
 
   create() {
@@ -168,6 +172,9 @@ export default class FlySwat extends Phaser.Scene {
     this.swatter = this.physics.add.sprite(500, 450, "8B5_swatter");
     this.swatter.body.setSize(128, 160).setOffset(128, 32);
     this.gamestart = true;
+    this.buzzNoise.play({
+      volume:1,
+    });
   }
   playSwatText() {
     if (!this.gameStartRan) {
@@ -182,6 +189,7 @@ export default class FlySwat extends Phaser.Scene {
         volume: 1,
       }
     )
+    this.buzzNoise.stop();
     this.fly.anims.play("8B5_crash");
     this.dead = true;
   }
@@ -339,5 +347,6 @@ export default class FlySwat extends Phaser.Scene {
   createSounds(){
     this.kaboomNoise = this.sound.add('8B5_Kaboom');
     this.slapNoise = this.sound.add('8B5_Slap');
+    this.buzzNoise = this.sound.add('8B5_Buzz');
   }
 }

@@ -85,9 +85,17 @@ export default class SockToss extends Phaser.Scene {
         this.load.image('sock', new URL('assets/sock.png', import.meta.url).href);
         this.load.image('sock_win', new URL('assets/win.png', import.meta.url).href);
         this.load.image('sock_lose', new URL('assets/lose.png', import.meta.url).href);
+
+        this.load.audio(
+            '8B6_Throw',
+            new URL('../8Bitties/assets/paperthrow.mp3', import.meta.url).href,
+          );
     }
 
     create() {
+        //Add SFX
+        this.createSounds();
+
         // Add images to Scene
         this.add.image(1080 / 2, 720 / 2, 'background1').setScale(SCALE_MULTIPLIER);
         this.basket_b = this.add.image(13 * SCALE_MULTIPLIER, 21 * SCALE_MULTIPLIER, 'basket_back');
@@ -385,4 +393,8 @@ export default class SockToss extends Phaser.Scene {
             this.player.scale += 0.005;
         }
     }
+
+    createSounds(){
+        this.throwPaper = this.sound.add('8B6_Throw');
+      }
 }
