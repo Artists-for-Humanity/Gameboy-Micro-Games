@@ -88,7 +88,7 @@ export default class SockToss extends Phaser.Scene {
 
         this.load.audio(
             '8B6_Throw',
-            new URL('../8Bitties/assets/paperthrow.mp3', import.meta.url).href,
+            new URL('../Team Notateam/assets/paperthrow.mp3', import.meta.url).href,
           );
     }
 
@@ -300,6 +300,10 @@ export default class SockToss extends Phaser.Scene {
         if (this.hand.angle > -90) {
             this.hand.angle -= 15 / Math.sqrt(2);
         }
+      //  this.throwPaper.play({
+       //     volume:1,
+       ////     loop: false,
+       //   });
     }
     dropcon() {
         this.timer = 0;
@@ -355,6 +359,7 @@ export default class SockToss extends Phaser.Scene {
         }
     }
     wincon() {
+        this.throwPaper.play();
         this.hand.anims.play('win');
         this.win.setDepth(2);
         this.win.setVisible(true);
@@ -365,6 +370,9 @@ export default class SockToss extends Phaser.Scene {
         } else
             setTimeout(() => {
                 this.gameOver = true;
+                this.throwPaper.play({
+                    loop:false,
+                });
             }, 1500);
         this.dircheck(this.player.scale >= 1.2, this.player.scale <= 1);
         if (this.decreasing) {

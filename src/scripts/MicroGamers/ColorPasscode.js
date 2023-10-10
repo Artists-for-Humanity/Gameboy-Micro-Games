@@ -82,24 +82,28 @@ export default class ColorPasscode extends Phaser.Scene {
             import.meta.url).href);
         this.load.audio(
             'MG_b4',
-            new URL('assets/colorPasscode/b4.wav', import.meta.url).href
+            new URL('assets/ColorPasscode/b4.wav', import.meta.url).href
         );
         this.load.audio(
             'MG_c4',
-            new URL('assets/colorPasscode/c4.wav', import.meta.url).href
+            new URL('assets/ColorPasscode/c4.wav', import.meta.url).href
         );
         this.load.audio(
             'MG_d4',
-            new URL('assets/colorPasscode/d4.wav', import.meta.url).href
+            new URL('assets/ColorPasscode/d4.wav', import.meta.url).href
         );
         this.load.audio(
             'MG_g4',
-            new URL('assets/colorPasscode/g4.wav', import.meta.url).href
+            new URL('assets/ColorPasscode/g4.wav', import.meta.url).href
         );
         this.load.audio(
             'demoDing',
-            new URL('assets/colorPasscode/passcodeding.wav', import.meta.url).href
-        )
+            new URL('assets/ColorPasscode/passcodeding.wav', import.meta.url).href
+        ); 
+      //  this.load.audio(
+       //     'start',
+       //     new URL('assets/ColorPasscode/go.wav', import.meta.url).href
+      //  );
         
     }
 
@@ -281,9 +285,9 @@ export default class ColorPasscode extends Phaser.Scene {
             for (var i = 0; i < this.guessBlocks.length; i++) {
                 // console.log(i);
                 this.guessBlocks[i].setTexture('');
-                this.demoDing.play({
-                    volume:1,
-                  });
+              //  this.start.play({
+               //     volume:1,
+               //   });
             }
         }, [], this);
     }
@@ -335,6 +339,10 @@ export default class ColorPasscode extends Phaser.Scene {
 
             //500ms between flashes and 300ms flash durations
             this.time.delayedCall(i * 500, this.flash, [this.pattern[i], 300, i], this);
+            this.time.delayedCall(500);
+            this.demoDing.play({
+                volume:1,
+          });
         }
     }
 
@@ -463,8 +471,8 @@ export default class ColorPasscode extends Phaser.Scene {
         }, [], this);
     }
     makeSounds(){
-        this.c4 = this.sound.add('MG_c4');
         this.b4 = this.sound.add('MG_b4');
+        this.c4 = this.sound.add('MG_c4');
         this.d4 = this.sound.add('MG_d4');
         this.g4 = this.sound.add('MG_g4');
         this.demoDing = this.sound.add('demoDing');

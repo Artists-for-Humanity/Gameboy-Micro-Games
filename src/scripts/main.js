@@ -55,14 +55,14 @@ const config = {
   scene: [
     newCutScreen,
     MainMenu,
+    FlySwat,
+    SockToss,
     PenguinSlide,
     WhereisWilly,
     Timer,
     ColorPasscode,
-    FlySwat,
-    fruitBasket,
     MarcyMunch,
-    SockToss,
+    fruitBasket,
     CarPump,
     Emeowgency,
     BetweenSpace,
@@ -81,7 +81,8 @@ const config = {
     GameOver,
   ],
   audio: {
-    disableWebAudio: true,
+    //disableWebAudio: true,
+    autoplay: true
   },
   plugins: {
     global: [

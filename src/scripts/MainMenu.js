@@ -76,10 +76,20 @@ export default class MainMenu extends Phaser.Scene {
     });
     this.load.image('finger', new URL('gameAssets/finger.png', import.meta.url).href);
     this.load.image('endless', new URL('gameAssets/EButton_Large.png', import.meta.url).href);
+    this.load.audio(
+      "hoverUI",
+      new URL("gameAssets/hoverUI.mp3", import.meta.url).href
+    );
+    this.load.audio(
+      "selectUI",
+      new URL("gameAssets/select.wav", import.meta.url).href
+    );
+    
   }
 
   create() {
     this.resetMainMenu();
+    this.makeSounds();
     this.add.image(X / 2, Y / 2, 'bg1');
     this.btns.push(this.physics.add.sprite(X / 8, Y * 0.9, 'play'));
     this.btns.push(this.physics.add.image((4 * X) / 8, Y * 0.9, 'endless').setScale(0.45));
@@ -155,10 +165,18 @@ export default class MainMenu extends Phaser.Scene {
     //left
     if (input === -1) {
       this.fingerPos === 0 ? (this.fingerPos = this.btns.length - 1) : this.fingerPos--;
+      console.log("right");
+      this.hoverUI.play({
+        volume: 1,
+      });
     }
+
     //right
     if (input === 1) {
       this.fingerPos === this.btns.length - 1 ? (this.fingerPos = 0) : this.fingerPos++;
+            this.hoverUI.play({
+        volume: 1,
+      });
     }
 
     this.fingerIcon.x = this.btns[this.fingerPos].x;
@@ -169,6 +187,7 @@ export default class MainMenu extends Phaser.Scene {
     console.log(this.fingerPos);
     switch (this.fingerPos) {
       case 0: // Play
+        this.selectUI.play();
         this.playGame();
         // this.scene.start('MarcyMunch');
         break;
@@ -266,5 +285,10 @@ export default class MainMenu extends Phaser.Scene {
         yoyo: true,
       })
     );
+  }
+
+  makeSounds() {
+    this.hoverUI = this.sound.add("hoverUI");
+    this.selectUI = this.sound.add("selectUI");
   }
 }

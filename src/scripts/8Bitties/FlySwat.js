@@ -104,8 +104,11 @@ export default class FlySwat extends Phaser.Scene {
       this.buttonHandlers.update();
       if (!this.gamePad) this.startGamePad();
       //this.playSwatText();
+      if(this.gameOver != false)
+      {
+        this.moveSwatter();
+      }
 
-      this.moveSwatter();
       this.swing();
       if (this.gameOver && !this.sent) {
         eventsCenter.emit('stop_timer');
@@ -293,7 +296,7 @@ export default class FlySwat extends Phaser.Scene {
     this.down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
   }
   moveSwatter(x) {
-    if (this.swatter) {
+    if (this.swatter && !this.dead) {
       if (x === 2) {
         this.swatter.setVelocityY(-400);
       }
