@@ -176,7 +176,7 @@ export default class FlySwat extends Phaser.Scene {
     this.swatter.body.setSize(128, 160).setOffset(128, 32);
     this.gamestart = true;
     this.buzzNoise.play({
-      volume:1,
+      volume:0.5,
     });
   }
   playSwatText() {

@@ -78,13 +78,13 @@ export default class MainMenu extends Phaser.Scene {
     this.load.image('endless', new URL('gameAssets/EButton_Large.png', import.meta.url).href);
     this.load.audio(
       "hoverUI",
-      new URL("gameAssets/hoverUI.mp3", import.meta.url).href
+      new URL("gameAssets/hover.wav", import.meta.url).href
     );
     this.load.audio(
       "selectUI",
       new URL("gameAssets/select.wav", import.meta.url).href
     );
-    
+    this.load.audio("mainMenu",new URL("gameAssets/menuTheme.mp3", import.meta.url).href);
   }
 
   create() {
@@ -106,6 +106,10 @@ export default class MainMenu extends Phaser.Scene {
     this.action = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
     this.juice = new phaserJuice(this);
+    this.mainMenu.play({
+      volume:0.09,
+      loop:true,
+    });
   }
 
   update() {
@@ -290,5 +294,6 @@ export default class MainMenu extends Phaser.Scene {
   makeSounds() {
     this.hoverUI = this.sound.add("hoverUI");
     this.selectUI = this.sound.add("selectUI");
+    this.mainMenu = this.sound.add("mainMenu");
   }
 }
