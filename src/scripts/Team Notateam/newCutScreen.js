@@ -122,7 +122,7 @@ export default class newCutScreen extends Phaser.Scene {
     this.load.image('add!', new URL('../textPrompts/add.png', import.meta.url).href);
     this.load.audio('open_doors', new URL('assets/open_doors.mp3', import.meta.url).href);
     this.load.audio('close_doors', new URL('assets/close_doors.mp3', import.meta.url).href);
-    this.load.audio('intro_jingle', new URL('assets/jingle.mp3', import.meta.url).href);
+    this.load.audio('intro_jingle', new URL('../8Bitties/assets/jingle.wav', import.meta.url).href);
   }
 
   create() {
@@ -355,6 +355,7 @@ export default class newCutScreen extends Phaser.Scene {
   }
 
   showGameResult() {
+    this.introJingle.play();
     if (!this.lost) {
       this.faceplate.anims.play('win1').once('animationcomplete', () => {
         this.faceplate.anims.play('win2');

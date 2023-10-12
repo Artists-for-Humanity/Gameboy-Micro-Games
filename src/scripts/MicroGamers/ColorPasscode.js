@@ -341,7 +341,7 @@ export default class ColorPasscode extends Phaser.Scene {
             this.time.delayedCall(i * 500, this.flash, [this.pattern[i], 300, i], this);
             this.time.delayedCall(500);
             this.sound.play('demoDing', {volume: 0.4}, false, true); 
-            this.sound.allowMultiple;
+           // this.sound.allowMultiple;
         }
 
         //this.demoDing.restart({volume:1});
@@ -440,7 +440,8 @@ export default class ColorPasscode extends Phaser.Scene {
         }
         else if (num === 3) {
             key = 'lightBlue';
-            this.g4.play({
+            console.log("play me");
+            this.gg4.play({
                 volume:1,
             });
         }
@@ -475,7 +476,7 @@ export default class ColorPasscode extends Phaser.Scene {
         this.b4 = this.sound.add('MG_b4');
         this.c4 = this.sound.add('MG_c4');
         this.d4 = this.sound.add('MG_d4');
-        this.g4 = this.sound.add('MG_g4');
+        this.gg4 = this.sound.add('MG_g4');
         this.demoDing = this.sound.add('demoDing', {volume: 0.4});
 
     }
