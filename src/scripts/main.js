@@ -55,12 +55,12 @@ const config = {
   scene: [
     newCutScreen,
     MainMenu,
+    ColorPasscode,
     FlySwat,
     SockToss,
     PenguinSlide,
     WhereisWilly,
     Timer,
-    ColorPasscode,
     MarcyMunch,
     fruitBasket,
     CarPump,

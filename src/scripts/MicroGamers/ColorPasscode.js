@@ -340,10 +340,11 @@ export default class ColorPasscode extends Phaser.Scene {
             //500ms between flashes and 300ms flash durations
             this.time.delayedCall(i * 500, this.flash, [this.pattern[i], 300, i], this);
             this.time.delayedCall(500);
-            this.demoDing.play({
-                volume:1,
-          });
+            this.sound.play('demoDing', {volume: 0.4}, false, true); 
+            this.sound.allowMultiple;
         }
+
+        //this.demoDing.restart({volume:1});
     }
 
     showDarkColor(num) {
@@ -475,7 +476,7 @@ export default class ColorPasscode extends Phaser.Scene {
         this.c4 = this.sound.add('MG_c4');
         this.d4 = this.sound.add('MG_d4');
         this.g4 = this.sound.add('MG_g4');
-        this.demoDing = this.sound.add('demoDing');
+        this.demoDing = this.sound.add('demoDing', {volume: 0.4});
 
     }
     resetCPC(){

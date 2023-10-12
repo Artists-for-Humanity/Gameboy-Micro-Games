@@ -9,6 +9,7 @@ const L_START = -L_END;
 const R_START = 5 * L_END;
 
 const listOfGames = [ 
+  'ColorPasscode',
   'FlySwat',
   'SockToss',
   'MarcyMunch',
@@ -121,6 +122,7 @@ export default class newCutScreen extends Phaser.Scene {
     this.load.image('add!', new URL('../textPrompts/add.png', import.meta.url).href);
     this.load.audio('open_doors', new URL('assets/open_doors.mp3', import.meta.url).href);
     this.load.audio('close_doors', new URL('assets/close_doors.mp3', import.meta.url).href);
+    this.load.audio('intro_jingle', new URL('assets/jingle.mp3', import.meta.url).href);
   }
 
   create() {
@@ -689,6 +691,7 @@ export default class newCutScreen extends Phaser.Scene {
   makeSounds() {
     this.openSound = this.sound.add('open_doors');
     this.closeSound = this.sound.add('close_doors');
+    this.introJingle = this.sound.add('intro_jingle');
     console.log('hearme 00');
   }
 }
