@@ -359,7 +359,7 @@ export default class SockToss extends Phaser.Scene {
         }
     }
     wincon() {
-        this.throwPaper.play();
+        //this.throwPaper.play();
         this.hand.anims.play('win');
         this.win.setDepth(2);
         this.win.setVisible(true);

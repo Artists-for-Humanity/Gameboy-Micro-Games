@@ -26,8 +26,8 @@ const listOfGames = [
   'TrashSort',
   // 'HideFromCat'(no sounds yet),
   // 'HitTheButton'(no sounds yet),
-  'BetweenSpace',
-  'TugOWar',
+  //'BetweenSpace',
+  //'TugOWar',
   // 'WhereisWilly'(sound not implimented ),
   'PenguinSlide',
   'GameOver',
@@ -122,7 +122,9 @@ export default class newCutScreen extends Phaser.Scene {
     this.load.image('add!', new URL('../textPrompts/add.png', import.meta.url).href);
     this.load.audio('open_doors', new URL('assets/open_doors.mp3', import.meta.url).href);
     this.load.audio('close_doors', new URL('assets/close_doors.mp3', import.meta.url).href);
-    this.load.audio('intro_jingle', new URL('../8Bitties/assets/jingle.wav', import.meta.url).href);
+    //this.load.audio('intro_jingle', new URL('../8Bitties/assets/jingle.wav', import.meta.url).href);
+    this.load.audio('lose_game', new URL('../8Bitties/assets/losegame.wav', import.meta.url).href);
+    this.load.audio('win_game', new URL('../8Bitties/assets/wingame.wav', import.meta.url).href);
   }
 
   create() {
@@ -355,8 +357,15 @@ export default class newCutScreen extends Phaser.Scene {
   }
 
   showGameResult() {
-    this.introJingle.play();
-    if (!this.lost) {
+    if(this.currentScene == 'MainMenu')
+    {
+      this.globalState.scores = 0;
+      setTimeout(() => {
+        this.setScore(this.globalState.scores);
+      }, 200);
+    }
+    if (!this.lost &&  this.currentScene !== 'MainMenu') {
+      this.winGame.play({volume: 0.5});
       this.faceplate.anims.play('win1').once('animationcomplete', () => {
         this.faceplate.anims.play('win2');
       });
@@ -364,9 +373,11 @@ export default class newCutScreen extends Phaser.Scene {
       setTimeout(() => {
         this.setScore(this.globalState.scores);
       }, 200);
-    } else {
+    } else if(this.lost){
+      this.loseGame.play({volume: 0.5});
       this.faceplate.anims.play('lose1').once('animationcomplete', () => {
         this.faceplate.anims.play('lose2');
+        
       });
       this.life_total--;
       this.reduce_life();
@@ -692,7 +703,9 @@ export default class newCutScreen extends Phaser.Scene {
   makeSounds() {
     this.openSound = this.sound.add('open_doors');
     this.closeSound = this.sound.add('close_doors');
-    this.introJingle = this.sound.add('intro_jingle');
+    //this.introJingle = this.sound.add('intro_jingle');
+    this.winGame = this.sound.add('win_game');
+    this.loseGame = this.sound.add('lose_game');
     console.log('hearme 00');
   }
 }

@@ -197,7 +197,7 @@ export default class Chew extends Phaser.Scene {
       this.marcy.play("lick");
       this.victory = true;
       this.barksound.play({
-        volume: .2,
+        volume: .5,
       });
       //this.gameOver = true;
     }

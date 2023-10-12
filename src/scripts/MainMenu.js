@@ -59,7 +59,7 @@ export default class MainMenu extends Phaser.Scene {
       'ColorPasscode',
       'HideFromCat',
       'HitTheButton',
-      'TugOWar',
+      //'TugOWar',
       'FlySwat',
       'DrinkPour',
     ];
