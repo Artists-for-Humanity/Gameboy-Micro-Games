@@ -55,9 +55,9 @@ const config = {
   scene: [
     newCutScreen,
     MainMenu,
+    FlySwat,
     PenguinSlide,
     ColorPasscode,
-    FlySwat,
     SockToss,
     //WhereisWilly,
     Timer,

@@ -9,9 +9,9 @@ const L_START = -L_END;
 const R_START = 5 * L_END;
 
 const listOfGames = [ 
+  'FlySwat',
   'PenguinSlide',
   'ColorPasscode',
-  'FlySwat',
   'SockToss',
   'MarcyMunch',
   'ColorPasscode',
@@ -126,6 +126,7 @@ export default class newCutScreen extends Phaser.Scene {
     //this.load.audio('intro_jingle', new URL('../8Bitties/assets/jingle.wav', import.meta.url).href);
     this.load.audio('lose_game', new URL('../8Bitties/assets/losegame.wav', import.meta.url).href);
     this.load.audio('win_game', new URL('../8Bitties/assets/wingame.wav', import.meta.url).href);
+    this.load.audio('game_over', new URL('../8Bitties/assets/gameover.wav', import.meta.url).href);
   }
 
   create() {
@@ -374,7 +375,7 @@ export default class newCutScreen extends Phaser.Scene {
       setTimeout(() => {
         this.setScore(this.globalState.scores);
       }, 200);
-    } else if(this.lost){
+    } else if(this.lost && this.currentScene !== 'GameOver'){
       this.loseGame.play({volume: 0.5});
       this.faceplate.anims.play('lose1').once('animationcomplete', () => {
         this.faceplate.anims.play('lose2');
@@ -411,9 +412,16 @@ export default class newCutScreen extends Phaser.Scene {
       this.endCurrentGame();
     }
   }
+
+  gameOverSound()
+  {
+    console.log("game over");
+    this.gameOver = true;
+    this.currentScene = 'GameOver'; this.gameOverSFX.play();
+  }
   startNextScene() {
     // Life total is less than or equal to one, game ends.
-    this.life_total > 1 ? this.setCurrentScene() : (this.currentScene = 'GameOver');
+    this.life_total > 1 ? this.setCurrentScene() : this.gameOverSound();
 
     if (
       this.currentScene !== 'GameOver' &&
@@ -710,6 +718,7 @@ export default class newCutScreen extends Phaser.Scene {
     //this.introJingle = this.sound.add('intro_jingle');
     this.winGame = this.sound.add('win_game');
     this.loseGame = this.sound.add('lose_game');
+    this.gameOverSFX = this.sound.add('game_over');
     console.log('hearme 00');
   }
 }
