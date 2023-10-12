@@ -9,6 +9,7 @@ const L_START = -L_END;
 const R_START = 5 * L_END;
 
 const listOfGames = [ 
+  'PenguinSlide',
   'ColorPasscode',
   'FlySwat',
   'SockToss',
@@ -29,7 +30,6 @@ const listOfGames = [
   //'BetweenSpace',
   //'TugOWar',
   // 'WhereisWilly'(sound not implimented ),
-  'PenguinSlide',
   'GameOver',
 ];
 
@@ -102,6 +102,7 @@ export default class newCutScreen extends Phaser.Scene {
     this.load.image('l_door', new URL('assets/l_door.png', import.meta.url).href);
     this.load.image('r_door', new URL('assets/r_door.png', import.meta.url).href);
 
+    this.load.image('count!', new URL('../textPrompts/countpenguins.png', import.meta.url).href);
     this.load.image('toss!', new URL('../textPrompts/toss.png', import.meta.url).href);
     this.load.image('catch!', new URL('../textPrompts/Catch_Text.png', import.meta.url).href);
     this.load.image('pour!', new URL('../textPrompts/pourtext.png', import.meta.url).href);
@@ -603,6 +604,9 @@ export default class newCutScreen extends Phaser.Scene {
     }
     let s;
     switch (this.currentScene) {
+      case 'PenguinSlide':
+        s = 'count!';
+        break;
       case 'fruitBasket':
         s = 'catch!';
         break;

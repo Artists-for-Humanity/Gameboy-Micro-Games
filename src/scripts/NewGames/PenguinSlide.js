@@ -6,7 +6,7 @@ export default class PenguinSlide extends Phaser.Scene {
     super({
       active: false,
       visible: false,
-      key: "PenguinSlide",
+      key: 'PenguinSlide',
     });
 
     // minigame globals
@@ -333,7 +333,7 @@ export default class PenguinSlide extends Phaser.Scene {
       // stroke: '#808080',
       // strokeThickness: 8,
     }).setVisible(false).setOrigin(0.5);
-    const goText = this.add.text(540, 120, 'how many penguins were there?', {
+    const goText = this.add.text(540, 120, 'How many Penguins were there?', {
       fontSize: '48px',
       color: '#FFFFFF',
       align: 'center',

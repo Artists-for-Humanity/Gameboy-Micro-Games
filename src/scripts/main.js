@@ -55,11 +55,11 @@ const config = {
   scene: [
     newCutScreen,
     MainMenu,
+    PenguinSlide,
     ColorPasscode,
     FlySwat,
     SockToss,
-    PenguinSlide,
-    WhereisWilly,
+    //WhereisWilly,
     Timer,
     MarcyMunch,
     fruitBasket,
